@@ -34,21 +34,31 @@ nav {
   padding: 0 15px;
 }
 
-.icon-list {
-  margin: 0 0 0 auto;
+.flat-list {
   padding: 0;
 }
 
-.icon-list li {
+.flat-list li {
   display: inline;
 }
 
-.icon-list li a {
+.icon {
+  margin-left: auto;
+}
+.icon li a {
   font-size: 1.7em;
 }
 
+.sep {
+  background-color: #bbb;
+  width: 1px;
+  height: 1em;
+  display: inline-block;
+  margin: 0 3px;
+}
+
 a {
-  font-size: 1.2em;
+  font-size: 1.1em;
   text-decoration: none;
   color: #000;
 }
@@ -78,10 +88,9 @@ section > .skillset > div {
   display: inline-block;
   background-color: #b4d5b6;
   border-radius: 3px;
-  margin: 5px 5px 0 0;
+  margin: 5px 3px 0 0;
   padding: 2px 4px;
   font-size: 1em;
-  
 }
 
 section > .company {
@@ -101,7 +110,7 @@ section .companyTitle {
 }
 
 section .date {
-  font-size: 0.8em;
+  font-size: 1em;
   font-weight: normal;
   color: gray;
   display: inline-block;
@@ -111,12 +120,20 @@ footer {
   margin-top: 50px;
   padding: 20px 50px;
   font-family: "Abel";
-  color: gray;
+  color: #aaa;
   text-align: center;
-  box-shadow: inset 0 1px 0 lightgray;
 }
 
 footer .icon-list li a {
   color: gray;
   font-size: 1.4em;
+}
+
+@media only screen and (min-width: 480px){
+    .icon{
+        margin-left:20px;
+    }
+    nav{
+        justify-content: flex-end;
+    }
 }
