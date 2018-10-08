@@ -1,47 +1,122 @@
-body{
-    margin:0;
-    font-family: 'Titillium Web';
+body,
+p,
+h1,
+h2,
+h3,
+h4,
+ul {
+  margin: 0;
 }
+
+.siteHeader {
+  font-family: "Titillium Web";
+  text-align: center;
+}
+
+.siteHeader > h3 {
+  color: gray;
+  font-size: 1em;
+  font-weight: normal;
+}
+
+.siteHeader h1 {
+  display: inline-block;
+  background-color: black;
+  color: white;
+  padding: 0 5px;
+  font-size: 1.4em;
+}
+
 nav {
-    display: flex;
-    align-items: center;
-    margin-top: 5px;
-    padding: 0 15px;
+  display: flex;
+  align-items: center;
+  margin-top: 5px;
+  padding: 0 15px;
 }
 
-nav ul {
-    margin: 0 0 0 auto;
-    padding: 0
+.icon-list {
+  margin: 0 0 0 auto;
+  padding: 0;
 }
 
-nav ul li {
-    display: inline;
+.icon-list li {
+  display: inline;
+}
+
+.icon-list li a {
+  font-size: 1.7em;
 }
 
 a {
-    font-size: 1.2em;
-    text-decoration: none;
-    color: #000;
+  font-size: 1.2em;
+  text-decoration: none;
+  color: #000;
 }
 
-a.icon{
-    font-size: 1.7em;
+body > section {
+  margin-top: 20px;
+  font-family: "Abel";
 }
 
-header{
-    text-align: center;
+section > h2 {
+  margin: 0 20px 5px 20px;
+  font-size: 1.5em;
+  font-weight: bold;
+  border-bottom: 1px dashed gray;
 }
 
-header>p{
-    color: gray;
-    font-size: 1em;
-    margin: 0;
+section > p {
+  margin: 5px 20px;
+  color: #333;
 }
 
-header>div{
-    display: inline-block;
-    background-color: black;
-    color: white;
-    padding: 0 5px;
-    font-size: 1.7em;
+section > .skillset {
+  margin-left: 20px;
+}
+
+section > .skillset > div {
+  display: inline-block;
+  background-color: #b4d5b6;
+  border-radius: 3px;
+  margin: 5px 5px 0 0;
+  padding: 2px 4px;
+  font-size: 1em;
+  
+}
+
+section > .company {
+  margin-left: 20px;
+  margin-top: 0;
+}
+
+section > .company > header {
+  text-align: left;
+  margin-top: 10px;
+}
+
+section .companyTitle {
+  font-size: 1em;
+  font-weight: normal;
+  display: inline-block;
+}
+
+section .date {
+  font-size: 0.8em;
+  font-weight: normal;
+  color: gray;
+  display: inline-block;
+}
+
+footer {
+  margin-top: 50px;
+  padding: 20px 50px;
+  font-family: "Abel";
+  color: gray;
+  text-align: center;
+  box-shadow: inset 0 1px 0 lightgray;
+}
+
+footer .icon-list li a {
+  color: gray;
+  font-size: 1.4em;
 }
