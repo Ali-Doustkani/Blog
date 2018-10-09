@@ -1,0 +1,27 @@
+﻿@mixin highlight($bg) {
+    display: inline-block;
+    background-color: $bg;
+    border-radius: 3px;
+    margin: 5px 3px 0 0;
+    padding: 2px 4px;
+}
+
+.skillset {
+
+    > div {
+        @include highlight(#b4d5b6);
+    }
+}
+
+.tagset {
+    color: #333;
+
+    > i {
+        font-size: .7em;
+    }
+
+    > div {
+        @include highlight(#ddd);
+        font-size: .8em;
+    }
+}

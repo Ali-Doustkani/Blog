@@ -1,0 +1,7 @@
+﻿@import 'Reset';
+@import 'Highlighting';
+@import 'SmallScreen';
+
+@media only screen and (min-width: 720px) {
+    @import 'WideScreen';
+}

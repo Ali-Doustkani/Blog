@@ -1,0 +1,130 @@
+﻿/* Body */
+
+body {
+    background-color: #f5f5f5;
+}
+
+/* Page Header */
+
+.siteHeader {
+    font-family: "Titillium Web";
+    text-align: center;
+
+    > h5 {
+        color: gray;
+    }
+
+    h1 {
+        display: inline-block;
+        background-color: black;
+        color: white;
+        padding: 0 5px;
+    }
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+    padding: 0 15px;
+}
+
+/* Page Content */
+
+main {
+    margin: 0 20px;
+    max-width: 720px;
+}
+
+a {
+    text-decoration: none;
+    color: #000;
+}
+
+.flat-list {
+    padding: 0;
+
+    li {
+        display: inline;
+    }
+}
+
+@mixin iconButton($color) {
+    font-size: 1.7em;
+
+    &:hover {
+        color: $color;
+    }
+}
+
+.github {
+    @include iconButton(#ff8742);
+}
+
+.linkedin {
+    @include iconButton(#0077B5);
+}
+
+
+.separator {
+    background-color: #bbb;
+    width: 1px;
+    height: 1em;
+    display: inline-block;
+    margin: 0 3px;
+}
+
+.article {
+    margin-top: 20px;
+    font-family: "Abel";
+
+    > header {
+        margin-bottom: 5px;
+        border-bottom: 1px dashed gray;
+
+        > h2 {
+            display: inline-block;
+
+            > a:hover {
+                color: #63a46c;
+            }
+        }
+    }
+
+    > p {
+        margin: 5px 0;
+        color: #333;
+    }
+}
+
+.company {
+    margin-top: 10px;
+
+    .companyTitle {
+        display: inline-block;
+    }
+}
+
+.date {
+    color: gray;
+    display: inline-block;
+
+    &::before {
+        content: "(";
+    }
+
+    &::after {
+        content: ")";
+    }
+}
+
+/* Footer */
+
+footer {
+    padding: 50px 0 30px 0;
+    font-family: "Abel";
+    font-size: .9em;
+    color: #aaa;
+    text-align: center;
+}
