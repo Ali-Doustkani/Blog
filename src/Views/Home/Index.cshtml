@@ -1,21 +1,22 @@
-﻿@{ 
+﻿@{
     Layout = "_Layout";
 }
+@model IEnumerable<Blog.Model.Post>;
 
-<article class="article">
-    <header>
-        <h2><a href="#">WPF and MVVC</a></h2>
-        <h4 class="date">Sep 2018</h4>
-    </header>
-    <p>
-        You know my name already. I was born in Iran. Istarted to code from 10 years ago. I have spent most of my
-        time with Microsoft technologies but I enjoy javascript stack which I'm introduced to recently.
-        You know my name already. I was born in Iran. Istarted to code from 10 years ago. I have spent most of my
-        time with Microsoft technologies but I enjoy javascript stack which I'm introduced to recently.
-    </p>
-    <div class="tagset">
-        <i class="fas fa-hashtag"></i>
-        <div>WPF</div>
-        <div>MVVM</div>
-    </div>
-</article>
+@foreach (var post in Model)
+{
+    <article class="article">
+        <header>
+            <h2><a asp-action="Post" asp-route-id="@post.Id">@post.Title</a></h2>
+            <h4 class="date">@post.PublishDate.ToString("MMM yyyy")</h4>
+        </header>
+        <p>@post.Summary</p>
+        <div class="tagset">
+            <i class="fas fa-hashtag"></i>
+            @foreach (var tag in post.TagCollection)
+            {
+                <div>@tag</div>
+            }
+        </div>
+    </article>
+}
