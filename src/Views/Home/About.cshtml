@@ -1,131 +1,99 @@
-<!DOCTYPE html>
+@{ 
+    Layout = "_Layout";
+}
 
-<html>
-
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/brands.css" integrity="sha384-rf1bqOAj3+pw6NqYrtaE1/4Se2NBwkIfeYbsFdtiR6TQz0acWiwJbv1IM/Nt/ite"
-        crossorigin="anonymous">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/fontawesome.css" integrity="sha384-1rquJLNOM3ijoueaaeS5m+McXPJCGdr5HcA03/VHXxcp2kX2sUrQDmFc3jR5i/C7"
-        crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css?family=Abel|Titillium+Web" rel="stylesheet">
-    <link rel="stylesheet" href="~/css/site.css" />
-    <title>Ali Doustkani</title>
-</head>
-
-<body>
-    <header class="siteHeader">
-        <nav>
-            <ul class="flat-list word">
-                <li>
-                    <a href="#">ABOUT ME</a>
-                </li>
-                <li><div class="sep"/></li>
-                <li>
-                    <a href="#">BLOG</a>
-                </li>
-            </ul>
-            <ul class="flat-list icon">
-                <li>
-                    <a href="#">
-                        <i class="fab fa-github-square"></i>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fab fa-linkedin"></i>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-        <img src="images/me.png" />
-        <h3>Hi, welcome to my blog!</h3>
-        <a href="#">
-            <h1>&lt;Ali Doustkani/&gt;</h1>
-        </a>
-    </header>
-    <section>
+<article class="article">
+    <header>
         <h2>summary</h2>
-        <p>You know my name already. I was born in Iran. Istarted to code from 10 years ago. I have spent most of my
-            time with Microsoft technologies but I enjoy javascript stack which I'm introduced to recently.</p>
-        <p>I like working on enterprise software projects which DD and architectural concerns are involved. I'm free at
-            the time, so feel free to contact me (email or linkedin) if you have a job for me.</p>
-    </section>
-    <section>
+    </header>
+    <p>
+        You know my name already. I was born in Iran. Istarted to code from 10 years ago. I have spent most of my
+        time with Microsoft technologies but I enjoy javascript stack which I'm introduced to recently.
+    </p>
+    <p>
+        I like working on enterprise software projects which DD and architectural concerns are involved. I'm free at
+        the time, so feel free to contact me (email or linkedin) if you have a job for me.
+    </p>
+</article>
+<article class="article">
+    <header>
         <h2>skills</h2>
-        <div class="skillset">
-            <div>OOP</div>
-            <div>Design Patterns</div>
-            <div>DDD</div>
-            <div>TDD</div>
-            <div>Agile</div>
-        </div>
-        <div class="skillset">
-            <div>C#</div>
-            <div>ASP.NET Core</div>
-            <div>WPF</div>
-            <div>SQLServer</div>
-        </div>
-        <div class="skillset">
-            <div>HTML</div>
-            <div>CSS</div>
-            <div>SASS</div>
-        </div>
-        <div class="skillset">
-            <div>JavaScript</div>
-            <div>npm</div>
-            <div>gulp</div>
-            <div>jasmin</div>
-        </div>
-        <div class="skillset">
-            <div>TFS</div>
-            <div>Git</div>
-        </div>
-    </section>
-    <section>
+    </header>
+    <div class="skillset">
+        <div>OOP</div>
+        <div>Design Patterns</div>
+        <div>DDD</div>
+        <div>TDD</div>
+        <div>Agile</div>
+    </div>
+    <div class="skillset">
+        <div>C#</div>
+        <div>ASP.NET Core</div>
+        <div>WPF</div>
+        <div>SQLServer</div>
+    </div>
+    <div class="skillset">
+        <div>HTML</div>
+        <div>CSS</div>
+        <div>SASS</div>
+    </div>
+    <div class="skillset">
+        <div>JavaScript</div>
+        <div>npm</div>
+        <div>gulp</div>
+        <div>jasmin</div>
+    </div>
+    <div class="skillset">
+        <div>TFS</div>
+        <div>Git</div>
+    </div>
+</article>
+<article class="article">
+    <header>
         <h2>work experience</h2>
-        <ul>
-            <li>
-                <section class="company">
-                    <header>
-                        <h4 class="companyTitle">ParmisIT</h4>
-                        <h4 class="date">(aug 2014 - mar 2013)</h4>
-                    </header>
-                    <p>We developed financial applications like Accounting and Inventory Management at Parmis. I was
-                        mainly
-                        focused on designing and implementing the back-end system, write clean code and review other
-                        teammates
-                        codes, ...</p>
-                </section>
-            </li>
-            <li>
-                <section class="company">
-                    <header>
-                        <h4 class="companyTitle">Freelancer</h4>
-                        <h4 class="date">(feb 2012 - mar 2013)</h4>
-                    </header>
-                    <p>so many projects and descrioption scome here sdf ...</p>
-                </section>
-            </li>
-            <li>
-                <section class="company">
-                    <header>
-                        <h4 class="companyTitle">ComputerScienceCo.</h4>
-                        <h4 class="date">(feb 2012 - mar 2013)</h4>
-                    </header>
-                    <p>so many projects and descrioption scome here sdf ...</p>
-                </section>
-            </li>
-        </ul>
-    </section>
-    <section>
+    </header>
+    <ul>
+        <li>
+            <section class="company">
+                <header>
+                    <h4 class="companyTitle">ParmisIT</h4>
+                    <h4 class="date">aug 2014 - mar 2013</h4>
+                </header>
+                <p>
+                    We developed financial applications like Accounting and Inventory Management at Parmis. I was
+                    mainly
+                    focused on designing and implementing the back-end system, write clean code and review other
+                    teammates
+                    codes, ...
+                </p>
+            </section>
+        </li>
+        <li>
+            <section class="company">
+                <header>
+                    <h4 class="companyTitle">Freelancer</h4>
+                    <h4 class="date">feb 2012 - mar 2013</h4>
+                </header>
+                <p>so many projects and descrioption scome here sdf ...</p>
+            </section>
+        </li>
+        <li>
+            <section class="company">
+                <header>
+                    <h4 class="companyTitle">ComputerScienceCo.</h4>
+                    <h4 class="date">feb 2012 - mar 2013</h4>
+                </header>
+                <p>so many projects and descrioption scome here sdf ...</p>
+            </section>
+        </li>
+    </ul>
+</article>
+<article class="article">
+    <header>
         <h2>education</h2>
-        <p>You know my name already. I was born in Iran. Istarted to code from 10 years ago. I have spent most of my
-            time with Microsoft technologies but I enjoy javascript stack which I'm introduced to recently.</p>
-    </section>
-    <footer>
-        <p>© Copyright 2018 Ali Doustkani</p>
-    </footer>
-</body>
-
-</html>
+    </header>
+    <p>
+        You know my name already. I was born in Iran. Istarted to code from 10 years ago. I have spent most of my
+        time with Microsoft technologies but I enjoy javascript stack which I'm introduced to recently.
+    </p>
+</article>
