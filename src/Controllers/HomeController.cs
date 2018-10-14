@@ -18,10 +18,12 @@ namespace Blog.Controllers
             return View(_context.Posts.ToList());
         }
 
-        public ViewResult Post(int id)
+        public IActionResult Post(int id)
         {
-            ViewBag.Id = id;
-            return View();
+            var post = _context.Posts.Find(id);
+            if (post == null)
+                return NotFound();
+            return View(post);
         }
 
         public ViewResult About()
