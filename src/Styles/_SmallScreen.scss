@@ -91,17 +91,12 @@ a {
             }
         }
     }
-
-    > p {
-        margin: 5px 0;
-        color: #333;
-    }
 }
 
-.company {
+.item {
     margin-top: 10px;
 
-    .companyTitle {
+    .item-title {
         display: inline-block;
     }
 }

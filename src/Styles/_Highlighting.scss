@@ -1,20 +1,5 @@
 ﻿/* Keywords */
 
-@mixin highlight($bg) {
-    display: inline-block;
-    background-color: $bg;
-    border-radius: 3px;
-    margin: 5px 3px 0 0;
-    padding: 2px 4px;
-}
-
-.skillset {
-
-    > div {
-        @include highlight(#b4d5b6);
-    }
-}
-
 .tagset {
     color: #333;
 
@@ -23,7 +8,11 @@
     }
 
     > div {
-        @include highlight(#ddd);
+        display: inline-block;
+        background-color: #ddd;
+        border-radius: 3px;
+        margin: 5px 3px 0 0;
+        padding: 2px 4px;
         font-size: .8em;
     }
 }
