@@ -1,9 +1,13 @@
+@{ 
+    var dob = new DateTime(1990, 1, 4);
+    var myAge = Convert.ToInt32(DateTime.Now.Subtract(dob).Days / 365);
+}
 <article class="article">
     <header>
         <h2>summary</h2>
     </header>
     <p>
-        I'm Ali, a 29-year-old programmer! I started to code when I was 17 and since then writing code and creating programs is one of my best enjoyments.
+        I'm Ali, a @myAge-year-old programmer! I started to code when I was 17 and since then writing code and creating programs is one of my best enjoyments.
     </p>
     <p>
         I have spent most of my time with Microsoft technologies but recently I found JavaScript and it's stack very interesting. I'm not that good in JS ecosystem but I really enjoy to code with it, especially because of its functional capability that challenges my OOP background to face problems differently.
