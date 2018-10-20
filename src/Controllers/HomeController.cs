@@ -13,11 +13,13 @@ namespace Blog.Controllers
 
         private readonly BlogContext _context;
 
+        [Route("blog")]
         public ViewResult Index()
         {
             return View(_context.Posts.ToList());
         }
 
+        [Route("blog/post/{id}")]
         public IActionResult Post(int id)
         {
             var post = _context.Posts.Find(id);
@@ -26,6 +28,8 @@ namespace Blog.Controllers
             return View(post);
         }
 
+        [Route("")]
+        [Route("about")]
         public ViewResult About()
         {
             return View("About");
