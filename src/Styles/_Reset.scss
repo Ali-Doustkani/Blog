@@ -1,4 +1,6 @@
-﻿body,
+﻿@import 'Colors.scss';
+
+body,
 p,
 h1,
 h2,
@@ -38,8 +40,12 @@ h5 {
 
 p {
     font-size: 1.1em;
-    color: #333;
+    color: $paragColor;
     margin: 0 0 5px 0;
+
+    a {
+        color: darken($linkColor, 10%);
+    }
 }
 
 /* Layout */
