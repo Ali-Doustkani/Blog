@@ -1,0 +1,65 @@
+﻿/* Post Form */
+
+@mixin group() {
+    margin-top: 10px;
+}
+
+@mixin label() {
+    font-size: 1.2em;
+    color: #333;
+    font-family: Abel;
+}
+
+.postForm > h2 {
+    font-family: Abel;
+    font-size: 2em;
+    border-bottom: 5px solid black;
+    margin-bottom: 30px;
+}
+
+.text-group {
+    @include group();
+
+    > label {
+        display: block;
+        @include label();
+    }
+
+    > input, > textarea {
+        width: 100%;
+        font-size: 1em;
+        font-family: sans-serif;
+        border: 1px solid lightgray;
+        padding: 5px;
+    }
+
+    #PublishDate, #Title {
+        width: 30%;
+    }
+
+    #Content {
+        min-height: 200px;
+        min-width: 100%;
+        overflow: scroll;
+        font-size: .8em;
+    }
+}
+
+.check-group {
+    @include group();
+
+    > label {
+        @include label();
+    }
+}
+
+button {
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 5px 15px;
+    font-size: 1.1em;
+    margin-top: 10px;
+    cursor: pointer;
+    font-family: Abel;
+}
