@@ -17,6 +17,7 @@ namespace Blog.Model
         public string Summary { get; set; }
         public string Content { get; set; }
         public string Tags { get; set; }
+        public bool Show { get; set; }
 
         public IEnumerable<string> TagCollection
         {
