@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Blog.Model
 {
@@ -21,8 +22,11 @@ namespace Blog.Model
         {
             get
             {
+                if (string.IsNullOrEmpty(Tags))
+                    return Enumerable.Empty<string>();
+
                 var result = new List<string>();
-                foreach(var str in Tags.Split(","))
+                foreach (var str in Tags.Split(","))
                 {
                     var trimmed = str.Trim();
                     if (!string.IsNullOrEmpty(trimmed))
