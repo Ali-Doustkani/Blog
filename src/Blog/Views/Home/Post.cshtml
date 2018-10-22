@@ -2,12 +2,14 @@
 
 <article class="post">
     <header>
-        <h1>WPF and MVVM</h1>
+        <h1>@Model.Title</h1>
         <h3>@Model.PublishDate.ToString("D")</h3>
         <div class="tagset">
             <i class="fas fa-hashtag"></i>
-            <div>WPF</div>
-            <div>MVVM</div>
+            @foreach(var tag in Model.TagCollection)
+            {
+                <div>@tag</div>
+            }
         </div>
     </header>
     @Html.Raw(Model.Content)

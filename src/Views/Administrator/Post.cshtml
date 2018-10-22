@@ -1,0 +1,32 @@
+﻿@model Post
+<div class="postForm">
+    <h2>Write a post</h2>
+    <form asp-action="Save">
+        <div class="text-group">
+            <label asp-for="PublishDate"></label>
+            <input asp-for="PublishDate" value="@Model.PublishDate.ToString("d")" autocomplete="off" />
+        </div>
+        <div class="text-group">
+            <label asp-for="Title"></label>
+            <input asp-for="Title" autofocus autocomplete="off" />
+        </div>
+        <div class="text-group">
+            <label asp-for="Tags"></label>
+            <input asp-for="Tags" autocomplete="off" />
+        </div>
+        <div class="text-group">
+            <label asp-for="Summary"></label>
+            <textarea asp-for="Summary"></textarea>
+        </div>
+        <div class="text-group">
+            <label asp-for="Content"></label>
+            <textarea asp-for="Content" wrap="off"></textarea>
+        </div>
+        <div class="check-group">
+            <input id="Show" type="checkbox" />
+            <label for="Show">Show In Blog</label>
+        </div>
+        <button type="submit">Save</button>
+        <button type="reset">Clear</button>
+    </form>
+</div>
