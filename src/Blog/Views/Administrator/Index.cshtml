@@ -1,0 +1,46 @@
+﻿@model IEnumerable<Post>
+
+@section Styles{
+    <link rel="stylesheet" href="~/libs/tingle.js/tingle.min.css" />
+}
+
+@section Scripts{
+    <script src="~/libs/tingle.js/tingle.min.js"></script>
+    <script src="~/js/admin.js"></script>
+}
+
+<div class="postForm">
+    <h2>Posts</h2>
+    <table border="0">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th width="20"></th>
+                <th>Title</th>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var post in Model)
+            {
+                <tr>
+                    <td>@post.Id</td>
+                    @if (post.Show)
+                    {
+                        <td><i class="fas fa-check"></i></td>
+                    }
+                    else
+                    {
+                        <td><i class="fas fa-times"></i></td>
+                    }
+                    <td>@post.Title</td>
+                    <td>@post.Summary</td>
+                    <td>
+                        <button class="cell-btn">Edit</button>
+                        <button class="cell-btn delete" data-id="@post.Id">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
