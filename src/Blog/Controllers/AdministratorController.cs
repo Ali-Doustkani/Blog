@@ -30,11 +30,23 @@ namespace Blog.Controllers
             return View(newPost);
         }
 
+        [Route("post/{id}")]
+        public IActionResult Post(int id)
+        {
+            var post = _context.Posts.Find(id);
+            if (post == null)
+                return NotFound();
+            return View(post);
+        }
+
         [Route("post/save")]
         [HttpPost]
         public IActionResult Save(Post post)
         {
-            _context.Posts.Add(post);
+            if (post.Id == 0)
+                _context.Posts.Add(post);
+            else
+                _context.Posts.Attach(post);
             _context.SaveChanges();
             return Redirect("~/blog/post/" + post.Id.ToString());
         }

@@ -23,7 +23,7 @@
         <tbody>
             @foreach (var post in Model)
             {
-                <tr>
+                <tr data-id="@post.Id">
                     <td>@post.Id</td>
                     @if (post.Show)
                     {
@@ -36,8 +36,8 @@
                     <td>@post.Title</td>
                     <td>@post.Summary</td>
                     <td>
-                        <button class="cell-btn">Edit</button>
-                        <button class="cell-btn delete" data-id="@post.Id">Delete</button>
+                        <button id="edit" class="cell-btn">Edit</button>
+                        <button id="delete" class="cell-btn">Delete</button>
                     </td>
                 </tr>
             }
