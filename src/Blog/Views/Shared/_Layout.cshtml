@@ -30,7 +30,15 @@
                 {
                     <li><div class="separator"></div></li>
                     <li>
-                        Hi Ali, <form asp-controller="Account" asp-action="Logout" class="logoutForm"><button type="submit">Logout</button></form>
+                        <form asp-controller="Account" asp-action="Logout" class="logoutForm"><button type="submit">Logout</button></form>
+                    </li>
+                    <li><div class="separator"></div></li>
+                    <li>
+                        <a asp-controller="Administrator" asp-action="Index">Posts</a>
+                    </li>
+                    <li><div class="separator"></div></li>
+                    <li>
+                        <a asp-controller="Administrator" asp-action="Post">New Post</a>
                     </li>
                 }
             </ul>
