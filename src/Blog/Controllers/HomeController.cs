@@ -13,6 +13,7 @@ namespace Blog.Controllers
 
         private readonly BlogContext _context;
 
+        [Route("")]
         [Route("blog")]
         public ViewResult Index()
         {
@@ -28,7 +29,6 @@ namespace Blog.Controllers
             return View(post);
         }
 
-        [Route("")]
         [Route("about")]
         public ViewResult About()
         {
