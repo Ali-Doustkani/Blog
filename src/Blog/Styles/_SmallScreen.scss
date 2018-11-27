@@ -31,6 +31,16 @@ nav {
     padding: 0 15px;
 }
 
+.logoutForm {
+    display: inline;
+
+    button {
+        padding: 3px;
+        background-color: lightgray;
+        font-size: .9em;
+    }
+}
+
 /* Page Content */
 
 main {

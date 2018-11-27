@@ -15,13 +15,20 @@
     <header class="siteHeader">
         <nav>
             <ul class="flat-list">
-                @*<li>
-                        <a asp-action="Index">BLOG</a>
-                    </li>
-                    <li><div class="separator"></div></li>*@
+                <li>
+                    <a asp-action="Index">BLOG</a>
+                </li>
+                <li><div class="separator"></div></li>
                 <li>
                     <a asp-controller="Home" asp-action="About">ABOUT ME</a>
                 </li>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <li><div class="separator"></div></li>
+                    <li>
+                        Hi Ali, <form asp-controller="Account" asp-action="Logout" class="logoutForm"><button type="submit">Logout</button></form>
+                    </li>
+                }
             </ul>
             <ul class="flat-list">
                 <li>

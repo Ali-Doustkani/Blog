@@ -22,12 +22,6 @@ namespace Blog.Controllers
             return View();
         }
 
-        [Route("accessdenied")]
-        public IActionResult AccessDenied()
-        {
-            return View();
-        }
-
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login(LoginViewModel vm, string returnUrl = null)
@@ -45,6 +39,14 @@ namespace Blog.Controllers
             }
 
             return View(new LoginViewModel { ErrorMessage = "Username or password is not valid" });
+        }
+
+        [HttpPost]
+        [Route("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
     }
 }
