@@ -1,0 +1,19 @@
+﻿@model Blog.Model.LoginViewModel
+<div>
+    <h1>Owner Login</h1>
+    <form asp-action="Login">
+        @if (Model != null && !string.IsNullOrEmpty(Model.ErrorMessage))
+        {
+            <div class="error">@Model.ErrorMessage</div>
+        }
+        <div class="text-group">
+            <label for="username">Username</label>
+            <input type="text" name="username" autocomplete="off" autofocus />
+        </div>
+        <div class="text-group">
+            <label for="password">Password</label>
+            <input type="password" name="password" />
+        </div>
+        <button type="submit">Login</button>
+    </form>
+</div>

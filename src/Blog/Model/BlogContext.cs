@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace Blog.Model
 {
-    public class BlogContext : DbContext
+    public class BlogContext : IdentityDbContext<IdentityUser>
     {
         public BlogContext(DbContextOptions options)
             : base(options)
@@ -12,6 +14,7 @@ namespace Blog.Model
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Post>(post =>
             {
                 post.Property(x => x.Title).IsRequired().HasMaxLength(150);

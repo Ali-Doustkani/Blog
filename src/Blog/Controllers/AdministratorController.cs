@@ -1,4 +1,5 @@
 ﻿using Blog.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
@@ -6,6 +7,7 @@ using System.Linq;
 namespace Blog.Controllers
 {
     [Route("admin")]
+    [Authorize]
     public class AdministratorController : Controller
     {
         public AdministratorController(BlogContext context)

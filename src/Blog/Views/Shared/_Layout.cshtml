@@ -16,11 +16,11 @@
         <nav>
             <ul class="flat-list">
                 @*<li>
-                    <a asp-action="Index">BLOG</a>
-                </li>
-                <li><div class="separator"></div></li>*@
+                        <a asp-action="Index">BLOG</a>
+                    </li>
+                    <li><div class="separator"></div></li>*@
                 <li>
-                    <a asp-action="About">ABOUT ME</a>
+                    <a asp-controller="Home" asp-action="About">ABOUT ME</a>
                 </li>
             </ul>
             <ul class="flat-list">
@@ -36,7 +36,11 @@
                 </li>
             </ul>
         </nav>
-        @if (ViewContext.RouteData.Values["controller"].ToString() != "Administrator")
+        @{
+            var controller = ViewContext.RouteData.Values["controller"].ToString();
+            var noHeaders = new[] { "Administrator", "Account" };
+        }
+        @if (!noHeaders.Contains(controller))
         {
             <img src="~/images/me.png" />
             <h5>Hi, welcome to my blog!</h5>

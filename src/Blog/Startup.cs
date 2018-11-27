@@ -1,6 +1,7 @@
 ﻿using Blog.Model;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,6 +31,7 @@ namespace Blog
                 options.UseSqlServer(_configuration.GetConnectionString("Blog"));
             });
             services.AddMvc();
+            services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<BlogContext>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -43,6 +45,7 @@ namespace Blog
                 app.UseHsts();
             }
             app.UseStaticFiles();
+            app.UseAuthentication();
             app.UseMvc();
         }
     }
