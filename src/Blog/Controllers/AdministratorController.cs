@@ -46,6 +46,9 @@ namespace Blog.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Save(Post post)
         {
+            if (!ModelState.IsValid)
+                return View("Post", post);
+
             if (post.Id == 0)
                 _context.Posts.Add(post);
             else

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace Blog.Model
@@ -12,11 +13,21 @@ namespace Blog.Model
         }
 
         public int Id { get; set; }
+
+        [Required]
         public string Title { get; set; }
+
         public DateTime PublishDate { get; set; }
+
+        [Required]
         public string Summary { get; set; }
+
+        [Required]
         public string Content { get; set; }
+
+        [Required]
         public string Tags { get; set; }
+
         public bool Show { get; set; }
 
         public IEnumerable<string> TagCollection
