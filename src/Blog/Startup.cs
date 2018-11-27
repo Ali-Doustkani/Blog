@@ -1,7 +1,9 @@
 ﻿using Blog.Model;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,7 +32,10 @@ namespace Blog
             {
                 options.UseSqlServer(_configuration.GetConnectionString("Blog"));
             });
-            services.AddMvc();
+            services.AddMvc(options=>
+            {
+                options.Filters.Add(new RequireHttpsAttribute());
+            });
             services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<BlogContext>();
         }
 
@@ -42,10 +47,17 @@ namespace Blog
             }
             else
             {
-                app.UseHttpsRedirection();
                 app.UseHsts();
             }
+
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
+
             app.UseStaticFiles();
+            app.UseXXssProtection(options => options.EnabledWithBlockMode());
+            app.UseXContentTypeOptions();
             app.UseAuthentication();
             app.UseMvc();
         }
