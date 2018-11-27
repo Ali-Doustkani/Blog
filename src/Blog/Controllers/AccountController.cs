@@ -26,8 +26,10 @@ namespace Blog.Controllers
         [Route("login")]
         public async Task<IActionResult> Login(LoginViewModel vm, string returnUrl = null)
         {
-            if (string.IsNullOrEmpty(vm.Username) || string.IsNullOrEmpty(vm.Password))
-                return View(new LoginViewModel { ErrorMessage = "Username or password is not valid" });
+            ViewData["returnUrl"] = returnUrl;
+
+            if (!ModelState.IsValid)
+                return View();
 
             var result = await _signInManager.PasswordSignInAsync(vm.Username, vm.Password, true, true);
             if (result.Succeeded)
@@ -38,7 +40,8 @@ namespace Blog.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            return View(new LoginViewModel { ErrorMessage = "Username or password is not valid" });
+            ModelState.AddModelError(string.Empty, "Wrong username or password");
+            return View();
         }
 
         [HttpPost]
