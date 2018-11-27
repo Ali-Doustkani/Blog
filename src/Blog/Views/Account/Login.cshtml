@@ -1,7 +1,7 @@
 ﻿@model Blog.Model.LoginViewModel
 <div>
     <h1>Login</h1>
-    <form asp-action="Login">
+    <form asp-action="Login" asp-route-returnUrl="@ViewData["returnUrl"]">
         @if (Model != null && !string.IsNullOrEmpty(Model.ErrorMessage))
         {
             <div class="error">@Model.ErrorMessage</div>

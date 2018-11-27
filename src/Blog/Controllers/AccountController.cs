@@ -18,7 +18,7 @@ namespace Blog.Controllers
         [Route("login")]
         public IActionResult Login(string returnUrl = null)
         {
-            TempData["returnUrl"] = returnUrl;
+            ViewData["returnUrl"] = returnUrl;
             return View();
         }
 
