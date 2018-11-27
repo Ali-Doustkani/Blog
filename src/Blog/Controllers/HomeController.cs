@@ -32,7 +32,7 @@ namespace Blog.Controllers
         [Route("about")]
         public ViewResult About()
         {
-            return View("About");
+            return View();
         }
     }
 }

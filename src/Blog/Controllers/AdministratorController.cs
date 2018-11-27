@@ -49,9 +49,14 @@ namespace Blog.Controllers
             if (post.Id == 0)
                 _context.Posts.Add(post);
             else
+            {
                 _context.Posts.Attach(post);
+                _context.Entry(post).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            }
             _context.SaveChanges();
-            return Redirect("~/blog/post/" + post.Id.ToString());
+            if (post.Show)
+                return RedirectToAction("Post", "Home", new { id = post.Id });
+            return RedirectToAction(nameof(Index));
         }
 
         [Route("post/delete/{id}")]
@@ -64,7 +69,7 @@ namespace Blog.Controllers
                 return NotFound();
             _context.Posts.Remove(post);
             _context.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
     }
 }

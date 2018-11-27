@@ -2,6 +2,7 @@
 <div class="postForm">
     <h2>Write a post</h2>
     <form asp-action="Save">
+        <input name="Id" value="@Model.Id" type="hidden"/>
         <div class="text-group">
             <label asp-for="PublishDate"></label>
             <input asp-for="PublishDate" value="@Model.PublishDate.ToString("d")" autocomplete="off" />
