@@ -42,6 +42,7 @@ namespace Blog
             }
             else
             {
+                app.UseHttpsRedirection();
                 app.UseHsts();
             }
             app.UseStaticFiles();
