@@ -23,6 +23,7 @@ namespace Blog.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Route("login")]
         public async Task<IActionResult> Login(LoginViewModel vm, string returnUrl = null)
         {
@@ -45,6 +46,7 @@ namespace Blog.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Route("logout")]
         public async Task<IActionResult> Logout()
         {

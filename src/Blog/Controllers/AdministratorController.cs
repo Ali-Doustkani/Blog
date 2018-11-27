@@ -43,6 +43,7 @@ namespace Blog.Controllers
 
         [Route("post/save")]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Save(Post post)
         {
             if (post.Id == 0)
@@ -54,7 +55,8 @@ namespace Blog.Controllers
         }
 
         [Route("post/delete/{id}")]
-        [HttpDelete]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
             var post = _context.Posts.Find(id);
@@ -62,7 +64,7 @@ namespace Blog.Controllers
                 return NotFound();
             _context.Posts.Remove(post);
             _context.SaveChanges();
-            return Ok();
+            return RedirectToAction("Index");
         }
     }
 }

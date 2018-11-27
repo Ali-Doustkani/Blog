@@ -9,6 +9,8 @@
     <script src="~/js/admin.js"></script>
 }
 
+<form id="deleteForm" method="post">
+</form>
 <div class="postForm">
     <h2>Posts</h2>
     <table border="0">
@@ -23,7 +25,7 @@
         <tbody>
             @foreach (var post in Model)
             {
-                <tr data-id="@post.Id">
+                <tr>
                     <td>@post.Id</td>
                     @if (post.Show)
                     {
@@ -36,8 +38,8 @@
                     <td>@post.Title</td>
                     <td>@post.Summary</td>
                     <td>
-                        <button id="edit" class="cell-btn">Edit</button>
-                        <button id="delete" class="cell-btn">Delete</button>
+                        <a asp-action="Post" asp-route-id="@post.Id" class="cell-btn">Edit</a>
+                        <a href="#" id="delete" class="cell-btn" data-id="@post.Id">Delete</a>
                     </td>
                 </tr>
             }
