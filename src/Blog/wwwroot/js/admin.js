@@ -19,7 +19,7 @@
         msgBox.addFooterBtn("Yes", "tingle-btn tingle-btn--danger tingle-btn--pull-right", function () {
             msgBox.close();
             var form = document.getElementById("deleteForm");
-            form.action = "/admin/post/delete/" + postId;
+            form.action = "/admin/DeletePost/" + postId;
             form.submit();
         });
         msgBox.addFooterBtn("No", "tingle-btn tingle-btn--pull-right", function () {

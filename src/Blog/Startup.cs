@@ -1,4 +1,5 @@
-﻿using Blog.Model;
+﻿using Blog.Controllers;
+using Blog.Model;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -32,7 +33,7 @@ namespace Blog
             {
                 options.UseSqlServer(_configuration.GetConnectionString("Blog"));
             });
-            services.AddMvc(options=>
+            services.AddMvc(options =>
             {
                 options.Filters.Add(new RequireHttpsAttribute());
             });
@@ -59,7 +60,23 @@ namespace Blog
             app.UseXXssProtection(options => options.EnabledWithBlockMode());
             app.UseXContentTypeOptions();
             app.UseAuthentication();
-            app.UseMvc();
+            app.UseMvc(cfg =>
+            {
+                cfg.MapRoute("root1", "/", Home(nameof(HomeController.Index)))
+                   .MapRoute("root2", "blog", Home(nameof(HomeController.Index)))
+                   .MapRoute("post", "blog/post/{id}", Home(nameof(HomeController.Post)))
+                   .MapRoute("about", "about", Home(nameof(HomeController.About)));
+
+                cfg.MapRoute("admin", "admin/{action}/{id?}", new { controller = Extensions.NameOf<AdministratorController>() });
+
+                cfg.MapRoute("default", "{controller}/{action}");
+            });
+        }
+
+        private object Home(string actionName)
+        {
+            var controllerName = Extensions.NameOf<HomeController>();
+            return new { controller = controllerName, action = actionName };
         }
     }
 }

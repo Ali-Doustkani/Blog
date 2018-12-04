@@ -1,7 +1,7 @@
 ﻿@model Post
 <div class="postForm">
     <h2>Write a post</h2>
-    <form asp-action="Save">
+    <form asp-action="SavePost">
         <div asp-validation-summary="All" class="error"></div>
         <input name="Id" value="@Model.Id" type="hidden"/>
         <div class="text-group">

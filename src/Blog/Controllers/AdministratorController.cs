@@ -6,7 +6,6 @@ using System.Linq;
 
 namespace Blog.Controllers
 {
-    [Route("admin")]
     [Authorize]
     public class AdministratorController : Controller
     {
@@ -22,7 +21,6 @@ namespace Blog.Controllers
             return View(_context.Posts.ToList());
         }
 
-        [Route("post")]
         public ViewResult Post()
         {
             var newPost = new Post
@@ -32,22 +30,19 @@ namespace Blog.Controllers
             return View(newPost);
         }
 
-        [Route("post/{id}")]
-        public IActionResult Post(int id)
+        public IActionResult ViewPost(int id)
         {
             var post = _context.Posts.Find(id);
             if (post == null)
                 return NotFound();
-            return View(post);
+            return View(nameof(Post), post);
         }
 
-        [Route("post/save")]
-        [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Save(Post post)
+        public IActionResult SavePost(Post post)
         {
             if (!ModelState.IsValid)
-                return View("Post", post);
+                return View(nameof(Post), post);
 
             if (post.Id == 0)
                 _context.Posts.Add(post);
@@ -58,14 +53,12 @@ namespace Blog.Controllers
             }
             _context.SaveChanges();
             if (post.Show)
-                return RedirectToAction("Post", "Home", new { id = post.Id });
+                return RedirectToAction(nameof(HomeController.Post), Extensions.NameOf<HomeController>(), new { id = post.Id });
             return RedirectToAction(nameof(Index));
         }
 
-        [Route("post/delete/{id}")]
-        [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id)
+        public IActionResult DeletePost(int id)
         {
             var post = _context.Posts.Find(id);
             if (post == null)

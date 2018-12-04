@@ -1,11 +1,11 @@
 ﻿using Blog.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace Blog.Controllers
 {
-    [Route("account")]
     public class AccountController : Controller
     {
         public AccountController(SignInManager<IdentityUser> signInManager)
@@ -15,7 +15,6 @@ namespace Blog.Controllers
 
         private readonly SignInManager<IdentityUser> _signInManager;
 
-        [Route("login")]
         public IActionResult Login(string returnUrl = null)
         {
             ViewData["returnUrl"] = returnUrl;
@@ -24,7 +23,6 @@ namespace Blog.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("login")]
         public async Task<IActionResult> Login(LoginViewModel vm, string returnUrl = null)
         {
             ViewData["returnUrl"] = returnUrl;
@@ -38,20 +36,19 @@ namespace Blog.Controllers
                 if (returnUrl != null)
                     return Redirect(returnUrl);
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction(nameof(HomeController.Index), Extensions.NameOf<HomeController>());
             }
 
             ModelState.AddModelError(string.Empty, "Wrong username or password");
             return View();
         }
 
-        [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
-        [Route("logout")]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction(nameof(HomeController.Index), Extensions.NameOf<HomeController>());
         }
     }
 }

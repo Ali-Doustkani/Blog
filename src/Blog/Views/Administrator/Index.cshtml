@@ -38,7 +38,7 @@
                     <td>@post.Title</td>
                     <td>@post.Summary</td>
                     <td>
-                        <a asp-action="Post" asp-route-id="@post.Id" class="cell-btn">Edit</a>
+                        <a asp-action="ViewPost" asp-route-id="@post.Id" class="cell-btn">Edit</a>
                         <a href="#" id="delete" class="cell-btn" data-id="@post.Id">Delete</a>
                     </td>
                 </tr>
