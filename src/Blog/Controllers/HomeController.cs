@@ -20,9 +20,13 @@ namespace Blog.Controllers
 
         public IActionResult Post(string title)
         {
-            var post = _context.Posts.SingleOrDefault(x => x.Title == title && x.Show);
+            var post = _context.Posts.SingleOrDefault(x => x.Title == title);
             if (post == null)
                 return NotFound();
+
+            if (!post.Show && !HttpContext.User.Identity.IsAuthenticated)
+                return Challenge();
+
             return View(post);
         }
 
