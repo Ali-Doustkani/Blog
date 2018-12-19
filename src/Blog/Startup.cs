@@ -42,6 +42,11 @@ namespace Blog
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -49,16 +54,11 @@ namespace Blog
             else
             {
                 app.UseHsts();
+                app.UseXXssProtection(options => options.EnabledWithBlockMode());
+                app.UseXContentTypeOptions();
             }
 
-            app.UseForwardedHeaders(new ForwardedHeadersOptions
-            {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-            });
-
             app.UseStaticFiles();
-            app.UseXXssProtection(options => options.EnabledWithBlockMode());
-            app.UseXContentTypeOptions();
             app.UseAuthentication();
             app.UseMvc(cfg =>
             {
