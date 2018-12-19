@@ -4,7 +4,7 @@
 {
     <article class="article">
         <header>
-            <h2><a asp-action="Post" asp-route-id="@post.Id">@post.Title</a></h2>
+            <h2><a asp-action="Post" asp-route-title="@post.Title">@post.Title</a></h2>
             <h4 class="date">@post.PublishDate.ToString("MMM yyyy")</h4>
         </header>
         <p>@post.Summary</p>

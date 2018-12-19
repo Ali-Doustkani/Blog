@@ -67,7 +67,7 @@ namespace Blog
             {
                 cfg.MapRoute("root1", "/", Home(nameof(HomeController.Index)))
                    .MapRoute("root2", "blog", Home(nameof(HomeController.Index)))
-                   .MapRoute("post", "blog/post/{id}", Home(nameof(HomeController.Post)))
+                   .MapRoute("post", "blog/post/{title}", Home(nameof(HomeController.Post)))
                    .MapRoute("about", "about", Home(nameof(HomeController.About)));
 
                 cfg.MapRoute("admin", "admin/{action}/{id?}", new { controller = Extensions.NameOf<AdministratorController>() });

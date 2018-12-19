@@ -18,9 +18,9 @@ namespace Blog.Controllers
             return View(_context.Posts.Where(x => x.Show).ToList());
         }
 
-        public IActionResult Post(int id)
+        public IActionResult Post(string title)
         {
-            var post = _context.Posts.SingleOrDefault(x => x.Id == id && x.Show);
+            var post = _context.Posts.SingleOrDefault(x => x.Title == title && x.Show);
             if (post == null)
                 return NotFound();
             return View(post);
