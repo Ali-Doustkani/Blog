@@ -15,6 +15,7 @@ namespace Blog.Model
         public int Id { get; set; }
 
         [Required]
+        [MustBeUnique]
         public string Title { get; set; }
 
         public DateTime PublishDate { get; set; }

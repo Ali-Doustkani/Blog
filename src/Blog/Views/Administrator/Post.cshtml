@@ -2,27 +2,32 @@
 <div class="postForm">
     <h2>Write a post</h2>
     <form asp-action="SavePost">
-        <div asp-validation-summary="All" class="error"></div>
+        <div asp-validation-summary="ModelOnly" class="error"></div>
         <input name="Id" value="@Model.Id" type="hidden"/>
         <div class="text-group">
             <label asp-for="PublishDate"></label>
             <input asp-for="PublishDate" value="@Model.PublishDate.ToString("yyyy-MM-dd")" type="date" autocomplete="off" />
+            <span asp-validation-for="PublishDate" class="error"></span>
         </div>
         <div class="text-group">
             <label asp-for="Title"></label>
             <input asp-for="Title" autofocus autocomplete="off" />
+            <span asp-validation-for="Title" class="error"></span>
         </div>
         <div class="text-group">
             <label asp-for="Tags"></label>
             <input asp-for="Tags" autocomplete="off" />
+            <span asp-validation-for="Tags" class="error"></span>
         </div>
         <div class="text-group">
             <label asp-for="Summary"></label>
             <textarea asp-for="Summary"></textarea>
+            <span asp-validation-for="Summary" class="error"></span>
         </div>
         <div class="text-group">
             <label asp-for="Content"></label>
             <textarea asp-for="Content" wrap="off"></textarea>
+            <span asp-validation-for="Content" class="error"></span>
         </div>
         <div class="check-group">
             <input asp-for="Show" />
