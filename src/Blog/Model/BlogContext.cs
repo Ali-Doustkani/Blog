@@ -17,6 +17,7 @@ namespace Blog.Model
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Post>(post =>
             {
+                post.HasAlternateKey(x => x.Title);
                 post.Property(x => x.Title).IsRequired().HasMaxLength(150);
                 post.Property(x => x.Summary).IsRequired();
                 post.Property(x => x.Content).IsRequired();
