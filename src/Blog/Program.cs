@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Serilog;
 
 namespace Blog
 {
@@ -21,6 +22,11 @@ namespace Blog
                 .ConfigureAppConfiguration(builder =>
                 {
                     builder.AddJsonFile("secrets.json", true);
+                })
+                .UseSerilog((context, cfg) =>
+                {
+                    if (context.HostingEnvironment.IsProduction())
+                        cfg.WriteTo.File("logs.txt");
                 });
     }
 }
