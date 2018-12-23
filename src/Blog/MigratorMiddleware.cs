@@ -27,7 +27,8 @@ namespace Blog
 
         private readonly RequestDelegate next;
 
-        public async Task Invoke(HttpContext httpContext, [FromServices]BlogContext dbContext, [FromServices]IConfiguration configuration)
+        public async Task Invoke(HttpContext httpContext, [FromServices]BlogContext dbContext, [FromServices]IConfiguration configuration,
+            [FromServices]UserManager<IdentityUser> userManager)
         {
             dbContext.Database.Migrate();
 
