@@ -21,8 +21,12 @@ gulp.task("build", function () {
 });
 
 function sassTask(options) {
-    return gulp.src("./Styles/Site.scss")
+    return gulp.src("./Styles/Site*.scss")
         .pipe(sass(options))
-        .pipe(rename("~site.css"))
+        .pipe(
+            rename(path => {
+                path.basename = "~" + path.basename.toLowerCase();
+                path.extname = ".css";
+            }))
         .pipe(gulp.dest("./wwwroot/css"));
 }
