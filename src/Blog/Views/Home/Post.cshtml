@@ -3,10 +3,17 @@
 <article class="post">
     <header>
         <h1>@Model.Title</h1>
-        <h3>@Model.PublishDate.ToString("D")</h3>
+        <h3>
+            <language value="@ViewData["language"]" is="English">
+                @Model.PublishDate.ToString("D")
+            </language>
+            <language value="@ViewData["language"]" is="Farsi">
+                @Model.PublishDate.ToString("D", CultureInfo.CreateSpecificCulture("fa"))
+            </language>
+        </h3>
         <div class="tagset">
             <i class="fas fa-hashtag"></i>
-            @foreach(var tag in Model.TagCollection)
+            @foreach (var tag in Model.TagCollection)
             {
                 <div>@tag</div>
             }

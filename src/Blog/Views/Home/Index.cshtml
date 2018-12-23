@@ -10,7 +10,7 @@
                     @post.PublishDate.ToString("MMM yyyy")
                 </language>
                 <language value="@ViewData["language"]" is="Farsi">
-                    @post.FarsiPublishDate
+                    @post.PublishDate.ToString("MMMM yyyy", CultureInfo.CreateSpecificCulture("fa"))
                 </language>
             </h4>
         </header>

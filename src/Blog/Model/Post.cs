@@ -51,10 +51,5 @@ namespace Blog.Model
                 return result;
             }
         }
-
-        public string FarsiPublishDate
-        {
-            get { return PublishDate.ToString("MMMM yyyy", CultureInfo.CreateSpecificCulture("fa")); }
-        }
     }
 }
