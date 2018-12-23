@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Blog.Model
 {
@@ -18,6 +19,7 @@ namespace Blog.Model
             modelBuilder.Entity<Post>(post =>
             {
                 post.HasAlternateKey(x => x.Title);
+                post.Property(x => x.Language).HasConversion(new EnumToNumberConverter<Language, int>()).IsRequired().HasDefaultValue(1);
                 post.Property(x => x.Title).IsRequired().HasMaxLength(150);
                 post.Property(x => x.Summary).IsRequired();
                 post.Property(x => x.Content).IsRequired();

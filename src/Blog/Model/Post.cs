@@ -20,6 +20,8 @@ namespace Blog.Model
 
         public DateTime PublishDate { get; set; }
 
+        public Language Language { get; set; }
+
         [Required]
         public string Summary { get; set; }
 
