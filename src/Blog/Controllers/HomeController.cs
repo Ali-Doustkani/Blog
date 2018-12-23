@@ -1,5 +1,6 @@
 ﻿using Blog.Model;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 
 namespace Blog.Controllers
@@ -13,9 +14,15 @@ namespace Blog.Controllers
 
         private readonly BlogContext _context;
 
-        public ViewResult Index()
+        public ViewResult Index(string language)
         {
-            return View(_context.Posts.Where(x => x.Show).ToList());
+            var lang = Language.English;
+            if (string.Equals(language, "fa", StringComparison.OrdinalIgnoreCase))
+                lang = Language.Farsi;
+
+            ViewData["language"] = lang;
+      
+            return View(_context.Posts.Where(x => x.Show && x.Language == lang).ToList());
         }
 
         public IActionResult Post(string title)
@@ -23,6 +30,8 @@ namespace Blog.Controllers
             var post = _context.Posts.SingleOrDefault(x => x.Title == title);
             if (post == null)
                 return NotFound();
+
+            ViewData["language"] = post.Language;
 
             if (!post.Show && !HttpContext.User.Identity.IsAuthenticated)
                 return Challenge();

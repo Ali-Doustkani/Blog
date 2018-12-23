@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 
 namespace Blog.Model
@@ -49,6 +50,11 @@ namespace Blog.Model
                 }
                 return result;
             }
+        }
+
+        public string FarsiPublishDate
+        {
+            get { return PublishDate.ToString("MMMM yyyy", CultureInfo.CreateSpecificCulture("fa")); }
         }
     }
 }

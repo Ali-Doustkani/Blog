@@ -5,7 +5,14 @@
     <article class="article">
         <header>
             <h2><a asp-action="Post" asp-route-title="@post.Title">@post.Title</a></h2>
-            <h4 class="date">@post.PublishDate.ToString("MMM yyyy")</h4>
+            <h4 class="date">
+                <language value="@ViewData["language"]" is="English">
+                    @post.PublishDate.ToString("MMM yyyy")
+                </language>
+                <language value="@ViewData["language"]" is="Farsi">
+                    @post.FarsiPublishDate
+                </language>
+            </h4>
         </header>
         <p>@post.Summary</p>
         <div class="tagset">

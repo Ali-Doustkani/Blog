@@ -2,7 +2,6 @@
 using Blog.Model;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Threading.Tasks;
 
 namespace Blog
 {
@@ -65,21 +63,15 @@ namespace Blog
             app.UseAuthentication();
             app.UseMvc(cfg =>
             {
-                cfg.MapRoute("root1", "/", Home(nameof(HomeController.Index)))
-                   .MapRoute("root2", "blog", Home(nameof(HomeController.Index)))
-                   .MapRoute("post", "blog/post/{title}", Home(nameof(HomeController.Post)))
-                   .MapRoute("about", "about", Home(nameof(HomeController.About)));
+                cfg.MapRoute("root", "/", new { controller = "home", action = "index" })
+                   .MapRoute("lang", "blog/{language=en}", new { controller = "home", action = "index" })
+                   .MapRoute("post", "blog/post/{title}", new { controller = "home", action = "post" })
+                   .MapRoute("about", "about", new { controller = "home", action = "about" });
 
                 cfg.MapRoute("admin", "admin/{action}/{id?}", new { controller = Extensions.NameOf<AdministratorController>() });
 
                 cfg.MapRoute("default", "{controller}/{action}");
             });
-        }
-
-        private object Home(string actionName)
-        {
-            var controllerName = Extensions.NameOf<HomeController>();
-            return new { controller = controllerName, action = actionName };
         }
     }
 }
