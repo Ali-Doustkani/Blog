@@ -8,7 +8,7 @@
                 @Model.PublishDate.ToString("D")
             </language>
             <language value="@ViewData["language"]" is="Farsi">
-                @Model.PublishDate.ToString("D", CultureInfo.CreateSpecificCulture("fa"))
+                @Blog.Extensions.GetLongPersianDate(Model.PublishDate)
             </language>
         </h3>
         <div class="tagset">
