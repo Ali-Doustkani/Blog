@@ -41,11 +41,13 @@ namespace Blog.Controllers
 
         public ViewResult About()
         {
+            ViewData["language"] = Language.English;
             return View();
         }
 
         public IActionResult Error(int statusCode = -1)
         {
+            ViewData["language"] = Language.English;
             if (statusCode == 404)
                 return View("NotFound");
             return View();
