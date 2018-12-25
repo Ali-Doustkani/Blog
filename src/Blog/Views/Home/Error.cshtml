@@ -1,1 +1,11 @@
-﻿<h1>Sorry, Something's wrong! I will fix it as soon as I can.</h1>
+﻿@{ 
+    ViewData["HasHeader"] = false;
+}
+
+<div class="error-container">
+    <div class="error-text">
+        <i class="fas fa-exclamation-triangle"></i>
+        <h1>SORRY, <span>SOMETHING's WRONG!</span></h1>
+        <h3>I will fix it as soon as possible.</h3>
+    </div>
+</div>

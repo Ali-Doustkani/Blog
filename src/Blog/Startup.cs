@@ -54,6 +54,7 @@ namespace Blog
             else
             {
                 app.UseExceptionHandler("/home/error");
+                app.UseStatusCodePagesWithReExecute("/home/error", "?statusCode={0}");
                 app.UseHsts();
                 app.UseXXssProtection(options => options.EnabledWithBlockMode());
                 app.UseXContentTypeOptions();

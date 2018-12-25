@@ -21,7 +21,7 @@ namespace Blog.Controllers
                 lang = Language.Farsi;
 
             ViewData["language"] = lang;
-      
+
             return View(_context.Posts.Where(x => x.Show && x.Language == lang).ToList());
         }
 
@@ -44,8 +44,10 @@ namespace Blog.Controllers
             return View();
         }
 
-        public IActionResult Error()
+        public IActionResult Error(int statusCode = -1)
         {
+            if (statusCode == 404)
+                return View("NotFound");
             return View();
         }
     }

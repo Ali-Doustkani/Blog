@@ -59,16 +59,19 @@
             </ul>
         </nav>
         @{
-            var controller = ViewContext.RouteData.Values["controller"].ToString();
-            var noHeaders = new[] { "Administrator", "Account" };
-        }
-        @if (!noHeaders.Contains(controller))
-        {
-            <img src="~/images/me.png" />
-            <h5>Hi, welcome to my blog!</h5>
-            <a asp-action="About">
-                <h1>&lt;Ali Doustkani/&gt;</h1>
-            </a>
+            var hasHeader = true;
+            if (ViewData.ContainsKey("HasHeader"))
+            {
+                hasHeader = Convert.ToBoolean(ViewData["HasHeader"]);
+            }
+            if (hasHeader)
+            {
+                <img src="~/images/me.png" />
+                <h5>Hi, welcome to my blog!</h5>
+                <a asp-action="About">
+                    <h1>&lt;Ali Doustkani/&gt;</h1>
+                </a>
+            }
         }
     </header>
     <main>
