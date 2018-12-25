@@ -53,6 +53,7 @@ namespace Blog
             }
             else
             {
+                app.UseExceptionHandler("/home/error");
                 app.UseHsts();
                 app.UseXXssProtection(options => options.EnabledWithBlockMode());
                 app.UseXContentTypeOptions();

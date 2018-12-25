@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Serilog;
+using Serilog.Formatting.Json;
 
 namespace Blog
 {
@@ -26,7 +27,7 @@ namespace Blog
                 .UseSerilog((context, cfg) =>
                 {
                     if (context.HostingEnvironment.IsProduction())
-                        cfg.WriteTo.File("logs.txt");
+                        cfg.WriteTo.File(new JsonFormatter(), "log/logs.json");
                 });
     }
 }
