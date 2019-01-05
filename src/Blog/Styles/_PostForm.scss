@@ -52,6 +52,10 @@
     }
 }
 
+.error{
+    color: crimson;
+}
+
 .check-group {
     @include group();
 
