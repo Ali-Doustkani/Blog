@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace Blog
 {
@@ -55,6 +56,11 @@ namespace Blog
                 case 12: return "اسفند";
             }
             throw new ArgumentException(nameof(month));
+        }
+
+        public static string PopulateUrlTitle(string title)
+        {
+            return Regex.Replace(title, @"[\s.:]+", "-");
         }
     }
 }

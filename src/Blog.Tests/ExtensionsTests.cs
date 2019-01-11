@@ -22,5 +22,14 @@ namespace Blog.Tests
         {
             Assert.Equal("سه شنبه، 4 دی 1397", Extensions.GetLongPersianDate(new System.DateTime(2018, 12, 25)));
         }
+
+        [Theory]
+        [InlineData("پیش مقدمه", "پیش-مقدمه")]
+        [InlineData("پیش      مقدمه", "پیش-مقدمه")]
+        [InlineData("یادگیری: ASP.NET Core", "یادگیری-ASP-NET-Core")]
+        public void PopulateUrlTitle(string title, string result)
+        {
+            Assert.Equal(result, Extensions.PopulateUrlTitle(title));
+        }
     }
 }

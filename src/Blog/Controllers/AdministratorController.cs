@@ -44,6 +44,8 @@ namespace Blog.Controllers
             if (!ModelState.IsValid)
                 return View(nameof(Post), post);
 
+            post.UrlTitle = Extensions.PopulateUrlTitle(post.Title);
+
             if (post.Id == 0)
                 _context.Posts.Add(post);
             else
@@ -53,7 +55,7 @@ namespace Blog.Controllers
             }
             _context.SaveChanges();
             if (post.Show)
-                return RedirectToAction(nameof(HomeController.Post), Extensions.NameOf<HomeController>(), new { title = post.Title });
+                return RedirectToAction(nameof(HomeController.Post), Extensions.NameOf<HomeController>(), new { urlTitle = post.UrlTitle });
             return RedirectToAction(nameof(Index));
         }
 

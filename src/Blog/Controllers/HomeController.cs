@@ -28,9 +28,9 @@ namespace Blog.Controllers
             return View(posts.ToList());
         }
 
-        public IActionResult Post(string title)
+        public IActionResult Post(string urlTitle)
         {
-            var post = _context.Posts.SingleOrDefault(x => x.Title == title);
+            var post = _context.Posts.SingleOrDefault(x => x.UrlTitle == urlTitle);
             if (post == null)
                 return NotFound();
 

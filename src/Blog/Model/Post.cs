@@ -19,6 +19,8 @@ namespace Blog.Model
         [MustBeUnique]
         public string Title { get; set; }
 
+        public string UrlTitle { get; set; }
+
         public DateTime PublishDate { get; set; }
 
         public Language Language { get; set; }

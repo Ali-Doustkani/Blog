@@ -24,6 +24,7 @@ namespace Blog.Model
                     .IsRequired()
                     .HasDefaultValue(Language.English);
                 post.Property(x => x.Title).IsRequired().HasMaxLength(150);
+                post.Property(x => x.UrlTitle).IsRequired().HasMaxLength(200).HasDefaultValue("[NOT SET]");
                 post.Property(x => x.Summary).IsRequired();
                 post.Property(x => x.Content).IsRequired();
                 post.Property(x => x.Tags).IsRequired().HasDefaultValue(string.Empty);
