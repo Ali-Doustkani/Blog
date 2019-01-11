@@ -160,6 +160,11 @@ a {
 
     h3 {
         font-size: 1.5em;
+        margin-top: 20px;
+    }
+
+    h4 {
+        margin-top: 20px;
     }
 
     p {
@@ -175,9 +180,15 @@ a {
     figure {
         text-align: center;
 
+        img {
+            max-width: 100%;
+        }
+
         figcaption {
             text-align: center;
             color: gray;
+            font-size: .85em;
+            margin-top: -5px;
         }
     }
 }

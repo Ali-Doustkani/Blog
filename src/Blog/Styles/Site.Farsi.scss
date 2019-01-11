@@ -1,5 +1,8 @@
 ﻿/*To gain information about the laws regarding the use of these fonts, please visit www.fontiran.com 
 This set of fonts are used in this project under the license: N4VA6	*/
+
+@import 'Colors.scss';
+
 @font-face {
     font-family: IRANSans;
     font-style: normal;
@@ -60,15 +63,46 @@ This set of fonts are used in this project under the license: N4VA6	*/
 .fa-note {
     margin-bottom: 10px;
     padding: 10px;
-    background-color: #eaeaea;
+    background-color: $boxBackground;
     border-right: 2px solid #99c24d;
 }
 
 .fa-warning {
     margin-bottom: 10px;
     padding: 10px;
-    background-color: #eaeaea;
+    background-color: $boxBackground;
     border-right: 2px solid #da3e52;
+}
+
+.fa-git-source {
+    position: relative;
+    height: 40px;
+    margin-bottom: 10px;
+
+    i {
+        position: absolute;
+        background-color: $boxBackground;
+        border-radius: 5px;
+        font-size: 1.8em;
+        text-align: center;
+        line-height: 40px;
+        width: 40px;
+    }
+
+    a {
+        position: absolute;
+        font-size: .95em;
+        margin-right: 45px;
+        line-height: 40px;
+        background-color: $boxBackground;
+        color: gray;
+        border-radius: 5px;
+        padding: 0 10px;
+    }
+
+    &:hover * {
+        color: #63a46c;
+    }
 }
 
 .en {

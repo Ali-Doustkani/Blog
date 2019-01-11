@@ -22,7 +22,7 @@
 @mixin box($color) {
     margin-bottom: 10px;
     padding: 10px;
-    background-color: #eaeaea;
+    background-color: $boxBackground;
     border-left: 2px solid $color;
 }
 
@@ -42,6 +42,7 @@
     background-color: $bg;
     color: $color;
     padding: 10px;
+    direction: ltr;
 }
 
 .cmd pre {
