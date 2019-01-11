@@ -22,7 +22,10 @@ namespace Blog.Controllers
 
             ViewData["language"] = lang;
 
-            return View(_context.Posts.Where(x => x.Show && x.Language == lang).ToList());
+            var posts = _context.Posts.Where(x => x.Language == lang);
+            if (!User.Identity.IsAuthenticated)
+                posts = posts.Where(x => x.Show);
+            return View(posts.ToList());
         }
 
         public IActionResult Post(string title)
