@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Blog.Model
 {
@@ -52,6 +53,32 @@ namespace Blog.Model
                 }
                 return result;
             }
+        }
+
+        public string GetLongPersianDate()
+        {
+            var cal = new PersianCalendar();
+            var days = new[] { "یکشنبه", "دوشنبه", "سه شنبه", "چهارشنبه", "پنج شنبه", "جمعه", "شنبه" };
+            var dayName = days[(int)cal.GetDayOfWeek(PublishDate)];
+            return $"{dayName}، {cal.GetDayOfMonth(PublishDate)} {MonthName()} {cal.GetYear(PublishDate)}";
+        }
+
+        public string GetShortPersianDate()
+        {
+            var cal = new PersianCalendar();
+            return $"{MonthName()} {cal.GetYear(PublishDate)}";
+        }
+
+        private string MonthName()
+        {
+            var cal = new PersianCalendar();
+            var months = new[] { "فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند" };
+            return months[cal.GetMonth(PublishDate) - 1];
+        }
+
+        public void PopulateUrlTitle()
+        {
+            UrlTitle = Regex.Replace(Title, @"[\s.:]+", "-");
         }
     }
 }

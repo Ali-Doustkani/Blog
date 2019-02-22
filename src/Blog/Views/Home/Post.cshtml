@@ -13,7 +13,7 @@
                 @Model.PublishDate.ToString("D")
             </language>
             <language value="@ViewData["language"]" is="Farsi">
-                @Blog.Extensions.GetLongPersianDate(Model.PublishDate)
+                @Model.GetLongPersianDate()
             </language>
         </h3>
         <div class="tagset">

@@ -44,7 +44,7 @@ namespace Blog.Controllers
             if (!ModelState.IsValid)
                 return View(nameof(Post), post);
 
-            post.UrlTitle = Extensions.PopulateUrlTitle(post.Title);
+            post.PopulateUrlTitle();
 
             if (post.Id == 0)
                 _context.Posts.Add(post);

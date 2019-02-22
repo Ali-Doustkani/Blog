@@ -13,7 +13,7 @@
                     @post.PublishDate.ToString("MMM yyyy")
                 </language>
                 <language value="@ViewData["language"]" is="Farsi">
-                    @Blog.Extensions.GetShortPersianDate(post.PublishDate)
+                    @post.GetShortPersianDate()
                 </language>
             </h4>
         </header>
