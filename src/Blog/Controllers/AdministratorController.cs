@@ -55,7 +55,7 @@ namespace Blog.Controllers
             }
             _context.SaveChanges();
             if (post.Show)
-                return RedirectToAction(nameof(HomeController.Post), Extensions.NameOf<HomeController>(), new { urlTitle = post.UrlTitle });
+                return RedirectToAction("Post", "Home", new { urlTitle = post.UrlTitle });
             return RedirectToAction(nameof(Index));
         }
 

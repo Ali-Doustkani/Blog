@@ -36,7 +36,7 @@ namespace Blog.Controllers
                 if (returnUrl != null)
                     return Redirect(returnUrl);
 
-                return RedirectToAction(nameof(HomeController.Index), Extensions.NameOf<HomeController>());
+                return RedirectToAction("Index", "Home");
             }
 
             ModelState.AddModelError(string.Empty, "Wrong username or password");
@@ -48,7 +48,7 @@ namespace Blog.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction(nameof(HomeController.Index), Extensions.NameOf<HomeController>());
+            return RedirectToAction("Index", "Home");
         }
     }
 }

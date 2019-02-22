@@ -70,7 +70,7 @@ namespace Blog
                    .MapRoute("post", "blog/post/{urlTitle}", new { controller = "home", action = "post" })
                    .MapRoute("about", "about", new { controller = "home", action = "about" });
 
-                cfg.MapRoute("admin", "admin/{action}/{id?}", new { controller = Extensions.NameOf<AdministratorController>() });
+                cfg.MapRoute("admin", "admin/{action}/{id?}", new { controller = "Administrator" });
 
                 cfg.MapRoute("default", "{controller}/{action}");
             });
