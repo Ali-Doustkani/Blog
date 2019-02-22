@@ -1,5 +1,5 @@
-﻿using Blog.Controllers;
-using Blog.Model;
+﻿using Blog.Model;
+using Blog.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;

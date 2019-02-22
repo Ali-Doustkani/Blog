@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Blog
+namespace Blog.Utils
 {
     public static class MigratorExtension
     {

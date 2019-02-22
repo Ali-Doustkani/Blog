@@ -4,7 +4,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace Blog
+namespace Blog.Utils
 {
     public class MustBeUnique : ValidationAttribute
     {

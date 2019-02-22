@@ -1,7 +1,7 @@
 ﻿using Blog.Model;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
-namespace Blog.TagHelpers
+namespace Blog.Utils
 {
     public class LanguageTagHelper : TagHelper
     {
