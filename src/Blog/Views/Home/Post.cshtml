@@ -9,12 +9,14 @@
     <header>
         <h1>@Model.Title</h1>
         <h3>
-            <language value="@ViewData["language"]" is="English">
+            @if (ViewData["language"].Equals(Language.English))
+            {
                 @Model.PublishDate.ToString("D")
-            </language>
-            <language value="@ViewData["language"]" is="Farsi">
+            }
+            else
+            {
                 @Model.GetLongPersianDate()
-            </language>
+            }
         </h3>
         <div class="tagset">
             <i class="fas fa-hashtag"></i>

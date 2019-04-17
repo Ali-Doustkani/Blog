@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<Post>;
-@{ 
+@{
     ViewData["Title"] = "Ali Doustkani";
 }
 
@@ -9,12 +9,14 @@
         <header>
             <h2><a asp-action="Post" asp-route-urlTitle="@post.UrlTitle">@post.Title</a></h2>
             <h4 class="date">
-                <language value="@ViewData["language"]" is="English">
+                @if (ViewData["language"].Equals(Language.English))
+                {
                     @post.PublishDate.ToString("MMM yyyy")
-                </language>
-                <language value="@ViewData["language"]" is="Farsi">
+                }
+                else
+                {
                     @post.GetShortPersianDate()
-                </language>
+                }
             </h4>
         </header>
         <p>@post.Summary</p>
