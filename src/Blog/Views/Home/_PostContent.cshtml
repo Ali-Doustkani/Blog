@@ -1,0 +1,59 @@
+﻿@using Blog.Model.SmartText
+@model string
+
+@{
+    var processor = new SmartTextProcessor();
+    foreach (var element in processor.Process(Model))
+    {
+        if (element is TextElement text)
+        {
+            if (text.Type == TextType.LargeHeader)
+            {
+                <h3>@text.Value</h3>
+            }
+            else if (text.Type == TextType.SmallHeader)
+            {
+                <h4>@text.Value</h4>
+            }
+            else if (text.Type == TextType.Paragraph)
+            {
+                <p>@text.Value</p>
+            }
+        }
+        else if (element is CodeElement code)
+        {
+            var style = "code";
+            if (code.Language == LanguageType.Command)
+            {
+                style = "cmd";
+            }
+            <div class="@style">
+                <pre>@code.Value</pre>
+            </div>
+        }
+        else if (element is ListElement list)
+        {
+            <ul>
+                @foreach (var item in list.Items)
+                {
+                    <li>@item</li>
+                }
+            </ul>
+        }
+        else if (element is NoteElement note)
+        {
+            var style = ViewData["language"].Equals(Language.Farsi) ? "fa-" : string.Empty;
+            if (note.Type == NoteType.Green)
+            {
+                style += "note";
+            }
+            else if (note.Type == NoteType.Red)
+            {
+                style += "warning";
+            }
+            <div class="@style">@note.Value</div>
+        }
+    }
+}
+
+

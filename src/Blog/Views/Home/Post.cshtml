@@ -24,7 +24,7 @@
             }
         </div>
     </header>
-    @Html.Raw(Model.Content)
+    <partial name="_PostContent" model="@Model.Content"/>
     <div id="disqus_thread"></div>
     <script>
         var disqus_config = function () {
