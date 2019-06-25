@@ -1,7 +1,13 @@
 ﻿**/*/bin
 **/*/obj
 **/*/.vs
+**/*/.cache
 **/*/log
 **/*/node_modules
 ~*.*
+/build
+**/*/dist
+
 *.csproj.user
+
+npm-debug.log*
