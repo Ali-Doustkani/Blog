@@ -2,9 +2,7 @@
 
 /* Page Content */
 
-a {
-  text-decoration: none;
-}
+
 
 
 
@@ -16,25 +14,7 @@ a {
   }
 }
 
-.github {
-  @include iconButton(#ff8742);
-}
 
-.linkedin {
-  @include iconButton(#0077B5);
-}
-
-.twitter {
-  @include iconButton(#38A1F3);
-}
-
-.separator {
-  background-color: #bbb;
-  width: 1px;
-  height: 1em;
-  display: inline-block;
-  margin: 0 3px;
-}
 
 .date {
   color: gray;
