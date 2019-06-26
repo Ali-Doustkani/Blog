@@ -2,12 +2,12 @@
   "version": "1.0.0",
   "name": "blog",
   "private": true,
+  "scripts": {
+    "start": "parcel watch ./Styles/Site.scss --out-dir ./wwwroot/css --out-file ~site.css"
+  },
   "devDependencies": {
-    "gulp": "4.0.0",
-    "gulp-npm-dist": "^1.0.2",
-    "gulp-rename": "1.4.0",
-    "gulp-sass": "4.0.1",
-    "node-sass": "^4.12.0"
+    "parcel-bundler": "^1.12.3",
+    "sass": "^1.22.0"
   },
   "dependencies": {
     "tingle.js": "^0.13.2"

@@ -1,0 +1,53 @@
+﻿@import 'Colors.scss';
+
+.resume-section {
+  margin-top: 20px;
+  font-family: "Roboto Condensed";
+  color: $color2;
+
+  h1 {
+    margin-bottom: 8px;
+    padding-bottom: 3px;
+    border-bottom: 1px dashed $color3;
+    color: $color3;
+    font-size: 1.5em;
+    font-weight: bold;
+  }
+
+  a {
+    color: $color4;
+  }
+
+  section {
+    h2 {
+      font-size: 1.1em;
+      font-weight: bold;
+      margin-top: 15px;
+    }
+
+    .date {
+      color: $color3;
+      font-size: .9em;
+      font-weight: normal;
+
+      &::before {
+        content: "(";
+      }
+
+      &::after {
+        content: ")";
+      }
+    }
+  }
+
+  .download-resume{
+    border-radius: 7px;
+    padding: 6px;
+    background: $color4;
+    color: white;
+  }
+}
+
+.resume-section:last-of-type{
+  margin-top: 40px;
+}
