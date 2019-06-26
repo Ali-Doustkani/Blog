@@ -1,33 +1,25 @@
-﻿nav {
-    justify-content: flex-end;
-
-    ul {
-        margin-right: 20px;
-    }
-}
-
-main {
-    margin: 0 auto;
+﻿main {
+  margin: 0 auto;
 }
 
 .editor {
-    position: relative;
+  position: relative;
 
-    a {
-        display: block;
-        position: absolute;
-        left: -48px;
-        color: #bbb;
-        padding: 3px 8px;
-        cursor: pointer;
-        font-size: .9em;
-        transition: all 150ms ease;
-        background-color: #eaeaea;
-        border-right: 1px solid gray;
+  a {
+    display: block;
+    position: absolute;
+    left: -48px;
+    color: #bbb;
+    padding: 3px 8px;
+    cursor: pointer;
+    font-size: .9em;
+    transition: all 150ms ease;
+    background-color: #eaeaea;
+    border-right: 1px solid gray;
 
-        &:hover {
-            color: black;
-            background-color: #eee;
-        }
+    &:hover {
+      color: black;
+      background-color: #eee;
     }
+  }
 }

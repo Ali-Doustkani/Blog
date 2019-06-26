@@ -3,8 +3,11 @@
 @import 'SmallScreen';
 @import 'PostForm';
 @import 'AdminPage';
+
+@import 'Shared/Header';
 @import 'AboutMe';
 
 @media only screen and (min-width: 720px) {
-    @import 'WideScreen';
+  @import 'Shared/WHeader';
+  @import 'WideScreen';
 }

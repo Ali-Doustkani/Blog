@@ -19,33 +19,27 @@
 </head>
 
 <body>
-    <header class="siteHeader">
+    <header id="site-header">
         <nav>
-            <ul class="flat-list">
+            <ul class="menu-bar">
                 <li><a asp-controller="Home" asp-action="Index">BLOG</a></li>
                 <li><div class="separator"></div></li>
                 <li><a asp-route="lang" asp-route-language="fa">Farsi Posts</a></li>
                 <li><div class="separator"></div></li>
-                <li>
-                    <a asp-controller="Home" asp-action="About">ABOUT ME</a>
-                </li>
+                <li><a asp-controller="Home" asp-action="About">ABOUT ME</a></li>
                 @if (User.Identity.IsAuthenticated)
                 {
                     <li><div class="separator"></div></li>
                     <li>
-                        <form asp-controller="Account" asp-action="Logout" class="logoutForm"><button type="submit">Logout</button></form>
+                        <form asp-controller="Account" asp-action="Logout" class="logout-form"><button type="submit">Logout</button></form>
                     </li>
                     <li><div class="separator"></div></li>
-                    <li>
-                        <a asp-controller="Administrator" asp-action="Index">Posts</a>
-                    </li>
+                    <li><a asp-controller="Administrator" asp-action="Index">Posts</a></li>
                     <li><div class="separator"></div></li>
-                    <li>
-                        <a asp-controller="Administrator" asp-action="Post">New Post</a>
-                    </li>
+                    <li><a asp-controller="Administrator" asp-action="Post">New Post</a></li>
                 }
             </ul>
-            <ul class="flat-list">
+            <ul class="menu-bar">
                 <li>
                     <a href="https://github.com/Ali-Doustkani" class="github">
                         <i class="fab fa-github-square"></i>
@@ -72,10 +66,8 @@
             if (hasHeader)
             {
                 <img src="~/images/me.jpg" />
-                <h5>Hi, welcome to my blog!</h5>
-                <a asp-action="About">
-                    <h1>&lt;Ali Doustkani/&gt;</h1>
-                </a>
+                <div class="welcome">Hi, welcome to my blog!</div>
+                <a class="name-with-tag" asp-action="About">&lt;Ali Doustkani/&gt;</a>
             }
         }
     </header>

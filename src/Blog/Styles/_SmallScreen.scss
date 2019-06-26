@@ -1,216 +1,159 @@
 ﻿@import 'Colors.scss';
 
-/* Page Header */
-
-.siteHeader {
-    font-family: "Titillium Web";
-    text-align: center;
-
-    > h5 {
-        color: gray;
-    }
-
-    h1 {
-        display: inline-block;
-        background-color: black;
-        color: white;
-        padding: 0 5px;
-    }
-
-    img {
-        width: 150px;
-        height: 150px;
-        padding: 5px;
-        border: 3px solid $linkColor;
-        border-radius: 50%;
-    }
-}
-
-nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 10px;
-    padding: 0 15px;
-}
-
-.logoutForm {
-    display: inline;
-
-    button {
-        padding: 3px;
-        background-color: lightgray;
-        font-size: .9em;
-    }
-}
-
 /* Page Content */
 
-main {
-    margin: 0 20px;
-    width: 90%;
-    max-width: 720px;
-}
-
 a {
-    text-decoration: none;
-    color: #000;
+  text-decoration: none;
 }
 
-.flat-list {
-    padding: 0;
 
-    li {
-        display: inline;
-    }
-}
 
 @mixin iconButton($color) {
-    font-size: 1.7em;
+  font-size: 1.7em;
 
-    &:hover {
-        color: $color;
-    }
+  &:hover {
+    color: $color;
+  }
 }
 
 .github {
-    @include iconButton(#ff8742);
+  @include iconButton(#ff8742);
 }
 
 .linkedin {
-    @include iconButton(#0077B5);
+  @include iconButton(#0077B5);
 }
 
 .twitter {
-    @include iconButton(#38A1F3);
+  @include iconButton(#38A1F3);
 }
 
 .separator {
-    background-color: #bbb;
-    width: 1px;
-    height: 1em;
-    display: inline-block;
-    margin: 0 3px;
+  background-color: #bbb;
+  width: 1px;
+  height: 1em;
+  display: inline-block;
+  margin: 0 3px;
 }
 
 .date {
-    color: gray;
-    display: inline-block;
+  color: gray;
+  display: inline-block;
 
-    &::before {
-        content: "(";
-    }
+  &::before {
+    content: "(";
+  }
 
-    &::after {
-        content: ")";
-    }
+  &::after {
+    content: ")";
+  }
 }
 
 /* Post */
 
 .post {
-    font-family: 'Abel';
-    margin-top: 50px;
+  font-family: 'Abel';
+  margin-top: 50px;
 
-    header {
-        padding-bottom: 10px;
-        border-bottom: 3px solid black;
-        margin-bottom: 15px;
+  header {
+    padding-bottom: 10px;
+    border-bottom: 3px solid black;
+    margin-bottom: 15px;
+  }
+
+  h1 {
+    display: inline;
+    font-size: 2.5em;
+  }
+
+  h2 {
+    font-size: 2em;
+  }
+
+  h3 {
+    font-size: 1.5em;
+    margin-top: 20px;
+  }
+
+  h4 {
+    margin-top: 20px;
+  }
+
+  p {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+    color: #222;
+  }
+
+  ul, ol {
+    margin: 10px 0;
+  }
+
+  figure {
+    text-align: center;
+
+    img {
+      max-width: 100%;
     }
 
-    h1 {
-        display: inline;
-        font-size: 2.5em;
+    figcaption {
+      text-align: center;
+      color: gray;
+      font-size: .85em;
+      margin-top: -5px;
     }
-
-    h2 {
-        font-size: 2em;
-    }
-
-    h3 {
-        font-size: 1.5em;
-        margin-top: 20px;
-    }
-
-    h4 {
-        margin-top: 20px;
-    }
-
-    p {
-        font-size: 1.2em;
-        margin-bottom: 10px;
-        color: #222;
-    }
-
-    ul, ol {
-        margin: 10px 0;
-    }
-
-    figure {
-        text-align: center;
-
-        img {
-            max-width: 100%;
-        }
-
-        figcaption {
-            text-align: center;
-            color: gray;
-            font-size: .85em;
-            margin-top: -5px;
-        }
-    }
+  }
 }
 
 .editor a {
-    display: none;
+  display: none;
 }
 
 /* Footer */
 
 footer {
-    padding: 50px 0 30px 0;
-    font-family: "Abel";
-    font-size: .9em;
-    color: #aaa;
-    text-align: center;
+  padding: 50px 0 30px 0;
+  font-family: "Abel";
+  font-size: .9em;
+  color: #aaa;
+  text-align: center;
 }
 
 /* Error Pages */
 
 .error-container {
-    text-align: center;
-    margin-top: 150px;
+  text-align: center;
+  margin-top: 150px;
 }
 
 .error-text {
-    display: inline-block;
-    white-space: nowrap;
+  display: inline-block;
+  white-space: nowrap;
 
-    > i {
-        font-size: 3em;
-        float: left;
-        margin-right: 10px;
-        margin-top: 5px;
-    }
+  > i {
+    font-size: 3em;
+    float: left;
+    margin-right: 10px;
+    margin-top: 5px;
+  }
 
-    > h1 {
-        font-size: 1.5em;
-        font-weight: bold;
-    }
+  > h1 {
+    font-size: 1.5em;
+    font-weight: bold;
+  }
 
-    span {
-        text-decoration: underline;
-        text-decoration-style: wavy;
-        text-decoration-color: crimson;
-    }
+  span {
+    text-decoration: underline;
+    text-decoration-style: wavy;
+    text-decoration-color: crimson;
+  }
 }
 
 .not-found {
-    text-align: center;
-    margin-top: 150px;
+  text-align: center;
+  margin-top: 150px;
 
-    > h1 {
-        font-size: 5em;
-    }
+  > h1 {
+    font-size: 5em;
+  }
 }

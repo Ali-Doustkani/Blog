@@ -1,0 +1,62 @@
+﻿@import 'Colors';
+
+#site-header {
+  text-align: center;
+
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+    padding: 0 15px;
+  }
+
+  img {
+    width: 150px;
+    height: 150px;
+    padding: 5px;
+    border: 3px solid $color4;
+    border-radius: 50%;
+  }
+
+  .welcome {
+    color: $color3;
+  }
+
+  .name-with-tag {
+    display: inline-block;
+    background-color: $color2;
+    font-size: 2em;
+    color: $bg;
+    padding: 0 5px;
+    margin-top: 3px;
+  }
+
+  .menu-bar {
+    padding: 0;
+
+    &:first-of-type {
+      a {
+        font-size: 1.06em;
+      }
+    }
+
+    a {
+      color: $color2;
+    }
+
+    li {
+      display: inline;
+    }
+  }
+
+  .logout-form {
+    display: inline;
+
+    button {
+      padding: 3px;
+      background-color: $color2;
+      font-size: .9em;
+    }
+  }
+}
