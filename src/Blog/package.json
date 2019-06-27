@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "parcel watch ./Styles/Site.scss --out-dir ./wwwroot --out-file ~site.css",
-    "build-styles": "parcel build ./Styles/Site.scss --out-dir ./wwwroot --out-file ~site.css --no-source-maps && parcel build ./Styles/Site_Farsi.scss --out-dir ./wwwroot --out-file ~site.farsi.css --no-source-maps"
+    "build-styles": "parcel build ./Views/Site.scss --out-dir ./wwwroot --out-file ~site.css --no-source-maps && parcel build ./Views/Site_Farsi.scss --out-dir ./wwwroot --out-file ~site.farsi.css --no-source-maps"
   },
   "devDependencies": {
     "parcel-bundler": "^1.12.3",
