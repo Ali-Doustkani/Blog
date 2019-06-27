@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using Westwind.AspNetCore.LiveReload;
 
 namespace Blog
 {
@@ -46,9 +45,6 @@ namespace Blog
                 options.Filters.Add(new RequireHttpsAttribute());
             });
             services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<BlogContext>();
-
-            // if (_env.IsDevelopment())
-            //services.AddLiveReload();
         }
 
         public void Configure(IApplicationBuilder app)
@@ -60,7 +56,6 @@ namespace Blog
 
             if (_env.IsDevelopment())
             {
-                //app.UseLiveReload();
                 app.UseDeveloperExceptionPage();
             }
             else
