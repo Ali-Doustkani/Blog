@@ -8,6 +8,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="Assets\Fonts\FontLicense.txt" />
+    <Content Include="Assets\Fonts\IRANSansWeb.woff2" />
+    <Content Include="Assets\Fonts\IRANSansWeb_Black.woff2" />
+    <Content Include="Assets\Fonts\IRANSansWeb_Bold.woff2" />
+    <Content Include="Assets\Fonts\IRANSansWeb_Light.woff2" />
+    <Content Include="Assets\Fonts\IRANSansWeb_Medium.woff2" />
+    <Content Include="Assets\Fonts\IRANSansWeb_UltraLight.woff2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="NWebsec.AspNetCore.Middleware" Version="2.0.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
