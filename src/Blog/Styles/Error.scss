@@ -1,0 +1,35 @@
+﻿@import 'Colors';
+
+.error-wrapper {
+  text-align: center;
+  margin-top: 150px;
+}
+
+.error-text {
+  display: inline-block;
+  white-space: nowrap;
+
+  i {
+    color: $color3;
+    font-size: 3em;
+    float: left;
+    margin-right: 10px;
+    margin-top: 5px;
+  }
+
+  h1 {
+    color: $color2;
+    font-size: 1.5em;
+    font-weight: bold;
+  }
+
+  h2 {
+    color: $color2;
+  }
+
+  span {
+    text-decoration: underline;
+    text-decoration-style: wavy;
+    text-decoration-color: crimson;
+  }
+}

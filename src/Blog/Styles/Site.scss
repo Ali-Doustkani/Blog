@@ -8,6 +8,8 @@
 @import 'Home';
 @import 'AboutMe';
 @import 'Post';
+@import 'Error';
+@import 'NotFound';
 
 @media only screen and (min-width: 720px) {
   @import 'Shared/WHeader';

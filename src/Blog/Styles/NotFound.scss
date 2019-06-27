@@ -1,0 +1,15 @@
+﻿@import 'Colors';
+
+.not-found {
+  text-align: center;
+  margin-top: 150px;
+
+  h1 {
+    font-size: 5em;
+    color: $color3;
+  }
+
+  h2 {
+    color: $color2;
+  }
+}
