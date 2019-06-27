@@ -1,11 +1,10 @@
 ﻿@import 'Colors';
 
-button {
+.form-button {
   background-color: black;
   color: white;
   border: none;
   padding: 5px 15px;
-  font-family: "Roboto Condensed";
   font-size: 1.1em;
   margin-top: 10px;
   cursor: pointer;
@@ -46,12 +45,14 @@ button {
     @include label();
   }
 
-  > input, > textarea {
+  > input, > textarea, > article {
     width: 100%;
     font-size: 1em;
     font-family: sans-serif;
     border: 1px solid lighten($color3, 40%);
     padding: 5px;
+    background: white;
+    box-sizing: border-box;
   }
 
   > input[type=radio] {

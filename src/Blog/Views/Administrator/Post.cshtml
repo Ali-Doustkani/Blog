@@ -1,7 +1,12 @@
 ﻿@model Post
-
 @{
     ViewData["Title"] = "Write a post";
+}
+@section Scripts{
+    <script src="~/~admin.min.js" asp-append-version="true"></script>
+}
+@section Styles{
+    <script src="https://kit.fontawesome.com/4f69c52348.js"></script>
 }
 
 <div class="post-form">
@@ -38,14 +43,35 @@
         </div>
         <div class="text-group">
             <label asp-for="Content"></label>
-            <textarea asp-for="Content" wrap="off"></textarea>
+            <div class="toolbar">
+                <button><i class="fas fa-bold"></i></button>
+                <div class="separator"></div>
+                <button><strong>H1</strong></button>
+                <button><strong>H2</strong></button>
+                <button><strong>H3</strong></button>
+                <div class="separator"></div>
+                <button><i class="fas fa-code"></i></button>
+                <button><i class="fas fa-terminal"></i></button>
+                <div class="separator"></div>
+                <button><i class="fas fa-exclamation"></i></button>
+                <button><i class="fas fa-times"></i></button>
+                <div class="separator"></div>
+                <button><i class="fas fa-list-ul"></i></button>
+                <button><i class="fas fa-list-ol"></i></button>
+                <div class="separator"></div>
+                <button><i class="fas fa-camera"></i></button>
+                <button><i class="fas fa-link"></i></button>
+
+                <button><i class="fas fa-arrows-alt"></i></button>
+            </div>
+            <article id="editor"></article>
             <span asp-validation-for="Content" class="error"></span>
         </div>
         <div class="check-group">
             <input asp-for="Show" />
             <label asp-for="Show">Show In Blog</label>
         </div>
-        <button type="submit">Save</button>
-        <button type="reset">Clear</button>
+        <button class="form-button" type="submit">Save</button>
+        <button class="form-button" type="reset">Clear</button>
     </form>
 </div>
