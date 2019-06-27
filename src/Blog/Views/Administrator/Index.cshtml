@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<Post>
 
-@{ 
+@{
     ViewData["Title"] = "Admin";
 }
 
@@ -14,15 +14,14 @@
 }
 
 <form id="deleteForm" method="post"></form>
-<div class="postForm">
-    <h2>Posts</h2>
+<section class="admin-wrapper">
+    <h1>Posts</h1>
     <table border="0">
         <thead>
             <tr>
                 <th>Id</th>
                 <th></th> @*Show*@
                 <th>Title</th>
-                <th>Summary</th>
             </tr>
         </thead>
         <tbody>
@@ -39,7 +38,6 @@
                         <td><i class="fas fa-times"></i></td>
                     }
                     <td>@post.Title</td>
-                    <td>@post.Summary</td>
                     <td>
                         <a asp-action="ViewPost" asp-route-id="@post.Id" class="cell-btn">Edit</a>
                         <a href="#" id="delete" class="cell-btn" data-id="@post.Id">Delete</a>
@@ -48,4 +46,4 @@
             }
         </tbody>
     </table>
-</div>
+</section>

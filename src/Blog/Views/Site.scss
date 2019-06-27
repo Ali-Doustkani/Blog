@@ -1,14 +1,62 @@
-﻿@import 'Shared/Reset';
-@import '../Styles/PostForm';
-@import '../Styles/AdminPage';
+﻿/*To gain information about the laws regarding the use of these fonts, please visit www.fontiran.com 
+This set of fonts are used in this project under the license: N4VA6	*/
 
-@import 'Shared/Header';
+@font-face {
+  font-family: IRANSans;
+  font-style: normal;
+  font-weight: 900;
+  src: url('./../wwwroot/fonts/IRANSansWeb_Black.woff2');
+}
+
+@font-face {
+  font-family: IRANSans;
+  font-style: normal;
+  font-weight: bold;
+  src: url('./../wwwroot/fonts/IRANSansWeb_Bold.woff2');
+}
+
+@font-face {
+  font-family: IRANSans;
+  font-style: normal;
+  font-weight: 500;
+  src: url('./../wwwroot/fonts/IRANSansWeb_Medium.woff2');
+}
+
+@font-face {
+  font-family: IRANSans;
+  font-style: normal;
+  font-weight: 300;
+  src: url('./../wwwroot/fonts/IRANSansWeb_Light.woff2');
+}
+
+@font-face {
+  font-family: IRANSans;
+  font-style: normal;
+  font-weight: 200;
+  src: url('./../wwwroot/fonts/IRANSansWeb_UltraLight.woff2');
+}
+
+@font-face {
+  font-family: IRANSans;
+  font-style: normal;
+  font-weight: normal;
+  src: url('./../wwwroot/fonts/IRANSansWeb.woff2');
+}
+
+@import 'Shared/Reset';
 @import 'Shared/Shared';
+@import 'Shared/Header';
+@import 'Administrator/Index';
+@import 'Administrator/Post';
 @import 'Home/Index';
 @import 'Home/About';
 @import 'Home/Post';
 @import 'Home/Error';
 @import 'Home/NotFound';
+
+main {
+  margin-top: 20px;
+}
 
 footer {
   padding: 50px 0 30px 0;
@@ -22,6 +70,6 @@ footer {
   @import 'Shared/Header_Wide';
 
   main {
-    margin: 0 auto;
+    margin: 20px auto;
   }
 }
