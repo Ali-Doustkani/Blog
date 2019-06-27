@@ -13,6 +13,11 @@ using Westwind.AspNetCore.LiveReload;
 
 namespace Blog
 {
+    public class C : Microsoft.AspNetCore.Razor.TagHelpers.TagHelper
+    {
+        public bool Hey { get; set; }
+    }
+
     public class Startup
     {
         public Startup(IConfiguration configuration, IHostingEnvironment env)
@@ -42,8 +47,8 @@ namespace Blog
             });
             services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<BlogContext>();
 
-            if (_env.IsDevelopment())
-                services.AddLiveReload();
+            // if (_env.IsDevelopment())
+            //services.AddLiveReload();
         }
 
         public void Configure(IApplicationBuilder app)
@@ -55,7 +60,7 @@ namespace Blog
 
             if (_env.IsDevelopment())
             {
-                app.UseLiveReload();
+                //app.UseLiveReload();
                 app.UseDeveloperExceptionPage();
             }
             else
@@ -72,7 +77,7 @@ namespace Blog
             app.UseAuthentication();
             app.UseMvc(cfg =>
             {
-                cfg.MapRoute("root", "/", new { controller = "home", action = "index", language = "fa" })
+                cfg.MapRoute("root", "/", new { controller = "home", action = "index" })
                    .MapRoute("lang", "blog/{language=en}", new { controller = "home", action = "index" })
                    .MapRoute("post", "blog/post/{urlTitle}", new { controller = "home", action = "post" })
                    .MapRoute("about", "about", new { controller = "home", action = "about" });

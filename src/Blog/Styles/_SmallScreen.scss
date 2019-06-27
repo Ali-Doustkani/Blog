@@ -16,18 +16,7 @@
 
 
 
-.date {
-  color: gray;
-  display: inline-block;
 
-  &::before {
-    content: "(";
-  }
-
-  &::after {
-    content: ")";
-  }
-}
 
 /* Post */
 

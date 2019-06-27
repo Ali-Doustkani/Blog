@@ -1,0 +1,71 @@
+﻿@import 'Colors';
+
+.post-item {
+  padding-bottom: 20px;
+  border-bottom: dashed 1px transparentize($color3, .6);
+  margin-bottom: 10px;
+
+  a {
+    color: $color2;
+
+    &:hover {
+      h1, .date {
+        color: $color4;
+      }
+    }
+  }
+
+  p {
+    color: $color1;
+  }
+
+  h1 {
+    color: $color3;
+    font-size: 1.5em;
+    transition: color .2s;
+  }
+
+  .date {
+    color: $color3;
+    font-size: .7em;
+    font-weight: normal;
+    transition: color .2s;
+    margin: 0 5px;
+
+    &::before {
+      content: "(";
+    }
+
+    &::after {
+      content: ")";
+    }
+  }
+
+  .tagset {
+    color: transparentize($color3, .1);
+
+    > i {
+      font-size: .7em;
+    }
+
+    > div {
+      display: inline-block;
+      background-color: transparentize($color3, .8);
+      border-radius: 3px;
+      margin: 5px 3px 0 0;
+      padding: 4px;
+      font-family: "Roboto Condensed";
+      font-size: .8em;
+      direction: ltr;
+    }
+  }
+}
+
+.post-item.farsi {
+  font-family: IRANSans;
+  direction: rtl;
+}
+
+.post-item:last-of-type {
+  border-bottom: none;
+}
