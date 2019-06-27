@@ -45,35 +45,6 @@ This set of fonts are used in this project under the license: N4VA6	*/
   src: url('./../wwwroot/fonts/IRANSansWeb.woff2');
 }
 
-.post-item, .post {
-  font-family: IRANSans;
-  direction: rtl;
-}
-
-.post {
-  p {
-    font-size: 1em;
-  }
-
-  > h3 {
-    font-weight: 500;
-  }
-}
-
-.fa-note {
-  margin-bottom: 10px;
-  padding: 10px;
-  background-color: $boxBackground;
-  border-right: 2px solid #99c24d;
-}
-
-.fa-warning {
-  margin-bottom: 10px;
-  padding: 10px;
-  background-color: $boxBackground;
-  border-right: 2px solid #da3e52;
-}
-
 .fa-git-source {
   position: relative;
   height: 40px;

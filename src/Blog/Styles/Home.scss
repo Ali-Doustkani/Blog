@@ -40,25 +40,6 @@
       content: ")";
     }
   }
-
-  .tagset {
-    color: transparentize($color3, .1);
-
-    > i {
-      font-size: .7em;
-    }
-
-    > div {
-      display: inline-block;
-      background-color: transparentize($color3, .8);
-      border-radius: 3px;
-      margin: 5px 3px 0 0;
-      padding: 4px;
-      font-family: "Roboto Condensed";
-      font-size: .8em;
-      direction: ltr;
-    }
-  }
 }
 
 .post-item.farsi {

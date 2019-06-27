@@ -1,0 +1,128 @@
+﻿@import 'Colors';
+
+.post {
+  margin-top: 50px;
+
+  header {
+    padding-bottom: 10px;
+    border-bottom: 3px solid $color1;
+    margin-bottom: 15px;
+  }
+
+  h1 {
+    display: inline;
+    color: $color3;
+    font-size: 2.5em;
+  }
+
+  h2 {
+    font-size: 1.5em;
+    margin-top: 5px;
+    color: $color2;
+  }
+
+  h3 {
+    font-size: 1.2em;
+    color: $color2;
+  }
+
+  h4 {
+    color: $color2;
+    margin-top: 20px;
+  }
+
+  p {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+    color: $color1;
+  }
+
+  a {
+    color: $color4;
+  }
+
+  ul, ol {
+    margin: 10px 0;
+  }
+
+  figure {
+    text-align: center;
+
+    img {
+      max-width: 100%;
+    }
+
+    figcaption {
+      text-align: center;
+      color: $color3;
+      font-size: .8em;
+      margin-top: -5px;
+    }
+  }
+}
+
+.post.farsi {
+  font-family: IRANSans;
+  direction: rtl;
+
+  h1 {
+    font-size: 2.1em;
+  }
+
+  h2 {
+    font-size: 1.3em;
+  }
+
+  p {
+    font-size: 1em;
+  }
+}
+
+/* Info Boxes */
+
+@mixin box($color) {
+  margin-bottom: 10px;
+  padding: 5px;
+  background: transparentize($color, .85);
+  color: $color1;
+  font-size: .82em;
+  border-radius: 5px;
+}
+
+.note {
+  @include box(#00faac);
+}
+
+.warning {
+  @include box(#ff3796);
+}
+
+.box-wrapper {
+  margin: 10px 0;
+}
+
+/* Code Boxes */
+
+@mixin codeBox() {
+  font-family: Consolas;
+  font-size: .82em;
+  padding: 10px 10px 10px 20px;
+  direction: ltr;
+  border-left: 4px solid $color4;
+}
+
+.cmd pre {
+  @include codeBox();
+  background-color: $color1;
+  color: white;
+}
+
+.code pre {
+  @include codeBox();
+  background-color: lighten($color3, 40%);
+  color: $color1;
+}
+
+pre {
+  line-height: 1.3em;
+}

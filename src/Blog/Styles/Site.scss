@@ -1,12 +1,13 @@
 ﻿@import 'Reset';
-@import 'Highlighting';
 @import 'SmallScreen';
 @import 'PostForm';
 @import 'AdminPage';
 
 @import 'Shared/Header';
+@import 'Shared/Shared';
 @import 'Home';
 @import 'AboutMe';
+@import 'Post';
 
 @media only screen and (min-width: 720px) {
   @import 'Shared/WHeader';

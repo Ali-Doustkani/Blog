@@ -5,19 +5,12 @@
     ViewData["HasHeader"] = false;
 }
 
-<article class="post">
+<article class="post" has-farsi="true">
     <header>
         <h1>@Model.Title</h1>
-        <h3>
-            @if (ViewData["language"].Equals(Language.English))
-            {
-                @Model.PublishDate.ToString("D")
-            }
-            else
-            {
-                @Model.GetLongPersianDate()
-            }
-        </h3>
+        <h2>
+            @(ViewData["language"].Equals(Language.English) ? Model.PublishDate.ToString("D") : Model.GetLongPersianDate())
+        </h2>
         <div class="tagset">
             <i class="fas fa-hashtag"></i>
             @foreach (var tag in Model.TagCollection)
@@ -26,7 +19,7 @@
             }
         </div>
     </header>
-    <partial name="_PostContent" model="@Model.Content"/>
+    @Html.Raw(Model.Content)
     <div id="disqus_thread"></div>
     <script>
         var disqus_config = function () {
