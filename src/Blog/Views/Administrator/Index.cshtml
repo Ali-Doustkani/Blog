@@ -1,19 +1,10 @@
 ﻿@model IEnumerable<Post>
-
 @{
     ViewData["Title"] = "Admin";
 }
-
-@section Styles{
-    <link rel="stylesheet" href="~/libs/tingle.js/tingle.min.css" />
-}
-
 @section Scripts{
-    <script src="~/libs/tingle.js/tingle.min.js"></script>
-    <script src="~/js/admin.js"></script>
+    <script src="~/~admin.min.js" asp-append-version="true"></script>
 }
-
-<form id="deleteForm" method="post"></form>
 <section class="admin-wrapper">
     <h1>Posts</h1>
     <table border="0">
@@ -39,8 +30,10 @@
                     }
                     <td>@post.Title</td>
                     <td>
-                        <a asp-action="ViewPost" asp-route-id="@post.Id" class="cell-btn">Edit</a>
-                        <a href="#" id="delete" class="cell-btn" data-id="@post.Id">Delete</a>
+                        <form asp-action="DeletePost" asp-route-id="@post.Id">
+                            <a asp-action="ViewPost" asp-route-id="@post.Id" class="cell-btn">Edit</a>
+                            <button type="submit" class="delete-button cell-btn">Delete</button>
+                        </form>
                     </td>
                 </tr>
             }

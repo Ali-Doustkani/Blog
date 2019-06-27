@@ -3,15 +3,14 @@
   "name": "blog",
   "private": true,
   "scripts": {
-    "start": "parcel watch ./Styles/Site.scss --out-dir ./wwwroot --out-file ~site.css",
-    "build-styles": "parcel build ./Views/Site.scss --out-dir ./wwwroot --out-file ~site.css --no-source-maps",
-    "build": "npm run build-styles && dotnet publish -c release"
+    "start": "parcel watch Styles/Site.scss --out-dir wwwroot --out-file ~site.css",
+    "build-styles": "parcel build Views/Site.scss --out-dir wwwroot --out-file ~site.css --no-source-maps",
+    "build-js": "parcel build Views/Administrator/Index.js --out-dir wwwroot --out-file ~admin.min.js",
+    "build": "npm run build-styles && npm run build-js && dotnet publish -c release"
   },
   "devDependencies": {
     "parcel-bundler": "^1.12.3",
     "sass": "^1.22.0"
   },
-  "dependencies": {
-    "tingle.js": "^0.13.2"
-  }
+  "dependencies": {}
 }

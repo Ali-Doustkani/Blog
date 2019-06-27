@@ -28,19 +28,21 @@
     }
 
     &:nth-of-type(3) {
-      width: 70%;
+      width: 60%;
     }
   }
 
   .cell-btn {
-    font-size: .7em;
-    margin: 0;
-    display: block;
+    font-size: .9em;
     float: right;
+    margin: 0;
     margin-left: 3px;
     background: gray;
     color: white;
-    padding: 5px 15px;
+    padding: 0;
+    width: 70px;
+    text-align: center;
+    line-height: 30px;
   }
 
   tbody tr:hover {
