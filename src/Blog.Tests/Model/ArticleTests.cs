@@ -90,7 +90,7 @@ namespace Blog.Tests.Model
         {
             Assert.Equal(
                 "<p><strong>Hello</strong>World</p>",
-                Article.Decorate("<p><strong>Hello</strong>World</p>"));
+                Article.Decorate("<p contenteditable=\"true\"><strong>Hello</strong>World</p>"));
         }
     }
 }
