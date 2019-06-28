@@ -45,7 +45,7 @@ namespace Blog.Controllers
                 return View(nameof(Post), post);
 
             post.PopulateUrlTitle();
-            post.ShowContent = Article.Decorate(post.Content);
+            post.DisplayContent = Article.Decorate(post.MarkedContent);
 
             if (post.Id == 0)
                 _context.Posts.Add(post);

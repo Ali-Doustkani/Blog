@@ -31,9 +31,10 @@ namespace Blog.Model
         public string Summary { get; set; }
 
         [Required]
-        public string Content { get; set; }
+        [Display(Name = "Content")]
+        public string MarkedContent { get; set; }
 
-        public string ShowContent { get; set; }
+        public string DisplayContent { get; set; }
 
         [Required]
         public string Tags { get; set; }

@@ -6,7 +6,7 @@ saveForm.addEventListener("submit", () => {
     console.log('start');
     const input = document.createElement("input");
     input.type = "hidden";
-    input.name = "Content";
+    input.name = "MarkedContent";
     input.value = editor.innerHTML;
     saveForm.appendChild(input);
 });
