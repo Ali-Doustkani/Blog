@@ -3,7 +3,7 @@
     ViewData["Title"] = "Write a post";
 }
 @section Scripts{
-    <script src="~/~admin.min.js" asp-append-version="true"></script>
+    <script src="~/~post.min.js" asp-append-version="true"></script>
 }
 @section Styles{
     <script src="https://kit.fontawesome.com/4f69c52348.js"></script>
@@ -11,7 +11,7 @@
 
 <div class="post-form">
     <h1>Write a post</h1>
-    <form asp-action="SavePost">
+    <form id="save-post" asp-action="SavePost">
         <div asp-validation-summary="ModelOnly" class="error"></div>
         <input name="Id" value="@Model.Id" type="hidden" />
         <div id="language" class="text-group">
@@ -44,25 +44,23 @@
         <div class="text-group">
             <label asp-for="Content"></label>
             <div class="toolbar">
-                <button><i class="fas fa-bold"></i></button>
+                <button id="important"><i class="fas fa-bold"></i></button>
                 <div class="separator"></div>
-                <button><strong>H1</strong></button>
-                <button><strong>H2</strong></button>
-                <button><strong>H3</strong></button>
+                <button id="h1"><strong>H1</strong></button>
+                <button id="h2"><strong>H2</strong></button>
                 <div class="separator"></div>
-                <button><i class="fas fa-code"></i></button>
-                <button><i class="fas fa-terminal"></i></button>
+                <button id="code"><i class="fas fa-code"></i></button>
+                <button id="terminal"><i class="fas fa-terminal"></i></button>
                 <div class="separator"></div>
-                <button><i class="fas fa-exclamation"></i></button>
-                <button><i class="fas fa-times"></i></button>
+                <button id="note"><i class="fas fa-exclamation"></i></button>
+                <button id="warning"><i class="fas fa-times"></i></button>
                 <div class="separator"></div>
-                <button><i class="fas fa-list-ul"></i></button>
-                <button><i class="fas fa-list-ol"></i></button>
+                <button id="unorderedList"><i class="fas fa-list-ul"></i></button>
+                <button id="orderedList"><i class="fas fa-list-ol"></i></button>
                 <div class="separator"></div>
-                <button><i class="fas fa-camera"></i></button>
-                <button><i class="fas fa-link"></i></button>
-
-                <button><i class="fas fa-arrows-alt"></i></button>
+                <button id="image"><i class="fas fa-camera"></i></button>
+                <button id="link"><i class="fas fa-link"></i></button>
+                <button id="fullscreen"><i class="fas fa-arrows-alt"></i></button>
             </div>
             <article id="editor"></article>
             <span asp-validation-for="Content" class="error"></span>
