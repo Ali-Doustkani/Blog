@@ -33,6 +33,8 @@ namespace Blog.Model
         [Required]
         public string Content { get; set; }
 
+        public string ShowContent { get; set; }
+
         [Required]
         public string Tags { get; set; }
 

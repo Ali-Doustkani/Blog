@@ -27,6 +27,7 @@ namespace Blog.Model
                 post.Property(x => x.UrlTitle).IsRequired().HasMaxLength(200).HasDefaultValue("[NOT SET]");
                 post.Property(x => x.Summary).IsRequired();
                 post.Property(x => x.Content).IsRequired();
+                post.Property(x => x.ShowContent).IsRequired();
                 post.Property(x => x.Tags).IsRequired().HasDefaultValue(string.Empty);
             });
         }
