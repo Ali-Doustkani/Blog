@@ -19,7 +19,9 @@
   }
 
   #editor {
+    height: 500px;
     min-height: 200px;
+    max-height: 500px;
     cursor: text;
     font-family: "Roboto Condensed";
 
@@ -82,11 +84,6 @@
       &:focus {
         outline: none;
       }
-    }
-
-    button:last-child {
-      margin-left: auto;
-      margin-right: 10px;
     }
   }
 }
