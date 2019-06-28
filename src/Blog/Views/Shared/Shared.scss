@@ -87,3 +87,25 @@
     @include label();
   }
 }
+
+/* Code Boxes */
+
+@mixin codeBox() {
+  font-family: Consolas;
+  font-size: .82em;
+  padding: 10px 10px 10px 20px;
+  direction: ltr;
+  border-left: 4px solid $color4;
+}
+
+@mixin cmd() {
+  @include codeBox();
+  background: $color1;
+  color: white;
+}
+
+@mixin code() {
+  @include codeBox();
+  background: lighten($color3, 40%);
+  color: $color1;
+}

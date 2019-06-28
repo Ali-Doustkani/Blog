@@ -1,4 +1,5 @@
 ﻿@import '../Shared/Colors';
+@import '../Shared/Shared';
 
 .post-form {
   h1 {
@@ -20,9 +21,30 @@
   #editor {
     min-height: 200px;
     cursor: text;
+    font-family: "Roboto Condensed";
 
     & * {
       outline: none;
+    }
+
+    h3 {
+      font-size: 1.4em;
+    }
+
+    h4 {
+      font-size: 1.2em;
+    }
+
+    a {
+      color: $color4;
+    }
+
+    pre.code {
+      @include code();
+    }
+
+    pre.terminal {
+      @include cmd();
     }
   }
 

@@ -1,4 +1,5 @@
 ﻿@import '../Shared/Colors';
+@import '../Shared/Shared';
 
 .post {
   margin-top: 50px;
@@ -103,24 +104,12 @@
 
 /* Code Boxes */
 
-@mixin codeBox() {
-  font-family: Consolas;
-  font-size: .82em;
-  padding: 10px 10px 10px 20px;
-  direction: ltr;
-  border-left: 4px solid $color4;
-}
-
 .cmd pre {
-  @include codeBox();
-  background-color: $color1;
-  color: white;
+  @include cmd();
 }
 
 .code pre {
-  @include codeBox();
-  background-color: lighten($color3, 40%);
-  color: $color1;
+  @include code();
 }
 
 pre {
