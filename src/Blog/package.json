@@ -12,7 +12,5 @@
     "parcel-bundler": "^1.12.3",
     "sass": "^1.22.0"
   },
-  "dependencies": {
-    "@alidoustkani/richtext": "^1.0.0"
-  }
+  "dependencies": {}
 }

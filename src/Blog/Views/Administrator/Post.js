@@ -2,15 +2,7 @@
 
 const saveForm = document.getElementById("save-post");
 const editor = document.getElementById("editor");
-saveForm.addEventListener("submit", () => {
-    console.log('start');
-    const input = document.createElement("input");
-    input.type = "hidden";
-    input.name = "MarkedContent";
-    input.value = editor.innerHTML;
-    saveForm.appendChild(input);
-});
-
+const summary = document.getElementById("Summary");
 const richtext = create(editor, {
     defaultLink: "/",
     staySelected: false,
@@ -47,9 +39,19 @@ const richtext = create(editor, {
     }
 });
 
-const click = (id, func) => document.getElementById(id).addEventListener("click", e => {
-    e.preventDefault();
-    func();
+saveForm.addEventListener("submit", () => {
+    const input = document.createElement("input");
+    input.type = "hidden";
+    input.name = "MarkedContent";
+    input.value = editor.innerHTML;
+    saveForm.appendChild(input);
+});
+
+summary.addEventListener("keydown", e => {
+    if (e.key === "Tab") {
+        e.preventDefault();
+        richtext.focus();
+    }
 });
 
 click("important", () => richtext.style("important"));
@@ -63,3 +65,10 @@ click("unorderedList", () => richtext.applyUnorderedList());
 click("orderedList", () => richtext.applyOrderedList());
 click("image", () => richtext.selectImage());
 click("link", () => richtext.styleLink());
+
+function click(id, func) {
+    document.getElementById(id).addEventListener("click", e => {
+        e.preventDefault();
+        func();
+    });
+}
