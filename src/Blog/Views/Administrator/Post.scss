@@ -10,6 +10,10 @@
     margin-bottom: 30px;
   }
 
+  label {
+    user-select: none;
+  }
+
   #language label {
     display: inline;
   }
