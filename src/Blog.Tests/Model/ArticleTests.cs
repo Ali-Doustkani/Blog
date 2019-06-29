@@ -41,48 +41,48 @@ namespace Blog.Tests.Model
         public void Code()
         {
             Assert.Equal(
-                "<div class=\"code\"><pre>CODE</pre></div>",
-                Article.Decorate("<pre class=\"code\">CODE</pre>"));
+                "<div class=\"code\"><pre><b>CODE</b></pre></div>",
+                Article.Decorate("<pre class=\"code\"><b>CODE</b></pre>"));
         }
 
         [Fact]
         public void Terminal()
         {
             Assert.Equal(
-                "<div class=\"cmd\"><pre>CMD</pre></div>",
-                Article.Decorate("<pre class=\"terminal\">CMD</pre>"));
+                "<div class=\"cmd\"><pre><b>CMD</b></pre></div>",
+                Article.Decorate("<pre class=\"terminal\"><b>CMD</b></pre>"));
         }
 
         [Fact]
         public void Note()
         {
             Assert.Equal(
-                "<div class=\"box-wrapper\"><span class=\"note\">NOTE</span></div>",
-                Article.Decorate("<div class=\"note\">NOTE</div>"));
+                "<div class=\"box-wrapper\"><span class=\"note\"><b>NOTE</b></span></div>",
+                Article.Decorate("<div class=\"note\"><b>NOTE</b></div>"));
         }
 
         [Fact]
         public void Warning()
         {
             Assert.Equal(
-                "<div class=\"box-wrapper\"><span class=\"warning\">WARN</span></div>",
-                Article.Decorate("<div class=\"warning\">WARN</div>"));
+                "<div class=\"box-wrapper\"><span class=\"warning\"><b>WARN</b></span></div>",
+                Article.Decorate("<div class=\"warning\"><b>WARN</b></div>"));
         }
 
         [Fact]
         public void UnorderedList()
         {
             Assert.Equal(
-                "<ul><li>I1</li><li>I2</li></ul>",
-                Article.Decorate("<ul><li contenteditable=\"true\">I1</li><li contenteditable=\"true\">I2</li></ul>"));
+                "<ul><li>I1</li><li><b>I2</b></li></ul>",
+                Article.Decorate("<ul><li contenteditable=\"true\">I1</li><li contenteditable=\"true\"><b>I2</b></li></ul>"));
         }
 
         [Fact]
         public void OrderedList()
         {
             Assert.Equal(
-                "<ol><li>I1</li><li>I2</li></ol>",
-                Article.Decorate("<ol><li contenteditable=\"true\">I1</li><li contenteditable=\"true\">I2</li></ol>"));
+                "<ol><li>I1</li><li><b>I2</b></li></ol>",
+                Article.Decorate("<ol><li contenteditable=\"true\">I1</li><li contenteditable=\"true\"><b>I2</b></li></ol>"));
         }
 
         [Fact]

@@ -42,17 +42,17 @@ namespace Blog.Model
         private static bool IsList(HtmlNode node) => node.OriginalName == "ul" || node.OriginalName == "ol";
 
         private static string TheSame(HtmlNode node) =>
-            (node.OriginalName == "p" && string.IsNullOrWhiteSpace(node.InnerText)) ?
+            (node.OriginalName == "p" && string.IsNullOrWhiteSpace(node.InnerHtml)) ?
             string.Empty :
             $"<{node.OriginalName}>{node.InnerHtml.Trim()}</{node.OriginalName}>";
 
-        private static string Code(HtmlNode node) => $"<div class=\"code\"><pre>{node.InnerText}</pre></div>";
+        private static string Code(HtmlNode node) => $"<div class=\"code\"><pre>{node.InnerHtml}</pre></div>";
 
-        private static string Terminal(HtmlNode node) => $"<div class=\"cmd\"><pre>{node.InnerText}</pre></div>";
+        private static string Terminal(HtmlNode node) => $"<div class=\"cmd\"><pre>{node.InnerHtml}</pre></div>";
 
-        private static string Note(HtmlNode node) => $"<div class=\"box-wrapper\"><span class=\"note\">{node.InnerText}</span></div>";
+        private static string Note(HtmlNode node) => $"<div class=\"box-wrapper\"><span class=\"note\">{node.InnerHtml}</span></div>";
 
-        private static string Warning(HtmlNode node) => $"<div class=\"box-wrapper\"><span class=\"warning\">{node.InnerText}</span></div>";
+        private static string Warning(HtmlNode node) => $"<div class=\"box-wrapper\"><span class=\"warning\">{node.InnerHtml}</span></div>";
 
         private static string List(HtmlNode node) => $"<{node.OriginalName}>{string.Join("", node.ChildNodes.Select(TheSame))}</{node.OriginalName}>";
     }
