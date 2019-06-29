@@ -55,32 +55,35 @@
     box-sizing: border-box;
   }
 
+  > input[type=text] {
+    height: 35px;
+  }
+
+  > textarea {
+    height: 70px;
+  }
+
   > input[type=radio] {
     width: unset;
+    cursor: pointer;
   }
 
   > input[type=radio] + label {
     display: inline;
     font-size: 1em;
+    cursor: pointer;
   }
 
   > input[type=text]:focus, textarea:focus {
     outline: 1px solid $color3;
   }
-
-  #PublishDate, #Title {
-    width: 30%;
-  }
-
-  #Content {
-    min-height: 200px;
-    min-width: 100%;
-    overflow: scroll;
-    font-size: .8em;
-  }
 }
 
 .check-group {
+  * {
+    cursor: pointer;
+  }
+
   @include group();
 
   > label {

@@ -14,44 +14,8 @@
     user-select: none;
   }
 
-  #language label {
-    display: inline;
-  }
-
   .error {
     color: crimson;
-  }
-
-  #editor {
-    height: 500px;
-    min-height: 200px;
-    max-height: 500px;
-    cursor: text;
-    font-family: "Roboto Condensed";
-
-    & * {
-      outline: none;
-    }
-
-    h3 {
-      font-size: 1.4em;
-    }
-
-    h4 {
-      font-size: 1.2em;
-    }
-
-    a {
-      color: $color4;
-    }
-
-    pre.code {
-      @include code();
-    }
-
-    pre.terminal {
-      @include cmd();
-    }
   }
 
   .toolbar {
@@ -90,4 +54,68 @@
       }
     }
   }
+
+  #PublishDate, #Title {
+    width: 30%;
+  }
+
+  #Content {
+    min-height: 200px;
+    min-width: 100%;
+    overflow: scroll;
+    font-size: .8em;
+  }
+
+  #language label {
+    display: inline;
+  }
+
+  #editor {
+    height: 500px;
+    min-height: 200px;
+    max-height: 500px;
+    cursor: text;
+    font-family: "Roboto Condensed";
+
+    & * {
+      outline: none;
+    }
+
+    h3 {
+      font-size: 1.4em;
+    }
+
+    h4 {
+      font-size: 1.2em;
+    }
+
+    a {
+      color: $color4;
+    }
+
+    pre.code {
+      @include code();
+    }
+
+    pre.terminal {
+      @include cmd();
+    }
+  }
+}
+
+/* Language Change */
+
+@mixin language($dir, $font) {
+  input[type=text]:not(#Tags), textarea, #editor {
+    direction: $dir;
+    font-family: $font;
+  }
+}
+
+#save-post.english {
+  @include language(ltr, "Roboto Condensed");
+}
+
+#save-post.farsi {
+  @include language(rtl, "IRANSans");
 }

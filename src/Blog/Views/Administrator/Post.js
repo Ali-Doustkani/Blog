@@ -1,9 +1,15 @@
 ﻿import { create } from '@alidoustkani/richtext';
 
 const saveForm = document.getElementById("save-post");
+const english = document.getElementById("english");
+const farsi = document.getElementById("farsi");
 const editor = document.getElementById("editor");
 const summary = document.getElementById("Summary");
 const markedContent = document.getElementById("MarkedContent");
+
+english.addEventListener("change", () => saveForm.classList.replace("farsi", "english"));
+farsi.addEventListener("change", () => saveForm.classList.replace("english", "farsi"));
+
 const richtext = create(editor, {
     defaultLink: "/",
     staySelected: false,

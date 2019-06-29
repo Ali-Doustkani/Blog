@@ -9,6 +9,7 @@
     "build": "npm run build-styles && npm run build-js && dotnet publish -c release"
   },
   "devDependencies": {
+    "autoprefixer": "^9.6.0",
     "parcel-bundler": "^1.12.3",
     "sass": "^1.22.0"
   },
