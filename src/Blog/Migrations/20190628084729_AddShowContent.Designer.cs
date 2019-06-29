@@ -4,14 +4,16 @@ using Blog.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Blog.Migrations
 {
     [DbContext(typeof(BlogContext))]
-    partial class BlogContextModelSnapshot : ModelSnapshot
+    [Migration("20190628084729_AddShowContent")]
+    partial class AddShowContent
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,19 +27,19 @@ namespace Blog.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("DisplayContent")
+                    b.Property<string>("Content")
                         .IsRequired();
 
                     b.Property<int>("Language")
                         .ValueGeneratedOnAdd()
                         .HasDefaultValue(1);
 
-                    b.Property<string>("MarkedContent")
-                        .IsRequired();
-
                     b.Property<DateTime>("PublishDate");
 
                     b.Property<bool>("Show");
+
+                    b.Property<string>("ShowContent")
+                        .IsRequired();
 
                     b.Property<string>("Summary")
                         .IsRequired();

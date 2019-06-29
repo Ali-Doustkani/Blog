@@ -3,16 +3,15 @@
   "name": "blog",
   "private": true,
   "scripts": {
-    "start": "parcel watch Styles/Site.scss --out-dir wwwroot --out-file ~site.css",
+    "start-styles": "parcel watch Styles/Site.scss --out-dir wwwroot --out-file ~site.css",
     "build-styles": "parcel build Views/Site.scss --out-dir wwwroot --out-file ~site.css --no-source-maps",
-    "build-js": "parcel build Views/Administrator/Index.js --out-dir wwwroot --out-file ~admin.min.js",
+    "build-js": "parcel build Views/Administrator/Index.js --out-dir wwwroot --out-file ~admin.min.js && parcel build Views/Administrator/Post.js --out-dir wwwroot --out-file ~post.min.js",
     "build": "npm run build-styles && npm run build-js && dotnet publish -c release"
   },
   "devDependencies": {
+    "autoprefixer": "^9.6.0",
     "parcel-bundler": "^1.12.3",
     "sass": "^1.22.0"
   },
-  "dependencies": {
-    "@alidoustkani/richtext": "^1.0.0"
-  }
+  "dependencies": {}
 }
