@@ -3,6 +3,7 @@
 const saveForm = document.getElementById("save-post");
 const editor = document.getElementById("editor");
 const summary = document.getElementById("Summary");
+const markedContent = document.getElementById("MarkedContent");
 const richtext = create(editor, {
     defaultLink: "/",
     staySelected: false,
@@ -39,16 +40,16 @@ const richtext = create(editor, {
     }
 });
 
+richtext.setInnerHTML(markedContent.value);
+
 saveForm.addEventListener("submit", () => {
-    const input = document.createElement("input");
-    input.type = "hidden";
-    input.name = "MarkedContent";
-    input.value = editor.innerHTML;
-    saveForm.appendChild(input);
+    markedContent.value = editor.innerHTML;
+    saveForm.appendChild(markedContent);
 });
 
 summary.addEventListener("keydown", e => {
     if (e.key === "Tab") {
+        console.log(richtext.focus);
         e.preventDefault();
         richtext.focus();
     }
