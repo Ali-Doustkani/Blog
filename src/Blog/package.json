@@ -6,7 +6,7 @@
     "start-styles": "parcel watch Styles/Site.scss --out-dir wwwroot --out-file ~site.css",
     "build-styles": "parcel build Views/Site.scss --out-dir wwwroot --out-file ~site.css --no-source-maps",
     "build-js": "parcel build Views/Administrator/Index.js --out-dir wwwroot --out-file ~admin.min.js && parcel build Views/Administrator/Post.js --out-dir wwwroot --out-file ~post.min.js",
-    "build": "npm run build-styles && npm run build-js && dotnet publish -c release"
+    "build": "npm run build-styles && npm run build-js"
   },
   "devDependencies": {
     "autoprefixer": "^9.6.0",
