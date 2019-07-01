@@ -14,6 +14,6 @@
     "sass": "^1.22.0"
   },
   "dependencies": {
-    "@alidoustkani/richtext": "^1.0.2"
+    "@alidoustkani/richtext": "^1.0.19"
   }
 }
