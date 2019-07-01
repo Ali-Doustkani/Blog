@@ -19,8 +19,11 @@ steps:
     arguments: '--configuration $(buildConfiguration)'
     workingDirectory: '$(System.DefaultWorkingDirectory)/src'
 
-- script: dotnet test
-  displayName: 'unit tests'
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'test'
+    projects: 'Blog.Test'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/src'
 
 - script: npm install
   displayName: 'npm install'
