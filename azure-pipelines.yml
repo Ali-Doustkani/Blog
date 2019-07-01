@@ -15,14 +15,16 @@ variables:
 steps:
 - task: DotNetCoreCLI@2
   inputs:
+    displayName: 'build'
     command: 'build'
     arguments: '--configuration $(buildConfiguration)'
     workingDirectory: '$(System.DefaultWorkingDirectory)/src'
 
 - task: DotNetCoreCLI@2
   inputs:
+    displayName: 'tests'
     command: 'test'
-    projects: 'Blog.Test'
+    projects: '**/*test*.csproj'
     workingDirectory: '$(System.DefaultWorkingDirectory)/src'
 
 - script: npm install
