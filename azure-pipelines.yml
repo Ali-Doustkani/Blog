@@ -23,6 +23,7 @@ steps:
 
 - task: DotNetCoreCLI@2
   displayName: Unit Tests
+  enabled: false
   inputs:
     command: 'test'
     projects: '**/*.csproj'
@@ -30,12 +31,14 @@ steps:
 
 - task: Npm@1
   displayName: install node modules
+  enabled: false
   inputs:
     command: 'install'
     workingDir: '$(System.DefaultWorkingDirectory)/src/Blog'
 
 - task: CmdLine@2
   displayName: build assets
+  enabled: false
   inputs:
     script: 'npm run build'
     workingDirectory: '$(System.DefaultWorkingDirectory)/src/Blog'
@@ -48,3 +51,17 @@ steps:
     zipAfterPublish: false
     modifyOutputPath: false
     workingDirectory: '$(System.DefaultWorkingDirectory)/src/Blog/'
+
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(Build.BinariesDirectory)'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/release.zip'
+    replaceExistingArchive: true
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
