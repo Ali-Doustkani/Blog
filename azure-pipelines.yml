@@ -12,6 +12,8 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
+  srcDirectory: '$(System.DefaultWorkingDirectory)/src'
+  blogDirectory: '$(srcDirectory)/Blog'
 
 steps:
 - task: DotNetCoreCLI@2
@@ -19,7 +21,7 @@ steps:
   inputs:
     command: 'build'
     arguments: '--configuration $(buildConfiguration)'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/src'
+    workingDirectory: '$(srcDirectory)'
 
 - task: DotNetCoreCLI@2
   displayName: Unit Tests
@@ -27,21 +29,21 @@ steps:
   inputs:
     command: 'test'
     projects: '**/*.csproj'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/src/Blog.Tests'
+    workingDirectory: '$(srcDirectory)/Blog.Tests'
 
 - task: Npm@1
   displayName: install node modules
   enabled: false
   inputs:
     command: 'install'
-    workingDir: '$(System.DefaultWorkingDirectory)/src/Blog'
+    workingDir: '$(blogDirectory)'
 
 - task: CmdLine@2
   displayName: build assets
   enabled: false
   inputs:
     script: 'npm run build'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/src/Blog'
+    workingDirectory: '$(blogDirectory)'
 
 - task: DotNetCoreCLI@2
   displayName: publish
@@ -51,11 +53,11 @@ steps:
     publishWebProjects: true
     zipAfterPublish: false
     modifyOutputPath: false
-    workingDirectory: '$(System.DefaultWorkingDirectory)/src/Blog/'
+    workingDirectory: '$(blogDirectory)/'
 
 - task: ArchiveFiles@2
   inputs:
-    rootFolderOrFile: '$(System.DefaultWorkingDirectory)/src/Blog/bin/Release/netcoreapp2.1/publish'
+    rootFolderOrFile: '$(srcDirectory)/Blog/bin/Release/netcoreapp2.1/publish'
     includeRootFolder: false
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/release.zip'
