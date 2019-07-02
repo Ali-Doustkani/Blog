@@ -14,24 +14,30 @@ variables:
 
 steps:
 - task: DotNetCoreCLI@2
-  displayName: build
+  displayName: Build
   inputs:
     command: 'build'
     arguments: '--configuration $(buildConfiguration)'
     workingDirectory: '$(System.DefaultWorkingDirectory)/src'
 
 - task: DotNetCoreCLI@2
-  displayName: tests
+  displayName: Unit Tests
   inputs:
     command: 'test'
     projects: '**/*.csproj'
     workingDirectory: '$(System.DefaultWorkingDirectory)/src/Blog.Tests'
 
-- script: npm install
-  displayName: npm install
+- task: Npm@1
+  displayName: install node modules
+  inputs:
+    command: 'install'
+    workingDir: '$(System.DefaultWorkingDirectory)/src/Blog'
 
-- script: npm run build
+- task: CmdLine@2
   displayName: build assets
+  inputs:
+    script: 'npm run build'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/src/Blog'
 
 - task: DotNetCoreCLI@2
   displayName: publish
