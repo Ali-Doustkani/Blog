@@ -1,0 +1,49 @@
+# ASP.NET Core
+# Build and test ASP.NET Core projects targeting .NET Core.
+# Add steps that run tests, create a NuGet package, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  buildConfiguration: 'Release'
+
+steps:
+- task: DotNetCoreCLI@2
+  displayName: Build
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(buildConfiguration)'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/src'
+
+- task: DotNetCoreCLI@2
+  displayName: Unit Tests
+  inputs:
+    command: 'test'
+    projects: '**/*.csproj'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/src/Blog.Tests'
+
+- task: Npm@1
+  displayName: install node modules
+  inputs:
+    command: 'install'
+    workingDir: '$(System.DefaultWorkingDirectory)/src/Blog'
+
+- task: CmdLine@2
+  displayName: build assets
+  inputs:
+    script: 'npm run build'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/src/Blog'
+
+- task: DotNetCoreCLI@2
+  displayName: publish
+  inputs:
+    command: 'publish'
+    publishWebProjects: true
+    zipAfterPublish: false
+    modifyOutputPath: false
+    workingDirectory: '$(System.DefaultWorkingDirectory)/src/Blog/'
