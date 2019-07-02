@@ -24,8 +24,8 @@ steps:
   inputs:
     displayName: 'tests'
     command: 'test'
-    projects: '**/*test*.csproj'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/src'
+    projects: '**/*.csproj'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/src/Blog.Tests'
 
 - script: npm install
   displayName: 'npm install'
