@@ -6,10 +6,12 @@
     "start-styles": "parcel watch Styles/Site.scss --out-dir wwwroot --out-file ~site.css",
     "build-styles": "parcel build Views/Site.scss --out-dir wwwroot --out-file ~site.css --no-source-maps",
     "build-js": "parcel build Views/Administrator/Index.js --out-dir wwwroot --out-file ~admin.min.js && parcel build Views/Administrator/Post.js --out-dir wwwroot --out-file ~post.min.js",
+    "copy-assets": "cpx Assets/Images/**/* wwwroot/images",
     "build": "npm run build-styles && npm run build-js"
   },
   "devDependencies": {
     "autoprefixer": "^9.6.0",
+    "cpx": "^1.5.0",
     "parcel-bundler": "^1.12.3",
     "sass": "^1.22.0"
   },
