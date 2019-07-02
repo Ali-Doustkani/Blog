@@ -20,7 +20,6 @@ steps:
 
 - task: DotNetCoreCLI@2
   displayName: Unit Tests
-  enabled: false
   inputs:
     command: 'test'
     projects: '**/*.csproj'
@@ -28,14 +27,12 @@ steps:
 
 - task: Npm@1
   displayName: install node modules
-  enabled: false
   inputs:
     command: 'install'
     workingDir: '$(blogDirectory)'
 
 - task: CmdLine@2
   displayName: build assets
-  enabled: false
   inputs:
     script: 'npm run build'
     workingDirectory: '$(blogDirectory)'
