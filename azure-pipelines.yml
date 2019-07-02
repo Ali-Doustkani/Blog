@@ -53,11 +53,11 @@ steps:
     publishWebProjects: true
     zipAfterPublish: false
     modifyOutputPath: false
-    workingDirectory: '$(blogDirectory)/'
+    workingDirectory: '$(blogDirectory)'
 
 - task: ArchiveFiles@2
   inputs:
-    rootFolderOrFile: '$(srcDirectory)/Blog/bin/Release/netcoreapp2.1/publish'
+    rootFolderOrFile: '$(blogDirectory)/bin/Release/netcoreapp2.1/publish'
     includeRootFolder: false
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/release.zip'
