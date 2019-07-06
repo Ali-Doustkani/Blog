@@ -23,7 +23,7 @@ namespace Blog.Controllers
 
         public ViewResult Post()
         {
-            var newPost = new Post
+            var newPost = new PostViewModel
             {
                 PublishDate = DateTime.Now
             };
@@ -39,7 +39,7 @@ namespace Blog.Controllers
         }
 
         [ValidateAntiForgeryToken]
-        public IActionResult SavePost(Post post)
+        public IActionResult SavePost(PostViewModel post)
         {
             if (!ModelState.IsValid)
                 return View(nameof(Post), post);

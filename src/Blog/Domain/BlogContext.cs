@@ -11,12 +11,12 @@ namespace Blog.Model
             : base(options)
         { }
 
-        public DbSet<Post> Posts { get; set; }
+        public DbSet<PostViewModel> Posts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Post>(post =>
+            modelBuilder.Entity<PostViewModel>(post =>
             {
                 post.HasAlternateKey(x => x.Title);
                 post.Property(x => x.Language)

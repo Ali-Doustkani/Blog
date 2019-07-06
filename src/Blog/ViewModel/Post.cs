@@ -8,9 +8,9 @@ using System.Text.RegularExpressions;
 
 namespace Blog.Model
 {
-    public class Post
+    public class PostViewModel
     {
-        public Post()
+        public PostViewModel()
         {
             Tags = string.Empty;
         }
