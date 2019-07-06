@@ -44,8 +44,7 @@ namespace Blog.Controllers
             if (!ModelState.IsValid)
                 return View(nameof(Post), post);
 
-            post.PopulateUrlTitle();
-            post.DisplayContent = Article.Decorate(post.MarkedContent);
+            new Article(null).Decorate(post);
 
             if (post.Id == 0)
                 _context.Posts.Add(post);

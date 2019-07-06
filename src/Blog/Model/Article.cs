@@ -4,56 +4,60 @@ using System.Text;
 
 namespace Blog.Model
 {
+    public interface IImageService
+    {
+        string Save(string directory, string data);
+    }
+
     public class Article
     {
-        public static string Decorate(string rawHtml)
+        public Article(IImageService imageService)
         {
+            _imageService = imageService;
+        }
+
+        readonly IImageService _imageService;
+
+        public void Decorate(Post post)
+        {
+            post.PopulateUrlTitle();
+
             var result = new StringBuilder(1000);
             var doc = new HtmlDocument();
-            doc.LoadHtml(rawHtml);
+            doc.LoadHtml(post.MarkedContent);
             var node = doc.DocumentNode.FirstChild;
             while (node != null)
             {
-                if (IsCode(node))
-                    result.Append(Code(node));
-                else if (IsTerminal(node))
-                    result.Append(Terminal(node));
-                else if (IsNote(node))
-                    result.Append(Note(node));
-                else if (IsWarning(node))
-                    result.Append(Warning(node));
-                else if (IsList(node))
-                    result.Append(List(node));
+                if (node.Is("pre.code"))
+                    result.Append(node.El("div.code>pre"));
+                else if (node.Is("pre.terminal"))
+                    result.Append(node.El("div.cmd>pre"));
+                else if (node.Is("div.note"))
+                    result.Append(node.El("div.box-wrapper>span.note"));
+                else if (node.Is("div.warning"))
+                    result.Append(node.El("div.box-wrapper>span.warning"));
+                else if (node.Is("ul") || node.Is("ol"))
+                    result.Append(node.ElChildren());
+                else if (node.Is("figure"))
+                    Figure(post, node);
                 else
-                    result.Append(TheSame(node));
+                    result.Append(node.El());
                 node = node.NextSibling;
             }
-            return result.ToString();
+
+            post.DisplayContent = result.ToString();
         }
 
-        private static bool IsCode(HtmlNode node) => node.OriginalName == "pre" && node.Attributes["class"].Value == "code";
+        void Figure(Post post, HtmlNode node)
+        {
+            var img = node.SelectNodes("//img").Single();
+            if (!img.Attributes.Contains("src"))
+                throw new System.Exception("There is not 'src' for the <img>");
+            var path = _imageService.Save(post.UrlTitle, img.Attributes["src"].Value);
 
-        private static bool IsTerminal(HtmlNode node) => node.OriginalName == "pre" && node.Attributes["class"].Value == "terminal";
-
-        private static bool IsNote(HtmlNode node) => node.OriginalName == "div" && node.Attributes["class"].Value == "note";
-
-        private static bool IsWarning(HtmlNode node) => node.OriginalName == "div" && node.Attributes["class"].Value == "warning";
-
-        private static bool IsList(HtmlNode node) => node.OriginalName == "ul" || node.OriginalName == "ol";
-
-        private static string TheSame(HtmlNode node) =>
-            (node.OriginalName == "p" && string.IsNullOrWhiteSpace(node.InnerHtml)) ?
-            string.Empty :
-            $"<{node.OriginalName}>{node.InnerHtml.Trim()}</{node.OriginalName}>";
-
-        private static string Code(HtmlNode node) => $"<div class=\"code\"><pre>{node.InnerHtml}</pre></div>";
-
-        private static string Terminal(HtmlNode node) => $"<div class=\"cmd\"><pre>{node.InnerHtml}</pre></div>";
-
-        private static string Note(HtmlNode node) => $"<div class=\"box-wrapper\"><span class=\"note\">{node.InnerHtml}</span></div>";
-
-        private static string Warning(HtmlNode node) => $"<div class=\"box-wrapper\"><span class=\"warning\">{node.InnerHtml}</span></div>";
-
-        private static string List(HtmlNode node) => $"<{node.OriginalName}>{string.Join("", node.ChildNodes.Select(TheSame))}</{node.OriginalName}>";
+            //select img
+            //save it's content to file
+            //use it's url for new 
+        }
     }
 }

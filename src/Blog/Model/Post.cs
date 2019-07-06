@@ -82,7 +82,8 @@ namespace Blog.Model
 
         public void PopulateUrlTitle()
         {
-            UrlTitle = Regex.Replace(Title, @"[\s.:]+", "-");
+            if (!string.IsNullOrEmpty(Title))
+                UrlTitle = Regex.Replace(Title, @"[\s.:]+", "-");
         }
     }
 }
