@@ -1,4 +1,4 @@
-﻿using Blog.Model;
+﻿using Blog.Domain;
 using System;
 using System.Linq;
 using Xunit;

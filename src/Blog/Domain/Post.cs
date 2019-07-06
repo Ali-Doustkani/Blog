@@ -1,24 +1,20 @@
-﻿using Blog.Utils;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Blog.Model
+namespace Blog.Domain
 {
-    public class PostViewModel
+    public class Post
     {
-        public PostViewModel()
+        public Post()
         {
             Tags = string.Empty;
         }
 
         public int Id { get; set; }
 
-        [Required]
-        [MustBeUnique]
         public string Title { get; set; }
 
         public string UrlTitle { get; set; }
@@ -27,16 +23,12 @@ namespace Blog.Model
 
         public Language Language { get; set; }
 
-        [Required]
         public string Summary { get; set; }
 
-        [Required]
-        [Display(Name = "Content")]
         public string MarkedContent { get; set; }
 
         public string DisplayContent { get; set; }
 
-        [Required]
         public string Tags { get; set; }
 
         public bool Show { get; set; }

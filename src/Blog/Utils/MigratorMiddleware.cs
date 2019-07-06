@@ -1,4 +1,4 @@
-﻿using Blog.Model;
+﻿using Blog.Domain;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;

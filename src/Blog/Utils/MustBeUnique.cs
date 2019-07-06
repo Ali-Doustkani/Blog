@@ -1,4 +1,5 @@
-﻿using Blog.Model;
+﻿using Blog.Domain;
+using Blog.Model;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.ComponentModel.DataAnnotations;

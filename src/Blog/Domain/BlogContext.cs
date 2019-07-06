@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Blog.Model
+namespace Blog.Domain
 {
     public class BlogContext : IdentityDbContext<IdentityUser>
     {
@@ -11,12 +11,12 @@ namespace Blog.Model
             : base(options)
         { }
 
-        public DbSet<PostViewModel> Posts { get; set; }
+        public DbSet<Post> Posts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<PostViewModel>(post =>
+            modelBuilder.Entity<Post>(post =>
             {
                 post.HasAlternateKey(x => x.Title);
                 post.Property(x => x.Language)

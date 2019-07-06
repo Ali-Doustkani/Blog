@@ -1,4 +1,5 @@
-﻿using Blog.Model;
+﻿using Blog.Domain;
+using Blog.Services;
 using Blog.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -45,6 +46,7 @@ namespace Blog
                 options.Filters.Add(new RequireHttpsAttribute());
             });
             services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<BlogContext>();
+            services.AddTransient<PostServices>();
         }
 
         public void Configure(IApplicationBuilder app)

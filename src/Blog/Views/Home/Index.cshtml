@@ -8,7 +8,7 @@
     <article class="post-item" has-farsi="true">
         <a asp-action="Post" asp-route-urlTitle="@post.UrlTitle">
             <h1>
-                @post.Title<span class="date">@(ViewData["language"].Equals(Language.English) ? @post.PublishDate.ToString("MMM yyyy") : @post.GetShortPersianDate())</span>
+                @post.Title<span class="date">@(ViewData["language"].Equals(Language.English) ? @post.PublishDate.ToString("MMM yyyy") : @post.ShortPersianDate)</span>
             </h1>
         </a>
         <p>@post.Summary</p>

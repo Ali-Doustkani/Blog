@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 
-namespace Blog.Model
+namespace Blog.Domain
 {
     public class Article
     {
