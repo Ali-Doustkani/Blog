@@ -8,10 +8,9 @@ namespace Blog.ViewModels.Home
     {
         public string Title { get; set; }
         public Language Language { get; set; }
-        public DateTime PublishDate { get; set; }
+        public string Date { get; set; }
         public string Content { get; set; }
         public IEnumerable<string> Tags { get; set; }
-        public string LongPersianDate { get; set; }
         public bool Show { get; set; }
     }
 }

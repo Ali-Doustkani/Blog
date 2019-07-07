@@ -8,9 +8,7 @@
 <article class="post" has-farsi="true">
     <header>
         <h1>@Model.Title</h1>
-        <h2>
-            @(ViewData["language"].Equals(Language.English) ? Model.PublishDate.ToString("D") : Model.LongPersianDate)
-        </h2>
+        <h2>@Model.Date</h2>
         <div class="tagset">
             <i class="fas fa-hashtag"></i>
             @foreach (var tag in Model.Tags)
