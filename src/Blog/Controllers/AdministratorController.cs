@@ -1,5 +1,5 @@
-﻿using Blog.Model;
-using Blog.Services;
+﻿using Blog.Services;
+using Blog.ViewModels.Administrator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,12 +8,12 @@ namespace Blog.Controllers
     [Authorize]
     public class AdministratorController : Controller
     {
-        public AdministratorController(PostServices services)
+        public AdministratorController(AdministratorServices services)
         {
             _services = services;
         }
 
-        private readonly PostServices _services;
+        private readonly AdministratorServices _services;
 
         public ViewResult Index() => View(_services.GetPosts());
 
@@ -28,7 +28,7 @@ namespace Blog.Controllers
         }
 
         [ValidateAntiForgeryToken]
-        public IActionResult SavePost(PostViewModel post)
+        public IActionResult SavePost(PostEntry post)
         {
             if (!ModelState.IsValid)
                 return View(nameof(Post), post);

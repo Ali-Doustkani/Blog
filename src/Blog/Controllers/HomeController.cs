@@ -7,12 +7,12 @@ namespace Blog.Controllers
 {
     public class HomeController : Controller
     {
-        public HomeController(PostServices services)
+        public HomeController(HomeServices services)
         {
             _services = services;
         }
 
-        private readonly PostServices _services;
+        private readonly HomeServices _services;
 
         public ViewResult Index(string language)
         {
@@ -21,7 +21,7 @@ namespace Blog.Controllers
                 lang = Language.Farsi;
             ViewData["language"] = lang;
             if (!User.Identity.IsAuthenticated)
-                _services.GetVerifiedPosts(lang);
+                return View(_services.GetVerifiedPosts(lang));
             return View(_services.GetPosts(lang));
         }
 

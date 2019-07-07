@@ -1,4 +1,5 @@
-﻿using Blog.Domain;
+﻿using AutoMapper;
+using Blog.Domain;
 using Blog.Services;
 using Blog.Utils;
 using Microsoft.AspNetCore.Builder;
@@ -13,11 +14,6 @@ using System;
 
 namespace Blog
 {
-    public class C : Microsoft.AspNetCore.Razor.TagHelpers.TagHelper
-    {
-        public bool Hey { get; set; }
-    }
-
     public class Startup
     {
         public Startup(IConfiguration configuration, IHostingEnvironment env)
@@ -46,7 +42,9 @@ namespace Blog
                 options.Filters.Add(new RequireHttpsAttribute());
             });
             services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<BlogContext>();
-            services.AddTransient<PostServices>();
+            services.AddAutoMapper(GetType().Assembly);
+            services.AddTransient<HomeServices>();
+            services.AddTransient<AdministratorServices>();
         }
 
         public void Configure(IApplicationBuilder app)

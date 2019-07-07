@@ -13,13 +13,13 @@
         </h2>
         <div class="tagset">
             <i class="fas fa-hashtag"></i>
-            @foreach (var tag in Model.TagCollection)
+            @foreach (var tag in Model.Tags)
             {
                 <div>@tag</div>
             }
         </div>
     </header>
-    @Html.Raw(Model.DisplayContent)
+    @Html.Raw(Model.Content)
     <div id="disqus_thread"></div>
     <script>
         var disqus_config = function () {

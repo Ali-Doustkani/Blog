@@ -1,4 +1,4 @@
-﻿@model IEnumerable<PostViewModel>
+﻿@model IEnumerable<PostRow>
 @{
     ViewData["Title"] = "Ali Doustkani";
 }
@@ -14,7 +14,7 @@
         <p>@post.Summary</p>
         <div class="tagset">
             <i class="fas fa-hashtag"></i>
-            @foreach (var tag in post.TagCollection)
+            @foreach (var tag in post.Tags)
             {
                 <div>@tag</div>
             }
