@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using Xunit;
 
-namespace Blog.Tests.Model
+namespace Blog.Tests.Domain
 {
     public class PostTests
     {

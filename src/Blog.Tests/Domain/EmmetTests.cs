@@ -1,7 +1,7 @@
 ﻿using Blog.Domain;
 using Xunit;
 
-namespace Blog.Tests.Model
+namespace Blog.Tests.Domain
 {
     public class EmmetTests
     {

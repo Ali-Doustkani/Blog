@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Blog.Domain;
+using Blog.Utils;
 using Blog.ViewModels.Administrator;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -10,14 +11,16 @@ namespace Blog.Services
 {
     public class AdministratorServices
     {
-        public AdministratorServices(BlogContext context, IMapper mapper)
+        public AdministratorServices(BlogContext context, IMapper mapper, IImageSaver imageService)
         {
             _context = context;
             _mapper = mapper;
+            _imageService = imageService;
         }
 
         private readonly BlogContext _context;
         private readonly IMapper _mapper;
+        private readonly IImageSaver _imageService;
 
         public PostEntry Create() =>
             new PostEntry { PublishDate = DateTime.Now };
@@ -38,7 +41,7 @@ namespace Blog.Services
                 throw new ValidationException(nameof(PostEntry.Title), "This title already exists in the database.");
 
             post.PopulateUrlTitle();
-            new Article(null).Decorate(post);
+            post.Render(_imageService);
 
             if (post.Id == 0)
             {
