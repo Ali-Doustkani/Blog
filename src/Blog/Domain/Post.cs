@@ -25,30 +25,25 @@ namespace Blog.Domain
 
         public string Summary { get; set; }
 
-        public string MarkedContent { get; set; }
-
-        public string DisplayContent { get; set; }
-
         public string Tags { get; set; }
 
         public bool Show { get; set; }
 
-        public IEnumerable<string> TagCollection
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(Tags))
-                    return Enumerable.Empty<string>();
+        public PostContent Content { get; set; }
 
-                var result = new List<string>();
-                foreach (var str in Tags.Split(","))
-                {
-                    var trimmed = str.Trim();
-                    if (!string.IsNullOrEmpty(trimmed))
-                        result.Add(trimmed);
-                }
-                return result;
+        public IEnumerable<string> GetTags()
+        {
+            if (string.IsNullOrEmpty(Tags))
+                return Enumerable.Empty<string>();
+
+            var result = new List<string>();
+            foreach (var str in Tags.Split(","))
+            {
+                var trimmed = str.Trim();
+                if (!string.IsNullOrEmpty(trimmed))
+                    result.Add(trimmed);
             }
+            return result;
         }
 
         public string GetLongPersianDate()

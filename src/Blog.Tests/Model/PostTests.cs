@@ -15,7 +15,7 @@ namespace Blog.Tests.Model
         {
             var post = new Post { Tags = tags };
 
-            Assert.Equal(Enumerable.Empty<string>(), post.TagCollection);
+            Assert.Equal(Enumerable.Empty<string>(), post.GetTags());
         }
 
         [Theory]
@@ -26,7 +26,7 @@ namespace Blog.Tests.Model
         {
             var post = new Post { Tags = tags };
 
-            Assert.Equal(2, post.TagCollection.Count());
+            Assert.Equal(2, post.GetTags().Count());
         }
 
         [Fact]

@@ -10,15 +10,15 @@ namespace Blog.ViewModels.Home
             CreateMap<Post, PostRow>()
                 .ForMember(
                     dest => dest.Tags,
-                    x => x.MapFrom(src => src.TagCollection));
+                    x => x.MapFrom(src => src.GetTags()));
 
             CreateMap<Post, PostViewModel>()
                 .ForMember(
                     dest => dest.Content,
-                    x => x.MapFrom(src => src.DisplayContent))
+                    x => x.MapFrom(src => src.Content.DisplayContent))
                 .ForMember(
                     dest => dest.Tags,
-                    x => x.MapFrom(src => src.TagCollection));
+                    x => x.MapFrom(src => src.GetTags()));
         }
     }
 }

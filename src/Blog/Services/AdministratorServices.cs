@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Blog.Domain;
 using Blog.ViewModels.Administrator;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,10 +25,10 @@ namespace Blog.Services
         public IEnumerable<PostRow> GetPosts() =>
             _context
             .Posts
-            .Select(x => new PostRow { Id = x.Id, Show = x.Show, Title = x.Title });
+            .Select(_mapper.Map<PostRow>);
 
         public PostEntry Get(int id) =>
-            _mapper.Map<PostEntry>(_context.Posts.Find(id));
+            _mapper.Map<PostEntry>(_context.Posts.Include(x => x.Content).Single(x => x.Id == id));
 
         public string Save(PostEntry viewModel)
         {
@@ -37,14 +38,17 @@ namespace Blog.Services
                 throw new ValidationException(nameof(PostEntry.Title), "This title already exists in the database.");
 
             post.PopulateUrlTitle();
-            post.DisplayContent = Article.Decorate(post.MarkedContent);
+            post.Content.DisplayContent = Article.Decorate(post.Content.MarkedContent);
 
             if (post.Id == 0)
+            {
                 _context.Posts.Add(post);
+            }
             else
             {
                 _context.Posts.Attach(post);
-                _context.Entry(post).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                _context.Entry(post).State = EntityState.Modified;
+                _context.Entry(post.Content).State = EntityState.Modified;
             }
             _context.SaveChanges();
             return post.UrlTitle;
@@ -52,8 +56,8 @@ namespace Blog.Services
 
         public void Delete(int id)
         {
-            var post = _context.Posts.Find(id);
-            _context.Posts.Remove(post);
+            _context.Posts.Remove(_context.Posts.Find(id));
+            _context.PostContents.Remove(_context.PostContents.Find(id));
             _context.SaveChanges();
         }
     }

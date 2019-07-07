@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Blog.Domain;
 using Blog.ViewModels.Home;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -18,7 +19,11 @@ namespace Blog.Services
         private readonly IMapper _mapper;
 
         public PostViewModel Get(string urlTitle) =>
-            _mapper.Map<PostViewModel>(_context.Posts.SingleOrDefault(x => x.UrlTitle == urlTitle));
+            _mapper.Map<PostViewModel>(_context
+                .Posts
+                .Include(x => x.Content)
+                .SingleOrDefault(x => x.UrlTitle == urlTitle)
+                );
 
         public IEnumerable<PostRow> GetPosts(Language language) =>
           _context.
