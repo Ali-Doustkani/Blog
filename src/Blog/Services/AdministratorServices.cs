@@ -32,6 +32,10 @@ namespace Blog.Services
         public string Save(PostEntry viewModel)
         {
             var post = _mapper.Map<Post>(viewModel);
+
+            if (_context.Posts.Any(x => x.Id != post.Id && string.Equals(x.Title, post.Title, StringComparison.OrdinalIgnoreCase)))
+                throw new ValidationException(nameof(PostEntry.Title), "This title already exists in the database.");
+
             post.PopulateUrlTitle();
             post.DisplayContent = Article.Decorate(post.MarkedContent);
 

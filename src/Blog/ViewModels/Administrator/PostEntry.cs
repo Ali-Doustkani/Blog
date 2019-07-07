@@ -1,5 +1,4 @@
 ﻿using Blog.Domain;
-using Blog.Utils;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -10,7 +9,6 @@ namespace Blog.ViewModels.Administrator
         public int Id { get; set; }
 
         [Required]
-        [MustBeUnique]
         public string Title { get; set; }
 
         public DateTime PublishDate { get; set; }

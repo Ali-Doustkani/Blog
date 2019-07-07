@@ -33,10 +33,18 @@ namespace Blog.Controllers
             if (!ModelState.IsValid)
                 return View(nameof(Post), post);
 
-            var urlTitle = _services.Save(post);
-            if (post.Show)
-                return RedirectToAction("Post", "Home", new { urlTitle });
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                var urlTitle = _services.Save(post);
+                if (post.Show)
+                    return RedirectToAction("Post", "Home", new { urlTitle });
+                return RedirectToAction(nameof(Index));
+            }
+            catch (ValidationException ex)
+            {
+                ModelState.AddModelError(ex.Key, ex.Message);
+                return View(nameof(Post), post);
+            }
         }
 
         [ValidateAntiForgeryToken]
