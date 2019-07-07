@@ -1,4 +1,4 @@
-﻿using Blog.Model;
+﻿using Blog.Domain;
 using Xunit;
 
 namespace Blog.Tests.Model

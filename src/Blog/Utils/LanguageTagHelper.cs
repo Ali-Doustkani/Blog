@@ -1,4 +1,4 @@
-﻿using Blog.Model;
+﻿using Blog.Domain;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -17,8 +17,6 @@ namespace Blog.Utils
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            System.Console.WriteLine(HasFarsi);
-            System.Console.WriteLine(ViewContext.ViewData["language"]);
             if (HasFarsi && Equals(ViewContext.ViewData["language"], Language.Farsi))
             {
                 if (output.Attributes.ContainsName("class"))

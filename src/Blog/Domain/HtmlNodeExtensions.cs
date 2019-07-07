@@ -1,7 +1,7 @@
 ﻿using HtmlAgilityPack;
 using System.Linq;
 
-namespace Blog.Model
+namespace Blog.Domain
 {
     public static class HtmlNodeExtensions
     {

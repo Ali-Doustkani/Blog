@@ -5,7 +5,7 @@ const english = document.getElementById("english");
 const farsi = document.getElementById("farsi");
 const editor = document.getElementById("editor");
 const summary = document.getElementById("Summary");
-const markedContent = document.getElementById("MarkedContent");
+const content = document.getElementById("Content");
 
 english.addEventListener("change", () => saveForm.classList.replace("farsi", "english"));
 farsi.addEventListener("change", () => saveForm.classList.replace("english", "farsi"));
@@ -46,11 +46,11 @@ const richtext = create(editor, {
     }
 });
 
-richtext.setInnerHTML(markedContent.value);
+richtext.setInnerHTML(content.value);
 
 saveForm.addEventListener("submit", () => {
-    markedContent.value = editor.innerHTML;
-    saveForm.appendChild(markedContent);
+    content.value = editor.innerHTML;
+    saveForm.appendChild(content);
 });
 
 summary.addEventListener("keydown", e => {

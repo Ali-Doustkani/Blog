@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Formatting.Json;
+using Microsoft.Extensions.Logging;
 
 namespace Blog
 {
@@ -24,10 +25,18 @@ namespace Blog
                 {
                     builder.AddJsonFile("secrets.json", true);
                 })
-                .UseSerilog((context, cfg) =>
+            .ConfigureLogging((context, cfg) =>
+            {
+                cfg.ClearProviders();
+                cfg.AddConsole();
+                if (context.HostingEnvironment.IsProduction())
                 {
-                    if (context.HostingEnvironment.IsProduction())
-                        cfg.WriteTo.File(new JsonFormatter(), "log/logs.json");
-                });
+                    cfg.AddSerilog(new LoggerConfiguration()
+                        .WriteTo
+                        .File(new JsonFormatter(), "log/logs.json")
+                        .CreateLogger()
+                        );
+                }
+            });
     }
 }

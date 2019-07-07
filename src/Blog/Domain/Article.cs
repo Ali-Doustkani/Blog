@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 
-namespace Blog.Model
+namespace Blog.Domain
 {
     public interface IImageService
     {
@@ -20,11 +20,9 @@ namespace Blog.Model
 
         public void Decorate(Post post)
         {
-            post.PopulateUrlTitle();
-
             var result = new StringBuilder(1000);
             var doc = new HtmlDocument();
-            doc.LoadHtml(post.MarkedContent);
+            doc.LoadHtml(post.Content.MarkedContent);
             var node = doc.DocumentNode.FirstChild;
             while (node != null)
             {
@@ -45,7 +43,7 @@ namespace Blog.Model
                 node = node.NextSibling;
             }
 
-            post.DisplayContent = result.ToString();
+            post.Content.DisplayContent = result.ToString();
         }
 
         void Figure(Post post, HtmlNode node)

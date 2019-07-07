@@ -1,4 +1,4 @@
-﻿using Blog.Model;
+﻿using Blog.ViewModels.Account;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +23,7 @@ namespace Blog.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel vm, string returnUrl = null)
+        public async Task<IActionResult> Login(LoginEntry vm, string returnUrl = null)
         {
             ViewData["returnUrl"] = returnUrl;
 

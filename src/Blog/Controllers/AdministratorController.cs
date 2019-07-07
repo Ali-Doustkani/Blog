@@ -1,72 +1,55 @@
-﻿using Blog.Model;
+﻿using Blog.Services;
+using Blog.ViewModels.Administrator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Linq;
 
 namespace Blog.Controllers
 {
     [Authorize]
     public class AdministratorController : Controller
     {
-        public AdministratorController(BlogContext context)
+        public AdministratorController(AdministratorServices services)
         {
-            _context = context;
+            _services = services;
         }
 
-        private readonly BlogContext _context;
+        private readonly AdministratorServices _services;
 
-        public ViewResult Index()
-        {
-            return View(_context.Posts.ToList());
-        }
+        public ViewResult Index() => View(_services.GetPosts());
 
-        public ViewResult Post()
-        {
-            var newPost = new Post
-            {
-                PublishDate = DateTime.Now
-            };
-            return View(newPost);
-        }
+        public ViewResult Post() => View(_services.Create());
 
         public IActionResult ViewPost(int id)
         {
-            var post = _context.Posts.Find(id);
+            var post = _services.Get(id);
             if (post == null)
                 return NotFound();
             return View(nameof(Post), post);
         }
 
         [ValidateAntiForgeryToken]
-        public IActionResult SavePost(Post post)
+        public IActionResult SavePost(PostEntry post)
         {
             if (!ModelState.IsValid)
                 return View(nameof(Post), post);
-
-            new Article(null).Decorate(post);
-
-            if (post.Id == 0)
-                _context.Posts.Add(post);
-            else
+            try
             {
-                _context.Posts.Attach(post);
-                _context.Entry(post).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                var urlTitle = _services.Save(post);
+                if (post.Show)
+                    return RedirectToAction("Post", "Home", new { urlTitle });
+                return RedirectToAction(nameof(Index));
             }
-            _context.SaveChanges();
-            if (post.Show)
-                return RedirectToAction("Post", "Home", new { urlTitle = post.UrlTitle });
-            return RedirectToAction(nameof(Index));
+            catch (ValidationException ex)
+            {
+                ModelState.AddModelError(ex.Key, ex.Message);
+                return View(nameof(Post), post);
+            }
         }
 
         [ValidateAntiForgeryToken]
         public IActionResult DeletePost(int id)
         {
-            var post = _context.Posts.Find(id);
-            if (post == null)
-                return NotFound();
-            _context.Posts.Remove(post);
-            _context.SaveChanges();
+            _services.Delete(id);
             return RedirectToAction(nameof(Index));
         }
     }

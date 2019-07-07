@@ -1,4 +1,4 @@
-﻿@model Post
+﻿@model PostEntry
 @{
     ViewData["Title"] = "Write a post";
 }
@@ -40,7 +40,7 @@
             <span asp-validation-for="Summary" class="error"></span>
         </div>
         <div class="text-group">
-            <label asp-for="MarkedContent"></label>
+            <label asp-for="Content"></label>
             <div class="toolbar">
                 <button id="important"><i class="fas fa-bold"></i></button>
                 <div class="separator"></div>
@@ -59,9 +59,9 @@
                 <button id="image"><i class="fas fa-camera"></i></button>
                 <button id="link"><i class="fas fa-link"></i></button>
             </div>
-            <input asp-for="MarkedContent" type="hidden" />
+            <input asp-for="Content" type="hidden" />
             <article id="editor"></article>
-            <span asp-validation-for="MarkedContent" class="error"></span>
+            <span asp-validation-for="Content" class="error"></span>
         </div>
         <div class="check-group">
             <input asp-for="Show" /><label asp-for="Show">Show In Blog</label>

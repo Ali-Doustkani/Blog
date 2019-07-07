@@ -1,36 +1,33 @@
-﻿using Blog.Model;
+﻿using Blog.Domain;
+using Blog.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Linq;
 
 namespace Blog.Controllers
 {
     public class HomeController : Controller
     {
-        public HomeController(BlogContext context)
+        public HomeController(HomeServices services)
         {
-            _context = context;
+            _services = services;
         }
 
-        private readonly BlogContext _context;
+        private readonly HomeServices _services;
 
         public ViewResult Index(string language)
         {
             var lang = Language.English;
             if (string.Equals(language, "fa", StringComparison.OrdinalIgnoreCase))
                 lang = Language.Farsi;
-
             ViewData["language"] = lang;
-
-            var posts = _context.Posts.Where(x => x.Language == lang);
             if (!User.Identity.IsAuthenticated)
-                posts = posts.Where(x => x.Show);
-            return View(posts.ToList());
+                return View(_services.GetVerifiedPosts(lang));
+            return View(_services.GetPosts(lang));
         }
 
         public IActionResult Post(string urlTitle)
         {
-            var post = _context.Posts.SingleOrDefault(x => x.UrlTitle == urlTitle);
+            var post = _services.Get(urlTitle);
             if (post == null)
                 return NotFound();
 
