@@ -75,9 +75,9 @@ namespace Blog.Domain
                 UrlTitle = Regex.Replace(Title, @"[\s.:]+", "-");
         }
 
-        public void Render(IImageSaver imageSaver)
+        public IEnumerable<Image> Render()
         {
-            Content.Render(imageSaver, UrlTitle);
+            return Content.Render(UrlTitle);
         }
     }
 }

@@ -11,16 +11,16 @@ namespace Blog.Services
 {
     public class AdministratorServices
     {
-        public AdministratorServices(BlogContext context, IMapper mapper, IImageSaver imageService)
+        public AdministratorServices(BlogContext context, IMapper mapper, IImageContext imageContext)
         {
             _context = context;
             _mapper = mapper;
-            _imageService = imageService;
+            _imageContext = imageContext;
         }
 
         private readonly BlogContext _context;
         private readonly IMapper _mapper;
-        private readonly IImageSaver _imageService;
+        private readonly IImageContext _imageContext;
 
         public PostEntry Create() =>
             new PostEntry { PublishDate = DateTime.Now };
@@ -41,7 +41,9 @@ namespace Blog.Services
                 throw new ValidationException(nameof(PostEntry.Title), "This title already exists in the database.");
 
             post.PopulateUrlTitle();
-            post.Render(_imageService);
+            var images = post.Render();
+
+            _imageContext.Save(images);
 
             if (post.Id == 0)
             {

@@ -1,7 +1,6 @@
 ﻿using Blog.Domain;
-using Blog.Utils;
-using HtmlAgilityPack;
-using Moq;
+using System;
+using System.Linq;
 using Xunit;
 
 namespace Blog.Tests.Domain
@@ -15,7 +14,7 @@ namespace Blog.Tests.Domain
             {
                 MarkedContent = "<span contenteditable=\"true\">TEXT</span>"
             };
-            post.Render(null, string.Empty);
+            post.Render("the-post");
             Assert.Equal(
                 "<span>TEXT</span>",
                 post.DisplayContent);
@@ -28,7 +27,7 @@ namespace Blog.Tests.Domain
             {
                 MarkedContent = "<p>1</p><p> </p><p>2</p>"
             };
-            post.Render(null, string.Empty);
+            post.Render("the-post");
             Assert.Equal(
                 "<p>1</p><p>2</p>",
                 post.DisplayContent);
@@ -41,7 +40,7 @@ namespace Blog.Tests.Domain
             {
                 MarkedContent = "<p> Hello </p>"
             };
-            post.Render(null, string.Empty);
+            post.Render("the-post");
             Assert.Equal(
                 "<p>Hello</p>",
                 post.DisplayContent);
@@ -54,7 +53,7 @@ namespace Blog.Tests.Domain
             {
                 MarkedContent = "<p contenteditable=\"true\">content</p><h3>H3</h3><h4>H4</h4>"
             };
-            post.Render(null, string.Empty);
+            post.Render("the-post");
             Assert.Equal(
                 "<p>content</p><h3>H3</h3><h4>H4</h4>",
                 post.DisplayContent);
@@ -67,7 +66,7 @@ namespace Blog.Tests.Domain
             {
                 MarkedContent = "<pre class=\"code\"><b>CODE</b></pre>"
             };
-            post.Render(null, string.Empty);
+            post.Render("the-post");
             Assert.Equal(
                 "<div class=\"code\"><pre><b>CODE</b></pre></div>",
                 post.DisplayContent);
@@ -80,7 +79,7 @@ namespace Blog.Tests.Domain
             {
                 MarkedContent = "<pre class=\"terminal\"><b>CMD</b></pre>"
             };
-            post.Render(null, string.Empty);
+            post.Render("the-post");
             Assert.Equal(
                 "<div class=\"cmd\"><pre><b>CMD</b></pre></div>",
                 post.DisplayContent);
@@ -93,7 +92,7 @@ namespace Blog.Tests.Domain
             {
                 MarkedContent = "<div class=\"note\"><b>NOTE</b></div>"
             };
-            post.Render(null, string.Empty);
+            post.Render("the-post");
             Assert.Equal(
                 "<div class=\"box-wrapper\"><span class=\"note\"><b>NOTE</b></span></div>",
                 post.DisplayContent);
@@ -106,7 +105,7 @@ namespace Blog.Tests.Domain
             {
                 MarkedContent = "<div class=\"warning\"><b>WARN</b></div>"
             };
-            post.Render(null, string.Empty);
+            post.Render("the-post");
             Assert.Equal(
                 "<div class=\"box-wrapper\"><span class=\"warning\"><b>WARN</b></span></div>",
                 post.DisplayContent);
@@ -119,7 +118,7 @@ namespace Blog.Tests.Domain
             {
                 MarkedContent = "<ul><li contenteditable=\"true\">I1</li><li contenteditable=\"true\"><b>I2</b></li></ul>"
             };
-            post.Render(null, string.Empty);
+            post.Render("the-post");
             Assert.Equal(
                 "<ul><li>I1</li><li><b>I2</b></li></ul>",
                 post.DisplayContent);
@@ -132,7 +131,7 @@ namespace Blog.Tests.Domain
             {
                 MarkedContent = "<ol><li contenteditable=\"true\">I1</li><li contenteditable=\"true\"><b>I2</b></li></ol>"
             };
-            post.Render(null, string.Empty);
+            post.Render("the-post");
             Assert.Equal(
                 "<ol><li>I1</li><li><b>I2</b></li></ol>",
                 post.DisplayContent);
@@ -145,27 +144,84 @@ namespace Blog.Tests.Domain
             {
                 MarkedContent = "<p contenteditable=\"true\"><strong>Hello</strong>World</p>"
             };
-            post.Render(null, string.Empty);
+            post.Render("the-post");
             Assert.Equal(
                 "<p><strong>Hello</strong>World</p>",
                 post.DisplayContent);
         }
 
         [Fact]
-        public void Images()
+        public void Return_Image_Fullname_And_Data()
         {
-            var imgSvc = new Mock<IImageSaver>();
-            imgSvc.Setup(x => x.Save(It.IsAny<string>(), It.IsAny<HtmlNode>())).Returns("PATH");
             var post = new PostContent
             {
-                MarkedContent = "<figure><button>Remove</button><img src=DATA/><figcaption>CAP</figcaption></figure>"
+                MarkedContent = "<figure><button>Remove</button><img data-filename=\"pic\" src=\"data:image/png;base64,DATA\"><figcaption>CAP</figcaption></figure>"
             };
 
-            post.Render(imgSvc.Object, "sth");
+            var images = post.Render("the-post");
+
+            Assert.Single(images);
+            Assert.Equal(
+                "<figure><img src=\"\\images\\posts\\the-post\\pic.png\"><figcaption>CAP</figcaption></figure>",
+                post.DisplayContent);
+            Assert.Equal(new byte[] { 12, 4, 192 }, images.First().Data);
+            Assert.Equal($"wwwroot\\images\\posts\\the-post\\pic.png", images.First().Fullname);
+        }
+
+        [Fact]
+        public void Render_Figures_Without_Captions()
+        {
+            var post = new PostContent
+            {
+                MarkedContent = "<figure><img data-filename=\"pic\" src=\"data:image/jpeg;base64,DATA\"></figure>"
+            };
+
+            post.Render("the-post");
 
             Assert.Equal(
-                "<figure><img src=\"PATH\"><figcaption>CAP</figcaption></figure>",
+                "<figure><img src=\"\\images\\posts\\the-post\\pic.jpeg\"></figure>",
                 post.DisplayContent);
+        }
+
+        [Fact]
+        public void Render_Figures_With_Empty_Captions()
+        {
+            var post = new PostContent
+            {
+                MarkedContent = "<figure><img data-filename=\"pic\" src=\"data:image/jpeg;base64,DATA\"><figcaption></figcaption></figure>"
+            };
+
+            post.Render("the-post");
+
+            Assert.Equal(
+                "<figure><img src=\"\\images\\posts\\the-post\\pic.jpeg\"></figure>",
+                post.DisplayContent);
+        }
+
+        [Fact]
+        public void When_Filename_Is_Not_Available_Use_Random_Name()
+        {
+            var post = new PostContent
+            {
+                MarkedContent = "<figure><img src=\"data:image/jpeg;base64,DATA\"></figure>"
+            };
+
+            var images = post.Render("the-post");
+
+            Assert.Equal(
+                $"<figure><img src=\"\\images\\posts\\the-post\\{images.First().Filename}\"></figure>",
+                post.DisplayContent);
+        }
+
+        [Fact]
+        public void Throw_For_Invalid_Base64()
+        {
+            var post = new PostContent
+            {
+                MarkedContent = "<figure><img src=\"data:image/jpeg;base64,DATA_=\"></figure>"
+            };
+
+            Assert.Throws<InvalidOperationException>(() => post.Render("the-post"));
         }
     }
 }

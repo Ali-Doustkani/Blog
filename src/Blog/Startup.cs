@@ -45,8 +45,7 @@ namespace Blog
             services.AddAutoMapper(GetType().Assembly);
             services.AddTransient<HomeServices>();
             services.AddTransient<AdministratorServices>();
-            services.AddTransient<IImageSaver, ImageSaver>();
-            services.AddTransient<IFileSystem, FileSystem>();
+            services.AddTransient<IImageContext, ImageContext>();
         }
 
         public void Configure(IApplicationBuilder app)
