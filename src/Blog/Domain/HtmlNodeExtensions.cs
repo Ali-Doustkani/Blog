@@ -29,12 +29,15 @@ namespace Blog.Domain
 
         public static string Figure(this HtmlNode node, string path)
         {
-            var img = node.SelectNodes("//img").Single();
+            var img = node.Child("img");
             img.Attributes["src"].Value = path;
-            var caption = node.SelectNodes("//figcaption")?.Single();
+            var caption = node.Child("figcaption");
             if (caption == null || string.IsNullOrWhiteSpace(caption.InnerHtml))
                 return Emmet.El("figure", img.OuterHtml);
             return Emmet.El("figure", string.Join("", img.OuterHtml, caption.OuterHtml));
         }
+
+        public static HtmlNode Child(this HtmlNode node, string tagName) =>
+            node.ChildNodes.SingleOrDefault(x => string.Equals(x.OriginalName, tagName, System.StringComparison.OrdinalIgnoreCase));
     }
 }

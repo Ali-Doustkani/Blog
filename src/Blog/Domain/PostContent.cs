@@ -57,7 +57,7 @@ namespace Blog.Domain
 
         private Image Image(HtmlNode node, string imagePath)
         {
-            var img = node.SelectNodes("//img").Single();
+            var img = node.Child("img");
             if (img == null)
                 throw new InvalidOperationException("The <figure> does not contain any <img>");
 
@@ -80,7 +80,7 @@ namespace Blog.Domain
 
         private string Filename(HtmlNode node)
         {
-            var img = node.SelectNodes("//img").Single();
+            var img = node.Child("img");
             var src = img.Attributes["src"].Value;
             var extension =
                 string.Concat(".",
@@ -95,7 +95,7 @@ namespace Blog.Domain
             if (!string.IsNullOrEmpty(dataFilename))
             {
                 img.Attributes["data-filename"].Remove();
-                return dataFilename + extension;
+                return dataFilename;
             }
 
             return Path.ChangeExtension(Path.GetRandomFileName(), extension);

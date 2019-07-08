@@ -155,7 +155,7 @@ namespace Blog.Tests.Domain
         {
             var post = new PostContent
             {
-                MarkedContent = "<figure><button>Remove</button><img data-filename=\"pic\" src=\"data:image/png;base64,DATA\"><figcaption>CAP</figcaption></figure>"
+                MarkedContent = "<figure><button>Remove</button><img data-filename=\"pic.png\" src=\"data:image/png;base64,DATA\"><figcaption>CAP</figcaption></figure>"
             };
 
             var images = post.Render("the-post");
@@ -173,7 +173,7 @@ namespace Blog.Tests.Domain
         {
             var post = new PostContent
             {
-                MarkedContent = "<figure><img data-filename=\"pic\" src=\"data:image/jpeg;base64,DATA\"></figure>"
+                MarkedContent = "<figure><img data-filename=\"pic.jpeg\" src=\"data:image/jpeg;base64,DATA\"></figure>"
             };
 
             post.Render("the-post");
@@ -188,7 +188,7 @@ namespace Blog.Tests.Domain
         {
             var post = new PostContent
             {
-                MarkedContent = "<figure><img data-filename=\"pic\" src=\"data:image/jpeg;base64,DATA\"><figcaption></figcaption></figure>"
+                MarkedContent = "<figure><img data-filename=\"pic.jpeg\" src=\"data:image/jpeg;base64,DATA\"><figcaption></figcaption></figure>"
             };
 
             post.Render("the-post");
