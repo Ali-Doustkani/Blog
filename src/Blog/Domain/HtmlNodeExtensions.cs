@@ -1,4 +1,5 @@
 ﻿using HtmlAgilityPack;
+using System;
 using System.Linq;
 
 namespace Blog.Domain
@@ -42,5 +43,15 @@ namespace Blog.Domain
 
         public static string Attr(this HtmlNode node, string name) =>
             node.Attributes.Contains(name) ? node.Attributes[name].Value : null;
+
+        public static void ForEachChild(this HtmlNode element, Action<HtmlNode> action)
+        {
+            var node = element.FirstChild;
+            while (node != null)
+            {
+                action(node);
+                node = node.NextSibling;
+            }
+        }
     }
 }

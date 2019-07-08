@@ -1,5 +1,4 @@
-﻿using Blog.Utils;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -13,6 +12,7 @@ namespace Blog.Domain
         {
             Tags = string.Empty;
             Content = new PostContent();
+            Content.Post = this;
         }
 
         public int Id { get; set; }
@@ -73,11 +73,6 @@ namespace Blog.Domain
         {
             if (!string.IsNullOrEmpty(Title))
                 UrlTitle = Regex.Replace(Title, @"[\s.:]+", "-");
-        }
-
-        public IEnumerable<Image> Render()
-        {
-            return Content.Render(UrlTitle);
         }
     }
 }

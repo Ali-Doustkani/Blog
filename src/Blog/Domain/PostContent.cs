@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -12,21 +11,21 @@ namespace Blog.Domain
     {
         public int Id { get; set; }
 
+        public Post Post { get; set; }
+
         public string MarkedContent { get; set; }
 
         public string DisplayContent { get; set; }
 
-        public IEnumerable<Image> Render(string urlTitle)
+        public void Render()
         {
-            if (string.IsNullOrEmpty(urlTitle))
-                throw new ArgumentNullException(nameof(urlTitle));
+            if (string.IsNullOrEmpty(Post.UrlTitle))
+                throw new InvalidOperationException("Render display HTML needs UrlTitle. Populate it first.");
 
-            var result = new List<Image>();
             var display = new StringBuilder(1000);
             var doc = new HtmlDocument();
             doc.LoadHtml(MarkedContent);
-            var node = doc.DocumentNode.FirstChild;
-            while (node != null)
+            doc.DocumentNode.ForEachChild(node =>
             {
                 if (node.Is("pre.code"))
                     display.Append(node.El("div.code>pre"));
@@ -39,20 +38,29 @@ namespace Blog.Domain
                 else if (node.Is("ul") || node.Is("ol"))
                     display.Append(node.ElChildren());
                 else if (node.Is("figure"))
-                {
-                    var fullname = Path.Combine("images", "posts", urlTitle, Filename(node));
-                    result.Add(Image(node, fullname));
-                    display.Append(
-                        node.Figure(
-                            Path.Combine(Path.DirectorySeparatorChar.ToString(), fullname)
-                            ));
-                }
+                    display.Append(node.Figure(PostPath.ImageUrl(Post.UrlTitle, GenerateFilename(node))));
                 else
                     display.Append(node.El());
-                node = node.NextSibling;
-            }
+            });
+
             DisplayContent = display.ToString();
-            return result;
+        }
+
+        public IEnumerable<Image> GetImages()
+        {
+            if (string.IsNullOrEmpty(Post.UrlTitle))
+                throw new InvalidOperationException("Creating images needs UrlTitle. Populate it first.");
+
+            var images = new List<Image>();
+            var doc = new HtmlDocument();
+            doc.LoadHtml(MarkedContent);
+            doc.DocumentNode.ForEachChild(node =>
+            {
+                if (node.Is("figure"))
+                    images.Add(Image(node, Path.Combine(Post.UrlTitle, GenerateFilename(node))));
+            });
+
+            return images;
         }
 
         private Image Image(HtmlNode node, string imagePath)
@@ -64,40 +72,25 @@ namespace Blog.Domain
             if (!img.Attributes.Contains("src"))
                 throw new InvalidOperationException("<img> must have src attribute in order to read the image.");
 
-            return new Image(Path.Combine("wwwroot", imagePath), Data(img));
-        }
-
-        private byte[] Data(HtmlNode img)
-        {
             var src = img.Attr("src");
             if (!Regex.IsMatch(src, @"^data:image/(?:[a-zA-Z]+);base64,[a-zA-Z0-9+/]+=*$"))
                 throw new InvalidOperationException($"src must have the Data URL pattern. DataURL: {src}");
 
             var url = Regex.Match(src, @",(?<data>.*)");
             var base64Data = url.Groups["data"].Value;
-            return Convert.FromBase64String(base64Data);
+            return new Image(imagePath, Convert.FromBase64String(base64Data));
         }
 
-        private string Filename(HtmlNode node)
+        private string GenerateFilename(HtmlNode node)
         {
             var img = node.Child("img");
-            var extension =
-                string.Concat(".",
-                    Regex
-                    .Match(img.Attr("src"), @"data:image/(?<type>.*),")
-                    .Groups["type"]
-                    .Value
-                    .Split(';')
-                    .First());
 
             var dataFilename = img.Attr("data-filename");
-            if (!string.IsNullOrEmpty(dataFilename))
-            {
-                img.Attributes["data-filename"].Remove();
-                return dataFilename;
-            }
+            if (string.IsNullOrEmpty(dataFilename))
+                throw new InvalidOperationException("data-filename attribute is not set for <img>");
 
-            return Path.ChangeExtension(Path.GetRandomFileName(), extension);
+            img.Attributes["data-filename"].Remove();
+            return dataFilename;
         }
     }
 }

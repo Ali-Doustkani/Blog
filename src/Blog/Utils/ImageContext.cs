@@ -8,7 +8,8 @@ namespace Blog.Utils
 {
     public interface IImageContext
     {
-        void Save(IEnumerable<Image> images);
+        void SaveChanges(IEnumerable<Image> images);
+        void Delete(string urlTitle);
     }
 
     public class ImageContext : IImageContext
@@ -20,11 +21,11 @@ namespace Blog.Utils
 
         private readonly ILogger _log;
 
-        public void Save(IEnumerable<Image> images)
+        public void SaveChanges(IEnumerable<Image> images)
         {
             if (images.Any())
             {
-                var dirpath = Path.GetDirectoryName(images.First().Fullname);
+                var dirpath = Path.GetDirectoryName(PostPath.PostImageAbsolute(images.First().Fullname));
                 Directory.CreateDirectory(dirpath);
                 foreach (var file in Directory.GetFiles(dirpath))
                     File.Delete(file);
@@ -32,8 +33,11 @@ namespace Blog.Utils
             foreach (var image in images)
             {
                 _log.LogInformation("Write Image. Filename: {0}, Data Length: {1}", image.Filename, image.Data.Length);
-                File.WriteAllBytes(image.Fullname, image.Data);
+                File.WriteAllBytes(PostPath.PostImageAbsolute(image.Fullname), image.Data);
             }
         }
+
+        public void Delete(string urlTitle) =>
+            Directory.Delete(PostPath.PostImageAbsolute(urlTitle), true);
     }
 }

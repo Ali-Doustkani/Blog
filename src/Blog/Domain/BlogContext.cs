@@ -22,7 +22,7 @@ namespace Blog.Domain
                 post.HasKey("Id");
 
                 post.HasOne(x => x.Content)
-                    .WithOne()
+                    .WithOne(x => x.Post)
                     .HasForeignKey<PostContent>(x => x.Id);
 
                 post.ToTable("Posts");
@@ -56,7 +56,7 @@ namespace Blog.Domain
                 postContent.HasKey(x => x.Id);
 
                 postContent
-                    .HasOne<Post>()
+                    .HasOne(x => x.Post)
                     .WithOne(x => x.Content)
                     .HasForeignKey<Post>(x => x.Id);
 
