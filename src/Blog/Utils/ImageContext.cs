@@ -37,7 +37,11 @@ namespace Blog.Utils
             }
         }
 
-        public void Delete(string urlTitle) =>
-            Directory.Delete(PostPath.PostImageAbsolute(urlTitle), true);
+        public void Delete(string urlTitle)
+        {
+            var dirpath = PostPath.PostImageAbsolute(urlTitle);
+            if (Directory.Exists(dirpath))
+                Directory.Delete(dirpath, true);
+        }
     }
 }
