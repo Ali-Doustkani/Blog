@@ -69,11 +69,11 @@ namespace Blog.Domain
 
         private byte[] Data(HtmlNode img)
         {
-            var src = img.Attributes["src"];
-            if (!Regex.IsMatch(src.Value, @"^data:image/(?:[a-zA-Z]+);base64,[a-zA-Z0-9+/]+=*$"))
-                throw new InvalidOperationException($"src must have the Data URL pattern. DataURL: {src.Value}");
+            var src = img.Attr("src");
+            if (!Regex.IsMatch(src, @"^data:image/(?:[a-zA-Z]+);base64,[a-zA-Z0-9+/]+=*$"))
+                throw new InvalidOperationException($"src must have the Data URL pattern. DataURL: {src}");
 
-            var url = Regex.Match(src.Value, @",(?<data>.*)");
+            var url = Regex.Match(src, @",(?<data>.*)");
             var base64Data = url.Groups["data"].Value;
             return Convert.FromBase64String(base64Data);
         }
@@ -81,17 +81,16 @@ namespace Blog.Domain
         private string Filename(HtmlNode node)
         {
             var img = node.Child("img");
-            var src = img.Attributes["src"].Value;
             var extension =
                 string.Concat(".",
                     Regex
-                    .Match(src, @"data:image/(?<type>.*),")
+                    .Match(img.Attr("src"), @"data:image/(?<type>.*),")
                     .Groups["type"]
                     .Value
                     .Split(';')
                     .First());
 
-            var dataFilename = img.Attributes["data-filename"]?.Value;
+            var dataFilename = img.Attr("data-filename");
             if (!string.IsNullOrEmpty(dataFilename))
             {
                 img.Attributes["data-filename"].Remove();

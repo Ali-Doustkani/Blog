@@ -39,5 +39,8 @@ namespace Blog.Domain
 
         public static HtmlNode Child(this HtmlNode node, string tagName) =>
             node.ChildNodes.SingleOrDefault(x => string.Equals(x.OriginalName, tagName, System.StringComparison.OrdinalIgnoreCase));
+
+        public static string Attr(this HtmlNode node, string name) =>
+            node.Attributes.Contains(name) ? node.Attributes[name].Value : null;
     }
 }
