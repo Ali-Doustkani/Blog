@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="appsettings.testing.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Assets\Fonts\FontLicense.txt" />
     <Content Include="Assets\Fonts\IRANSansWeb.woff2" />
     <Content Include="Assets\Fonts\IRANSansWeb_Black.woff2" />
@@ -15,6 +19,10 @@
     <Content Include="Assets\Fonts\IRANSansWeb_Light.woff2" />
     <Content Include="Assets\Fonts\IRANSansWeb_Medium.woff2" />
     <Content Include="Assets\Fonts\IRANSansWeb_UltraLight.woff2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="appsettings.testing.json" />
   </ItemGroup>
 
   <ItemGroup>

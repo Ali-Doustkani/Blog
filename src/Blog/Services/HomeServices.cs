@@ -19,7 +19,7 @@ namespace Blog.Services
         private readonly IMapper _mapper;
 
         public PostViewModel Get(string urlTitle) =>
-            MapViewModel(_context
+            _mapper.Map<PostViewModel>(_context
                 .Posts
                 .Include(x => x.Info)
                 .SingleOrDefault(x => x.Url == urlTitle)
@@ -27,36 +27,8 @@ namespace Blog.Services
 
         public IEnumerable<PostRow> GetPosts(Language language) =>
             _context
-            .Infos
-            .Join(_context.Posts, info => info.Id, pub => pub.Id, (info, pub) => info)
-            .Where(x => x.Language == language)
-            .Select(MapRow);
-
-        public IEnumerable<PostRow> GetVerifiedPosts(Language language) =>
-            _context
-            .Infos
-            .Join(_context.Posts, info => info.Id, pub => pub.Id, (info, pub) => info)
-            .Where(x => x.Language == language)
-            .Select(MapRow);
-
-        private PostRow MapRow(PostInfo post)
-        {
-            var row = _mapper.Map<PostRow>(post);
-            row.Date =
-                post.Language == Language.English ?
-                post.PublishDate.ToString("MMM yyyy") :
-                post.GetShortPersianDate();
-            return row;
-        }
-
-        private PostViewModel MapViewModel(Post post)
-        {
-            var viewModel = _mapper.Map<PostViewModel>(post);
-            viewModel.Date =
-                post.Info.Language == Language.English ?
-                post.Info.PublishDate.ToString("D") :
-                post.Info.GetLongPersianDate();
-            return viewModel;
-        }
+            .Posts
+            .Where(x => x.Info.Language == language)
+            .Select(_mapper.Map<PostRow>);
     }
 }

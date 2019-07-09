@@ -1,5 +1,4 @@
 ﻿using Blog.Domain;
-using System;
 using System.Collections.Generic;
 
 namespace Blog.ViewModels.Home
@@ -11,6 +10,5 @@ namespace Blog.ViewModels.Home
         public string Date { get; set; }
         public string Content { get; set; }
         public IEnumerable<string> Tags { get; set; }
-        public bool Show { get; set; }
     }
 }

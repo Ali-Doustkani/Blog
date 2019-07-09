@@ -20,8 +20,6 @@ namespace Blog.Controllers
             if (string.Equals(language, "fa", StringComparison.OrdinalIgnoreCase))
                 lang = Language.Farsi;
             ViewData["language"] = lang;
-            if (!User.Identity.IsAuthenticated)
-                return View(_services.GetVerifiedPosts(lang));
             return View(_services.GetPosts(lang));
         }
 
@@ -32,9 +30,6 @@ namespace Blog.Controllers
                 return NotFound();
 
             ViewData["language"] = post.Language;
-
-            if (!post.Show && !HttpContext.User.Identity.IsAuthenticated)
-                return Challenge();
 
             return View(post);
         }

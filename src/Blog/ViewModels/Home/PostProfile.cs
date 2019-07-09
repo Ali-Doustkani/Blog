@@ -10,15 +10,41 @@ namespace Blog.ViewModels.Home
             CreateMap<PostInfo, PostRow>()
                 .ForMember(
                     dest => dest.Tags,
-                    x => x.MapFrom(src => src.GetTags()));
-
-            CreateMap<Post, PostViewModel>()
+                    o => o.MapFrom(src => src.GetTags()))
                 .ForMember(
-                    dest => dest.Content,
-                    x => x.MapFrom(src => src.Content))
+                    dest => dest.Date,
+                    o => o.MapFrom<ShortDateResolver>());
+
+            CreateMap<Post, PostRow>()
+                .IncludeMembers(x => x.Info);
+
+            CreateMap<PostInfo, PostViewModel>()
                 .ForMember(
                     dest => dest.Tags,
-                    x => x.MapFrom(src => src.Info.GetTags()));
+                    o => o.MapFrom(src => src.GetTags()))
+                .ForMember(
+                    dest => dest.Date,
+                    o => o.MapFrom<LongDateResolver>());
+
+            CreateMap<Post, PostViewModel>()
+                .IncludeMembers(x => x.Info);
+        }
+
+        public class ShortDateResolver : IValueResolver<PostInfo, PostRow, string>
+        {
+            public string Resolve(PostInfo source, PostRow destination, string destMember, ResolutionContext context) =>
+                 source.Language == Language.English ?
+                 source.PublishDate.ToString("MMM yyyy") :
+                 source.GetShortPersianDate();
+
+        }
+
+        public class LongDateResolver : IValueResolver<PostInfo, PostViewModel, string>
+        {
+            public string Resolve(PostInfo source, PostViewModel destination, string destMember, ResolutionContext context) =>
+                source.Language == Language.English ?
+                source.PublishDate.ToString("D") :
+                source.GetLongPersianDate();
         }
     }
 }

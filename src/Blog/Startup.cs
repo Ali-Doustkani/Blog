@@ -4,6 +4,7 @@ using Blog.Services;
 using Blog.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -37,10 +38,7 @@ namespace Blog
             {
                 options.UseSqlServer(_configuration.GetConnectionString("Blog"));
             });
-            services.AddMvc(options =>
-            {
-                options.Filters.Add(new RequireHttpsAttribute());
-            });
+            services.AddMvc();
             services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<BlogContext>();
             services.AddAutoMapper(GetType().Assembly);
             services.AddTransient<HomeServices>();
@@ -50,20 +48,20 @@ namespace Blog
 
         public void Configure(IApplicationBuilder app)
         {
-            app.UseForwardedHeaders(new ForwardedHeadersOptions
-            {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-            });
-
             if (_env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
+            else if (_env.IsProduction())
             {
+                app.UseForwardedHeaders(new ForwardedHeadersOptions
+                {
+                    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+                });
                 app.UseExceptionHandler("/home/error");
                 app.UseStatusCodePagesWithReExecute("/home/error", "?statusCode={0}");
                 app.UseHsts();
+                app.UseHttpsRedirection();
                 app.UseXXssProtection(options => options.EnabledWithBlockMode());
                 app.UseXContentTypeOptions();
             }
