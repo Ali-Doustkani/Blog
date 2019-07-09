@@ -22,6 +22,8 @@ namespace Blog.Domain
             if (string.IsNullOrEmpty(Post.UrlTitle))
                 throw new InvalidOperationException("Render display HTML needs UrlTitle. Populate it first.");
 
+            _filenames = new Queue<string>();
+
             var display = new StringBuilder(1000);
             var doc = new HtmlDocument();
             doc.LoadHtml(MarkedContent);
@@ -51,13 +53,16 @@ namespace Blog.Domain
             if (string.IsNullOrEmpty(Post.UrlTitle))
                 throw new InvalidOperationException("Creating images needs UrlTitle. Populate it first.");
 
+            if (_filenames == null)
+                Render();
+
             var images = new List<Image>();
             var doc = new HtmlDocument();
             doc.LoadHtml(MarkedContent);
             doc.DocumentNode.ForEachChild(node =>
             {
                 if (node.Is("figure"))
-                    images.Add(Image(node, Path.Combine(Post.UrlTitle, GenerateFilename(node))));
+                    images.Add(Image(node, Path.Combine(Post.UrlTitle, _filenames.Peek())));
             });
 
             return images;
@@ -81,6 +86,8 @@ namespace Blog.Domain
             return new Image(imagePath, Convert.FromBase64String(base64Data));
         }
 
+        private Queue<string> _filenames;
+
         private string GenerateFilename(HtmlNode node)
         {
             var img = node.Child("img");
@@ -90,6 +97,11 @@ namespace Blog.Domain
                 throw new InvalidOperationException("data-filename attribute is not set for <img>");
 
             img.Attributes["data-filename"].Remove();
+
+            while (_filenames.Contains(dataFilename))
+                dataFilename = PostPath.Increment(dataFilename);
+
+            _filenames.Enqueue(dataFilename);
             return dataFilename;
         }
     }
