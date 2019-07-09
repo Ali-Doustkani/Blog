@@ -20,22 +20,22 @@ namespace Blog.Services
 
         public PostViewModel Get(string urlTitle) =>
             MapViewModel(_context
-                .Publishes
+                .Posts
                 .Include(x => x.Info)
-                .SingleOrDefault(x => x.UrlTitle == urlTitle)
+                .SingleOrDefault(x => x.Url == urlTitle)
                 );
 
         public IEnumerable<PostRow> GetPosts(Language language) =>
             _context
             .Infos
-            .Join(_context.Publishes, info => info.Id, pub => pub.Id, (info, pub) => info)
+            .Join(_context.Posts, info => info.Id, pub => pub.Id, (info, pub) => info)
             .Where(x => x.Language == language)
             .Select(MapRow);
 
         public IEnumerable<PostRow> GetVerifiedPosts(Language language) =>
             _context
             .Infos
-            .Join(_context.Publishes, info => info.Id, pub => pub.Id, (info, pub) => info)
+            .Join(_context.Posts, info => info.Id, pub => pub.Id, (info, pub) => info)
             .Where(x => x.Language == language)
             .Select(MapRow);
 

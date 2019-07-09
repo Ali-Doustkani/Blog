@@ -11,7 +11,7 @@ namespace Blog.Domain
 
         public PostInfo Info { get; set; }
 
-        public string UrlTitle { get; set; }
+        public string Url { get; set; }
 
         public string Content { get; set; }
     }

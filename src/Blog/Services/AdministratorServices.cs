@@ -69,23 +69,23 @@ namespace Blog.Services
             if (viewModel.Show)
             {
                 var publish = draft.Publish();
-                if (_context.Publishes.Any(x => x.Id == publish.Id))
+                if (_context.Posts.Any(x => x.Id == publish.Id))
                 {
-                    _context.Publishes.Attach(publish);
+                    _context.Posts.Attach(publish);
                     _context.Entry(publish).State = EntityState.Modified;
                 }
                 else
                 {
-                    _context.Publishes.Add(publish);
+                    _context.Posts.Add(publish);
                 }
 
-                result = new SaveResult(true, publish.UrlTitle);
+                result = new SaveResult(true, publish.Url);
             }
             else
             {
-                if (_context.Publishes.Any(x => x.Id == draft.Id))
+                if (_context.Posts.Any(x => x.Id == draft.Id))
                 {
-                    _context.Publishes.Remove(_context.Publishes.Find(draft.Id));
+                    _context.Posts.Remove(_context.Posts.Find(draft.Id));
                 }
 
                 result = new SaveResult(false, string.Empty);

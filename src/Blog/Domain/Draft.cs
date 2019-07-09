@@ -50,7 +50,7 @@ namespace Blog.Domain
                 Id = Id,
                 Content = display.ToString(),
                 Info = Info,
-                UrlTitle = Info.EncodeTitle()
+                Url = Info.EncodeTitle()
             };
         }
     }

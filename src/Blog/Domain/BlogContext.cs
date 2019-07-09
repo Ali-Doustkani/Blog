@@ -13,7 +13,7 @@ namespace Blog.Domain
 
         public DbSet<PostInfo> Infos { get; set; }
         public DbSet<Draft> Drafts { get; set; }
-        public DbSet<Post> Publishes { get; set; }
+        public DbSet<Post> Posts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -24,6 +24,10 @@ namespace Blog.Domain
                 info.HasOne<Draft>()
                 .WithOne(x => x.Info)
                 .HasForeignKey<Draft>(x => x.Id);
+
+                info.HasOne<Post>()
+               .WithOne(x => x.Info)
+               .HasForeignKey<Post>(x => x.Id);
 
                 info.HasAlternateKey(x => x.Title);
 
@@ -55,9 +59,9 @@ namespace Blog.Domain
             {
                 pub.HasOne(x => x.Info)
                .WithOne()
-               .HasForeignKey<PostInfo>(x => x.Id);
+               .HasForeignKey<Post>(x => x.Id);
 
-                pub.Property(x => x.UrlTitle)
+                pub.Property(x => x.Url)
                    .IsRequired()
                    .HasMaxLength(200);
             });
