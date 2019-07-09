@@ -37,7 +37,7 @@ namespace Blog.Services
         {
             var post = _mapper.Map<Draft>(viewModel);
 
-            if (_context.Drafts.Any(x => x.Id != post.Id && string.Equals(x.Title, post.Title, StringComparison.OrdinalIgnoreCase)))
+            if (_context.Infos.Any(x => x.Id != post.Id && string.Equals(x.Title, post.Info.Title, StringComparison.OrdinalIgnoreCase)))
                 throw new ValidationException(nameof(PostEntry.Title), "This title already exists in the database.");
 
             post.PopulateUrlTitle();

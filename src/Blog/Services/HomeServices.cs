@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Blog.Domain;
 using Blog.ViewModels.Home;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -20,28 +21,31 @@ namespace Blog.Services
         public PostViewModel Get(string urlTitle) =>
             MapViewModel(_context
                 .Drafts
+                .Include(x => x.Info)
                 .SingleOrDefault(x => x.UrlTitle == urlTitle)
                 );
 
         public IEnumerable<PostRow> GetPosts(Language language) =>
-          _context.
-          Drafts.
-          Where(x => x.Language == language).
-          Select(MapRow);
+            _context
+            .Drafts
+            .Include(x => x.Info)
+            .Where(x => x.Info.Language == language)
+            .Select(MapRow);
 
         public IEnumerable<PostRow> GetVerifiedPosts(Language language) =>
-            _context.
-            Drafts.
-            Where(x => x.Show && x.Language == language).
-            Select(MapRow);
+            _context
+            .Drafts
+            .Include(x => x.Info)
+            .Where(x => x.Info.Language == language)
+            .Select(MapRow);
 
         private PostRow MapRow(Draft post)
         {
             var row = _mapper.Map<PostRow>(post);
             row.Date =
-                post.Language == Language.English ?
-                post.PublishDate.ToString("MMM yyyy") :
-                post.GetShortPersianDate();
+                post.Info.Language == Language.English ?
+                post.Info.PublishDate.ToString("MMM yyyy") :
+                post.Info.GetShortPersianDate();
             return row;
         }
 
@@ -49,9 +53,9 @@ namespace Blog.Services
         {
             var viewModel = _mapper.Map<PostViewModel>(post);
             viewModel.Date =
-                post.Language == Language.English ?
-                post.PublishDate.ToString("D") :
-                post.GetLongPersianDate();
+                post.Info.Language == Language.English ?
+                post.Info.PublishDate.ToString("D") :
+                post.Info.GetLongPersianDate();
             return viewModel;
         }
     }

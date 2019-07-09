@@ -11,37 +11,52 @@ namespace Blog.Domain
             : base(options)
         { }
 
+        public DbSet<PostInfo> Infos { get; set; }
         public DbSet<Draft> Drafts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Draft>(post =>
+
+            modelBuilder.Entity<PostInfo>(info =>
             {
-                post.HasKey("Id");
+                info.HasKey("Id");
 
-                post.HasAlternateKey(x => x.Title);
+                info.HasOne<Draft>()
+                .WithOne(x => x.Info)
+                .HasForeignKey<Draft>(x => x.Id);
 
-                post.Property(x => x.Language)
+                info.HasAlternateKey(x => x.Title);
+
+                info.Property(x => x.Language)
                     .HasConversion(new EnumToNumberConverter<Language, int>())
                     .IsRequired()
                     .HasDefaultValue(Language.English);
 
-                post.Property(x => x.Title)
+                info.Property(x => x.Title)
                     .IsRequired()
                     .HasMaxLength(150);
+
+                info.Property(x => x.Summary)
+                   .IsRequired();
+
+                info.Property(x => x.Tags)
+                    .IsRequired()
+                    .HasDefaultValue(string.Empty);
+            });
+
+            modelBuilder.Entity<Draft>(post =>
+            {
+                post.HasKey("Id");
+
+                post.HasOne(x => x.Info)
+                .WithOne()
+                .HasForeignKey<PostInfo>(x => x.Id);
 
                 post.Property(x => x.UrlTitle)
                     .IsRequired()
                     .HasMaxLength(200)
                     .HasDefaultValue("[NOT SET]");
-
-                post.Property(x => x.Summary)
-                    .IsRequired();
-
-                post.Property(x => x.Tags)
-                    .IsRequired()
-                    .HasDefaultValue(string.Empty);
             });
         }
     }
