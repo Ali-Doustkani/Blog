@@ -13,7 +13,7 @@ namespace Blog.Tests.Domain
         [InlineData("   ")]
         public void TagCollection_WithEmptyString_EmptyCollection(string tags)
         {
-            var post = new Post { Tags = tags };
+            var post = new Draft { Tags = tags };
 
             Assert.Equal(Enumerable.Empty<string>(), post.GetTags());
         }
@@ -24,7 +24,7 @@ namespace Blog.Tests.Domain
         [InlineData("a,b,")]
         public void TagCollection_IgnoresEmptyStringParts(string tags)
         {
-            var post = new Post { Tags = tags };
+            var post = new Draft { Tags = tags };
 
             Assert.Equal(2, post.GetTags().Count());
         }
@@ -32,7 +32,7 @@ namespace Blog.Tests.Domain
         [Fact]
         public void GetShortPersianDate()
         {
-            var post = new Post { PublishDate = new DateTime(2018, 12, 25) };
+            var post = new Draft { PublishDate = new DateTime(2018, 12, 25) };
 
             Assert.Equal("دی 1397", post.GetShortPersianDate());
         }
@@ -40,7 +40,7 @@ namespace Blog.Tests.Domain
         [Fact]
         public void GetLongPersianDate()
         {
-            var post = new Post { PublishDate = new DateTime(2018, 12, 25) };
+            var post = new Draft { PublishDate = new DateTime(2018, 12, 25) };
 
             Assert.Equal("سه شنبه، 4 دی 1397", post.GetLongPersianDate());
         }
@@ -51,7 +51,7 @@ namespace Blog.Tests.Domain
         [InlineData("یادگیری: ASP.NET Core", "یادگیری-ASP-NET-Core")]
         public void PopulateUrlTitle(string title, string result)
         {
-            var post = new Post { Title = title };
+            var post = new Draft { Title = title };
             post.PopulateUrlTitle();
 
             Assert.Equal(result, post.UrlTitle);

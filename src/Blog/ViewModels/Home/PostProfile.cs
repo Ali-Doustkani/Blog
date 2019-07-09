@@ -7,15 +7,15 @@ namespace Blog.ViewModels.Home
     {
         public PostProfile()
         {
-            CreateMap<Post, PostRow>()
+            CreateMap<Draft, PostRow>()
                 .ForMember(
                     dest => dest.Tags,
                     x => x.MapFrom(src => src.GetTags()));
 
-            CreateMap<Post, PostViewModel>()
+            CreateMap<Draft, PostViewModel>()
                 .ForMember(
                     dest => dest.Content,
-                    x => x.MapFrom(src => src.Content.DisplayContent))
+                    x => x.MapFrom(src => src.DisplayContent))
                 .ForMember(
                     dest => dest.Tags,
                     x => x.MapFrom(src => src.GetTags()));

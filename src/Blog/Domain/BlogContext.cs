@@ -11,21 +11,14 @@ namespace Blog.Domain
             : base(options)
         { }
 
-        public DbSet<Post> Posts { get; set; }
-        public DbSet<PostContent> PostContents { get; set; }
+        public DbSet<Draft> Drafts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Post>(post =>
+            modelBuilder.Entity<Draft>(post =>
             {
                 post.HasKey("Id");
-
-                post.HasOne(x => x.Content)
-                    .WithOne(x => x.Post)
-                    .HasForeignKey<PostContent>(x => x.Id);
-
-                post.ToTable("Posts");
 
                 post.HasAlternateKey(x => x.Title);
 
@@ -49,24 +42,6 @@ namespace Blog.Domain
                 post.Property(x => x.Tags)
                     .IsRequired()
                     .HasDefaultValue(string.Empty);
-            });
-
-            modelBuilder.Entity<PostContent>(postContent =>
-            {
-                postContent.HasKey(x => x.Id);
-
-                postContent
-                    .HasOne(x => x.Post)
-                    .WithOne(x => x.Content)
-                    .HasForeignKey<Post>(x => x.Id);
-
-                postContent.ToTable("Posts");
-
-                postContent.Property(x => x.MarkedContent)
-                    .IsRequired();
-
-                postContent.Property(x => x.DisplayContent)
-                    .IsRequired();
             });
         }
     }

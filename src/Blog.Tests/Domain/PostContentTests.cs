@@ -9,19 +9,19 @@ namespace Blog.Tests.Domain
     {
         private string Render(string html)
         {
-            var post = new Post();
-            post.UrlTitle = "the-post";
-            post.Content.MarkedContent = html;
-            post.Content.Render();
-            return post.Content.DisplayContent;
+            var draft = new Draft();
+            draft.UrlTitle = "the-post";
+            draft.Content = html;
+            draft.Render();
+            return draft.DisplayContent;
         }
 
-        private PostContent Create(string html)
+        private Draft Create(string html)
         {
-            var post = new Post();
-            post.UrlTitle = "the-post";
-            post.Content.MarkedContent = html;
-            return post.Content;
+            var draft = new Draft();
+            draft.UrlTitle = "the-post";
+            draft.Content = html;
+            return draft;
         }
 
         #region Rendering HTML

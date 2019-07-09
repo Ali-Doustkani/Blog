@@ -1,32 +1,95 @@
 ﻿using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Blog.Domain
 {
-    public class PostContent
+    public class Draft
     {
+        public Draft()
+        {
+            Tags = string.Empty;
+        }
+
         public int Id { get; set; }
 
-        public Post Post { get; set; }
+        public string Title { get; set; }
 
-        public string MarkedContent { get; set; }
+        public string UrlTitle { get; set; }
+
+        public DateTime PublishDate { get; set; }
+
+        public Language Language { get; set; }
+
+        public string Summary { get; set; }
+
+        public string Tags { get; set; }
+
+        public bool Show { get; set; }
+
+        public string Content { get; set; }
 
         public string DisplayContent { get; set; }
 
+        public IEnumerable<string> GetTags()
+        {
+            if (string.IsNullOrEmpty(Tags))
+                return Enumerable.Empty<string>();
+
+            var result = new List<string>();
+            foreach (var str in Tags.Split(","))
+            {
+                var trimmed = str.Trim();
+                if (!string.IsNullOrEmpty(trimmed))
+                    result.Add(trimmed);
+            }
+            return result;
+        }
+
+        public string GetLongPersianDate()
+        {
+            var cal = new PersianCalendar();
+            var days = new[] { "یکشنبه", "دوشنبه", "سه شنبه", "چهارشنبه", "پنج شنبه", "جمعه", "شنبه" };
+            var dayName = days[(int)cal.GetDayOfWeek(PublishDate)];
+            return $"{dayName}، {cal.GetDayOfMonth(PublishDate)} {MonthName()} {cal.GetYear(PublishDate)}";
+        }
+
+        public string GetShortPersianDate()
+        {
+            var cal = new PersianCalendar();
+            return $"{MonthName()} {cal.GetYear(PublishDate)}";
+        }
+
+        private string MonthName()
+        {
+            var cal = new PersianCalendar();
+            var months = new[] { "فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند" };
+            return months[cal.GetMonth(PublishDate) - 1];
+        }
+
+        public void PopulateUrlTitle()
+        {
+            if (!string.IsNullOrEmpty(Title))
+                UrlTitle = Regex.Replace(Title, @"[\s.:]+", "-");
+        }
+
+        // Post Content
+
         public void Render()
         {
-            if (string.IsNullOrEmpty(Post.UrlTitle))
+            if (string.IsNullOrEmpty(UrlTitle))
                 throw new InvalidOperationException("Render display HTML needs UrlTitle. Populate it first.");
 
             _filenames = new Queue<string>();
 
             var display = new StringBuilder(1000);
             var doc = new HtmlDocument();
-            doc.LoadHtml(MarkedContent);
+            doc.LoadHtml(Content);
             doc.DocumentNode.ForEachChild(node =>
             {
                 if (node.Is("pre.code"))
@@ -40,7 +103,7 @@ namespace Blog.Domain
                 else if (node.Is("ul") || node.Is("ol"))
                     display.Append(node.ElChildren());
                 else if (node.Is("figure"))
-                    display.Append(node.Figure(PostPath.ImageUrl(Post.UrlTitle, GenerateFilename(node))));
+                    display.Append(node.Figure(PostPath.ImageUrl(UrlTitle, GenerateFilename(node))));
                 else
                     display.Append(node.El());
             });
@@ -50,7 +113,7 @@ namespace Blog.Domain
 
         public IEnumerable<Image> GetImages()
         {
-            if (string.IsNullOrEmpty(Post.UrlTitle))
+            if (string.IsNullOrEmpty(UrlTitle))
                 throw new InvalidOperationException("Creating images needs UrlTitle. Populate it first.");
 
             if (_filenames == null)
@@ -58,11 +121,11 @@ namespace Blog.Domain
 
             var images = new List<Image>();
             var doc = new HtmlDocument();
-            doc.LoadHtml(MarkedContent);
+            doc.LoadHtml(Content);
             doc.DocumentNode.ForEachChild(node =>
             {
                 if (node.Is("figure"))
-                    images.Add(Image(node, Path.Combine(Post.UrlTitle, _filenames.Peek())));
+                    images.Add(Image(node, Path.Combine(UrlTitle, _filenames.Peek())));
             });
 
             return images;

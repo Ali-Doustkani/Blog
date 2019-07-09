@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Blog.Domain;
 using Blog.ViewModels.Home;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -20,24 +19,23 @@ namespace Blog.Services
 
         public PostViewModel Get(string urlTitle) =>
             MapViewModel(_context
-                .Posts
-                .Include(x => x.Content)
+                .Drafts
                 .SingleOrDefault(x => x.UrlTitle == urlTitle)
                 );
 
         public IEnumerable<PostRow> GetPosts(Language language) =>
           _context.
-          Posts.
+          Drafts.
           Where(x => x.Language == language).
           Select(MapRow);
 
         public IEnumerable<PostRow> GetVerifiedPosts(Language language) =>
             _context.
-            Posts.
+            Drafts.
             Where(x => x.Show && x.Language == language).
             Select(MapRow);
 
-        private PostRow MapRow(Post post)
+        private PostRow MapRow(Draft post)
         {
             var row = _mapper.Map<PostRow>(post);
             row.Date =
@@ -47,7 +45,7 @@ namespace Blog.Services
             return row;
         }
 
-        private PostViewModel MapViewModel(Post post)
+        private PostViewModel MapViewModel(Draft post)
         {
             var viewModel = _mapper.Map<PostViewModel>(post);
             viewModel.Date =
