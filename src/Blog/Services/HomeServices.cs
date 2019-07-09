@@ -20,36 +20,36 @@ namespace Blog.Services
 
         public PostViewModel Get(string urlTitle) =>
             MapViewModel(_context
-                .Drafts
+                .Publishes
                 .Include(x => x.Info)
                 .SingleOrDefault(x => x.UrlTitle == urlTitle)
                 );
 
         public IEnumerable<PostRow> GetPosts(Language language) =>
             _context
-            .Drafts
-            .Include(x => x.Info)
-            .Where(x => x.Info.Language == language)
+            .Infos
+            .Join(_context.Publishes, info => info.Id, pub => pub.Id, (info, pub) => info)
+            .Where(x => x.Language == language)
             .Select(MapRow);
 
         public IEnumerable<PostRow> GetVerifiedPosts(Language language) =>
             _context
-            .Drafts
-            .Include(x => x.Info)
-            .Where(x => x.Info.Language == language)
+            .Infos
+            .Join(_context.Publishes, info => info.Id, pub => pub.Id, (info, pub) => info)
+            .Where(x => x.Language == language)
             .Select(MapRow);
 
-        private PostRow MapRow(Draft post)
+        private PostRow MapRow(PostInfo post)
         {
             var row = _mapper.Map<PostRow>(post);
             row.Date =
-                post.Info.Language == Language.English ?
-                post.Info.PublishDate.ToString("MMM yyyy") :
-                post.Info.GetShortPersianDate();
+                post.Language == Language.English ?
+                post.PublishDate.ToString("MMM yyyy") :
+                post.GetShortPersianDate();
             return row;
         }
 
-        private PostViewModel MapViewModel(Draft post)
+        private PostViewModel MapViewModel(Post post)
         {
             var viewModel = _mapper.Map<PostViewModel>(post);
             viewModel.Date =

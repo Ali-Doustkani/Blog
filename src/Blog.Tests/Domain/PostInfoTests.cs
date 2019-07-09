@@ -45,5 +45,14 @@ namespace Blog.Tests.Domain
             Assert.Equal("سه شنبه، 4 دی 1397", post.GetLongPersianDate());
         }
 
+        [Theory]
+        [InlineData("پیش مقدمه", "پیش-مقدمه")]
+        [InlineData("پیش      مقدمه", "پیش-مقدمه")]
+        [InlineData("یادگیری: ASP.NET Core", "یادگیری-ASP-NET-Core")]
+        public void EncodeTitle(string title, string result)
+        {
+            var info = new PostInfo { Title = title };
+            Assert.Equal(result, info.EncodeTitle());
+        }
     }
 }

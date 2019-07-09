@@ -13,6 +13,7 @@ namespace Blog.Domain
 
         public DbSet<PostInfo> Infos { get; set; }
         public DbSet<Draft> Drafts { get; set; }
+        public DbSet<Post> Publishes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -20,8 +21,6 @@ namespace Blog.Domain
 
             modelBuilder.Entity<PostInfo>(info =>
             {
-                info.HasKey("Id");
-
                 info.HasOne<Draft>()
                 .WithOne(x => x.Info)
                 .HasForeignKey<Draft>(x => x.Id);
@@ -47,16 +46,20 @@ namespace Blog.Domain
 
             modelBuilder.Entity<Draft>(post =>
             {
-                post.HasKey("Id");
-
                 post.HasOne(x => x.Info)
                 .WithOne()
                 .HasForeignKey<PostInfo>(x => x.Id);
+            });
 
-                post.Property(x => x.UrlTitle)
-                    .IsRequired()
-                    .HasMaxLength(200)
-                    .HasDefaultValue("[NOT SET]");
+            modelBuilder.Entity<Post>(pub =>
+            {
+                pub.HasOne(x => x.Info)
+               .WithOne()
+               .HasForeignKey<PostInfo>(x => x.Id);
+
+                pub.Property(x => x.UrlTitle)
+                   .IsRequired()
+                   .HasMaxLength(200);
             });
         }
     }

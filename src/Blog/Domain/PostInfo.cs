@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Blog.Domain
 {
@@ -58,6 +59,14 @@ namespace Blog.Domain
                     result.Add(trimmed);
             }
             return result;
+        }
+
+        public string EncodeTitle()
+        {
+            if (!string.IsNullOrEmpty(Title))
+                return Regex.Replace(Title, @"[\s.:]+", "-");
+
+            throw new InvalidOperationException("Publishing needs Title to be set.");
         }
     }
 }

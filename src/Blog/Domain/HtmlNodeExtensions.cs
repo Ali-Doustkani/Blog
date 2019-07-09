@@ -28,10 +28,12 @@ namespace Blog.Domain
         public static string ElChildren(this HtmlNode node) =>
              Emmet.El(node.OriginalName, string.Join("", node.ChildNodes.Select(El)));
 
-        public static string Figure(this HtmlNode node, string path)
+        public static string Figure(this HtmlNode node)
         {
             var img = node.Child("img");
-            img.Attributes["src"].Value = path;
+            if (Image.IsDataUrl(img.Attr("src")))
+                throw new InvalidOperationException("<img> src is not rendered yet.");
+
             var caption = node.Child("figcaption");
             if (caption == null || string.IsNullOrWhiteSpace(caption.InnerHtml))
                 return Emmet.El("figure", img.OuterHtml);

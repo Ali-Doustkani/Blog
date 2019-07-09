@@ -34,9 +34,9 @@ namespace Blog.Controllers
                 return View(nameof(Post), post);
             try
             {
-                var urlTitle = _services.Save(post);
-                if (post.Show)
-                    return RedirectToAction("Post", "Home", new { urlTitle });
+                var result = _services.Save(post);
+                if (result.Published)
+                    return RedirectToAction("Post", "Home", new { result.Url });
                 return RedirectToAction(nameof(Index));
             }
             catch (ValidationException ex)

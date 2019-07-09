@@ -9,6 +9,18 @@ using System.Linq;
 
 namespace Blog.Services
 {
+    public class SaveResult
+    {
+        public SaveResult(bool published, string url)
+        {
+            Published = published;
+            Url = url;
+        }
+
+        public bool Published { get; }
+        public string Url { get; }
+    }
+
     public class AdministratorServices
     {
         public AdministratorServices(BlogContext context, IMapper mapper, IImageContext imageContext)
@@ -33,31 +45,56 @@ namespace Blog.Services
         public PostEntry Get(int id) =>
             _mapper.Map<PostEntry>(_context.Drafts.Single(x => x.Id == id));
 
-        public string Save(PostEntry viewModel)
+        public SaveResult Save(PostEntry viewModel)
         {
-            var post = _mapper.Map<Draft>(viewModel);
+            SaveResult result;
 
-            if (_context.Infos.Any(x => x.Id != post.Id && string.Equals(x.Title, post.Info.Title, StringComparison.OrdinalIgnoreCase)))
+            var draft = _mapper.Map<Draft>(viewModel);
+
+            if (_context.Infos.Any(x => x.Id != draft.Id && string.Equals(x.Title, draft.Info.Title, StringComparison.OrdinalIgnoreCase)))
                 throw new ValidationException(nameof(PostEntry.Title), "This title already exists in the database.");
 
-            post.PopulateUrlTitle();
-            post.Render();
+            var images = draft.RenderImages();
 
-            if (post.Id == 0)
+            if (draft.Id == 0)
             {
-                _context.Drafts.Add(post);
+                _context.Drafts.Add(draft);
             }
             else
             {
-                _context.Drafts.Attach(post);
-                _context.Entry(post).State = EntityState.Modified;
-                _context.Entry(post).State = EntityState.Modified;
+                _context.Drafts.Attach(draft);
+                _context.Entry(draft).State = EntityState.Modified;
+            }
+
+            if (viewModel.Show)
+            {
+                var publish = draft.Publish();
+                if (_context.Publishes.Any(x => x.Id == publish.Id))
+                {
+                    _context.Publishes.Attach(publish);
+                    _context.Entry(publish).State = EntityState.Modified;
+                }
+                else
+                {
+                    _context.Publishes.Add(publish);
+                }
+
+                result = new SaveResult(true, publish.UrlTitle);
+            }
+            else
+            {
+                if (_context.Publishes.Any(x => x.Id == draft.Id))
+                {
+                    _context.Publishes.Remove(_context.Publishes.Find(draft.Id));
+                }
+
+                result = new SaveResult(false, string.Empty);
             }
 
             _context.SaveChanges();
-            _imageContext.SaveChanges(post.GetImages());
+            _imageContext.SaveChanges(images);
 
-            return post.UrlTitle;
+            return result;
         }
 
         public void Delete(int id)
@@ -65,7 +102,7 @@ namespace Blog.Services
             var post = _context.Drafts.Find(id);
             _context.Drafts.Remove(post);
             _context.SaveChanges();
-            _imageContext.Delete(post.UrlTitle);
+            // _imageContext.Delete(post.UrlTitle);
         }
     }
 }
