@@ -6,14 +6,12 @@ using System.Text.RegularExpressions;
 
 namespace Blog.Domain
 {
-    public class PostInfo
+    public class PostInfo : DomainEntity
     {
         public PostInfo()
         {
             Tags = string.Empty;
         }
-
-        public int Id { get; set; }
 
         public string Title { get; set; }
 

@@ -1,6 +1,6 @@
 ﻿using Blog.Domain;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Blog.Tests.Services
 {
@@ -8,17 +8,24 @@ namespace Blog.Tests.Services
     {
         public static BlogContext CreateInMemory()
         {
+            var connection = new SqliteConnection("DataSource=:memory:");
+            connection.Open();
             var optionBuilder = new DbContextOptionsBuilder();
-            optionBuilder.UseInMemoryDatabase("BlogInMemoryDb");
+            optionBuilder.UseSqlite(connection);
 
-            var serviceProvider = new ServiceCollection()
-                .AddEntityFrameworkInMemoryDatabase()
-                .BuildServiceProvider();
-            optionBuilder.UseInternalServiceProvider(serviceProvider);
+            using (var ctx = new BlogContext(optionBuilder.Options))
+                ctx.Database.EnsureCreated();
 
-            var ctx = new BlogContext(optionBuilder.Options);
-            ctx.Database.EnsureCreated();
-            return ctx;
+            return new BlogContext(optionBuilder.Options);
+        }
+
+        public static DbContextOptions CreateOptions()
+        {
+            var connection = new SqliteConnection("DataSource=:memory:");
+            connection.Open();
+            var optionBuilder = new DbContextOptionsBuilder();
+            optionBuilder.UseSqlite(connection);
+            return optionBuilder.Options;
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Blog.Domain;
 using System.Collections.Generic;
 
-namespace Blog.ViewModels.Home
+namespace Blog.Services.Home
 {
     public class PostViewModel
     {

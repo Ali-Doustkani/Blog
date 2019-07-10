@@ -1,5 +1,5 @@
 ﻿using Blog.Services;
-using Blog.ViewModels.Administrator;
+using Blog.Services.Administrator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,14 +8,14 @@ namespace Blog.Controllers
     [Authorize]
     public class AdministratorController : Controller
     {
-        public AdministratorController(AdministratorServices services)
+        public AdministratorController(Service services)
         {
             _services = services;
         }
 
-        private readonly AdministratorServices _services;
+        private readonly Service _services;
 
-        public ViewResult Index() => View(_services.GetPosts());
+        public ViewResult Index() => View(_services.GetDrafts());
 
         public ViewResult Post() => View(_services.Create());
 
@@ -28,21 +28,21 @@ namespace Blog.Controllers
         }
 
         [ValidateAntiForgeryToken]
-        public IActionResult SavePost(PostEntry post)
+        public IActionResult SavePost(DraftEntry draft)
         {
             if (!ModelState.IsValid)
-                return View(nameof(Post), post);
+                return View(nameof(Post), draft);
             try
             {
-                var result = _services.Save(post);
-                if (result.Published)
-                    return RedirectToAction("Post", "Home", new { result.Url });
+                var result = _services.Save(draft);
+                if (draft.Show)
+                    return RedirectToAction("Post", "Home", new { urlTitle = result });
                 return RedirectToAction(nameof(Index));
             }
             catch (ValidationException ex)
             {
                 ModelState.AddModelError(ex.Key, ex.Message);
-                return View(nameof(Post), post);
+                return View(nameof(Post), draft);
             }
         }
 

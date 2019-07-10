@@ -1,20 +1,33 @@
 ﻿using AutoMapper;
 using Blog.Domain;
-using Blog.Services;
-using Blog.ViewModels.Home;
+using Blog.Services.Home;
 using System;
 using System.Linq;
 using Xunit;
 
-namespace Blog.Tests.Services
+namespace Blog.Tests.Services.Home
 {
     [Trait("Category", "Integration")]
-    public class HomeServicesTests
+    public class ServiceTests
     {
-        public HomeServicesTests()
+        public ServiceTests()
         {
             _blogContext = Db.CreateInMemory();
-
+            _blogContext.Drafts.Add(new Draft
+            {
+                Id = 1,
+                Content = "<h1>RegularExpressions</h1>"
+            });
+            _blogContext.Drafts.Add(new Draft
+            {
+                Id = 2,
+                Content = "<h1>Learn React</h1>"
+            });
+            _blogContext.Drafts.Add(new Draft
+            {
+                Id = 3,
+                Content = "<h1>سی شارپ در 24 سال</h1>"
+            });
             _blogContext.Infos.Add(new PostInfo
             {
                 Id = 1,
@@ -24,7 +37,6 @@ namespace Blog.Tests.Services
                 Tags = "C#, Regex",
                 Title = "Regular Expressions"
             });
-
             _blogContext.Infos.Add(new PostInfo
             {
                 Id = 2,
@@ -34,7 +46,6 @@ namespace Blog.Tests.Services
                 Tags = "JS, React",
                 Title = "Learn React"
             });
-
             _blogContext.Infos.Add(new PostInfo
             {
                 Id = 3,
@@ -44,30 +55,27 @@ namespace Blog.Tests.Services
                 Tags = "C#, .NET, ASP.NET",
                 Title = "سی شارپ در 24 سال"
             });
-
             _blogContext.Posts.Add(new Post
             {
                 Content = "<h1>Regular Expressions</h1>",
                 Id = 1,
                 Url = "Regular-Expressions"
             });
-
             _blogContext.Posts.Add(new Post
             {
                 Content = "<h1>C#</h1>",
                 Id = 3,
                 Url = "سی-شارپ-در-24-سال"
             });
-
             _blogContext.SaveChanges();
 
             var config = new MapperConfiguration(cfg => cfg.AddProfile<PostProfile>());
 
-            _services = new HomeServices(_blogContext, config.CreateMapper());
+            _services = new Service(_blogContext, config.CreateMapper());
         }
 
         private readonly BlogContext _blogContext;
-        private readonly HomeServices _services;
+        private readonly Service _services;
 
         [Fact]
         public void GetPosts_with_english_posts()

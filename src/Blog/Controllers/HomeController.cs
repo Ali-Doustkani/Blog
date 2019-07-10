@@ -1,5 +1,5 @@
 ﻿using Blog.Domain;
-using Blog.Services;
+using Blog.Services.Home;
 using Microsoft.AspNetCore.Mvc;
 using System;
 
@@ -7,12 +7,12 @@ namespace Blog.Controllers
 {
     public class HomeController : Controller
     {
-        public HomeController(HomeServices services)
+        public HomeController(Service services)
         {
             _services = services;
         }
 
-        private readonly HomeServices _services;
+        private readonly Service _services;
 
         public ViewResult Index(string language)
         {

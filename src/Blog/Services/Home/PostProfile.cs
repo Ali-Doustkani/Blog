@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Blog.Domain;
 
-namespace Blog.ViewModels.Home
+namespace Blog.Services.Home
 {
     public class PostProfile : Profile
     {

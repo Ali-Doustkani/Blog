@@ -32,38 +32,38 @@ namespace Blog.Domain
                 info.HasAlternateKey(x => x.Title);
 
                 info.Property(x => x.Language)
-                    .HasConversion(new EnumToNumberConverter<Language, int>())
-                    .IsRequired()
-                    .HasDefaultValue(Language.English);
+                .HasConversion(new EnumToNumberConverter<Language, int>())
+                .IsRequired()
+                .HasDefaultValue(Language.English);
 
                 info.Property(x => x.Title)
-                    .IsRequired()
-                    .HasMaxLength(150);
+                .IsRequired()
+                .HasMaxLength(150);
 
                 info.Property(x => x.Summary)
-                   .IsRequired();
+                .IsRequired();
 
                 info.Property(x => x.Tags)
-                    .IsRequired()
-                    .HasDefaultValue(string.Empty);
+                .IsRequired()
+                .HasDefaultValue(string.Empty);
             });
 
-            modelBuilder.Entity<Draft>(post =>
+            modelBuilder.Entity<Draft>(draft =>
             {
-                post.HasOne(x => x.Info)
+                draft.HasOne(x => x.Info)
                 .WithOne()
                 .HasForeignKey<PostInfo>(x => x.Id);
             });
 
-            modelBuilder.Entity<Post>(pub =>
+            modelBuilder.Entity<Post>(post =>
             {
-                pub.HasOne(x => x.Info)
+                post.HasOne(x => x.Info)
                .WithOne()
                .HasForeignKey<Post>(x => x.Id);
 
-                pub.Property(x => x.Url)
-                   .IsRequired()
-                   .HasMaxLength(200);
+                post.Property(x => x.Url)
+                .IsRequired()
+                .HasMaxLength(200);
             });
         }
     }

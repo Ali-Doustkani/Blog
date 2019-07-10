@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Blog.Domain
+﻿namespace Blog.Domain
 {
-    public class Post
+    public class Post : DomainEntity
     {
-        public int Id { get; set; }
-
         public PostInfo Info { get; set; }
 
         public string Url { get; set; }

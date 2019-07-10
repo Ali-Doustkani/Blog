@@ -4,10 +4,8 @@ using System.Text;
 
 namespace Blog.Domain
 {
-    public class Draft
+    public class Draft : DomainEntity
     {
-        public int Id { get; set; }
-
         public PostInfo Info { get; set; }
 
         public bool Show { get; set; }

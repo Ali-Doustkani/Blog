@@ -2,9 +2,9 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Blog.ViewModels.Administrator
+namespace Blog.Services.Administrator
 {
-    public class PostEntry
+    public class DraftEntry
     {
         public int Id { get; set; }
 
