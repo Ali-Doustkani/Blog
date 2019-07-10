@@ -1,6 +1,6 @@
 ﻿using Blog.Domain;
+using FluentAssertions;
 using System;
-using System.Linq;
 using Xunit;
 
 namespace Blog.Tests.Domain
@@ -15,7 +15,7 @@ namespace Blog.Tests.Domain
         {
             var post = new PostInfo { Tags = tags };
 
-            Assert.Equal(Enumerable.Empty<string>(), post.GetTags());
+            post.GetTags().Should().BeEmpty();
         }
 
         [Theory]
@@ -26,7 +26,7 @@ namespace Blog.Tests.Domain
         {
             var post = new PostInfo { Tags = tags };
 
-            Assert.Equal(2, post.GetTags().Count());
+            post.GetTags().Should().HaveCount(2);
         }
 
         [Fact]
@@ -34,7 +34,7 @@ namespace Blog.Tests.Domain
         {
             var post = new PostInfo { PublishDate = new DateTime(2018, 12, 25) };
 
-            Assert.Equal("دی 1397", post.GetShortPersianDate());
+            post.GetShortPersianDate().Should().Be("دی 1397");
         }
 
         [Fact]
@@ -42,7 +42,7 @@ namespace Blog.Tests.Domain
         {
             var post = new PostInfo { PublishDate = new DateTime(2018, 12, 25) };
 
-            Assert.Equal("سه شنبه، 4 دی 1397", post.GetLongPersianDate());
+            post.GetLongPersianDate().Should().Be("سه شنبه، 4 دی 1397");
         }
 
         [Theory]
@@ -52,7 +52,7 @@ namespace Blog.Tests.Domain
         public void EncodeTitle(string title, string result)
         {
             var info = new PostInfo { Title = title };
-            Assert.Equal(result, info.EncodeTitle());
+            info.EncodeTitle().Should().Be(result);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Blog.Domain;
+using FluentAssertions;
 using HtmlAgilityPack;
 using System;
 using Xunit;
@@ -15,16 +16,18 @@ namespace Blog.Tests.Domain
         }
 
         [Fact]
-        public void Throw_for_invalid_base64() =>
-          Assert.Throws<InvalidOperationException>(() =>
-                CreateImage("<img src=\"data:image/jpeg;base64,DATA_=\">"));
+        public void Throw_for_invalid_base64()
+        {
+            Action act = () => CreateImage("<img src=\"data:image/jpeg;base64,DATA_=\">");
+            act.Should().Throw<InvalidOperationException>();
+        }
 
         [Fact]
         public void Create_image_fullname_and_bytes()
         {
             var img = CreateImage("<img src=\"data:image/jpeg;base64,DATA\">");
-            Assert.Equal(new byte[] { 12, 4, 192 }, img.Data);
-            Assert.Equal("url", img.Fullname);
+            img.Data.Should().Contain(new byte[] { 12, 4, 192 });
+            img.Fullname.Should().Be("url");
         }
     }
 }

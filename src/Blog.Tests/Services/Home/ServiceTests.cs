@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentAssertions;
 using Blog.Domain;
 using Blog.Services.Home;
 using System;
@@ -12,23 +13,23 @@ namespace Blog.Tests.Services.Home
     {
         public ServiceTests()
         {
-            _blogContext = Db.CreateInMemory();
-            _blogContext.Drafts.Add(new Draft
+            var context = Db.CreateInMemory();
+            context.Drafts.Add(new Draft
             {
                 Id = 1,
                 Content = "<h1>RegularExpressions</h1>"
             });
-            _blogContext.Drafts.Add(new Draft
+            context.Drafts.Add(new Draft
             {
                 Id = 2,
                 Content = "<h1>Learn React</h1>"
             });
-            _blogContext.Drafts.Add(new Draft
+            context.Drafts.Add(new Draft
             {
                 Id = 3,
                 Content = "<h1>سی شارپ در 24 سال</h1>"
             });
-            _blogContext.Infos.Add(new PostInfo
+            context.Infos.Add(new PostInfo
             {
                 Id = 1,
                 Language = Language.English,
@@ -37,7 +38,7 @@ namespace Blog.Tests.Services.Home
                 Tags = "C#, Regex",
                 Title = "Regular Expressions"
             });
-            _blogContext.Infos.Add(new PostInfo
+            context.Infos.Add(new PostInfo
             {
                 Id = 2,
                 Language = Language.English,
@@ -46,7 +47,7 @@ namespace Blog.Tests.Services.Home
                 Tags = "JS, React",
                 Title = "Learn React"
             });
-            _blogContext.Infos.Add(new PostInfo
+            context.Infos.Add(new PostInfo
             {
                 Id = 3,
                 Language = Language.Farsi,
@@ -55,26 +56,25 @@ namespace Blog.Tests.Services.Home
                 Tags = "C#, .NET, ASP.NET",
                 Title = "سی شارپ در 24 سال"
             });
-            _blogContext.Posts.Add(new Post
+            context.Posts.Add(new Post
             {
                 Content = "<h1>Regular Expressions</h1>",
                 Id = 1,
                 Url = "Regular-Expressions"
             });
-            _blogContext.Posts.Add(new Post
+            context.Posts.Add(new Post
             {
                 Content = "<h1>C#</h1>",
                 Id = 3,
                 Url = "سی-شارپ-در-24-سال"
             });
-            _blogContext.SaveChanges();
+            context.SaveChanges();
 
             var config = new MapperConfiguration(cfg => cfg.AddProfile<PostProfile>());
 
-            _services = new Service(_blogContext, config.CreateMapper());
+            _services = new Service(context, config.CreateMapper());
         }
 
-        private readonly BlogContext _blogContext;
         private readonly Service _services;
 
         [Fact]
@@ -82,12 +82,19 @@ namespace Blog.Tests.Services.Home
         {
             var rows = _services.GetPosts(Language.English);
 
-            Assert.Single(rows);
-            Assert.Equal("Jan 2019", rows.First().Date);
-            Assert.Equal("an overview of regex", rows.First().Summary);
-            Assert.Equal(2, rows.First().Tags.Count());
-            Assert.Equal("Regular Expressions", rows.First().Title);
-            Assert.Equal("Regular-Expressions", rows.First().Url);
+            rows.Should()
+                .HaveCount(1);
+
+            rows.First()
+                .Should()
+                .BeEquivalentTo(new
+                {
+                    Date = "Jan 2019",
+                    Summary = "an overview of regex",
+                    Title = "Regular Expressions",
+                    Url = "Regular-Expressions",
+                    Tags = new[] { "C#", "Regex" }
+                });
         }
 
         [Fact]
@@ -95,12 +102,18 @@ namespace Blog.Tests.Services.Home
         {
             var rows = _services.GetPosts(Language.Farsi);
 
-            Assert.Single(rows);
-            Assert.Equal("دی 1395", rows.First().Date);
-            Assert.Equal("آموزش سی شارپ", rows.First().Summary);
-            Assert.Equal(3, rows.First().Tags.Count());
-            Assert.Equal("سی شارپ در 24 سال", rows.First().Title);
-            Assert.Equal("سی-شارپ-در-24-سال", rows.First().Url);
+            rows.Should()
+                .HaveCount(1);
+            rows.First()
+                .Should()
+                .BeEquivalentTo(new
+                {
+                    Date = "دی 1395",
+                    Summary = "آموزش سی شارپ",
+                    Tags = new[] { "C#", ".NET", "ASP.NET" },
+                    Title = "سی شارپ در 24 سال",
+                    Url = "سی-شارپ-در-24-سال"
+                });
         }
 
         [Fact]
@@ -108,11 +121,15 @@ namespace Blog.Tests.Services.Home
         {
             var vm = _services.Get("Regular-Expressions");
 
-            Assert.Equal("<h1>Regular Expressions</h1>", vm.Content);
-            Assert.Equal("Tuesday, January 1, 2019", vm.Date);
-            Assert.Equal(Language.English, vm.Language);
-            Assert.Equal(2, vm.Tags.Count());
-            Assert.Equal("Regular Expressions", vm.Title);
+            vm.Should()
+                .BeEquivalentTo(new
+                {
+                    Content = "<h1>Regular Expressions</h1>",
+                    Date = "Tuesday, January 1, 2019",
+                    Language = Language.English,
+                    Tags = new[] { "C#", "Regex" },
+                    Title = "Regular Expressions"
+                });
         }
 
         [Fact]
@@ -120,11 +137,15 @@ namespace Blog.Tests.Services.Home
         {
             var vm = _services.Get("سی-شارپ-در-24-سال");
 
-            Assert.Equal("<h1>C#</h1>", vm.Content);
-            Assert.Equal("یکشنبه، 12 دی 1395", vm.Date);
-            Assert.Equal(Language.Farsi, vm.Language);
-            Assert.Equal(3, vm.Tags.Count());
-            Assert.Equal("سی شارپ در 24 سال", vm.Title);
+            vm.Should()
+                .BeEquivalentTo(new
+                {
+                    Content = "<h1>C#</h1>",
+                    Date = "یکشنبه، 12 دی 1395",
+                    Language = Language.Farsi,
+                    Tags = new[] { "C#", ".NET", "ASP.NET" },
+                    Title = "سی شارپ در 24 سال"
+                });
         }
     }
 }
