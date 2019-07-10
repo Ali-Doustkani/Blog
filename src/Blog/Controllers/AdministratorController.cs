@@ -35,7 +35,7 @@ namespace Blog.Controllers
             try
             {
                 var result = _services.Save(draft);
-                if (draft.Show)
+                if (draft.Publish)
                     return RedirectToAction("Post", "Home", new { urlTitle = result });
                 return RedirectToAction(nameof(Index));
             }

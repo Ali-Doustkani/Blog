@@ -221,7 +221,7 @@ namespace Blog.Tests.Services.Administrator
                 Content = "<h1>Content</h1>",
                 Language = Language.English,
                 PublishDate = new DateTime(2019, 1, 1),
-                Show = true,
+                Publish = true,
                 Summary = "Summary",
                 Tags = "Tags",
                 Title = "Title"
@@ -249,7 +249,7 @@ namespace Blog.Tests.Services.Administrator
                 Content = "<p>New Content</p>",
                 Language = Language.English,
                 PublishDate = new DateTime(2019, 1, 1),
-                Show = true,
+                Publish = true,
                 Summary = "Summary",
                 Tags = "Tags",
                 Title = "New Content"
@@ -279,7 +279,7 @@ namespace Blog.Tests.Services.Administrator
                 Content = "<p>New Content</p>",
                 Summary = "SUMMARY",
                 Tags = "Tags",
-                Show = false
+                Publish = false
             });
 
             using (var context = new BlogContext(_options))

@@ -24,6 +24,6 @@ namespace Blog.Services.Administrator
         [Required]
         public string Tags { get; set; }
 
-        public bool Show { get; set; }
+        public bool Publish { get; set; }
     }
 }

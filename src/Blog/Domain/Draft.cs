@@ -8,8 +8,6 @@ namespace Blog.Domain
     {
         public PostInfo Info { get; set; }
 
-        public bool Show { get; set; }
-
         public string Content { get; set; }
 
         public IEnumerable<Image> RenderImages()

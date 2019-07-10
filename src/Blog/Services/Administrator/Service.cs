@@ -53,7 +53,7 @@ namespace Blog.Services.Administrator
             var images = draft.RenderImages();
             _context.AddOrUpdate(draft);
 
-            if (viewModel.Show)
+            if (viewModel.Publish)
             {
                 var post = draft.Publish();
                 _context.AddOrUpdate(post);
