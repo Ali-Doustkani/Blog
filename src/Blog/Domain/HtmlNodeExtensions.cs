@@ -35,8 +35,11 @@ namespace Blog.Domain
                 throw new InvalidOperationException("<img> src is not rendered yet.");
 
             var caption = node.Child("figcaption");
-            if (caption == null || string.IsNullOrWhiteSpace(caption.InnerHtml))
+            if (string.IsNullOrWhiteSpace(caption?.InnerHtml))
                 return Emmet.El("figure", img.OuterHtml);
+
+            if (caption.Attributes.Contains("contenteditable"))
+                caption.Attributes["contenteditable"].Remove();
             return Emmet.El("figure", string.Join("", img.OuterHtml, caption.OuterHtml));
         }
 
