@@ -40,6 +40,9 @@ namespace Blog.Domain
 
             if (caption.Attributes.Contains("contenteditable"))
                 caption.Attributes["contenteditable"].Remove();
+
+            img.SetAttributeValue("alt", caption.InnerText);
+
             return Emmet.El("figure", string.Join("", img.OuterHtml, caption.OuterHtml));
         }
 

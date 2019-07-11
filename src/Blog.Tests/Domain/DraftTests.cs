@@ -92,7 +92,7 @@ namespace Blog.Tests.Domain
         public void Set_img_src_to_file() =>
             Publish("<figure><button>Remove</button><img data-filename=\"pic.png\" src=\"data:image/png;base64,DATA\"><figcaption contenteditable=\"true\">CAP</figcaption></figure>")
             .Should()
-            .Be("<figure><img src=\"\\images\\posts\\the-post\\pic.png\"><figcaption>CAP</figcaption></figure>");
+            .Be("<figure><img src=\"\\images\\posts\\the-post\\pic.png\" alt=\"CAP\"><figcaption>CAP</figcaption></figure>");
 
         [Fact]
         public void Figures_without_captions() =>
