@@ -74,7 +74,7 @@ namespace Blog.Services.Administrator
             var info = _context.Infos.Find(id);
             _context.Drafts.Delete(id);
             _context.SaveChanges();
-            _imageContext.Delete(info.EncodeTitle());
+            _imageContext.Delete(info.Slugify());
         }
     }
 }

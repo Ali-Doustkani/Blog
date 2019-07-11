@@ -12,7 +12,7 @@ namespace Blog.Domain
 
         public IEnumerable<Image> RenderImages()
         {
-            var renderer = new ImageRenderer(Info.EncodeTitle());
+            var renderer = new ImageRenderer(Info.Slugify());
             var result = renderer.Render(Content);
             Content = result.Html;
             return result.Images;
@@ -46,7 +46,7 @@ namespace Blog.Domain
                 Id = Id,
                 PostContent = new PostContent { Id = Id, Content = display.ToString() },
                 Info = Info,
-                Url = Info.EncodeTitle()
+                Url = Info.Slugify()
             };
         }
     }

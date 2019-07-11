@@ -59,7 +59,7 @@ namespace Blog.Domain
             return result;
         }
 
-        public string EncodeTitle()
+        public string Slugify()
         {
             if (!string.IsNullOrEmpty(Title))
                 return Regex.Replace(Title, @"[\s.:]+", "-");

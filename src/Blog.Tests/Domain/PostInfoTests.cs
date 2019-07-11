@@ -52,7 +52,7 @@ namespace Blog.Tests.Domain
         public void EncodeTitle(string title, string result)
         {
             var info = new PostInfo { Title = title };
-            info.EncodeTitle().Should().Be(result);
+            info.Slugify().Should().Be(result);
         }
     }
 }
