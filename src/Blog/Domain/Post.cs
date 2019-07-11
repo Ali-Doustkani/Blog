@@ -4,8 +4,8 @@
     {
         public PostInfo Info { get; set; }
 
-        public string Url { get; set; }
+        public PostContent PostContent { get; set; }
 
-        public string Content { get; set; }
+        public string Url { get; set; }
     }
 }

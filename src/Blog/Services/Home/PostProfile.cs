@@ -27,6 +27,8 @@ namespace Blog.Services.Home
                     o => o.MapFrom<LongDateResolver>());
 
             CreateMap<Post, PostViewModel>()
+                .ForMember(
+                    dest => dest.Content, o => o.MapFrom(src => src.PostContent.Content))
                 .IncludeMembers(x => x.Info);
         }
 

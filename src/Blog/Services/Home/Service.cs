@@ -21,6 +21,7 @@ namespace Blog.Services.Home
             _mapper.Map<PostViewModel>(_context
                 .Posts
                 .Include(x => x.Info)
+                .Include(x => x.PostContent)
                 .SingleOrDefault(x => x.Url == urlTitle)
                 );
 

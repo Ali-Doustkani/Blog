@@ -24,22 +24,20 @@ namespace Blog.Services.Administrator
         public DraftEntry Create() =>
             new DraftEntry { PublishDate = DateTime.Now };
 
-        public IEnumerable<DraftRow> GetDrafts()
-        {
-            var query = from info in _context.Infos
-                        join draft in _context.Drafts on info.Id equals draft.Id
-                        join post in _context.Posts on info.Id equals post.Id into posts
-                        from post in posts.DefaultIfEmpty()
-                        select _mapper.Map<DraftRow>(Tuple.Create(info, post == null ? -1 : post.Id));
-            return query.ToArray();
-        }
+        public IEnumerable<DraftRow> GetDrafts() =>
+            (from info in _context.Infos
+             join post in _context.Posts on info.Id equals post.Id into posts
+             from post in posts.DefaultIfEmpty()
+             select _mapper.Map<DraftRow>(Tuple.Create(info, post == null ? -1 : post.Id))
+             ).ToArray();
 
         public DraftEntry Get(int id) =>
-            _mapper.Map<DraftEntry>(
-                _context
-                .Drafts
-                .Include(x => x.Info)
-                .Single(x => x.Id == id));
+            (from draft in _context.Drafts.Include(x => x.Info)
+             join post in _context.Posts on draft.Id equals post.Id into posts
+             from post in posts.DefaultIfEmpty()
+             where draft.Id == id
+             select _mapper.Map<DraftEntry>(Tuple.Create(draft, post == null ? -1 : post.Id))
+             ).Single();
 
         public string Save(DraftEntry viewModel)
         {
@@ -59,10 +57,10 @@ namespace Blog.Services.Administrator
                 _context.AddOrUpdate(post);
                 result = post.Url;
             }
-            else
+            else if (_context.Posts.Any(draft.Id))
             {
-                if (_context.Posts.Any(draft.Id))
-                    _context.Posts.Delete(draft.Id);
+                _context.Posts.Delete(draft.Id);
+                _context.PostContents.Delete(draft.Id);
             }
 
             _context.SaveChanges();

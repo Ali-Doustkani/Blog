@@ -9,9 +9,9 @@ using Xunit;
 namespace Blog.Tests.Services.Home
 {
     [Trait("Category", "Integration")]
-    public class ServiceTests
+    public class HomeServiceTests
     {
-        public ServiceTests()
+        public HomeServiceTests()
         {
             var context = Db.CreateInMemory();
             context.Drafts.Add(new Draft
@@ -58,13 +58,13 @@ namespace Blog.Tests.Services.Home
             });
             context.Posts.Add(new Post
             {
-                Content = "<h1>Regular Expressions</h1>",
+                PostContent = new PostContent { Id = 1, Content = "<h1>Regular Expressions</h1>" },
                 Id = 1,
                 Url = "Regular-Expressions"
             });
             context.Posts.Add(new Post
             {
-                Content = "<h1>C#</h1>",
+                PostContent = new PostContent { Id = 3, Content = "<h1>C#</h1>" },
                 Id = 3,
                 Url = "سی-شارپ-در-24-سال"
             });

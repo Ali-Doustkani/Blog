@@ -44,7 +44,7 @@ namespace Blog.Domain
             return new Post
             {
                 Id = Id,
-                Content = display.ToString(),
+                PostContent = new PostContent { Id = Id, Content = display.ToString() },
                 Info = Info,
                 Url = Info.EncodeTitle()
             };

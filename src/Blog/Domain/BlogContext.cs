@@ -14,6 +14,7 @@ namespace Blog.Domain
         public DbSet<PostInfo> Infos { get; set; }
         public DbSet<Draft> Drafts { get; set; }
         public DbSet<Post> Posts { get; set; }
+        public DbSet<PostContent> PostContents { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -61,9 +62,21 @@ namespace Blog.Domain
                .WithOne()
                .HasForeignKey<Post>(x => x.Id);
 
+                post.HasOne(x => x.PostContent)
+               .WithOne()
+               .HasForeignKey<PostContent>(x => x.Id);
+
                 post.Property(x => x.Url)
                 .IsRequired()
                 .HasMaxLength(200);
+            });
+
+            modelBuilder.Entity<PostContent>(pc =>
+            {
+                pc.ToTable("Posts");
+
+                pc.Property(x => x.Content)
+                .IsRequired();
             });
         }
     }

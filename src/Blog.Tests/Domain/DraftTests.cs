@@ -25,7 +25,7 @@ namespace Blog.Tests.Domain
             draft.Info = new PostInfo { Title = "the post" };
             draft.Content = html;
             draft.RenderImages();
-            return draft.Publish().Content;
+            return draft.Publish().PostContent.Content;
         }
 
         [Fact]
@@ -124,7 +124,8 @@ namespace Blog.Tests.Domain
             var images = draft.RenderImages();
             var publish = draft.Publish();
 
-            publish.Content
+            publish.PostContent
+                .Content
                 .Should()
                 .Be("<figure><img src=\"\\images\\posts\\the-post\\pic.png\"></figure><figure><img src=\"\\images\\posts\\the-post\\pic-1.png\"></figure>");
             images.First()

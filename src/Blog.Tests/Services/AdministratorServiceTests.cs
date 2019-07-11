@@ -14,9 +14,9 @@ using Xunit;
 namespace Blog.Tests.Services.Administrator
 {
     [Trait("Category", "Integration")]
-    public class ServiceTests
+    public class AdministratorServiceTests
     {
-        public ServiceTests()
+        public AdministratorServiceTests()
         {
             _options = Db.CreateOptions();
 
@@ -68,12 +68,14 @@ namespace Blog.Tests.Services.Administrator
                 seed.Posts.Add(new Post
                 {
                     Id = 1,
-                    Url = "Javascript-FP"
+                    Url = "Javascript-FP",
+                    PostContent = new PostContent { Id = 1, Content = "<p>JS Functional Programming</p>" }
                 });
                 seed.Posts.Add(new Post
                 {
                     Id = 2,
-                    Url = "Object-Oriented-Csharp"
+                    Url = "Object-Oriented-Csharp",
+                    PostContent = new PostContent { Id = 2, Content = "<p>Object Oriented C#</p>" }
                 });
                 seed.SaveChanges();
             }
@@ -231,7 +233,9 @@ namespace Blog.Tests.Services.Administrator
             {
                 ctx
                     .Posts
-                    .Find(4)
+                    .Include(x => x.PostContent)
+                    .Single(x => x.Id == 4)
+                    .PostContent
                     .Should()
                     .BeEquivalentTo(new
                     {
@@ -259,12 +263,13 @@ namespace Blog.Tests.Services.Administrator
             {
                 context
                     .Posts
-                    .Find(1)
+                    .Include(x => x.PostContent)
+                    .Single(x => x.Id == 1)
                     .Should()
                     .BeEquivalentTo(new
                     {
                         Url = "New-Content",
-                        Content = "<p>New Content</p>"
+                        PostContent = new { Content = "<p>New Content</p>" }
                     });
             }
         }

@@ -9,20 +9,15 @@ namespace Blog.Domain
                    where T : DomainEntity
         {
             if (context.Set<T>().Any(x => x.Id == entity.Id))
-            {
                 context.Update(entity);
-            }
             else
-            {
                 context.Set<T>().Add(entity);
-            }
         }
 
         public static void Delete<T>(this DbSet<T> dbset, int id)
             where T : DomainEntity, new()
         {
-            var entity = new T();
-            entity.Id = id;
+            var entity = new T { Id = id };
             dbset.Attach(entity).State = EntityState.Deleted;
         }
 
