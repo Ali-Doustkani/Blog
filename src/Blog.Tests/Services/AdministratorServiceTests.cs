@@ -307,7 +307,7 @@ namespace Blog.Tests.Services.Administrator
                 Summary = "SUMMARY"
             });
 
-            _imageContext.Verify(x => x.SaveChanges(It.IsAny<IEnumerable<Image>>()));
+            _imageContext.Verify(x => x.SaveChanges("the-post", It.IsAny<IEnumerable<Image>>()));
         }
 
         [Fact]

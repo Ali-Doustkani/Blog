@@ -1,5 +1,4 @@
 ﻿using Blog.Domain;
-using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,40 +7,62 @@ namespace Blog.Utils
 {
     public interface IImageContext
     {
-        void SaveChanges(IEnumerable<Image> images);
+        void SaveChanges(string postSlug, IEnumerable<Image> images);
         void Delete(string urlTitle);
     }
 
     public class ImageContext : IImageContext
     {
-        public ImageContext(ILogger<ImageContext> log)
+        public ImageContext(IFileSystem fs)
         {
-            _log = log;
+            _fs = fs;
         }
 
-        private readonly ILogger _log;
+        private readonly IFileSystem _fs;
 
-        public void SaveChanges(IEnumerable<Image> images)
+        public void SaveChanges(string postSlug, IEnumerable<Image> images)
+        {
+            var directory = GetDirectory(postSlug);
+            CreteDirectory(directory, images);
+            WriteImages(directory, images);
+            DeleteOrphanFiles(directory, images);
+        }
+
+        private void CreteDirectory(string directory, IEnumerable<Image> images)
         {
             if (images.Any())
-            {
-                var dirpath = Path.GetDirectoryName(images.First().AbsolutePath);
-                Directory.CreateDirectory(dirpath);
-                foreach (var file in Directory.GetFiles(dirpath))
-                    File.Delete(file);
-            }
+                _fs.CreateDirectory(directory);
+        }
+
+        private void WriteImages(string directory, IEnumerable<Image> images)
+        {
             foreach (var image in images)
             {
-                _log.LogInformation("Write Image. Filename: {0}, Data Length: {1}", image.Filename, image.Data.Length);
-                File.WriteAllBytes(image.AbsolutePath, image.Data);
+                if (!image.IsFile)
+                    _fs.WriteAllBytes(Path.Combine(directory, image.Filename), image.Data);
             }
         }
 
-        public void Delete(string urlTitle)
+        private void DeleteOrphanFiles(string directory, IEnumerable<Image> images)
         {
-            //  var dirpath = PostPath.PostImageAbsolute(urlTitle);
-            //    if (Directory.Exists(dirpath))
-            //   Directory.Delete(dirpath, true);
+            foreach (var file in _fs.GetFiles(directory))
+            {
+                if (!images.Any(x => x.Filename == Path.GetFileName(file)))
+                    _fs.DeleteFile(file);
+            }
+
+            if (!_fs.GetFiles(directory).Any())
+                _fs.DeleteDirectory(directory);
         }
+
+        public void Delete(string postSlug)
+        {
+            var directory = GetDirectory(postSlug);
+            if (_fs.DirectoryExists(directory))
+                _fs.DeleteDirectory(directory);
+        }
+
+        private string GetDirectory(string postSlug) =>
+            Path.Combine("wwwroot", "images", "posts", postSlug);
     }
 }

@@ -8,17 +8,21 @@ namespace Blog.Domain
 {
     public class Image
     {
-        public Image(string filename, string post, byte[] data)
+        public Image(string filename, string postSlug, byte[] data)
         {
             Filename = Its.NotNull(filename);
-            Post = Its.NotNull(post);
-            Data = Its.NotNull(data);
+            PostSlug = Its.NotNull(postSlug);
+            Data = data;
         }
 
+        public Image(string filename, string postSlug)
+            : this(filename, postSlug, null)
+        { }
+
         public string Filename { get; }
-        public string Post { get; }
-        public string AbsolutePath { get => Path.Combine("wwwroot", "images", "posts", Post, Filename); }
-        public string RelativePath { get => Path.Combine(Path.DirectorySeparatorChar.ToString(), "images", "posts", Post, Filename); }
+        public string PostSlug { get; }
+        public string RelativePath { get => Path.Combine(Path.DirectorySeparatorChar.ToString(), "images", "posts", PostSlug, Filename); }
+        public bool IsFile { get => Data == null; }
         public byte[] Data { get; }
 
         public static Image Create(HtmlNode img, string filename, string post)

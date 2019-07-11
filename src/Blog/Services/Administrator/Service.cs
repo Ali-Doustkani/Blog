@@ -64,7 +64,7 @@ namespace Blog.Services.Administrator
             }
 
             _context.SaveChanges();
-            _imageContext.SaveChanges(images);
+            _imageContext.SaveChanges(draft.Info.Slugify(), images);
 
             return result;
         }

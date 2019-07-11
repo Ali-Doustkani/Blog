@@ -30,13 +30,6 @@ namespace Blog.Tests.Domain
         }
 
         [Fact]
-        public void Create_absolute_path_of_image()
-        {
-            var img = CreateImage("<img src=\"data:image/jpeg;base64,DATA\">");
-            img.AbsolutePath.Should().Be("wwwroot\\images\\posts\\the-post\\file");
-        }
-
-        [Fact]
         public void Create_relative_path_of_image()
         {
             var img = CreateImage("<img src=\"data:image/jpeg;base64,DATA\">");

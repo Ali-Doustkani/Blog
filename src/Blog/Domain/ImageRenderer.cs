@@ -39,7 +39,7 @@ namespace Blog.Domain
                     }
                     else
                     {
-                        images.Add(new Image(Path.GetFileName(img.Attr("src")), _postDirectory, null));
+                        images.Add(new Image(Path.GetFileName(img.Attr("src")), _postDirectory));
                     }
                 }
             });

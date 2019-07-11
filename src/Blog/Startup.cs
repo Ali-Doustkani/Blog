@@ -1,13 +1,10 @@
 ﻿using AutoMapper;
 using Blog.Domain;
-using Blog.Services;
 using Blog.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -44,6 +41,7 @@ namespace Blog
             services.AddTransient<Services.Home.Service>();
             services.AddTransient<Services.Administrator.Service>();
             services.AddTransient<IImageContext, ImageContext>();
+            services.AddTransient<IFileSystem, FileSystem>();
         }
 
         public void Configure(IApplicationBuilder app)
