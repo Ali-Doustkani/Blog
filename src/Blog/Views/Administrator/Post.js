@@ -55,7 +55,6 @@ saveForm.addEventListener("submit", () => {
 
 summary.addEventListener("keydown", e => {
     if (e.key === "Tab") {
-        console.log(richtext.focus);
         e.preventDefault();
         richtext.focus();
     }
