@@ -2,18 +2,22 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Threading.Tasks;
 
 namespace Blog.Controllers
 {
     public class AccountController : Controller
     {
-        public AccountController(SignInManager<IdentityUser> signInManager)
+        public AccountController(SignInManager<IdentityUser> signInManager, ILogger<AccountController> logger)
         {
             _signInManager = signInManager;
+            _logger = logger;
         }
 
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly ILogger _logger;
 
         public IActionResult Login(string returnUrl = null)
         {
@@ -33,6 +37,8 @@ namespace Blog.Controllers
             var result = await _signInManager.PasswordSignInAsync(vm.Username, vm.Password, true, true);
             if (result.Succeeded)
             {
+                _logger.LogInformation("Login Succeeded");
+
                 if (returnUrl != null)
                     return Redirect(returnUrl);
 
@@ -40,6 +46,9 @@ namespace Blog.Controllers
             }
 
             ModelState.AddModelError(string.Empty, "Wrong username or password");
+
+            _logger.LogInformation("Login Failed with {0} error(s)", ModelState.ErrorCount);
+
             return View();
         }
 
