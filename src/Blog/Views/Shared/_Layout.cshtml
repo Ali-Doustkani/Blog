@@ -18,11 +18,11 @@
     <header id="site-header">
         <nav>
             <ul class="menu-bar">
-                <li><a asp-controller="Home" asp-action="Index">BLOG</a></li>
+                <li><a asp-controller="Home" asp-action="Index">Blog</a></li>
                 <li><div class="separator"></div></li>
                 <li><a asp-route="lang" asp-route-language="fa">Farsi Posts</a></li>
                 <li><div class="separator"></div></li>
-                <li><a asp-controller="Home" asp-action="About">ABOUT ME</a></li>
+                <li><a asp-controller="Home" asp-action="About">About Me</a></li>
                 @if (User.Identity.IsAuthenticated)
                 {
                     <li><div class="separator"></div></li>
