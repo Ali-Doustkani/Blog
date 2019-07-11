@@ -32,14 +32,14 @@ namespace Blog.Domain
                     var img = node.Child("img");
                     if (Image.IsDataUrl(img.Attr("src")))
                     {
-                        var path = PostPath.ImageUrl(_postDirectory, GenerateFilename(img));
-                        images.Add(Image.Create(img, path));
+                        var image = Image.Create(img, GenerateFilename(img), _postDirectory);
+                        images.Add(image);
                         img.Attributes.RemoveAll();
-                        img.SetAttributeValue("src", path);
+                        img.SetAttributeValue("src", image.RelativePath);
                     }
                     else
                     {
-                        images.Add(new Image(img.Attr("src"), null));
+                        images.Add(new Image(Path.GetFileName(img.Attr("src")), _postDirectory, null));
                     }
                 }
             });

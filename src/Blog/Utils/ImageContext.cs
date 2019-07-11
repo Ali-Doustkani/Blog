@@ -25,7 +25,7 @@ namespace Blog.Utils
         {
             if (images.Any())
             {
-                var dirpath = Path.GetDirectoryName(PostPath.PostImageAbsolute(images.First().Fullname));
+                var dirpath = Path.GetDirectoryName(images.First().AbsolutePath);
                 Directory.CreateDirectory(dirpath);
                 foreach (var file in Directory.GetFiles(dirpath))
                     File.Delete(file);
@@ -33,15 +33,15 @@ namespace Blog.Utils
             foreach (var image in images)
             {
                 _log.LogInformation("Write Image. Filename: {0}, Data Length: {1}", image.Filename, image.Data.Length);
-                File.WriteAllBytes(PostPath.PostImageAbsolute(image.Fullname), image.Data);
+                File.WriteAllBytes(image.AbsolutePath, image.Data);
             }
         }
 
         public void Delete(string urlTitle)
         {
-            var dirpath = PostPath.PostImageAbsolute(urlTitle);
-            if (Directory.Exists(dirpath))
-                Directory.Delete(dirpath, true);
+            //  var dirpath = PostPath.PostImageAbsolute(urlTitle);
+            //    if (Directory.Exists(dirpath))
+            //   Directory.Delete(dirpath, true);
         }
     }
 }

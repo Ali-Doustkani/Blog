@@ -12,7 +12,7 @@ namespace Blog.Tests.Domain
         {
             var doc = new HtmlDocument();
             doc.LoadHtml(html);
-            return Image.Create(doc.DocumentNode.FirstChild, "url");
+            return Image.Create(doc.DocumentNode.FirstChild, "file", "the-post");
         }
 
         [Fact]
@@ -23,11 +23,24 @@ namespace Blog.Tests.Domain
         }
 
         [Fact]
-        public void Create_image_fullname_and_bytes()
+        public void Create_image_data()
         {
             var img = CreateImage("<img src=\"data:image/jpeg;base64,DATA\">");
             img.Data.Should().Contain(new byte[] { 12, 4, 192 });
-            img.Fullname.Should().Be("url");
+        }
+
+        [Fact]
+        public void Create_absolute_path_of_image()
+        {
+            var img = CreateImage("<img src=\"data:image/jpeg;base64,DATA\">");
+            img.AbsolutePath.Should().Be("wwwroot\\images\\posts\\the-post\\file");
+        }
+
+        [Fact]
+        public void Create_relative_path_of_image()
+        {
+            var img = CreateImage("<img src=\"data:image/jpeg;base64,DATA\">");
+            img.RelativePath.Should().Be("\\images\\posts\\the-post\\file");
         }
     }
 }

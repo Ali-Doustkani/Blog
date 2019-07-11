@@ -8,17 +8,20 @@ namespace Blog.Domain
 {
     public class Image
     {
-        public Image(string fullname, byte[] data)
+        public Image(string filename, string post, byte[] data)
         {
-            Fullname = Its.NotNull(fullname);
+            Filename = Its.NotNull(filename);
+            Post = Its.NotNull(post);
             Data = Its.NotNull(data);
         }
 
-        public string Filename { get => Path.GetFileName(Fullname); }
-        public string Fullname { get; }
+        public string Filename { get; }
+        public string Post { get; }
+        public string AbsolutePath { get => Path.Combine("wwwroot", "images", "posts", Post, Filename); }
+        public string RelativePath { get => Path.Combine(Path.DirectorySeparatorChar.ToString(), "images", "posts", Post, Filename); }
         public byte[] Data { get; }
 
-        public static Image Create(HtmlNode img, string imagePath)
+        public static Image Create(HtmlNode img, string filename, string post)
         {
             Its.NotNull(img, nameof(img));
 
@@ -31,7 +34,7 @@ namespace Blog.Domain
 
             var url = Regex.Match(src, @",(?<data>.*)");
             var base64Data = url.Groups["data"].Value;
-            return new Image(imagePath, Convert.FromBase64String(base64Data));
+            return new Image(filename, post, Convert.FromBase64String(base64Data));
         }
 
         public static bool IsDataUrl(string src) =>
