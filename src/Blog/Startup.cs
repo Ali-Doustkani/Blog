@@ -1,10 +1,10 @@
-﻿using Blog.Model;
+﻿using AutoMapper;
+using Blog.Domain;
 using Blog.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,75 +12,72 @@ using System;
 
 namespace Blog
 {
-    public class C : Microsoft.AspNetCore.Razor.TagHelpers.TagHelper
-    {
-        public bool Hey { get; set; }
-    }
+   public class Startup
+   {
+      public Startup(IConfiguration configuration, IHostingEnvironment env)
+      {
+         _configuration = configuration;
+         _env = env;
+      }
 
-    public class Startup
-    {
-        public Startup(IConfiguration configuration, IHostingEnvironment env)
-        {
-            _configuration = configuration;
-            _env = env;
-        }
+      private readonly IConfiguration _configuration;
+      private readonly IHostingEnvironment _env;
 
-        private readonly IConfiguration _configuration;
-        private readonly IHostingEnvironment _env;
+      public void ConfigureServices(IServiceCollection services)
+      {
+         services.AddHsts(options =>
+         {
+            options.MaxAge = TimeSpan.FromDays(365);
+            options.IncludeSubDomains = true;
+            options.Preload = true;
+         });
+         services.AddDbContext<BlogContext>(options =>
+         {
+            options.UseSqlServer(_configuration.GetConnectionString("Blog"));
+         });
+         services.AddMvc();
+         services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<BlogContext>();
+         services.AddAutoMapper(GetType().Assembly);
+         services.AddTransient<Services.Home.Service>();
+         services.AddTransient<Services.Administrator.Service>();
+         services.AddTransient<IImageContext, ImageContext>();
+         services.AddTransient<IFileSystem, FileSystem>();
+      }
 
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddHsts(options =>
-            {
-                options.MaxAge = TimeSpan.FromDays(365);
-                options.IncludeSubDomains = true;
-                options.Preload = true;
-            });
-            services.AddDbContext<BlogContext>(options =>
-            {
-                options.UseSqlServer(_configuration.GetConnectionString("Blog"));
-            });
-            services.AddMvc(options =>
-            {
-                options.Filters.Add(new RequireHttpsAttribute());
-            });
-            services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<BlogContext>();
-        }
-
-        public void Configure(IApplicationBuilder app)
-        {
+      public void Configure(IApplicationBuilder app)
+      {
+         if (_env.IsDevelopment())
+         {
+            app.UseDeveloperExceptionPage();
+         }
+         else if (_env.IsProduction())
+         {
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+               ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
+            app.UseExceptionHandler("/home/error");
+            app.UseStatusCodePagesWithReExecute("/home/error", "?statusCode={0}");
+            app.UseHsts();
+            app.UseHttpsRedirection();
+            app.UseXXssProtection(options => options.EnabledWithBlockMode());
+            app.UseXContentTypeOptions();
+         }
 
-            if (_env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/home/error");
-                app.UseStatusCodePagesWithReExecute("/home/error", "?statusCode={0}");
-                app.UseHsts();
-                app.UseXXssProtection(options => options.EnabledWithBlockMode());
-                app.UseXContentTypeOptions();
-            }
+         app.MigrateDatabase();
+         app.UseStaticFiles();
+         app.UseAuthentication();
+         app.UseMvc(cfg =>
+         {
+            cfg.MapRoute("root", "/", new { controller = "home", action = "index" })
+                  .MapRoute("lang", "blog/{language=en}", new { controller = "home", action = "index" })
+                  .MapRoute("post", "blog/post/{urlTitle}", new { controller = "home", action = "post" })
+                  .MapRoute("about", "about", new { controller = "home", action = "about" });
 
-            app.MigrateDatabase();
-            app.UseStaticFiles();
-            app.UseAuthentication();
-            app.UseMvc(cfg =>
-            {
-                cfg.MapRoute("root", "/", new { controller = "home", action = "index" })
-                   .MapRoute("lang", "blog/{language=en}", new { controller = "home", action = "index" })
-                   .MapRoute("post", "blog/post/{urlTitle}", new { controller = "home", action = "post" })
-                   .MapRoute("about", "about", new { controller = "home", action = "about" });
+            cfg.MapRoute("admin", "admin/{action=index}/{id?}", new { controller = "Administrator" });
 
-                cfg.MapRoute("admin", "admin/{action}/{id?}", new { controller = "Administrator" });
-
-                cfg.MapRoute("default", "{controller}/{action}");
-            });
-        }
-    }
+            cfg.MapRoute("default", "{controller}/{action}");
+         });
+      }
+   }
 }

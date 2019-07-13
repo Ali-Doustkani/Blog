@@ -1,4 +1,4 @@
-﻿using Blog.Model;
+﻿using Blog.Domain;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -6,10 +6,10 @@ using System.Linq;
 
 namespace Blog.Utils
 {
-    [HtmlTargetElement(Attributes = "has-farsi")]
+    [HtmlTargetElement(Attributes = "add-lang-class")]
     public class LanguageTagHelper : TagHelper
     {
-        public bool HasFarsi { get; set; }
+        public bool AddLangClass { get; set; }
 
         [HtmlAttributeNotBound]
         [ViewContext]
@@ -17,9 +17,7 @@ namespace Blog.Utils
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            System.Console.WriteLine(HasFarsi);
-            System.Console.WriteLine(ViewContext.ViewData["language"]);
-            if (HasFarsi && Equals(ViewContext.ViewData["language"], Language.Farsi))
+            if (AddLangClass && Equals(ViewContext.ViewData["language"], Language.Farsi))
             {
                 if (output.Attributes.ContainsName("class"))
                 {

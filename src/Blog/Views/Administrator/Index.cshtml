@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Post>
+﻿@model IEnumerable<DraftRow>
 @{
     ViewData["Title"] = "Admin";
 }
@@ -20,7 +20,7 @@
             {
                 <tr>
                     <td>@post.Id</td>
-                    @if (post.Show)
+                    @if (post.Published)
                     {
                         <td><i class="fas fa-check"></i></td>
                     }

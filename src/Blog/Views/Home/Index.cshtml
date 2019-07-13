@@ -1,20 +1,20 @@
-﻿@model IEnumerable<Post>
+﻿@model IEnumerable<PostRow>
 @{
     ViewData["Title"] = "Ali Doustkani";
 }
 
 @foreach (var post in Model)
 {
-    <article class="post-item" has-farsi="true">
-        <a asp-action="Post" asp-route-urlTitle="@post.UrlTitle">
+    <article class="post-item" add-lang-class="true">
+        <a asp-action="Post" asp-route-urlTitle="@post.Url">
             <h1>
-                @post.Title<span class="date">@(ViewData["language"].Equals(Language.English) ? @post.PublishDate.ToString("MMM yyyy") : @post.GetShortPersianDate())</span>
+                @post.Title<span class="date">@post.Date</span>
             </h1>
         </a>
         <p>@post.Summary</p>
         <div class="tagset">
             <i class="fas fa-hashtag"></i>
-            @foreach (var tag in post.TagCollection)
+            @foreach (var tag in post.Tags)
             {
                 <div>@tag</div>
             }
