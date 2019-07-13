@@ -14,7 +14,7 @@ namespace Blog.Domain
       public ImageRenderer(string postDirectory)
       {
          _imageUrls = new List<string>();
-         _postDirectory = Its.NotNull(postDirectory);
+         _postDirectory = Its.NotEmpty(postDirectory);
       }
 
       private readonly List<string> _imageUrls;
