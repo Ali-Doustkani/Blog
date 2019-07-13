@@ -5,64 +5,71 @@ using System.Linq;
 
 namespace Blog.Utils
 {
-    public interface IImageContext
-    {
-        void SaveChanges(string postSlug, IEnumerable<Image> images);
-        void Delete(string urlTitle);
-    }
+   public interface IImageContext
+   {
+      void SaveChanges(string oldPostDirectory, string postDirectory, IEnumerable<Image> images);
+      void Delete(string urlTitle);
+   }
 
-    public class ImageContext : IImageContext
-    {
-        public ImageContext(IFileSystem fs)
-        {
-            _fs = fs;
-        }
+   public class ImageContext : IImageContext
+   {
+      public ImageContext(IFileSystem fs)
+      {
+         _fs = fs;
+      }
 
-        private readonly IFileSystem _fs;
+      private readonly IFileSystem _fs;
 
-        public void SaveChanges(string postSlug, IEnumerable<Image> images)
-        {
-            var directory = GetDirectory(postSlug);
-            CreteDirectory(directory, images);
-            WriteImages(directory, images);
-            DeleteOrphanFiles(directory, images);
-        }
+      public void SaveChanges(string oldPostDirectory, string postDirectory, IEnumerable<Image> images)
+      {
+         RenameDirectory(oldPostDirectory, postDirectory);
+         var dir = GetDirectory(postDirectory);
+         CreteDirectory(dir, images);
+         WriteImages(dir, images);
+         DeleteOrphanFiles(dir, images);
+      }
 
-        private void CreteDirectory(string directory, IEnumerable<Image> images)
-        {
-            if (images.Any())
-                _fs.CreateDirectory(directory);
-        }
+      private void CreteDirectory(string dir, IEnumerable<Image> images)
+      {
+         if (images.Any())
+            _fs.CreateDirectory(dir);
+      }
 
-        private void WriteImages(string directory, IEnumerable<Image> images)
-        {
-            foreach (var image in images)
-            {
-                if (!image.IsFile)
-                    _fs.WriteAllBytes(Path.Combine(directory, image.Filename), image.Data);
-            }
-        }
+      private void WriteImages(string dir, IEnumerable<Image> images)
+      {
+         foreach (var image in images)
+         {
+            if (!image.IsFile)
+               _fs.WriteAllBytes(Path.Combine(dir, image.Filename), image.Data);
+         }
+      }
 
-        private void DeleteOrphanFiles(string directory, IEnumerable<Image> images)
-        {
-            foreach (var file in _fs.GetFiles(directory))
-            {
-                if (!images.Any(x => x.Filename == Path.GetFileName(file)))
-                    _fs.DeleteFile(file);
-            }
+      private void DeleteOrphanFiles(string dir, IEnumerable<Image> images)
+      {
+         foreach (var file in _fs.GetFiles(dir))
+         {
+            if (!images.Any(x => x.Filename == Path.GetFileName(file)))
+               _fs.DeleteFile(file);
+         }
 
-            if (!_fs.GetFiles(directory).Any())
-                _fs.DeleteDirectory(directory);
-        }
+         if (!_fs.GetFiles(dir).Any())
+            _fs.DeleteDirectory(dir);
+      }
 
-        public void Delete(string postSlug)
-        {
-            var directory = GetDirectory(postSlug);
-            if (_fs.DirectoryExists(directory))
-                _fs.DeleteDirectory(directory);
-        }
+      private void RenameDirectory(string oldPostDirectory, string postDirectory)
+      {
+         if (!string.IsNullOrEmpty(oldPostDirectory) && oldPostDirectory != postDirectory)
+            _fs.RenameDirectory(GetDirectory(oldPostDirectory), GetDirectory(postDirectory));
+      }
 
-        private string GetDirectory(string postSlug) =>
-            Path.Combine("wwwroot", "images", "posts", postSlug);
-    }
+      public void Delete(string postSlug)
+      {
+         var directory = GetDirectory(postSlug);
+         if (_fs.DirectoryExists(directory))
+            _fs.DeleteDirectory(directory);
+      }
+
+      private string GetDirectory(string postDirectory) =>
+          Path.Combine("wwwroot", "images", "posts", postDirectory);
+   }
 }

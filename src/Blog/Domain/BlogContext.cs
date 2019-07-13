@@ -22,51 +22,63 @@ namespace Blog.Domain
 
             modelBuilder.Entity<PostInfo>(info =>
             {
-                info.HasOne<Draft>()
+                info
+                .HasOne<Draft>()
                 .WithOne(x => x.Info)
                 .HasForeignKey<Draft>(x => x.Id);
 
-                info.HasOne<Post>()
+                info
+                .HasOne<Post>()
                .WithOne(x => x.Info)
                .HasForeignKey<Post>(x => x.Id);
 
-                info.HasAlternateKey(x => x.Title);
+                info
+                .HasIndex(x => x.Title)
+                .IsUnique();
 
-                info.Property(x => x.Language)
+                info
+                .Property(x => x.Language)
                 .HasConversion(new EnumToNumberConverter<Language, int>())
                 .IsRequired()
                 .HasDefaultValue(Language.English);
 
-                info.Property(x => x.Title)
+                info
+                .Property(x => x.Title)
                 .IsRequired()
                 .HasMaxLength(150);
 
-                info.Property(x => x.Summary)
+                info
+                .Property(x => x.Summary)
                 .IsRequired();
 
-                info.Property(x => x.Tags)
+                info
+                .Property(x => x.Tags)
                 .IsRequired()
                 .HasDefaultValue(string.Empty);
             });
 
             modelBuilder.Entity<Draft>(draft =>
             {
-                draft.HasOne(x => x.Info)
+                draft
+                .HasOne(x => x.Info)
                 .WithOne()
                 .HasForeignKey<PostInfo>(x => x.Id);
             });
 
             modelBuilder.Entity<Post>(post =>
             {
-                post.HasOne(x => x.Info)
+                post
+                .HasOne(x => x.Info)
                .WithOne()
                .HasForeignKey<Post>(x => x.Id);
 
-                post.HasOne(x => x.PostContent)
+                post
+                .HasOne(x => x.PostContent)
                .WithOne()
                .HasForeignKey<PostContent>(x => x.Id);
 
-                post.Property(x => x.Url)
+                post
+                .Property(x => x.Url)
                 .IsRequired()
                 .HasMaxLength(200);
             });
@@ -75,7 +87,8 @@ namespace Blog.Domain
             {
                 pc.ToTable("Posts");
 
-                pc.Property(x => x.Content)
+                pc
+                .Property(x => x.Content)
                 .IsRequired();
             });
         }
