@@ -92,19 +92,19 @@ namespace Blog.Tests.Domain
       public void Set_img_src_to_file() =>
           Publish("<figure><button>Remove</button><img data-filename=\"pic.png\" src=\"data:image/png;base64,DATA\"><figcaption contenteditable=\"true\">CAP</figcaption></figure>")
           .Should()
-          .Be("<figure><img src=\"\\images\\posts\\the-post\\pic.png\" alt=\"CAP\"><figcaption>CAP</figcaption></figure>");
+          .BePath("<figure><img src=\"/images/posts/the-post/pic.png\" alt=\"CAP\"><figcaption>CAP</figcaption></figure>");
 
       [Fact]
       public void Figures_without_captions() =>
           Publish("<figure><img data-filename=\"pic.jpeg\" src=\"data:image/jpeg;base64,DATA\"></figure>")
           .Should()
-          .Be("<figure><img src=\"\\images\\posts\\the-post\\pic.jpeg\"></figure>");
+          .BePath("<figure><img src=\"/images/posts/the-post/pic.jpeg\"></figure>");
 
       [Fact]
       public void Figures_with_empty_captions() =>
           Publish("<figure><img data-filename=\"pic.jpeg\" src=\"data:image/jpeg;base64,DATA\"><figcaption></figcaption></figure>")
           .Should()
-          .Be("<figure><img src=\"\\images\\posts\\the-post\\pic.jpeg\"></figure>");
+          .BePath("<figure><img src=\"/images/posts/the-post/pic.jpeg\"></figure>");
 
       #endregion
 
@@ -127,7 +127,7 @@ namespace Blog.Tests.Domain
          publish.PostContent
              .Content
              .Should()
-             .Be("<figure><img src=\"\\images\\posts\\the-post\\pic.png\"></figure><figure><img src=\"\\images\\posts\\the-post\\pic-1.png\"></figure>");
+             .BePath("<figure><img src=\"/images/posts/the-post/pic.png\"></figure><figure><img src=\"/images/posts/the-post/pic-1.png\"></figure>");
          images.First()
              .Filename
              .Should()
@@ -149,7 +149,7 @@ namespace Blog.Tests.Domain
 
          draft.Content
              .Should()
-             .Be("<figure><img src=\"\\images\\posts\\the-post\\pic.png\"></figure>");
+             .BePath("<figure><img src=\"/images/posts/the-post/pic.png\"></figure>");
       }
 
       [Fact]
@@ -157,14 +157,14 @@ namespace Blog.Tests.Domain
       {
          var draft = new Draft();
          draft.Info = new PostInfo { Title = "the post" };
-         draft.Content = "<figure><img src=\"\\images\\posts\\the-post\\pic.png\"></figure>";
+         draft.Content = "<figure><img src=\"/images/posts/the-post/pic.png\"></figure>";
 
          draft.Info.Title = "new title";
          draft.RenderImages();
 
          draft.Content
              .Should()
-             .Be("<figure><img src=\"\\images\\posts\\new-title\\pic.png\"></figure>");
+             .BePath("<figure><img src=\"/images/posts/new-title/pic.png\"></figure>");
       }
    }
 }
