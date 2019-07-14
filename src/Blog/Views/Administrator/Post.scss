@@ -93,6 +93,10 @@
       color: $color4;
     }
 
+    img {
+      width: 100%;
+    }
+
     pre.code {
       @include code();
     }
