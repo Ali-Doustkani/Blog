@@ -69,7 +69,7 @@ namespace Blog
          app.UseAuthentication();
          app.UseMvc(cfg =>
          {
-            cfg.MapRoute("root", "/", new { controller = "home", action = "index" })
+            cfg.MapRoute("root", "/", new { controller = "home", action = "index", language = "fa" })
                   .MapRoute("lang", "blog/{language=en}", new { controller = "home", action = "index" })
                   .MapRoute("post", "blog/post/{urlTitle}", new { controller = "home", action = "post" })
                   .MapRoute("about", "about", new { controller = "home", action = "about" });

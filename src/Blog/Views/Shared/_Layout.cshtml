@@ -2,78 +2,78 @@
 <html>
 
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <meta http-equiv="content-security-policy" content="block-all-mixed-content" />
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="~/~site.css" asp-append-version="true" />
-    <link rel="icon" type="image/png" href="~/images/favicons/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="~/images/favicons/favicon-96x96.png" sizes="96x96">
-    <link rel="icon" type="image/png" href="~/images/favicons/favicon-16x16.png" sizes="16x16">
-    @RenderSection("Styles", false)
-    <title>@ViewData["Title"]</title>
+   <meta name="viewport" content="width=device-width" />
+   <meta http-equiv="content-security-policy" content="block-all-mixed-content" />
+   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+   <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed&display=swap" rel="stylesheet">
+   <link rel="stylesheet" href="~/~site.css" asp-append-version="true" />
+   <link rel="icon" type="image/png" href="~/images/favicons/favicon-32x32.png" sizes="32x32">
+   <link rel="icon" type="image/png" href="~/images/favicons/favicon-96x96.png" sizes="96x96">
+   <link rel="icon" type="image/png" href="~/images/favicons/favicon-16x16.png" sizes="16x16">
+   @RenderSection("Styles", false)
+   <title>@ViewData["Title"]</title>
 </head>
 
 <body>
-    <header id="site-header">
-        <nav>
-            <ul class="menu-bar">
-                <li><a asp-controller="Home" asp-action="Index">Blog</a></li>
-                <li><div class="separator"></div></li>
-                <li><a asp-route="lang" asp-route-language="fa">Farsi Posts</a></li>
-                <li><div class="separator"></div></li>
-                <li><a asp-controller="Home" asp-action="About">About Me</a></li>
-                @if (User.Identity.IsAuthenticated)
-                {
-                    <li><div class="separator"></div></li>
-                    <li>
-                        <form asp-controller="Account" asp-action="Logout" class="logout-form"><button class="form-button" type="submit">Logout</button></form>
-                    </li>
-                    <li><div class="separator"></div></li>
-                    <li><a asp-controller="Administrator" asp-action="Index">Posts</a></li>
-                    <li><div class="separator"></div></li>
-                    <li><a asp-controller="Administrator" asp-action="Post">New Post</a></li>
-                }
-            </ul>
-            <ul class="menu-bar">
-                <li>
-                    <a href="https://github.com/Ali-Doustkani">
-                        <i class="fab fa-github-square"></i>
-                    </a>
-                </li>
-                <li>
-                    <a href="https://www.linkedin.com/in/ali-doustkani/">
-                        <i class="fab fa-linkedin"></i>
-                    </a>
-                </li>
-                <li>
-                    <a href="https://twitter.com/AliDoustkani">
-                        <i class="fab fa-twitter-square"></i>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-        @{
-            var hasHeader = true;
-            if (ViewData.ContainsKey("HasHeader"))
+   <header id="site-header">
+      <nav>
+         <ul class="menu-bar">
+            <li><a asp-controller="Home" asp-action="Index">Blog</a></li>
+            <li><div class="separator"></div></li>
+            @*<li><a asp-route="lang" asp-route-language="fa">Farsi Posts</a></li>
+               <li><div class="separator"></div></li>*@
+            <li><a asp-controller="Home" asp-action="About">About Me</a></li>
+            @if (User.Identity.IsAuthenticated)
             {
-                hasHeader = Convert.ToBoolean(ViewData["HasHeader"]);
+               <li><div class="separator"></div></li>
+               <li>
+                  <form asp-controller="Account" asp-action="Logout" class="logout-form"><button class="form-button" type="submit">Logout</button></form>
+               </li>
+               <li><div class="separator"></div></li>
+               <li><a asp-controller="Administrator" asp-action="Index">Posts</a></li>
+               <li><div class="separator"></div></li>
+               <li><a asp-controller="Administrator" asp-action="Post">New Post</a></li>
             }
-            if (hasHeader)
-            {
-                <img src="~/images/me.jpg" />
-                <div class="welcome">Hi, welcome to my blog!</div>
-                <a class="name-with-tag" asp-action="About">&lt;Ali Doustkani/&gt;</a>
-            }
-        }
-    </header>
-    <main>
-        @RenderBody()
-    </main>
-    <footer>
-        <p>© Copyright @DateTime.Now.Year Ali Doustkani</p>
-    </footer>
-    @RenderSection("Scripts", false)
+         </ul>
+         <ul class="menu-bar">
+            <li>
+               <a href="https://github.com/Ali-Doustkani">
+                  <i class="fab fa-github-square"></i>
+               </a>
+            </li>
+            <li>
+               <a href="https://www.linkedin.com/in/ali-doustkani/">
+                  <i class="fab fa-linkedin"></i>
+               </a>
+            </li>
+            <li>
+               <a href="https://twitter.com/AliDoustkani">
+                  <i class="fab fa-twitter-square"></i>
+               </a>
+            </li>
+         </ul>
+      </nav>
+      @{
+         var hasHeader = true;
+         if (ViewData.ContainsKey("HasHeader"))
+         {
+            hasHeader = Convert.ToBoolean(ViewData["HasHeader"]);
+         }
+         if (hasHeader)
+         {
+            <img src="~/images/me.jpg" />
+            <div class="welcome">Hi, welcome to my blog!</div>
+            <a class="name-with-tag" asp-action="About">&lt;Ali Doustkani/&gt;</a>
+         }
+      }
+   </header>
+   <main>
+      @RenderBody()
+   </main>
+   <footer>
+      <p>© Copyright @DateTime.Now.Year Ali Doustkani</p>
+   </footer>
+   @RenderSection("Scripts", false)
 </body>
 
 </html>
