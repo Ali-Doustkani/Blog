@@ -18,27 +18,27 @@ namespace Blog.Tests.Utils
          _fs.Setup(x => x
          .WriteAllBytes(It.IsAny<string>(), It.IsAny<byte[]>()))
              .Callback((string path, byte[] data) =>
-                 _log.Add(string.Join(" ", "write-file", path, string.Join(",", data))));
+                 _log.Add(string.Join(" ", "write-file", path.Standardize(), string.Join(",", data))));
 
          _fs.Setup(x => x
          .CreateDirectory(It.IsAny<string>()))
              .Callback((string path) =>
-             _log.Add(string.Join(" ", "create-dir", path)));
+             _log.Add(string.Join(" ", "create-dir", path.Standardize())));
 
          _fs.Setup(x => x
          .DeleteFile(It.IsAny<string>()))
              .Callback((string path) =>
-             _log.Add(string.Join(" ", "del-file", path)));
+             _log.Add(string.Join(" ", "del-file", path.Standardize())));
 
          _fs.Setup(x => x
          .DeleteDirectory(It.IsAny<string>()))
              .Callback((string path) =>
-             _log.Add(string.Join(" ", "del-dir", path)));
+             _log.Add(string.Join(" ", "del-dir", path.Standardize())));
 
          _fs.Setup(x => x
          .RenameDirectory(It.IsAny<string>(), It.IsAny<string>()))
             .Callback((string oldDir, string newDir) =>
-            _log.Add(string.Join(" ", "rename-dir", oldDir, newDir)));
+            _log.Add(string.Join(" ", "rename-dir", oldDir.Standardize(), newDir.Standardize())));
 
          _ctx = new ImageContext(_fs.Object);
       }
@@ -50,7 +50,7 @@ namespace Blog.Tests.Utils
       [Fact]
       public void Write_image_files()
       {
-         _fs.Setup(x => x.GetFiles(@"wwwroot\images\posts\the-post"))
+         _fs.Setup(x => x.GetFiles("wwwroot/images/posts/the-post".Local()))
             .Returns(new[] { "a.png", "b.png" });
 
          var images = new[] {
@@ -63,9 +63,9 @@ namespace Blog.Tests.Utils
          _log.Should()
              .BeEquivalentTo(new[]
              {
-                    @"create-dir wwwroot\images\posts\the-post",
-                    @"write-file wwwroot\images\posts\the-post\a.png 1,2,3",
-                    @"write-file wwwroot\images\posts\the-post\b.png 4,5"
+                "create-dir wwwroot/images/posts/the-post",
+                "write-file wwwroot/images/posts/the-post/a.png 1,2,3",
+                "write-file wwwroot/images/posts/the-post/b.png 4,5"
              },
              cfg => cfg.WithStrictOrdering());
       }
@@ -73,7 +73,7 @@ namespace Blog.Tests.Utils
       [Fact]
       public void Ignore_written_files()
       {
-         _fs.Setup(x => x.GetFiles(@"wwwroot\images\posts\the-post"))
+         _fs.Setup(x => x.GetFiles("wwwroot/images/posts/the-post".Local()))
              .Returns(new[] { "a.png", "b.png" });
 
          var images = new[]
@@ -87,8 +87,8 @@ namespace Blog.Tests.Utils
          _log.Should()
              .BeEquivalentTo(new[]
              {
-                    @"create-dir wwwroot\images\posts\the-post",
-                    @"write-file wwwroot\images\posts\the-post\b.png 1,2"
+                "create-dir wwwroot/images/posts/the-post",
+                "write-file wwwroot/images/posts/the-post/b.png 1,2"
              },
              cfg => cfg.WithStrictOrdering());
       }
@@ -96,12 +96,12 @@ namespace Blog.Tests.Utils
       [Fact]
       public void Delete_orphan_files()
       {
-         _fs.Setup(x => x.GetFiles(@"wwwroot\images\posts\the-post"))
+         _fs.Setup(x => x.GetFiles("wwwroot/images/posts/the-post".Local()))
              .Returns(new[]
              {
-                    @"wwwroot\images\posts\the-post\a.png",
-                    @"wwwroot\images\posts\the-post\b.png",
-                    @"wwwroot\images\posts\the-post\c.png"
+                "wwwroot/images/posts/the-post/a.png",
+                "wwwroot/images/posts/the-post/b.png",
+                "wwwroot/images/posts/the-post/c.png"
              });
 
          var images = new[]
@@ -115,9 +115,9 @@ namespace Blog.Tests.Utils
          _log.Should()
              .BeEquivalentTo(new[]
              {
-                    @"create-dir wwwroot\images\posts\the-post",
-                    @"write-file wwwroot\images\posts\the-post\c.png 1,2",
-                    @"del-file wwwroot\images\posts\the-post\a.png"
+                "create-dir wwwroot/images/posts/the-post",
+                "write-file wwwroot/images/posts/the-post/c.png 1,2",
+                "del-file wwwroot/images/posts/the-post/a.png"
              },
              cfg => cfg.WithStrictOrdering());
       }
@@ -125,11 +125,11 @@ namespace Blog.Tests.Utils
       [Fact]
       public void Delete_empty_directory_at_the_end()
       {
-         _fs.SetupSequence(x => x.GetFiles(@"wwwroot\images\posts\the-post"))
+         _fs.SetupSequence(x => x.GetFiles("wwwroot/images/posts/the-post".Local()))
              .Returns(new[]
              {
-                    @"wwwroot\images\posts\the-post\a.png",
-                    @"wwwroot\images\posts\the-post\b.png"
+                "wwwroot/images/posts/the-post/a.png",
+                "wwwroot/images/posts/the-post/b.png"
              }).Returns(new string[] { });
 
          var images = Enumerable.Empty<Image>();
@@ -139,9 +139,9 @@ namespace Blog.Tests.Utils
          _log.Should()
              .BeEquivalentTo(new[]
              {
-                    @"del-file wwwroot\images\posts\the-post\a.png",
-                    @"del-file wwwroot\images\posts\the-post\b.png",
-                    @"del-dir wwwroot\images\posts\the-post"
+                "del-file wwwroot/images/posts/the-post/a.png",
+                "del-file wwwroot/images/posts/the-post/b.png",
+                "del-dir wwwroot/images/posts/the-post"
              },
              cfg => cfg.WithStrictOrdering());
       }
@@ -149,7 +149,7 @@ namespace Blog.Tests.Utils
       [Fact]
       public void Rename_post_directory_name()
       {
-         _fs.Setup(x => x.GetFiles(@"wwwroot\images\posts\new-title"))
+         _fs.Setup(x => x.GetFiles("wwwroot/images/posts/new-title".Local()))
             .Returns(new string[] { "a.png" });
          var images = new List<Image>();
          images.Add(new Image("a.png", "new-title"));
@@ -158,8 +158,8 @@ namespace Blog.Tests.Utils
 
          _log.Should().BeEquivalentTo(new[]
          {
-            @"rename-dir wwwroot\images\posts\the-post wwwroot\images\posts\new-title",
-            @"create-dir wwwroot\images\posts\new-title"
+            "rename-dir wwwroot/images/posts/the-post wwwroot/images/posts/new-title",
+            "create-dir wwwroot/images/posts/new-title"
          },
          cfg => cfg.WithStrictOrdering());
       }
