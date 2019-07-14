@@ -3,6 +3,7 @@ using Blog.Utils;
 using FluentAssertions;
 using Moq;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Xunit;
 
@@ -18,27 +19,27 @@ namespace Blog.Tests.Utils
          _fs.Setup(x => x
          .WriteAllBytes(It.IsAny<string>(), It.IsAny<byte[]>()))
              .Callback((string path, byte[] data) =>
-                 _log.Add(string.Join(" ", "write-file", path.Local(), string.Join(",", data))));
+                 _log.Add(string.Join(" ", "write-file", path.Standard(), string.Join(",", data))));
 
          _fs.Setup(x => x
          .CreateDirectory(It.IsAny<string>()))
              .Callback((string path) =>
-             _log.Add(string.Join(" ", "create-dir", path.Local())));
+             _log.Add(string.Join(" ", "create-dir", path.Standard())));
 
          _fs.Setup(x => x
          .DeleteFile(It.IsAny<string>()))
              .Callback((string path) =>
-             _log.Add(string.Join(" ", "del-file", path.Local())));
+             _log.Add(string.Join(" ", "del-file", path.Standard())));
 
          _fs.Setup(x => x
          .DeleteDirectory(It.IsAny<string>()))
              .Callback((string path) =>
-             _log.Add(string.Join(" ", "del-dir", path.Local())));
+             _log.Add(string.Join(" ", "del-dir", path.Standard())));
 
          _fs.Setup(x => x
          .RenameDirectory(It.IsAny<string>(), It.IsAny<string>()))
             .Callback((string oldDir, string newDir) =>
-            _log.Add(string.Join(" ", "rename-dir", oldDir.Local(), newDir.Local())));
+            _log.Add(string.Join(" ", "rename-dir", oldDir.Standard(), newDir.Standard())));
 
          _ctx = new ImageContext(_fs.Object);
       }
@@ -48,10 +49,30 @@ namespace Blog.Tests.Utils
       private readonly List<string> _log;
 
       [Fact]
+      public void Create_dir_before_writing_images()
+      {
+         _fs.Setup(x => x.DirectoryExists("wwwroot/images/posts/the-post".Local()))
+            .Returns(false);
+
+         var images = new[] { new Image("a.png", "the-post", new byte[] { 1, 2 }) };
+
+         _ctx.SaveChanges(null, "the-post", images);
+
+         _log.Should()
+            .BeEquivalentTo(new[]
+            {
+               "create-dir wwwroot/images/posts/the-post",
+               "write-file wwwroot/images/posts/the-post/a.png 1,2"
+            });
+      }
+
+      [Fact]
       public void Write_image_files()
       {
          _fs.Setup(x => x.GetFiles("wwwroot/images/posts/the-post".Local()))
             .Returns(new[] { "a.png", "b.png" });
+         _fs.Setup(x => x.DirectoryExists("wwwroot/images/posts/the-post".Local()))
+            .Returns(true);
 
          var images = new[] {
                 new Image("a.png", "the-post", new byte[] { 1, 2, 3 }),
@@ -63,7 +84,6 @@ namespace Blog.Tests.Utils
          _log.Should()
              .BeEquivalentTo(new[]
              {
-                "create-dir wwwroot/images/posts/the-post",
                 "write-file wwwroot/images/posts/the-post/a.png 1,2,3",
                 "write-file wwwroot/images/posts/the-post/b.png 4,5"
              },
@@ -75,6 +95,8 @@ namespace Blog.Tests.Utils
       {
          _fs.Setup(x => x.GetFiles("wwwroot/images/posts/the-post".Local()))
              .Returns(new[] { "a.png", "b.png" });
+         _fs.Setup(x => x.DirectoryExists("wwwroot/images/posts/the-post".Local()))
+            .Returns(true);
 
          var images = new[]
          {
@@ -87,7 +109,6 @@ namespace Blog.Tests.Utils
          _log.Should()
              .BeEquivalentTo(new[]
              {
-                "create-dir wwwroot/images/posts/the-post",
                 "write-file wwwroot/images/posts/the-post/b.png 1,2"
              },
              cfg => cfg.WithStrictOrdering());
@@ -103,6 +124,8 @@ namespace Blog.Tests.Utils
                 "wwwroot/images/posts/the-post/b.png",
                 "wwwroot/images/posts/the-post/c.png"
              });
+         _fs.Setup(x => x.DirectoryExists("wwwroot/images/posts/the-post".Local()))
+            .Returns(true);
 
          var images = new[]
          {
@@ -115,11 +138,24 @@ namespace Blog.Tests.Utils
          _log.Should()
              .BeEquivalentTo(new[]
              {
-                "create-dir wwwroot/images/posts/the-post",
                 "write-file wwwroot/images/posts/the-post/c.png 1,2",
                 "del-file wwwroot/images/posts/the-post/a.png"
              },
              cfg => cfg.WithStrictOrdering());
+      }
+
+      [Fact]
+      public void Delete_orphan_files_when_no_directory_exists()
+      {
+         _fs.Setup(x => x.GetFiles(It.IsAny<string>()))
+            .Throws<DirectoryNotFoundException>();
+         _fs.Setup(x => x.DirectoryExists(It.IsAny<string>()))
+            .Returns(false);
+
+         _ctx.SaveChanges("the-post", "the-post", Enumerable.Empty<Image>());
+
+         _log.Should()
+            .BeEquivalentTo(Enumerable.Empty<string>(), cfg => cfg.WithStrictOrdering());
       }
 
       [Fact]
@@ -131,6 +167,8 @@ namespace Blog.Tests.Utils
                 "wwwroot/images/posts/the-post/a.png",
                 "wwwroot/images/posts/the-post/b.png"
              }).Returns(new string[] { });
+         _fs.Setup(x => x.DirectoryExists("wwwroot/images/posts/the-post".Local()))
+            .Returns(true);
 
          var images = Enumerable.Empty<Image>();
 
@@ -151,6 +189,8 @@ namespace Blog.Tests.Utils
       {
          _fs.Setup(x => x.GetFiles("wwwroot/images/posts/new-title".Local()))
             .Returns(new string[] { "a.png" });
+         _fs.Setup(x => x.DirectoryExists("wwwroot/images/posts/new-title".Local()))
+            .Returns(true);
          var images = new List<Image>();
          images.Add(new Image("a.png", "new-title"));
 
@@ -159,7 +199,6 @@ namespace Blog.Tests.Utils
          _log.Should().BeEquivalentTo(new[]
          {
             "rename-dir wwwroot/images/posts/the-post wwwroot/images/posts/new-title",
-            "create-dir wwwroot/images/posts/new-title"
          },
          cfg => cfg.WithStrictOrdering());
       }

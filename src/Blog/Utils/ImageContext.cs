@@ -31,7 +31,7 @@ namespace Blog.Utils
 
       private void CreteDirectory(string dir, IEnumerable<Image> images)
       {
-         if (images.Any())
+         if (images.Any() && !_fs.DirectoryExists(dir))
             _fs.CreateDirectory(dir);
       }
 
@@ -46,6 +46,8 @@ namespace Blog.Utils
 
       private void DeleteOrphanFiles(string dir, IEnumerable<Image> images)
       {
+         if (!_fs.DirectoryExists(dir)) return;
+
          foreach (var file in _fs.GetFiles(dir))
          {
             if (!images.Any(x => x.Filename == Path.GetFileName(file)))
