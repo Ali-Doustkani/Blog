@@ -18,27 +18,27 @@ namespace Blog.Tests.Utils
          _fs.Setup(x => x
          .WriteAllBytes(It.IsAny<string>(), It.IsAny<byte[]>()))
              .Callback((string path, byte[] data) =>
-                 _log.Add(string.Join(" ", "write-file", path.Standardize(), string.Join(",", data))));
+                 _log.Add(string.Join(" ", "write-file", path.Local(), string.Join(",", data))));
 
          _fs.Setup(x => x
          .CreateDirectory(It.IsAny<string>()))
              .Callback((string path) =>
-             _log.Add(string.Join(" ", "create-dir", path.Standardize())));
+             _log.Add(string.Join(" ", "create-dir", path.Local())));
 
          _fs.Setup(x => x
          .DeleteFile(It.IsAny<string>()))
              .Callback((string path) =>
-             _log.Add(string.Join(" ", "del-file", path.Standardize())));
+             _log.Add(string.Join(" ", "del-file", path.Local())));
 
          _fs.Setup(x => x
          .DeleteDirectory(It.IsAny<string>()))
              .Callback((string path) =>
-             _log.Add(string.Join(" ", "del-dir", path.Standardize())));
+             _log.Add(string.Join(" ", "del-dir", path.Local())));
 
          _fs.Setup(x => x
          .RenameDirectory(It.IsAny<string>(), It.IsAny<string>()))
             .Callback((string oldDir, string newDir) =>
-            _log.Add(string.Join(" ", "rename-dir", oldDir.Standardize(), newDir.Standardize())));
+            _log.Add(string.Join(" ", "rename-dir", oldDir.Local(), newDir.Local())));
 
          _ctx = new ImageContext(_fs.Object);
       }

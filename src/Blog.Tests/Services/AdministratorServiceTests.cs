@@ -233,7 +233,7 @@ namespace Blog.Tests.Services.Administrator
          Service().Save(new DraftEntry
          {
             Id = 12,
-            Content = "<figure><img src=\"\\images\\posts\\learn-js\\a.png\"></figure>",
+            Content = "<figure><img src=\"/images/posts/learn-js/a.png\"></figure>".Local(),
             Title = "learn js",
             Summary = "Summary",
             Tags = "Tags",
@@ -244,7 +244,7 @@ namespace Blog.Tests.Services.Administrator
          Service().Save(new DraftEntry
          {
             Id = 12,
-            Content = "<figure><img src=\"\\images\\posts\\Learn-js\\a.png\"></figure>",
+            Content = "<figure><img src=\"/images/posts/Learn-js/a.png\"></figure>".Local(),
             Title = "learn c",
             Summary = "Summary",
             Tags = "Tags",
@@ -258,7 +258,7 @@ namespace Blog.Tests.Services.Administrator
             .BeEquivalentTo(new
             {
                Title = "learn c",
-               Content = "<figure><img src=\"\\images\\posts\\learn-c\\a.png\"></figure>"
+               Content = "<figure><img src=\"/images/posts/learn-c/a.png\"></figure>".Local()
             });
       }
 

@@ -12,9 +12,6 @@ namespace Blog.Tests
       public static string Local(this string path) =>
            Regex.Replace(path, PATTERN, Path.DirectorySeparatorChar.ToString());
 
-      public static string Standardize(this string path) =>
-         Regex.Replace(path, PATTERN, "/");
-
       public static AndConstraint<StringAssertions> BePath(this StringAssertions assertions, string path) =>
          assertions.Be(path.Local());
    }
