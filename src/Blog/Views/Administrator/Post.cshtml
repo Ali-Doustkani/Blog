@@ -68,6 +68,7 @@
          <input asp-for="Publish" /><label asp-for="Publish">Publish the Post</label>
       </div>
       <button class="form-button" type="submit">Save</button>
+      <a class="form-button" asp-action="Preview" asp-route-id="@Model.Id" target="_blank">Preview</a>
       <button class="form-button" type="reset">Clear</button>
    </form>
-   </div>
+</div>

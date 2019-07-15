@@ -89,6 +89,7 @@ namespace Blog.Tests.Services.Administrator
          var config = new MapperConfiguration(cfg =>
          {
             cfg.AddProfile<PostProfile>();
+            cfg.AddProfile<Blog.Services.Home.PostProfile>();
          });
          _imageContext = new Mock<IImageContext>();
          return new Service(context, config.CreateMapper(), _imageContext.Object);
@@ -391,6 +392,21 @@ namespace Blog.Tests.Services.Administrator
               .Should()
               .HaveCount(1);
          }
+      }
+
+      [Fact]
+      public void GetView()
+      {
+         Service()
+            .GetView(3)
+            .Should()
+            .BeEquivalentTo(new
+            {
+               Title = "جاوا و ویندوز",
+               Date = "دوشنبه، 24 تیر 1398",
+               Content = "<p>جاوا و ویندوز</p>",
+               Tags = new[] { "Java" }
+            });
       }
    }
 }
