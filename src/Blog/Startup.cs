@@ -35,6 +35,11 @@ namespace Blog
          {
             options.UseSqlServer(_configuration.GetConnectionString("Blog"));
          });
+         services.ConfigureApplicationCookie(op =>
+         {
+            op.SlidingExpiration = false;
+            op.ExpireTimeSpan = TimeSpan.FromDays(30);
+         });
          services.AddMvc();
          services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<BlogContext>();
          services.AddAutoMapper(GetType().Assembly);
