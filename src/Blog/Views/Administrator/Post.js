@@ -10,6 +10,16 @@ const content = document.getElementById("Content");
 english.addEventListener("change", () => saveForm.classList.replace("farsi", "english"));
 farsi.addEventListener("change", () => saveForm.classList.replace("english", "farsi"));
 
+document.addEventListener("DOMContentLoaded", () => {
+   const event = document.createEvent("HTMLEvents");
+   event.initEvent("change", false, true);
+   if (english.checked) {
+      english.dispatchEvent(event);
+   } else if (farsi.checked) {
+      farsi.dispatchEvent(event);
+   }
+});
+
 const richtext = create(editor, {
    defaultLink: "/",
    staySelected: false,
