@@ -39,6 +39,16 @@ namespace Blog.Services.Administrator
            select _mapper.Map<DraftEntry>(Tuple.Create(draft, post == null ? -1 : post.Id))
            ).Single();
 
+      public Home.PostViewModel GetView(int id)
+      {
+         var draft = _context
+            .Drafts
+            .Include(x => x.Info)
+            .SingleOrDefault(x => x.Id == id);
+         if (draft == null) return null;
+         return _mapper.Map<Home.PostViewModel>(draft.Publish());
+      }
+
       public string Save(DraftEntry viewModel)
       {
          var result = string.Empty;

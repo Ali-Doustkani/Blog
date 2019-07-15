@@ -24,7 +24,11 @@ const richtext = create(editor, {
    defaultLink: "/",
    staySelected: false,
    decors: {
-      important: 'strong',
+      important: "strong",
+      inlineCode: {
+         tag: "span",
+         className: "inline-code"
+      },
       h1: {
          parent: true,
          tag: "h3"
@@ -71,6 +75,7 @@ summary.addEventListener("keydown", e => {
 });
 
 click("important", () => richtext.style("important"));
+click("inlineCode", () => richtext.style("inlineCode"));
 click("h1", () => richtext.apply("h1"));
 click("h2", () => richtext.apply("h2"));
 click("code", () => richtext.apply("code"));

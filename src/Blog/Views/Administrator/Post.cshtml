@@ -1,72 +1,74 @@
 ﻿@model DraftEntry
 @{
-    ViewData["Title"] = "Write a post";
+   ViewData["Title"] = "Write a post";
 }
 @section Scripts{
-    <script src="~/~post.min.js" asp-append-version="true"></script>
+   <script src="~/~post.min.js" asp-append-version="true"></script>
 }
 @section Styles{
-    <script src="https://kit.fontawesome.com/4f69c52348.js"></script>
+   <script src="https://kit.fontawesome.com/4f69c52348.js"></script>
 }
 
 <div class="post-form">
-    <h1>Write a post</h1>
-    <form id="save-post" class="english" asp-action="SavePost">
-        <div asp-validation-summary="ModelOnly" class="error"></div>
-        <input name="Id" value="@Model.Id" type="hidden" />
-        <div id="language" class="text-group">
-            <label>Language</label>
-            <input id="english" type="radio" asp-for="Language" value="@Language.English" checked /><label for="english">English</label>
-            <input id="farsi" type="radio" asp-for="Language" value="@Language.Farsi" /><label for="farsi">Farsi</label>
-        </div>
-        <div class="text-group">
-            <label asp-for="PublishDate"></label>
-            <input asp-for="PublishDate" value="@Model.PublishDate.ToString("yyyy-MM-dd")" type="date" autocomplete="off" />
-            <span asp-validation-for="PublishDate" class="error"></span>
-        </div>
-        <div class="text-group">
-            <label asp-for="Title"></label>
-            <input asp-for="Title" autofocus autocomplete="off" />
-            <span asp-validation-for="Title" class="error"></span>
-        </div>
-        <div class="text-group">
-            <label asp-for="Tags"></label>
-            <input asp-for="Tags" autocomplete="off" />
-            <span asp-validation-for="Tags" class="error"></span>
-        </div>
-        <div class="text-group">
-            <label asp-for="Summary"></label>
-            <textarea asp-for="Summary"></textarea>
-            <span asp-validation-for="Summary" class="error"></span>
-        </div>
-        <div class="text-group">
-            <label asp-for="Content"></label>
-            <div class="toolbar">
-                <button id="important"><i class="fas fa-bold"></i></button>
-                <div class="separator"></div>
-                <button id="h1"><strong>H1</strong></button>
-                <button id="h2"><strong>H2</strong></button>
-                <div class="separator"></div>
-                <button id="code"><i class="fas fa-code"></i></button>
-                <button id="terminal"><i class="fas fa-terminal"></i></button>
-                <div class="separator"></div>
-                <button id="note"><i class="fas fa-exclamation"></i></button>
-                <button id="warning"><i class="fas fa-times"></i></button>
-                <div class="separator"></div>
-                <button id="unorderedList"><i class="fas fa-list-ul"></i></button>
-                <button id="orderedList"><i class="fas fa-list-ol"></i></button>
-                <div class="separator"></div>
-                <button id="image"><i class="fas fa-camera"></i></button>
-                <button id="link"><i class="fas fa-link"></i></button>
-            </div>
-            <input asp-for="Content" type="hidden" />
-            <article id="editor"></article>
-            <span asp-validation-for="Content" class="error"></span>
-        </div>
-        <div class="check-group">
-            <input asp-for="Publish" /><label asp-for="Publish">Publish the Post</label>
-        </div>
-        <button class="form-button" type="submit">Save</button>
-        <button class="form-button" type="reset">Clear</button>
-    </form>
+   <h1>Write a post</h1>
+   <form id="save-post" class="english" asp-action="SavePost">
+      <div asp-validation-summary="ModelOnly" class="error"></div>
+      <input name="Id" value="@Model.Id" type="hidden" />
+      <div id="language" class="text-group">
+         <label>Language</label>
+         <input id="english" type="radio" asp-for="Language" value="@Language.English" checked /><label for="english">English</label>
+         <input id="farsi" type="radio" asp-for="Language" value="@Language.Farsi" /><label for="farsi">Farsi</label>
+      </div>
+      <div class="text-group">
+         <label asp-for="PublishDate"></label>
+         <input asp-for="PublishDate" value="@Model.PublishDate.ToString("yyyy-MM-dd")" type="date" autocomplete="off" />
+         <span asp-validation-for="PublishDate" class="error"></span>
+      </div>
+      <div class="text-group">
+         <label asp-for="Title"></label>
+         <input asp-for="Title" autofocus autocomplete="off" />
+         <span asp-validation-for="Title" class="error"></span>
+      </div>
+      <div class="text-group">
+         <label asp-for="Tags"></label>
+         <input asp-for="Tags" autocomplete="off" />
+         <span asp-validation-for="Tags" class="error"></span>
+      </div>
+      <div class="text-group">
+         <label asp-for="Summary"></label>
+         <textarea asp-for="Summary"></textarea>
+         <span asp-validation-for="Summary" class="error"></span>
+      </div>
+      <div class="text-group">
+         <label asp-for="Content"></label>
+         <div class="toolbar">
+            <button id="important"><i class="fas fa-bold"></i></button>
+            <button id="inlineCode"><i class="fas fa-code"></i></button>
+            <div class="separator"></div>
+            <button id="h1"><strong>H1</strong></button>
+            <button id="h2"><strong>H2</strong></button>
+            <div class="separator"></div>
+            <button id="code"><i class="fas fa-code"></i></button>
+            <button id="terminal"><i class="fas fa-terminal"></i></button>
+            <div class="separator"></div>
+            <button id="note"><i class="fas fa-exclamation"></i></button>
+            <button id="warning"><i class="fas fa-times"></i></button>
+            <div class="separator"></div>
+            <button id="unorderedList"><i class="fas fa-list-ul"></i></button>
+            <button id="orderedList"><i class="fas fa-list-ol"></i></button>
+            <div class="separator"></div>
+            <button id="image"><i class="fas fa-camera"></i></button>
+            <button id="link"><i class="fas fa-link"></i></button>
+         </div>
+         <input asp-for="Content" type="hidden" />
+         <article id="editor"></article>
+         <span asp-validation-for="Content" class="error"></span>
+      </div>
+      <div class="check-group">
+         <input asp-for="Publish" /><label asp-for="Publish">Publish the Post</label>
+      </div>
+      <button class="form-button" type="submit">Save</button>
+      <a class="form-button" asp-action="Preview" asp-route-id="@Model.Id" target="_blank">Preview</a>
+      <button class="form-button" type="reset">Clear</button>
+   </form>
 </div>

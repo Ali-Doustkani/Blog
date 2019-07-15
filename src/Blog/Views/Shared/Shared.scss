@@ -112,3 +112,13 @@
   background: lighten($color3, 40%);
   color: $color1;
 }
+
+.inline-code {
+  font-family: Consolas;
+  font-size: .82em;
+  padding: 2px 5px;
+  border-radius: 3px;
+  direction: ltr;
+  background: $color3;
+  color: white;
+}
