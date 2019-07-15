@@ -11,56 +11,61 @@ english.addEventListener("change", () => saveForm.classList.replace("farsi", "en
 farsi.addEventListener("change", () => saveForm.classList.replace("english", "farsi"));
 
 const richtext = create(editor, {
-    defaultLink: "/",
-    staySelected: false,
-    decors: {
-        important: 'strong',
-        h1: {
-            parent: true,
-            tag: "h3"
-        },
-        h2: {
-            parent: true,
-            tag: "h4"
-        },
-        code: {
-            parent: true,
-            tag: "pre",
-            className: "code"
-        },
-        terminal: {
-            parent: true,
-            tag: "pre",
-            className: "terminal"
-        },
-        note: {
-            parent: true,
-            tag: "div",
-            className: "note"
-        },
-        warning: {
-            parent: true,
-            tag: "div",
-            className: "warning"
-        }
-    }
+   defaultLink: "/",
+   staySelected: false,
+   decors: {
+      important: "strong",
+      inlineCode: {
+         tag: "span",
+         className: "inline-code"
+      },
+      h1: {
+         parent: true,
+         tag: "h3"
+      },
+      h2: {
+         parent: true,
+         tag: "h4"
+      },
+      code: {
+         parent: true,
+         tag: "pre",
+         className: "code"
+      },
+      terminal: {
+         parent: true,
+         tag: "pre",
+         className: "terminal"
+      },
+      note: {
+         parent: true,
+         tag: "div",
+         className: "note"
+      },
+      warning: {
+         parent: true,
+         tag: "div",
+         className: "warning"
+      }
+   }
 });
 
 richtext.setInnerHTML(content.value);
 
 saveForm.addEventListener("submit", () => {
-    content.value = editor.innerHTML;
-    saveForm.appendChild(content);
+   content.value = editor.innerHTML;
+   saveForm.appendChild(content);
 });
 
 summary.addEventListener("keydown", e => {
-    if (e.key === "Tab") {
-        e.preventDefault();
-        richtext.focus();
-    }
+   if (e.key === "Tab") {
+      e.preventDefault();
+      richtext.focus();
+   }
 });
 
 click("important", () => richtext.style("important"));
+click("inlineCode", () => richtext.style("inlineCode"));
 click("h1", () => richtext.apply("h1"));
 click("h2", () => richtext.apply("h2"));
 click("code", () => richtext.apply("code"));
@@ -73,8 +78,8 @@ click("image", () => richtext.selectImage());
 click("link", () => richtext.styleLink());
 
 function click(id, func) {
-    document.getElementById(id).addEventListener("click", e => {
-        e.preventDefault();
-        func();
-    });
+   document.getElementById(id).addEventListener("click", e => {
+      e.preventDefault();
+      func();
+   });
 }
