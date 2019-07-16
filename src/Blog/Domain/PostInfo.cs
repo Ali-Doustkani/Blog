@@ -1,9 +1,8 @@
-﻿using System;
+﻿using Blog.Utils;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
-using Blog.Utils;
 
 namespace Blog.Domain
 {
@@ -12,9 +11,12 @@ namespace Blog.Domain
       public PostInfo()
       {
          Tags = string.Empty;
+         Language = Language.English;
       }
 
       public string Title { get; set; }
+
+      public string EnglishUrl { get; set; }
 
       public DateTime PublishDate { get; set; }
 
@@ -60,7 +62,17 @@ namespace Blog.Domain
          return result;
       }
 
-      public string Slugify() =>
+      public string Slugify()
+      {
+         if (Language == Language.English)
+            return SlugifyTitle();
+
+         if (string.IsNullOrEmpty(EnglishUrl))
+            throw new InvalidOperationException("Enlish URL of Farsi posts must have value");
+         return EnglishUrl;
+      }
+
+      private string SlugifyTitle() =>
          Title
          .ThrowIfNullOrEmpty<InvalidOperationException>("Publishing needs Title to be set.")
          .ToLower()

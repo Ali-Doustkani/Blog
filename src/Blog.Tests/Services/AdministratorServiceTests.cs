@@ -47,7 +47,8 @@ namespace Blog.Tests.Services.Administrator
                PublishDate = DateTime.Now,
                Summary = "استفاده از جاوا در ویندوز",
                Tags = "Java",
-               Title = "جاوا و ویندوز"
+               Title = "جاوا و ویندوز",
+               EnglishUrl = "java-windows"
             });
             seed.Drafts.Add(new Draft
             {
@@ -167,7 +168,8 @@ namespace Blog.Tests.Services.Administrator
          var entry = new DraftEntry
          {
             Content = "<p>JS Content</p>",
-            Title = "Javascript FP"
+            Title = "Javascript FP",
+            Language = Language.English
          };
 
          Service()
@@ -209,7 +211,7 @@ namespace Blog.Tests.Services.Administrator
             Title = "Javascript FP",
             Summary = "Summary",
             Tags = "Tags",
-            Language = Language.Farsi,
+            Language = Language.English,
             PublishDate = new DateTime(2018, 8, 8)
          });
 
@@ -223,7 +225,7 @@ namespace Blog.Tests.Services.Administrator
                Title = "Javascript FP",
                Summary = "Summary",
                Tags = "Tags",
-               Language = Language.Farsi,
+               Language = Language.English,
                PublishDate = new DateTime(2018, 8, 8)
             });
       }
@@ -238,7 +240,7 @@ namespace Blog.Tests.Services.Administrator
             Title = "learn js",
             Summary = "Summary",
             Tags = "Tags",
-            Language = Language.Farsi,
+            Language = Language.English,
             PublishDate = new DateTime(2018, 8, 8)
          });
 
@@ -249,7 +251,7 @@ namespace Blog.Tests.Services.Administrator
             Title = "learn c",
             Summary = "Summary",
             Tags = "Tags",
-            Language = Language.Farsi,
+            Language = Language.English,
             PublishDate = new DateTime(2018, 8, 8)
          });
 
@@ -297,7 +299,7 @@ namespace Blog.Tests.Services.Administrator
             Title = "new title",
             Summary = "new summary",
             Tags = "new tag",
-            Language = Language.Farsi,
+            Language = Language.English,
             PublishDate = new DateTime(2017, 7, 7)
          });
 
@@ -311,7 +313,7 @@ namespace Blog.Tests.Services.Administrator
                 .BeEquivalentTo(new
                 {
                    Url = "new-title",
-                   PostContent = new { Content = "<p>New Content</p>" }
+                   PostContent = new { Content = "<p>New Content</p>" },
                 });
          }
       }
@@ -326,7 +328,8 @@ namespace Blog.Tests.Services.Administrator
             Content = "<p>New Content</p>",
             Summary = "SUMMARY",
             Tags = "Tags",
-            Publish = false
+            Publish = false,
+            Language = Language.English
          });
 
          using (var context = new BlogContext(_options))
@@ -346,7 +349,8 @@ namespace Blog.Tests.Services.Administrator
          {
             Content = "<figure><img data-filename=\"pic.jpeg\" src=\"data:image/jpeg;base64,DATA\"></figure>",
             Title = "the post",
-            Summary = "SUMMARY"
+            Summary = "SUMMARY",
+            Language = Language.English
          });
 
          _imageContext.Verify(x => x.SaveChanges(null, "the-post", It.IsAny<IEnumerable<Image>>()));
@@ -403,9 +407,10 @@ namespace Blog.Tests.Services.Administrator
             .BeEquivalentTo(new
             {
                Title = "جاوا و ویندوز",
-               Date = "دوشنبه، 24 تیر 1398",
+               Date = "سه شنبه، 25 تیر 1398",
                Content = "<p>جاوا و ویندوز</p>",
-               Tags = new[] { "Java" }
+               Tags = new[] { "Java" },
+               Language = Language.Farsi
             });
       }
    }

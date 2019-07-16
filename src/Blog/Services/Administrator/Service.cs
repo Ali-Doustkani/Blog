@@ -54,6 +54,9 @@ namespace Blog.Services.Administrator
          var result = string.Empty;
 
          var draft = _mapper.Map<Draft>(viewModel);
+         if (draft.Info.Language == Language.Farsi && string.IsNullOrEmpty(draft.Info.EnglishUrl))
+            throw new ValidationException("EnglishUrl", "EnglishUrl must have value for Farsi posts");
+
          var images = draft.RenderImages();
 
          var oldDraft = _context.Drafts.Include(x => x.Info).SingleOrDefault(x => x.Id == draft.Id);
