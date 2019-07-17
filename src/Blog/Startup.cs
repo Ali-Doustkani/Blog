@@ -47,6 +47,7 @@ namespace Blog
          services.AddTransient<Services.Administrator.Service>();
          services.AddTransient<IImageContext, ImageContext>();
          services.AddTransient<IFileSystem, FileSystem>();
+         services.AddTransient<DraftValidator>();
       }
 
       public void Configure(IApplicationBuilder app)

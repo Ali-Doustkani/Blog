@@ -27,6 +27,10 @@
     color: $color2;
   }
 
+  h3:not(:first-of-type) {
+    margin-top: 25px;
+  }
+
   h4 {
     color: $color2;
     margin-top: 20px;
@@ -79,9 +83,9 @@
   }
 }
 
-/* Info Boxes */
+/* Highlights */
 
-@mixin box($color) {
+@mixin highlight($color) {
   margin-bottom: 10px;
   padding: 5px;
   background: transparentize($color, .85);
@@ -91,11 +95,11 @@
 }
 
 .note {
-  @include box(#00faac);
+  @include highlight(#00faac);
 }
 
 .warning {
-  @include box(#ff3796);
+  @include highlight(#ff3796);
 }
 
 .box-wrapper {
