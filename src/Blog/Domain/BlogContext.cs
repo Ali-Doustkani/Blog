@@ -57,8 +57,7 @@ namespace Blog.Domain
 
             info
                .Property(x => x.Tags)
-               .IsRequired()
-               .HasDefaultValue(string.Empty);
+               .IsRequired();
          });
 
          modelBuilder.Entity<Draft>(draft =>
