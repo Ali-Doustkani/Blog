@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Blog.Domain;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace Blog.Utils
@@ -25,6 +28,12 @@ namespace Blog.Utils
             throw exc;
 
          return value;
+      }
+
+      public static void AddModelErrors(this ModelStateDictionary dic, IEnumerable<Problem> problems)
+      {
+         foreach (var prob in problems)
+            dic.AddModelError(prob.Property, prob.Message);
       }
    }
 }

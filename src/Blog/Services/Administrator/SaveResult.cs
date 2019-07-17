@@ -1,14 +1,26 @@
-﻿namespace Blog.Services.Administrator
-{
-    public class SaveResult
-    {
-        public SaveResult(int id, string url)
-        {
-            Id = id;
-            Url = url;
-        }
+﻿using Blog.Domain;
+using System.Collections.Generic;
+using System.Linq;
 
-        public int Id { get; }
-        public string Url { get; }
-    }
+namespace Blog.Services.Administrator
+{
+   public class SaveResult
+   {
+      private SaveResult(bool failed, IEnumerable<Problem> problems, string url)
+      {
+         Failed = failed;
+         Problems = problems;
+         Url = url;
+      }
+
+      public bool Failed { get; }
+      public IEnumerable<Problem> Problems { get; }
+      public string Url { get; }
+
+      public static SaveResult Failure(IEnumerable<Problem> problems) =>
+         new SaveResult(true, problems, null);
+
+      public static SaveResult Success(string url) =>
+         new SaveResult(false, Enumerable.Empty<Problem>(), url);
+   }
 }
