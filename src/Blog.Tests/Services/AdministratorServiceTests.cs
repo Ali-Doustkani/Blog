@@ -355,7 +355,8 @@ namespace Blog.Tests.Services.Administrator
             Content = "<figure><img data-filename=\"pic.jpeg\" src=\"data:image/jpeg;base64,DATA\"></figure>",
             Title = "the post",
             Summary = "SUMMARY",
-            Language = Language.English
+            Language = Language.English,
+            Tags = "tags"
          });
 
          _imageContext.Verify(x => x.SaveChanges(null, "the-post", It.IsAny<IEnumerable<Image>>()));
