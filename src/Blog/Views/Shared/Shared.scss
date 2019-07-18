@@ -119,6 +119,5 @@
   padding: 2px 5px;
   border-radius: 3px;
   direction: ltr;
-  background: $color3;
-  color: white;
+  background: lighten($color3, 40%);
 }
