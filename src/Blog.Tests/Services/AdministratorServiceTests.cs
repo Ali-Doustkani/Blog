@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Blog.Domain;
-using Blog.Services;
 using Blog.Services.Administrator;
 using Blog.Utils;
 using FluentAssertions;
@@ -35,7 +34,7 @@ namespace Blog.Tests.Services.Administrator
             {
                Id = 2,
                Language = Language.English,
-               PublishDate = DateTime.Now,
+               PublishDate = new DateTime(2019, 7, 16),
                Summary = "Learning OOP in C#",
                Tags = "OOP, C#",
                Title = "Object Oriented C#"
@@ -44,10 +43,11 @@ namespace Blog.Tests.Services.Administrator
             {
                Id = 3,
                Language = Language.Farsi,
-               PublishDate = DateTime.Now,
+               PublishDate = new DateTime(2019, 7, 16),
                Summary = "استفاده از جاوا در ویندوز",
                Tags = "Java",
-               Title = "جاوا و ویندوز"
+               Title = "جاوا و ویندوز",
+               EnglishUrl = "java-windows"
             });
             seed.Drafts.Add(new Draft
             {
@@ -92,7 +92,7 @@ namespace Blog.Tests.Services.Administrator
             cfg.AddProfile<Blog.Services.Home.PostProfile>();
          });
          _imageContext = new Mock<IImageContext>();
-         return new Service(context, config.CreateMapper(), _imageContext.Object);
+         return new Service(context, config.CreateMapper(), _imageContext.Object, new DraftValidator(context));
       }
 
       [Fact]
@@ -167,14 +167,21 @@ namespace Blog.Tests.Services.Administrator
          var entry = new DraftEntry
          {
             Content = "<p>JS Content</p>",
-            Title = "Javascript FP"
+            Title = "Javascript FP",
+            Language = Language.English
          };
 
-         Service()
-            .Invoking(x => x.Save(entry))
+         var result = Service().Save(entry);
+
+         result
+            .Failed
             .Should()
-            .Throw<ValidationException>()
-            .WithMessage("This title already exists in the database.");
+            .BeTrue();
+
+         result
+            .Problems
+            .Should()
+            .ContainEquivalentOf(new { Message = "This title already exists in the database." });
       }
 
       [Fact]
@@ -209,7 +216,7 @@ namespace Blog.Tests.Services.Administrator
             Title = "Javascript FP",
             Summary = "Summary",
             Tags = "Tags",
-            Language = Language.Farsi,
+            Language = Language.English,
             PublishDate = new DateTime(2018, 8, 8)
          });
 
@@ -223,7 +230,7 @@ namespace Blog.Tests.Services.Administrator
                Title = "Javascript FP",
                Summary = "Summary",
                Tags = "Tags",
-               Language = Language.Farsi,
+               Language = Language.English,
                PublishDate = new DateTime(2018, 8, 8)
             });
       }
@@ -238,7 +245,7 @@ namespace Blog.Tests.Services.Administrator
             Title = "learn js",
             Summary = "Summary",
             Tags = "Tags",
-            Language = Language.Farsi,
+            Language = Language.English,
             PublishDate = new DateTime(2018, 8, 8)
          });
 
@@ -249,7 +256,7 @@ namespace Blog.Tests.Services.Administrator
             Title = "learn c",
             Summary = "Summary",
             Tags = "Tags",
-            Language = Language.Farsi,
+            Language = Language.English,
             PublishDate = new DateTime(2018, 8, 8)
          });
 
@@ -297,7 +304,7 @@ namespace Blog.Tests.Services.Administrator
             Title = "new title",
             Summary = "new summary",
             Tags = "new tag",
-            Language = Language.Farsi,
+            Language = Language.English,
             PublishDate = new DateTime(2017, 7, 7)
          });
 
@@ -311,7 +318,7 @@ namespace Blog.Tests.Services.Administrator
                 .BeEquivalentTo(new
                 {
                    Url = "new-title",
-                   PostContent = new { Content = "<p>New Content</p>" }
+                   PostContent = new { Content = "<p>New Content</p>" },
                 });
          }
       }
@@ -326,7 +333,8 @@ namespace Blog.Tests.Services.Administrator
             Content = "<p>New Content</p>",
             Summary = "SUMMARY",
             Tags = "Tags",
-            Publish = false
+            Publish = false,
+            Language = Language.English
          });
 
          using (var context = new BlogContext(_options))
@@ -346,7 +354,8 @@ namespace Blog.Tests.Services.Administrator
          {
             Content = "<figure><img data-filename=\"pic.jpeg\" src=\"data:image/jpeg;base64,DATA\"></figure>",
             Title = "the post",
-            Summary = "SUMMARY"
+            Summary = "SUMMARY",
+            Language = Language.English
          });
 
          _imageContext.Verify(x => x.SaveChanges(null, "the-post", It.IsAny<IEnumerable<Image>>()));
@@ -403,9 +412,10 @@ namespace Blog.Tests.Services.Administrator
             .BeEquivalentTo(new
             {
                Title = "جاوا و ویندوز",
-               Date = "دوشنبه، 24 تیر 1398",
+               Date = "سه شنبه، 25 تیر 1398",
                Content = "<p>جاوا و ویندوز</p>",
-               Tags = new[] { "Java" }
+               Tags = new[] { "Java" },
+               Language = Language.Farsi
             });
       }
    }

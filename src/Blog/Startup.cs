@@ -47,6 +47,7 @@ namespace Blog
          services.AddTransient<Services.Administrator.Service>();
          services.AddTransient<IImageContext, ImageContext>();
          services.AddTransient<IFileSystem, FileSystem>();
+         services.AddTransient<DraftValidator>();
       }
 
       public void Configure(IApplicationBuilder app)
@@ -75,11 +76,11 @@ namespace Blog
          app.UseMvc(cfg =>
          {
             cfg.MapRoute("root", "/", new { controller = "home", action = "index", language = "fa" })
-                  .MapRoute("lang", "blog/{language=en}", new { controller = "home", action = "index" })
-                  .MapRoute("post", "blog/post/{urlTitle}", new { controller = "home", action = "post" })
+                  .MapRoute("en", "{language:regex(^fa|en$)}", new { controller = "home", action = "index" })
+                  .MapRoute("post", "{language:regex(^fa|en$)}/{urlTitle}", new { controller = "home", action = "post" })
                   .MapRoute("about", "about", new { controller = "home", action = "about" });
 
-            cfg.MapRoute("admin", "admin/{action=index}/{id?}", new { controller = "Administrator" });
+            cfg.MapRoute("admin", "admin/{action=index}/{id?}", new { controller = "administrator" });
 
             cfg.MapRoute("default", "{controller}/{action}");
          });

@@ -34,7 +34,7 @@ steps:
 - task: CmdLine@2
   displayName: build assets
   inputs:
-    script: 'npm run build'
+    script: 'npm run build-assets'
     workingDirectory: '$(blogDirectory)'
 
 - task: DotNetCoreCLI@2

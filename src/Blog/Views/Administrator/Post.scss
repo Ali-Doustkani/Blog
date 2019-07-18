@@ -110,7 +110,7 @@
 /* Language Change */
 
 @mixin language($dir, $font) {
-  input[type=text]:not(#Tags), textarea, #editor {
+  input[type=text]:not(#Tags):not(#EnglishUrl), textarea, #editor {
     direction: $dir;
     font-family: $font;
   }

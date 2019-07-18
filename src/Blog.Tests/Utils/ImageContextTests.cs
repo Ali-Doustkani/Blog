@@ -188,7 +188,7 @@ namespace Blog.Tests.Utils
       public void Rename_post_directory_name()
       {
          _fs.Setup(x => x.GetFiles("wwwroot/images/posts/new-title".Local()))
-            .Returns(new string[] { "a.png" });
+            .Returns(new[] { "a.png" });
          _fs.Setup(x => x.DirectoryExists("wwwroot/images/posts/new-title".Local()))
             .Returns(true);
          var images = new List<Image>();
@@ -201,6 +201,24 @@ namespace Blog.Tests.Utils
             "rename-dir wwwroot/images/posts/the-post wwwroot/images/posts/new-title",
          },
          cfg => cfg.WithStrictOrdering());
+      }
+
+      [Fact]
+      public void Overwrite_files()
+      {
+         _fs.Setup(x => x.GetFiles("wwwroot/images/posts/the-post".Local()))
+            .Returns(new[] { "a.png" });
+         _fs.Setup(x => x.DirectoryExists("wwwroot/images/posts/the-post".Local()))
+            .Returns(true);
+         var images = new List<Image>();
+         images.Add(new Image("a.png", "the-post", new byte[] { 3, 4 }));
+
+         _ctx.SaveChanges("the-post", "the-post", images);
+
+         _log.Should().BeEquivalentTo(new[]
+         {
+            "write-file wwwroot/images/posts/the-post/a.png 3,4"
+         }, cfg => cfg.WithStrictOrdering());
       }
    }
 }

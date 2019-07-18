@@ -10,16 +10,18 @@ namespace Blog.Services.Administrator
 {
    public class Service
    {
-      public Service(BlogContext context, IMapper mapper, IImageContext imageContext)
+      public Service(BlogContext context, IMapper mapper, IImageContext imageContext, DraftValidator validator)
       {
          _context = context;
          _mapper = mapper;
          _imageContext = imageContext;
+         _validator = validator;
       }
 
       private readonly BlogContext _context;
       private readonly IMapper _mapper;
       private readonly IImageContext _imageContext;
+      private readonly DraftValidator _validator;
 
       public DraftEntry Create() =>
           new DraftEntry { PublishDate = DateTime.Now };
@@ -49,11 +51,15 @@ namespace Blog.Services.Administrator
          return _mapper.Map<Home.PostViewModel>(draft.Publish());
       }
 
-      public string Save(DraftEntry viewModel)
+      public SaveResult Save(DraftEntry viewModel)
       {
-         var result = string.Empty;
-
          var draft = _mapper.Map<Draft>(viewModel);
+
+         var result = _validator.Validate(draft);
+         if (result.Any())
+            return SaveResult.Failure(result);
+
+         var url = string.Empty;
          var images = draft.RenderImages();
 
          var oldDraft = _context.Drafts.Include(x => x.Info).SingleOrDefault(x => x.Id == draft.Id);
@@ -72,7 +78,7 @@ namespace Blog.Services.Administrator
          {
             var post = draft.Publish();
             _context.AddOrUpdate(post);
-            result = post.Url;
+            url = post.Url;
          }
          else if (_context.Posts.Any(draft.Id))
          {
@@ -80,17 +86,10 @@ namespace Blog.Services.Administrator
             _context.PostContents.Delete(draft.Id);
          }
 
-         try
-         {
-            _context.SaveChanges();
-         }
-         catch (DbUpdateException)
-         {
-            throw new ValidationException("Title", "This title already exists in the database.");
-         }
+         _context.SaveChanges();
 
          _imageContext.SaveChanges(oldPostDirectory, draft.Info.Slugify(), images);
-         return result;
+         return SaveResult.Success(url);
       }
 
       public void Delete(int id)

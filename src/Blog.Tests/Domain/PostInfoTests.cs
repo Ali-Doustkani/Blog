@@ -2,7 +2,6 @@
 using FluentAssertions;
 using System;
 using Xunit;
-using Blog.Utils;
 
 namespace Blog.Tests.Domain
 {
@@ -46,10 +45,17 @@ namespace Blog.Tests.Domain
          post.GetLongPersianDate().Should().Be("سه شنبه، 4 دی 1397");
       }
 
+      [Fact]
+      public void Farsi_posts_should_be_slugified_to_english_url() =>
+         new PostInfo { Language = Language.Farsi, EnglishUrl = "the-url" }
+         .Slugify()
+         .Should()
+         .Be("the-url");
+
       [Theory]
-      [InlineData("پیش مقدمه", "پیش-مقدمه")]
-      [InlineData("پیش      مقدمه", "پیش-مقدمه")]
-      [InlineData("یادگیری: ASP.NET Core", "یادگیری-aspnet-core")]
+      [InlineData("js intro", "js-intro")]
+      [InlineData("js      intro", "js-intro")]
+      [InlineData("learn: ASP.NET Core", "learn-aspnet-core")]
       [InlineData("LEARN JS", "learn-js")]
       public void Slugify(string title, string result) =>
          new PostInfo { Title = title }
