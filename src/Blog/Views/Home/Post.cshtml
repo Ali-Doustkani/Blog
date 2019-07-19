@@ -1,25 +1,26 @@
 ﻿@using Microsoft.AspNetCore.Http.Extensions
 @model PostViewModel
 @{
-    ViewData["Title"] = Model.Title;
-    ViewData["HasHeader"] = false;
+   ViewData["Title"] = Model.Title;
+   ViewData["HasHeader"] = false;
 }
 
 <article class="post" add-lang-class="true">
-    <header>
-        <h1>@Model.Title</h1>
-        <h2>@Model.Date</h2>
-        <div class="tagset">
-            <i class="fas fa-hashtag"></i>
-            @foreach (var tag in Model.Tags)
-            {
-                <div>@tag</div>
-            }
-        </div>
-    </header>
-    @Html.Raw(Model.Content)
-    <div id="disqus_thread"></div>
-    <script>
+   <header>
+      <h1>@Model.Title</h1>
+      <h2>@Model.Date</h2>
+      <div class="tagset">
+         <i class="fas fa-hashtag"></i>
+         @foreach (var tag in Model.Tags)
+         {
+            <div>@tag</div>
+         }
+      </div>
+   </header>
+   @Html.Raw(Model.Content)
+   <environment include="Production">
+      <div id="disqus_thread"></div>
+      <script>
         var disqus_config = function () {
             this.page.url = @Html.Raw($"'{Context.Request.GetEncodedUrl()}'");
             this.page.identifier = @Html.Raw($"'{Model.Title}'");
@@ -30,6 +31,7 @@
             s.setAttribute('data-timestamp', +new Date());
             (d.head || d.body).appendChild(s);
         })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      </script>
+      <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+   </environment>
 </article>

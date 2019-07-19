@@ -76,7 +76,7 @@ namespace Blog
          app.UseMvc(cfg =>
          {
             cfg.MapRoute("root", "/", new { controller = "home", action = "index", language = "fa" })
-                  .MapRoute("en", "{language:regex(^fa|en$)}", new { controller = "home", action = "index" })
+                  .MapRoute("langRoot", "{language:regex(^fa|en$)}", new { controller = "home", action = "index" })
                   .MapRoute("post", "{language:regex(^fa|en$)}/{urlTitle}", new { controller = "home", action = "post" })
                   .MapRoute("about", "about", new { controller = "home", action = "about" });
 
