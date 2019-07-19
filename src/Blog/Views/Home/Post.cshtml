@@ -5,15 +5,15 @@
    ViewData["HasHeader"] = false;
 }
 
-<article class="post" add-lang-class="true">
+<article blog-testid="article-container" class="post" blog-bilingual="true">
    <header>
-      <h1>@Model.Title</h1>
-      <h2>@Model.Date</h2>
+      <h1 blog-testid="title-value">@Model.Title</h1>
+      <h2 blog-testid="date-value">@Model.Date</h2>
       <div class="tagset">
          <i class="fas fa-hashtag"></i>
          @foreach (var tag in Model.Tags)
          {
-            <div>@tag</div>
+            <div blog-testid="tag-value">@tag</div>
          }
       </div>
    </header>

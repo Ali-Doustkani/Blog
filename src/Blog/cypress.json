@@ -1,8 +1,8 @@
 {
-   "integrationFolder": "../Blog.E2E/Integration",
-   "fixturesFolder": false,
-   "pluginsFile": false,
-   "supportFile": false,
-   "baseUrl": "https://localhost:5001",
-   "video": false
+  "integrationFolder": "../Blog.E2E/Integration",
+  "fixturesFolder": false,
+  "pluginsFile": false,
+  "supportFile": "../Blog.E2E/Support",
+  "baseUrl": "https://localhost:5001",
+  "video": false
 }

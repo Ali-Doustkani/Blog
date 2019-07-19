@@ -11,12 +11,12 @@
         <div asp-validation-summary="All" class="error"></div>
         <div class="text-group">
             <label for="username">Username</label>
-            <input type="text" name="username" autocomplete="off" autofocus />
+            <input blog-testid="username-input" type="text" name="username" autocomplete="off" autofocus />
         </div>
         <div class="text-group">
             <label for="password">Password</label>
-            <input type="password" name="password" />
+            <input blog-testid="password-input" type="password" name="password" />
         </div>
-        <button type="submit" class="form-button">Login</button>
+        <button blog-testid="login-button" type="submit" class="form-button">Login</button>
     </form>
 </div>
