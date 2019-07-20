@@ -5,47 +5,50 @@ using System;
 
 namespace Blog.Controllers
 {
-    public class HomeController : Controller
-    {
-        public HomeController(Service services)
-        {
-            _services = services;
-        }
+   public class HomeController : Controller
+   {
+      public HomeController(Service services)
+      {
+         _services = services;
+      }
 
-        private readonly Service _services;
+      private readonly Service _services;
 
-        public ViewResult Index(string language)
-        {
-            var lang = Language.English;
-            if (string.Equals(language, "fa", StringComparison.OrdinalIgnoreCase))
-                lang = Language.Farsi;
-            ViewData["language"] = lang;
-            return View(_services.GetPosts(lang));
-        }
+      public ViewResult Index(string language)
+      {
+         var lang = Language.English;
+         if (string.Equals(language, "fa", StringComparison.OrdinalIgnoreCase))
+            lang = Language.Farsi;
+         ViewData["language"] = lang;
+         return View(_services.GetPosts(lang));
+      }
 
-        public IActionResult Post(string urlTitle)
-        {
-            var post = _services.Get(urlTitle);
-            if (post == null)
-                return NotFound();
+      public IActionResult Post(string language, string urlTitle)
+      {
+         var post = _services.Get(urlTitle);
+         if (post == null)
+            return NotFound();
 
-            ViewData["language"] = post.Language;
+         if (language == "fa" && post.Language != Language.Farsi || language == "en" && post.Language != Language.English)
+            return NotFound();
 
-            return View(post);
-        }
+         ViewData["language"] = post.Language;
 
-        public ViewResult About()
-        {
-            ViewData["language"] = Language.English;
-            return View();
-        }
+         return View(post);
+      }
 
-        public IActionResult Error(int statusCode = -1)
-        {
-            ViewData["language"] = Language.English;
-            if (statusCode == 404)
-                return View("NotFound");
-            return View();
-        }
-    }
+      public ViewResult About()
+      {
+         ViewData["language"] = Language.English;
+         return View();
+      }
+
+      public IActionResult Error(int statusCode = -1)
+      {
+         ViewData["language"] = Language.English;
+         if (statusCode == 404)
+            return View("NotFound");
+         return View();
+      }
+   }
 }

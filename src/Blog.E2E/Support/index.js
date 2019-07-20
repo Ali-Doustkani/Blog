@@ -12,6 +12,10 @@ Cypress.Commands.add("login", { prevSubject: true }, () => {
   return cy.el("login-button").click();
 });
 
+Cypress.Commands.add("logout", { prevSubject: false }, selector => {
+  cy.el("logout-button").click();
+});
+
 Cypress.Commands.add("clickAll", { prevSubject: false }, selector => {
   if (any(selector)) {
     cy.el(selector).then(x => {

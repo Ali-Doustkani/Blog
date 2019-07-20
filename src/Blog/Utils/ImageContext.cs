@@ -60,8 +60,13 @@ namespace Blog.Utils
 
       private void RenameDirectory(string oldPostDirectory, string postDirectory)
       {
-         if (!string.IsNullOrEmpty(oldPostDirectory) && oldPostDirectory != postDirectory)
-            _fs.RenameDirectory(GetDirectory(oldPostDirectory), GetDirectory(postDirectory));
+         if (string.IsNullOrEmpty(oldPostDirectory) || oldPostDirectory == postDirectory)
+            return;
+
+         if (!_fs.DirectoryExists(GetDirectory(oldPostDirectory)))
+            return;
+
+         _fs.RenameDirectory(GetDirectory(oldPostDirectory), GetDirectory(postDirectory));
       }
 
       public void Delete(string postSlug)

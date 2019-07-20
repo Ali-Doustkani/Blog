@@ -1,8 +1,9 @@
-﻿using Blog.Services;
+﻿using Blog.Domain;
+using Blog.Services;
 using Blog.Services.Administrator;
+using Blog.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Blog.Utils;
 
 namespace Blog.Controllers
 {
@@ -42,7 +43,10 @@ namespace Blog.Controllers
          }
 
          if (draft.Publish)
-            return RedirectToAction("Post", "Home", new { urlTitle = result.Url });
+         {
+            var lang = draft.Language == Language.English ? "en" : "fa";
+            return RedirectToAction("Post", "Home", new { language = lang, urlTitle = result.Url });
+         }
 
          return RedirectToAction(nameof(Index));
 

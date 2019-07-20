@@ -5,7 +5,7 @@
 
 @foreach (var post in Model)
 {
-   <article blog-testid="post-container" class="post-item" blog-bilingual="true">
+   <article blog-testid="post-item" class="post-item" blog-bilingual="true">
       <a asp-action="Post" asp-route-urlTitle="@post.Url">
          <h1>
             @post.Title<span class="date">@post.Date</span>
