@@ -7,11 +7,18 @@
       "build-styles": "parcel build Views/Site.scss --out-dir wwwroot --out-file ~site.css --no-source-maps",
       "build-js": "parcel build Views/Administrator/Index.js --out-dir wwwroot --out-file ~admin.min.js && parcel build Views/Administrator/Post.js --out-dir wwwroot --out-file ~post.min.js",
       "copy-assets": "cpx Assets/Images/**/* wwwroot/images",
-      "build-assets": "npm run build-styles && npm run build-js"
+      "build-assets": "npm run build-styles && npm run build-js",
+      "test:cy": "npm-run-all --parallel --race start-test-server cy:open",
+      "test:e2e": "npm-run-all --parallel --race start-test-server cy:run",
+      "start-test-server": "dotnet run --environment testing",
+      "cy:open": "cypress open",
+      "cy:run": "cypress run"
    },
    "devDependencies": {
       "autoprefixer": "^9.6.0",
       "cpx": "^1.5.0",
+      "cypress": "^3.4.0",
+      "npm-run-all": "^4.1.5",
       "parcel-bundler": "^1.12.3",
       "sass": "^1.22.0"
    },

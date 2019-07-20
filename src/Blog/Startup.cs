@@ -52,22 +52,23 @@ namespace Blog
 
       public void Configure(IApplicationBuilder app)
       {
-         if (_env.IsDevelopment())
-         {
-            app.UseDeveloperExceptionPage();
-         }
-         else if (_env.IsProduction())
+         app.UseStatusCodePagesWithReExecute("/home/error", "?statusCode={0}");
+
+         if (_env.IsProduction())
          {
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
             app.UseExceptionHandler("/home/error");
-            app.UseStatusCodePagesWithReExecute("/home/error", "?statusCode={0}");
             app.UseHsts();
             app.UseHttpsRedirection();
             app.UseXXssProtection(options => options.EnabledWithBlockMode());
             app.UseXContentTypeOptions();
+         }
+         else
+         {
+            app.UseDeveloperExceptionPage();
          }
 
          app.MigrateDatabase();
@@ -76,9 +77,9 @@ namespace Blog
          app.UseMvc(cfg =>
          {
             cfg.MapRoute("root", "/", new { controller = "home", action = "index", language = "fa" })
-                  .MapRoute("en", "{language:regex(^fa|en$)}", new { controller = "home", action = "index" })
-                  .MapRoute("post", "{language:regex(^fa|en$)}/{urlTitle}", new { controller = "home", action = "post" })
-                  .MapRoute("about", "about", new { controller = "home", action = "about" });
+               .MapRoute("langRoot", "{language:regex(^fa|en$)}", new { controller = "home", action = "index" })
+               .MapRoute("post", "{language:regex(^fa|en$)}/{urlTitle}", new { controller = "home", action = "post" })
+               .MapRoute("about", "about", new { controller = "home", action = "about" });
 
             cfg.MapRoute("admin", "admin/{action=index}/{id?}", new { controller = "administrator" });
 

@@ -187,12 +187,25 @@ namespace Blog.Tests.Utils
       [Fact]
       public void Rename_post_directory_name()
       {
-         _fs.Setup(x => x.GetFiles("wwwroot/images/posts/new-title".Local()))
-            .Returns(new[] { "a.png" });
-         _fs.Setup(x => x.DirectoryExists("wwwroot/images/posts/new-title".Local()))
+         var oldPath = "wwwroot/images/posts/the-post".Local();
+         var newPath = "wwwroot/images/posts/new-title".Local();
+
+         _fs.SetupSequence(x => x.DirectoryExists(oldPath))
+            .Returns(true)
+            .Returns(false);
+
+         _fs.SetupSequence(x => x.GetFiles(oldPath))
+            .Returns(new[] { "a.png" })
+            .Throws<IOException>();
+
+         _fs.Setup(x => x.DirectoryExists(newPath))
             .Returns(true);
+
+         _fs.Setup(x => x.GetFiles(newPath))
+            .Returns(new[] { "a.png" });
+
          var images = new List<Image>();
-         images.Add(new Image("a.png", "new-title"));
+         images.Add(new Image("a.png", "the-post"));
 
          _ctx.SaveChanges("the-post", "new-title", images);
 
@@ -219,6 +232,22 @@ namespace Blog.Tests.Utils
          {
             "write-file wwwroot/images/posts/the-post/a.png 3,4"
          }, cfg => cfg.WithStrictOrdering());
+      }
+
+      [Fact]
+      public void Do_not_rename_not_existing_directories()
+      {
+         var oldPath = "wwwroot/images/posts/the-post".Local();
+         var newPath = "wwwroot/images/posts/new-title".Local();
+         _fs.Setup(x => x.RenameDirectory(oldPath, newPath))
+            .Throws<IOException>();
+         _fs.Setup(x => x.DirectoryExists(oldPath))
+            .Returns(false);
+         var images = Enumerable.Empty<Image>();
+
+         _ctx.SaveChanges("the-post", "new-title", images);
+
+         _log.Should().BeEquivalentTo(new string[] { });
       }
    }
 }

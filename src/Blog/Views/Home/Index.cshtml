@@ -1,24 +1,24 @@
 ﻿@model IEnumerable<PostRow>
 @{
-    ViewData["Title"] = "Ali Doustkani";
+   ViewData["Title"] = "Ali Doustkani";
 }
 
 @foreach (var post in Model)
 {
-    <article class="post-item" add-lang-class="true">
-        <a asp-action="Post" asp-route-urlTitle="@post.Url">
-            <h1>
-                @post.Title<span class="date">@post.Date</span>
-            </h1>
-        </a>
-        <p>@post.Summary</p>
-        <div class="tagset">
-            <i class="fas fa-hashtag"></i>
-            @foreach (var tag in post.Tags)
-            {
-                <div>@tag</div>
-            }
-        </div>
-    </article>
+   <article blog-testid="post-item" class="post-item" blog-bilingual="true">
+      <a asp-action="Post" asp-route-urlTitle="@post.Url">
+         <h1>
+            @post.Title<span class="date">@post.Date</span>
+         </h1>
+      </a>
+      <p>@post.Summary</p>
+      <div class="tagset">
+         <i class="fas fa-hashtag"></i>
+         @foreach (var tag in post.Tags)
+         {
+            <div>@tag</div>
+         }
+      </div>
+   </article>
 }
 

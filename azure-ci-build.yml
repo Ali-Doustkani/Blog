@@ -17,24 +17,27 @@ steps:
     arguments: '--configuration $(buildConfiguration)'
     workingDirectory: '$(srcDirectory)'
 
+- task: Npm@1
+  displayName: install node modules
+  inputs:
+    command: 'install'
+    workingDir: '$(blogDirectory)'
+
 - task: DotNetCoreCLI@2
   displayName: Unit Tests
-  enabled: false
   inputs:
     command: 'test'
     projects: '**/*.csproj'
     workingDirectory: '$(srcDirectory)/Blog.Tests'
 
-- task: Npm@1
-  displayName: install node modules
-  enabled: false
+- task: CmdLine@2
+  displayName: E2E Tests
   inputs:
-    command: 'install'
-    workingDir: '$(blogDirectory)'
+    script: 'npm run test:e2e'
+    workingDirectory: '$(blogDirectory)'
 
 - task: CmdLine@2
   displayName: build assets
-  enabled: false
   inputs:
     script: 'npm run build'
     workingDirectory: '$(blogDirectory)'
