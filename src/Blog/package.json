@@ -10,7 +10,7 @@
       "build-assets": "npm run build-styles && npm run build-js",
       "test:cy": "npm-run-all --parallel --race start-test-server cy:open",
       "test:e2e": "npm-run-all --parallel --race start-test-server cy:run",
-      "start-test-server": "dotnet run --environment testing",
+      "start-test-server": "dotnet run --launch-profile E2E",
       "cy:open": "cypress open",
       "cy:run": "cypress run"
    },
