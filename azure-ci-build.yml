@@ -1,15 +1,17 @@
 trigger: 
 - master
 
+variables:
+  buildConfiguration: 'Release'
+  srcDirectory: '$(System.DefaultWorkingDirectory)/src'
+  blogDirectory: '$(srcDirectory)/Blog'
+
 jobs:
-- job: INIT
+- job: A
+  displayName: 'Install OS'
   pool:
     vmImage: 'windows-2019'
-  variables:
-    buildConfiguration: 'Release'
-    srcDirectory: '$(System.DefaultWorkingDirectory)/src'
-    blogDirectory: '$(srcDirectory)/Blog'
-- job: A
+- job: B
   displayName: 'Build & Test'
   steps:
   - task: DotNetCoreCLI@2
@@ -34,15 +36,15 @@ jobs:
     inputs:
       script: 'npm run test:e2e'
       workingDirectory: '$(blogDirectory)'
-- job: B1
+- job: C1
   displayName: 'Drop Log on Failure'
-  dependsOn: A
+  dependsOn: B
   condition: failed()
   steps:
   - script: echo THIS IS THE FAILURE
-- job: B2
+- job: C2
   displayName: 'Building Deploy Assets'
-  dependsOn: A
+  dependsOn: B
   condition: succeeded()
   steps:
   - task: CmdLine@2
