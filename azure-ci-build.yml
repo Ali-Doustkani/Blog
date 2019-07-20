@@ -15,7 +15,10 @@ jobs:
   - checkout: self
 - job: B
   displayName: 'Build & Test'
+  dependsOn: A
+  condition: succeeded()
   steps:
+  - checkout: none
   - task: DotNetCoreCLI@2
     displayName: Build
     enabled: false
