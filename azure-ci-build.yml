@@ -11,11 +11,14 @@ jobs:
   displayName: 'Install OS'
   pool:
     vmImage: 'windows-2019'
+  steps:
+  - checkout: self
 - job: B
   displayName: 'Build & Test'
   steps:
   - task: DotNetCoreCLI@2
     displayName: Build
+    enabled: false
     inputs:
       command: 'build'
       arguments: '--configuration $(buildConfiguration)'
@@ -27,6 +30,7 @@ jobs:
       workingDir: '$(blogDirectory)'
   - task: DotNetCoreCLI@2
     displayName: Unit Tests
+    enabled: false
     inputs:
       command: 'test'
       projects: '**/*.csproj'
