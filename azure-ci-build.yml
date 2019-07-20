@@ -9,35 +9,50 @@ variables:
   srcDirectory: '$(System.DefaultWorkingDirectory)/src'
   blogDirectory: '$(srcDirectory)/Blog'
 
-steps:
-- task: DotNetCoreCLI@2
-  displayName: Build
-  inputs:
-    command: 'build'
-    arguments: '--configuration $(buildConfiguration)'
-    workingDirectory: '$(srcDirectory)'
+jobs:
+- job: A
+  displayName: 'Build & Test'
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build
+    inputs:
+      command: 'build'
+      arguments: '--configuration $(buildConfiguration)'
+      workingDirectory: '$(srcDirectory)'
 
-- task: Npm@1
-  displayName: install node modules
-  inputs:
-    command: 'install'
-    workingDir: '$(blogDirectory)'
+  - task: Npm@1
+    displayName: install node modules
+    inputs:
+      command: 'install'
+      workingDir: '$(blogDirectory)'
 
-- task: DotNetCoreCLI@2
-  displayName: Unit Tests
-  inputs:
-    command: 'test'
-    projects: '**/*.csproj'
-    workingDirectory: '$(srcDirectory)/Blog.Tests'
+  - task: DotNetCoreCLI@2
+    displayName: Unit Tests
+    inputs:
+      command: 'test'
+      projects: '**/*.csproj'
+      workingDirectory: '$(srcDirectory)/Blog.Tests'
 
-- task: CmdLine@2
-  displayName: E2E Tests
-  inputs:
-    script: 'npm run test:e2e'
-    workingDirectory: '$(blogDirectory)'
+  - task: CmdLine@2
+    displayName: E2E Tests
+    inputs:
+      script: 'npm run test:e2e'
+      workingDirectory: '$(blogDirectory)'
 
-- task: CmdLine@2
-  displayName: build assets
-  inputs:
-    script: 'npm run build'
-    workingDirectory: '$(blogDirectory)'
+- job: B1
+  displayName: 'Drop Log on Failure'
+  dependsOn: A
+  condition: failed()
+  steps:
+  - script: echo THIS IS THE FAILURE
+
+- job: B2
+  displayName: 'Building Deploy Assets'
+  dependsOn: A
+  condition: succeeded()
+  steps:
+  - task: CmdLine@2
+    displayName: build assets
+    inputs:
+      script: 'npm run build'
+      workingDirectory: '$(blogDirectory)'
