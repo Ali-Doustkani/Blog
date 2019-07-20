@@ -83,4 +83,48 @@ describe("adding posts", () => {
       cy.el("save-button").click();
       cy.el("published-value").should("have.class", "fa-times");
    });
+
+   it("publish with different languages", () => {
+      cy.visit("/admin").login();
+  
+      cy.request({ url: "/en/learn-js", failOnStatusCode: false })
+        .its("status")
+        .should("eq", 404);
+      cy.request({ url: "/fa/learn-js", failOnStatusCode: false })
+        .its("status")
+        .should("eq", 404);
+  
+      cy.el("edit-button").click();
+      cy.el("farsiLanguage-radio").check();
+      cy.el("publish-checkbox").check();
+      cy.el("save-button").click();
+      cy.request({ url: "/fa/learn-js", failOnStatusCode: false })
+        .its("status")
+        .should("eq", 200);
+      cy.request({ url: "/en/learn-js", failOnStatusCode: false })
+        .its("status")
+        .should("eq", 404);
+  
+      cy.visit("/admin");
+      cy.el("edit-button").click();
+      cy.el("englishLanguage-radio").check();
+      cy.el("save-button").click();
+      cy.request({ url: "/fa/learn-js", failOnStatusCode: false })
+        .its("status")
+        .should("eq", 404);
+      cy.request({ url: "/en/learn-js", failOnStatusCode: false })
+        .its("status")
+        .should("eq", 200);
+  
+      cy.visit("/admin");
+      cy.el("edit-button").click();
+      cy.el("publish-checkbox").uncheck();
+      cy.el("save-button").click();
+      cy.request({ url: "/fa/learn-js", failOnStatusCode: false })
+        .its("status")
+        .should("eq", 404);
+      cy.request({ url: "/en/learn-js", failOnStatusCode: false })
+        .its("status")
+        .should("eq", 404);
+    });
 });

@@ -65,7 +65,12 @@ namespace Blog.Domain
       public string Slugify()
       {
          if (Language == Language.English)
+         {
+            if (!string.IsNullOrEmpty(EnglishUrl))
+               return EnglishUrl;
+
             return SlugifyTitle();
+         }
 
          if (string.IsNullOrEmpty(EnglishUrl))
             throw new InvalidOperationException("Enlish URL of Farsi posts must have value");
