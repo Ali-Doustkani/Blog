@@ -8,17 +8,9 @@ variables:
 
 jobs:
 - job: A
-  displayName: 'Install OS'
   pool:
     vmImage: 'windows-2019'
   steps:
-  - checkout: self
-- job: B
-  displayName: 'Build & Test'
-  dependsOn: A
-  condition: succeeded()
-  steps:
-  - checkout: none
   - task: DotNetCoreCLI@2
     displayName: Build
     enabled: false
@@ -43,15 +35,16 @@ jobs:
     inputs:
       script: 'npm run test:e2e'
       workingDirectory: '$(blogDirectory)'
-- job: C1
-  displayName: 'Drop Log on Failure'
-  dependsOn: B
-  condition: failed()
-  steps:
-  - script: echo THIS IS THE FAILURE
-- job: C2
+  - task: CmdLine@2
+    dependsOn: A
+    condition: failed()
+    inputs:
+      script: 'dir'
+      workingDirectory: '$(blogDirectory)'
+
+- job: B
   displayName: 'Building Deploy Assets'
-  dependsOn: B
+  dependsOn: A
   condition: succeeded()
   steps:
   - task: CmdLine@2
