@@ -15,12 +15,14 @@ steps:
   inputs:
     command: 'install'
     workingDir: '$(blogDirectory)'
+
 - task: DotNetCoreCLI@2
   displayName: Build
   inputs:
     command: 'build'
     arguments: '--configuration $(buildConfiguration)'
     workingDirectory: '$(srcDirectory)'
+
 - task: DotNetCoreCLI@2
   displayName: Unit Tests
   enabled: false
@@ -28,11 +30,13 @@ steps:
     command: 'test'
     projects: '**/*.csproj'
     workingDirectory: '$(srcDirectory)/Blog.Tests'
+
 - task: CmdLine@2
   displayName: build assets
   inputs:
-    script: 'npm run build'
+    script: 'npm run build-assets'
     workingDirectory: '$(blogDirectory)'
+
 - task: CmdLine@2
   displayName: E2E Tests
   continueOnError: true
@@ -41,10 +45,9 @@ steps:
     workingDirectory: '$(blogDirectory)'
 
 - task: PublishBuildArtifacts@1
+  displayName: Publish Screenshots
+  condition: failed()
   inputs:
-    PathtoPublish: 'D:\a\1\s\src\Blog\cypress\screenshots\posting_spec.js'
+    PathtoPublish: '$(blogDirectory)\cypress\screenshots'
     ArtifactName: 'drop'
     publishLocation: 'Container'
-    
-
-
