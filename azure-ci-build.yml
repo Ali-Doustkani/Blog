@@ -12,7 +12,6 @@ pool:
 steps:
 - task: DotNetCoreCLI@2
   displayName: Build
-  enabled: false
   inputs:
     command: 'build'
     arguments: '--configuration $(buildConfiguration)'
