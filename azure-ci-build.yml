@@ -10,18 +10,17 @@ pool:
   vmImage: 'windows-2019'
   
 steps:
+- task: Npm@1
+  displayName: install node modules
+  inputs:
+    command: 'install'
+    workingDir: '$(blogDirectory)'
 - task: DotNetCoreCLI@2
   displayName: Build
   inputs:
     command: 'build'
     arguments: '--configuration $(buildConfiguration)'
     workingDirectory: '$(srcDirectory)'
-- script: dir $(blogDirectory)
-- task: Npm@1
-  displayName: install node modules
-  inputs:
-    command: 'install'
-    workingDir: '$(blogDirectory)'
 - task: DotNetCoreCLI@2
   displayName: Unit Tests
   enabled: false
@@ -35,23 +34,6 @@ steps:
   inputs:
     script: 'npm run test:e2e'
     workingDirectory: '$(blogDirectory)'
-- script: dir $(srcDirectory)
-- script: dir $(srcDirectory)\Blog.E2E
-
-- task: ArchiveFiles@2
-  displayName: Archive Server Logs
-  inputs:
-    rootFolderOrFile: '$(blogDirectory)/log'
-    includeRootFolder: false
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/logs.zip'
-    replaceExistingArchive: true
-- task: PublishBuildArtifacts@1
-  displayName: Publish Logs
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'Logs'
-    publishLocation: 'Container'
 - task: CmdLine@2
   displayName: build assets
   inputs:
