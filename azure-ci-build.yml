@@ -6,48 +6,47 @@ variables:
   srcDirectory: '$(System.DefaultWorkingDirectory)/src'
   blogDirectory: '$(srcDirectory)/Blog'
 
-jobs:
-- job: A
-  pool:
-    vmImage: 'windows-2019'
-  steps:
-  - task: DotNetCoreCLI@2
+pool:
+  vmImage: 'windows-2019'
+  
+steps:
+- task: DotNetCoreCLI@2
     displayName: Build
     enabled: false
     inputs:
       command: 'build'
       arguments: '--configuration $(buildConfiguration)'
       workingDirectory: '$(srcDirectory)'
-  - task: Npm@1
+- task: Npm@1
     displayName: install node modules
     inputs:
       command: 'install'
       workingDir: '$(blogDirectory)'
-  - task: DotNetCoreCLI@2
+- task: DotNetCoreCLI@2
     displayName: Unit Tests
     enabled: false
     inputs:
       command: 'test'
       projects: '**/*.csproj'
       workingDirectory: '$(srcDirectory)/Blog.Tests'
-  - task: CmdLine@2
+- task: CmdLine@2
     displayName: E2E Tests
     inputs:
       script: 'npm run test:e2e'
       workingDirectory: '$(blogDirectory)'
-  - task: CmdLine@2
-    dependsOn: A
-    condition: failed()
+- task: ArchiveFiles@2
     inputs:
-      script: 'dir'
-      workingDirectory: '$(blogDirectory)'
-
-- job: B
-  displayName: 'Building Deploy Assets'
-  dependsOn: A
-  condition: succeeded()
-  steps:
-  - task: CmdLine@2
+      rootFolderOrFile: '$(blogDirectory)/logs'
+      includeRootFolder: false
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/logs.zip'
+      replaceExistingArchive: true
+- task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'Logs'
+      publishLocation: 'Container'
+- task: CmdLine@2
     displayName: build assets
     inputs:
       script: 'npm run build'
