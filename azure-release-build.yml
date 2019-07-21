@@ -1,6 +1,4 @@
 trigger: none
-pr:
-- master
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -23,19 +21,6 @@ steps:
   inputs:
     command: 'install'
     workingDir: '$(blogDirectory)'
-
-- task: DotNetCoreCLI@2
-  displayName: Unit Tests
-  inputs:
-    command: 'test'
-    projects: '**/*.csproj'
-    workingDirectory: '$(srcDirectory)/Blog.Tests'
-
-- task: CmdLine@2
-  displayName: E2E Tests
-  inputs:
-    script: 'npm run test:e2e'
-    workingDirectory: '$(blogDirectory)'
 
 - task: CmdLine@2
   displayName: build assets
