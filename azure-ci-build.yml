@@ -25,7 +25,6 @@ steps:
 
 - task: DotNetCoreCLI@2
   displayName: Unit Tests
-  enabled: false
   inputs:
     command: 'test'
     projects: '**/*.csproj'
@@ -45,8 +44,9 @@ steps:
     workingDirectory: '$(blogDirectory)'
 
 - task: PublishBuildArtifacts@1
-  displayName: Publish Screenshots
+  displayName: Publish E2E Failure Screenshots
   condition: failed()
+  continueOnError: true
   inputs:
     PathtoPublish: '$(blogDirectory)\cypress\screenshots'
     ArtifactName: 'drop'
