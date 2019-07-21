@@ -37,7 +37,7 @@ steps:
 - task: ArchiveFiles@2
   displayName: Archive Server Logs
   inputs:
-    rootFolderOrFile: '$(blogDirectory)/logs'
+    rootFolderOrFile: '$(blogDirectory)/log'
     includeRootFolder: false
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/logs.zip'
