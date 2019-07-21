@@ -86,7 +86,7 @@ namespace Blog.Services.Administrator
             _context.PostContents.Delete(draft.Id);
          }
 
-         //_context.SaveChanges();
+         _context.SaveChanges();
 
          _imageContext.SaveChanges(oldPostDirectory, draft.Info.Slugify(), images);
          return SaveResult.Success(url);
