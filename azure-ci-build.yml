@@ -36,6 +36,12 @@ steps:
     script: 'npm run test:e2e'
     workingDirectory: '$(blogDirectory)'
 - script: dir $(blogDirectory)
+- script: dir $(blogDirectory)\bin
+- script: dir $(blogDirectory)\bin\release
+- script: dir $(blogDirectory)\bin\release\netcoreapp2.1
+- script: dir $(blogDirectory)\bin\release\netcoreapp2.1\publish
+- script: dir $(blogDirectory)\bin\release\netcoreapp2.1\publish\wwwroot
+
 - task: ArchiveFiles@2
   displayName: Archive Server Logs
   inputs:
