@@ -29,6 +29,11 @@ steps:
     projects: '**/*.csproj'
     workingDirectory: '$(srcDirectory)/Blog.Tests'
 - task: CmdLine@2
+  displayName: build assets
+  inputs:
+    script: 'npm run build'
+    workingDirectory: '$(blogDirectory)'
+- task: CmdLine@2
   displayName: E2E Tests
   continueOnError: true
   inputs:
@@ -43,8 +48,3 @@ steps:
     
 
 
-- task: CmdLine@2
-  displayName: build assets
-  inputs:
-    script: 'npm run build'
-    workingDirectory: '$(blogDirectory)'
