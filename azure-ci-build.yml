@@ -11,43 +11,43 @@ pool:
   
 steps:
 - task: DotNetCoreCLI@2
-    displayName: Build
-    enabled: false
-    inputs:
-      command: 'build'
-      arguments: '--configuration $(buildConfiguration)'
-      workingDirectory: '$(srcDirectory)'
+  displayName: Build
+  enabled: false
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(buildConfiguration)'
+    workingDirectory: '$(srcDirectory)'
 - task: Npm@1
-    displayName: install node modules
-    inputs:
-      command: 'install'
-      workingDir: '$(blogDirectory)'
+  displayName: install node modules
+  inputs:
+    command: 'install'
+    workingDir: '$(blogDirectory)'
 - task: DotNetCoreCLI@2
-    displayName: Unit Tests
-    enabled: false
-    inputs:
-      command: 'test'
-      projects: '**/*.csproj'
-      workingDirectory: '$(srcDirectory)/Blog.Tests'
+  displayName: Unit Tests
+  enabled: false
+  inputs:
+    command: 'test'
+    projects: '**/*.csproj'
+    workingDirectory: '$(srcDirectory)/Blog.Tests'
 - task: CmdLine@2
-    displayName: E2E Tests
-    inputs:
-      script: 'npm run test:e2e'
-      workingDirectory: '$(blogDirectory)'
+  displayName: E2E Tests
+  inputs:
+    script: 'npm run test:e2e'
+    workingDirectory: '$(blogDirectory)'
 - task: ArchiveFiles@2
-    inputs:
-      rootFolderOrFile: '$(blogDirectory)/logs'
-      includeRootFolder: false
-      archiveType: 'zip'
-      archiveFile: '$(Build.ArtifactStagingDirectory)/logs.zip'
-      replaceExistingArchive: true
+  inputs:
+    rootFolderOrFile: '$(blogDirectory)/logs'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/logs.zip'
+    replaceExistingArchive: true
 - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-      ArtifactName: 'Logs'
-      publishLocation: 'Container'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'Logs'
+    publishLocation: 'Container'
 - task: CmdLine@2
-    displayName: build assets
-    inputs:
-      script: 'npm run build'
-      workingDirectory: '$(blogDirectory)'
+  displayName: build assets
+  inputs:
+    script: 'npm run build'
+    workingDirectory: '$(blogDirectory)'
