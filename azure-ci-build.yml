@@ -31,10 +31,12 @@ steps:
     workingDirectory: '$(srcDirectory)/Blog.Tests'
 - task: CmdLine@2
   displayName: E2E Tests
+  continueOnError: true
   inputs:
     script: 'npm run test:e2e'
     workingDirectory: '$(blogDirectory)'
 - task: ArchiveFiles@2
+  displayName: Archive Server Logs
   inputs:
     rootFolderOrFile: '$(blogDirectory)/logs'
     includeRootFolder: false
@@ -42,6 +44,7 @@ steps:
     archiveFile: '$(Build.ArtifactStagingDirectory)/logs.zip'
     replaceExistingArchive: true
 - task: PublishBuildArtifacts@1
+  displayName: Publish Logs
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'Logs'
