@@ -8,9 +8,9 @@
       "build-js": "parcel build Views/Administrator/Index.js --out-dir wwwroot --out-file ~admin.min.js && parcel build Views/Administrator/Post.js --out-dir wwwroot --out-file ~post.min.js",
       "copy-assets": "cpx Assets/Images/**/* wwwroot/images",
       "build-assets": "npm run build-styles && npm run build-js",
-      "test:cy": "npm-run-all --parallel --race start-test-server cy:open",
-      "test:e2e": "npm-run-all --parallel --race start-test-server cy:run",
-      "start-test-server": "dotnet run --launch-profile E2E",
+      "test:cy": "start-server-and-test start 'http://localhost:5000' cy:open",
+      "test:e2e": "start-server-and-test start 'http://localhost:5000' cy:run",
+      "start": "dotnet run --launch-profile E2E",
       "cy:open": "cypress open",
       "cy:run": "cypress run"
    },
@@ -18,9 +18,9 @@
       "autoprefixer": "^9.6.0",
       "cpx": "^1.5.0",
       "cypress": "^3.4.0",
-      "npm-run-all": "^4.1.5",
       "parcel-bundler": "^1.12.3",
-      "sass": "^1.22.0"
+      "sass": "^1.22.0",
+      "start-server-and-test": "^1.9.1"
    },
    "dependencies": {
       "@alidoustkani/richtext": "^1.0.24"
