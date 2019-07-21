@@ -34,6 +34,15 @@ steps:
   inputs:
     script: 'npm run test:e2e'
     workingDirectory: '$(blogDirectory)'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: 'D:\a\1\s\src\Blog\cypress\screenshots\posting_spec.js'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+    
+
+
 - task: CmdLine@2
   displayName: build assets
   inputs:
