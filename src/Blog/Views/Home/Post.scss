@@ -122,6 +122,21 @@
 
 pre {
    line-height: 1.3em;
+
+   td {
+      padding: 0;
+   }
+
+   td:first-of-type {
+      color: red;
+      padding-right: 10px;
+      color: $code-line-number;
+      border-right: 1px dashed $code-line-number;
+   }
+
+   td:nth-of-type(2) {
+      padding-left: 10px;
+   }
 }
 
 .code pre, .token.number, .token.function {

@@ -60,7 +60,7 @@ namespace Blog.Tests.Domain
 
       [Fact]
       public void Wrap_codes() =>
-           Publish(string.Join(Environment.NewLine, "<pre class=\"code\">", "csharp", "<b>CODE</b></pre>"))
+           Publish(string.Join(Environment.NewLine, "<pre class=\"code\">", "csharp, no-line-number", "<b>CODE</b></pre>"))
           .Should()
           .Be("<div class=\"code\"><pre><b>CODE</b></pre></div>");
 
@@ -68,7 +68,7 @@ namespace Blog.Tests.Domain
       public void Format_code()
       {
          Publish(string.Join(Environment.NewLine,
-            "<pre class=\"code\">js",
+            "<pre class=\"code\">js, no-line-number",
             "var a = 1;",
             "var b = 2;</pre>"))
             .Should()
@@ -78,6 +78,18 @@ namespace Blog.Tests.Domain
 
          _codeFormatter.Verify(x => x.Format("js", string.Join(Environment.NewLine, "var a = 1;", "var b = 2;")));
       }
+
+      [Fact]
+      public void Format_set_line_numbers() =>
+         Publish(string.Join(Environment.NewLine,
+            "<pre class=\"code\">csharp",
+            "var a = 12;",
+            "var b = 13;</pre>"))
+            .Should()
+            .Be(string.Join(Environment.NewLine,
+            "<div class=\"code\"><pre><table><tr><td>1",
+            "2</td><td>var a = 12;",
+            "var b = 13;</td></tr></table></pre></div>"));
 
       [Fact]
       public void Wrap_terminals() =>

@@ -57,7 +57,7 @@ namespace Blog.Domain
                   return;
                }
 
-               var lang = plain.Substring(0, plain.IndexOf(Environment.NewLine));
+               var lang = Draft.GetLanguage(plain);
                if (!_languages.Contains(lang))
                   _result.Add(new Problem(nameof(Draft.Content), $"Specified language in code block #{num} is not valid ({lang}...)"));
             }

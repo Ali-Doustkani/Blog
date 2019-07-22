@@ -1,6 +1,7 @@
 ﻿using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Blog.Domain
@@ -55,9 +56,23 @@ namespace Blog.Domain
       private string Code(HtmlNode node, ICodeFormatter codeFormatter)
       {
          var plain = node.InnerHtml.Trim();
-         var language = plain.Substring(0, plain.IndexOf(Environment.NewLine));
          var code = plain.Substring(plain.IndexOf(Environment.NewLine)).Trim();
-         return Emmet.El("div.code>pre", codeFormatter.Format(language, HtmlEntity.DeEntitize(code)));
+         var formattedCode = codeFormatter.Format(GetLanguage(plain), HtmlEntity.DeEntitize(code)).Trim();
+
+         if (GetDefinitionLine(plain).Contains("no-line-number"))
+            return Emmet.El("div.code>pre", formattedCode);
+
+         var lineNumbers = string.Empty;
+         for (var i = 1; i <= formattedCode.Split('\n').Count(); i++)
+            lineNumbers += Environment.NewLine + i;
+         var table = $"<table><tr><td>{lineNumbers.Trim()}</td><td>{formattedCode}</td></tr></table>";
+         return Emmet.El("div.code>pre", table);
       }
+
+      private static string GetDefinitionLine(string plain) =>
+         plain.Substring(0, plain.IndexOf(Environment.NewLine));
+
+      public static string GetLanguage(string plain) =>
+         GetDefinitionLine(plain).Split(',').First();
    }
 }
