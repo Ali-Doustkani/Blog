@@ -1,5 +1,6 @@
 ﻿using Blog.Domain;
 using FluentAssertions;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,13 @@ namespace Blog.Tests.Domain
 {
    public class DraftTests
    {
+      public DraftTests()
+      {
+         _codeFormatter = new Mock<ICodeFormatter>();
+      }
+
+      private Mock<ICodeFormatter> _codeFormatter;
+
       private IEnumerable<Image> RenderImages(string html)
       {
          var draft = new Draft();
@@ -21,11 +29,15 @@ namespace Blog.Tests.Domain
 
       private string Publish(string html)
       {
+         _codeFormatter
+            .Setup(x => x.Format(It.IsAny<string>(), It.IsAny<string>()))
+            .Returns((string language, string code) => code);
+
          var draft = new Draft();
          draft.Info = new PostInfo { Title = "the post" };
          draft.Content = html;
          draft.RenderImages();
-         return draft.Publish().PostContent.Content;
+         return draft.Publish(_codeFormatter.Object).PostContent.Content;
       }
 
       [Fact]
@@ -48,9 +60,24 @@ namespace Blog.Tests.Domain
 
       [Fact]
       public void Wrap_codes() =>
-           Publish("<pre class=\"code\"><b>CODE</b></pre>")
+           Publish(string.Join(Environment.NewLine, "<pre class=\"code\">", "csharp", "<b>CODE</b></pre>"))
           .Should()
           .Be("<div class=\"code\"><pre><b>CODE</b></pre></div>");
+
+      [Fact]
+      public void Format_code()
+      {
+         Publish(string.Join(Environment.NewLine,
+            "<pre class=\"code\">js",
+            "var a = 1;",
+            "var b = 2;</pre>"))
+            .Should()
+            .Be(string.Join(Environment.NewLine,
+            "<div class=\"code\"><pre>var a = 1;",
+            "var b = 2;</pre></div>"));
+
+         _codeFormatter.Verify(x => x.Format("js", string.Join(Environment.NewLine, "var a = 1;", "var b = 2;")));
+      }
 
       [Fact]
       public void Wrap_terminals() =>
@@ -122,7 +149,7 @@ namespace Blog.Tests.Domain
          draft.Info = new PostInfo { Title = "the post" };
          draft.Content = "<figure><img data-filename=\"pic.png\" src=\"data:image/png;base64,DATA\"></figure><figure><img data-filename=\"pic.png\" src=\"data:image/png;base64,DATA\"></figure>";
          var images = draft.RenderImages();
-         var publish = draft.Publish();
+         var publish = draft.Publish(_codeFormatter.Object);
 
          publish.PostContent
              .Content
