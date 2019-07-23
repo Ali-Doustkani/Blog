@@ -16,6 +16,12 @@
             <div blog-testid="tag-value">@tag</div>
          }
       </div>
+      @if (User.Identity.IsAuthenticated)
+      {
+         <div class="admin-bar" blog-bilingual="true">
+            <a blog-testid="edit-button" asp-controller="Administrator" asp-action="ViewPost" asp-route-id="@Model.Id" class="form-button">Edit this post</a>
+         </div>
+      }
    </header>
    @Html.Raw(Model.Content)
    <environment include="Production">

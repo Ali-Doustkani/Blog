@@ -87,6 +87,14 @@
    }
 }
 
+.admin-bar {
+   direction: rtl;
+}
+
+.admin-bar.farsi {
+   direction: ltr;
+}
+
 /* Highlights */
 
 @mixin highlight($color) {
