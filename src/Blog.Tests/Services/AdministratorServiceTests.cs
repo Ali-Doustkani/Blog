@@ -17,6 +17,7 @@ namespace Blog.Tests.Services.Administrator
    {
       public AdministratorServiceTests()
       {
+         _codeFormatter = new Mock<ICodeFormatter>();
          _options = Db.CreateOptions();
          using (var seed = new BlogContext(_options))
          {
@@ -82,6 +83,7 @@ namespace Blog.Tests.Services.Administrator
 
       private readonly DbContextOptions _options;
       private Mock<IImageContext> _imageContext;
+      private Mock<ICodeFormatter> _codeFormatter;
 
       private Service Service()
       {
@@ -92,7 +94,11 @@ namespace Blog.Tests.Services.Administrator
             cfg.AddProfile<Blog.Services.Home.PostProfile>();
          });
          _imageContext = new Mock<IImageContext>();
-         return new Service(context, config.CreateMapper(), _imageContext.Object, new DraftValidator(context));
+         return new Service(context,
+            config.CreateMapper(),
+            _imageContext.Object,
+            new DraftValidator(context),
+            _codeFormatter.Object);
       }
 
       [Fact]
@@ -159,29 +165,6 @@ namespace Blog.Tests.Services.Administrator
          draft.Summary.Should().Be("Learning FP in Javascript");
          draft.Tags.Should().Be("JS, FP, Node.js");
          draft.Title.Should().Be("Javascript FP");
-      }
-
-      [Fact]
-      public void Dont_save_duplicate_titles()
-      {
-         var entry = new DraftEntry
-         {
-            Content = "<p>JS Content</p>",
-            Title = "Javascript FP",
-            Language = Language.English
-         };
-
-         var result = Service().Save(entry);
-
-         result
-            .Failed
-            .Should()
-            .BeTrue();
-
-         result
-            .Problems
-            .Should()
-            .ContainEquivalentOf(new { Message = "This title already exists in the database." });
       }
 
       [Fact]
@@ -418,6 +401,37 @@ namespace Blog.Tests.Services.Administrator
                Tags = new[] { "Java" },
                Language = Language.Farsi
             });
+      }
+
+      [Fact]
+      public void If_code_formatting_failed_just_save_the_draft()
+      {
+         _codeFormatter
+            .Setup(x => x.Format(It.IsAny<string>(), It.IsAny<string>()))
+            .Callback(() => throw new CodeFormatException(null));
+
+         var result = Service().Save(new DraftEntry
+         {
+            Content = string.Join(Environment.NewLine, "<pre class=\"code\">", "js", "content</pre>"),
+            Language = Language.English,
+            Publish = true,
+            Summary = "summary",
+            Tags = "tags",
+            Title = "title"
+         });
+
+         result
+            .Should()
+            .BeEquivalentTo(new
+            {
+               Failed = true,
+               Url = (string)null,
+            });
+
+         result
+            .Problems
+            .Should()
+            .ContainEquivalentOf(new { Property = "", Message = "Draft saved but couldn't publish because code formatting failed" });
       }
    }
 }

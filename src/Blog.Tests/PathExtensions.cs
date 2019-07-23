@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using Blog.Utils;
+using FluentAssertions;
 using FluentAssertions.Primitives;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -17,5 +18,8 @@ namespace Blog.Tests
 
       public static AndConstraint<StringAssertions> BePath(this StringAssertions assertions, string path) =>
          assertions.Be(path.Local());
+
+      public static AndConstraint<StringAssertions> BeLines(this StringAssertions assertions, params string[] lines) =>
+         assertions.Be(lines.JoinLines());
    }
 }

@@ -2,130 +2,194 @@
 @import '../Shared/Shared';
 
 .post {
-  margin-top: 50px;
+   margin-top: 50px;
 
-  header {
-    padding-bottom: 10px;
-    border-bottom: 3px solid $color1;
-    margin-bottom: 15px;
-  }
+   header {
+      padding-bottom: 10px;
+      border-bottom: 3px solid $color1;
+      margin-bottom: 15px;
+   }
 
-  h1 {
-    display: inline;
-    color: $color3;
-    font-size: 2.5em;
-  }
-
-  h2 {
-    font-size: 1.5em;
-    margin-top: 5px;
-    color: $color2;
-  }
-
-  h3 {
-    font-size: 1.2em;
-    color: $color2;
-  }
-
-  h3:not(:first-of-type) {
-    margin-top: 25px;
-  }
-
-  h4 {
-    color: $color2;
-    margin-top: 20px;
-  }
-
-  p {
-    font-size: 1.2em;
-    margin-bottom: 10px;
-    color: $color1;
-  }
-
-  a {
-    color: $color4;
-  }
-
-  ul, ol {
-    margin: 10px 0;
-  }
-
-  figure {
-    text-align: center;
-    margin: 0;
-
-    img {
-      max-width: 100%;
-    }
-
-    figcaption {
-      text-align: center;
+   h1 {
+      display: inline;
       color: $color3;
-      font-size: .8em;
+      font-size: 2.5em;
+   }
 
-      a {
-        color: $color3;
+   h2 {
+      font-size: 1.5em;
+      margin-top: 5px;
+      color: $color2;
+   }
+
+   h3 {
+      font-size: 1.2em;
+      color: $color2;
+   }
+
+   h3:not(:first-of-type) {
+      margin-top: 25px;
+   }
+
+   h4 {
+      color: $color2;
+      margin-top: 20px;
+   }
+
+   p {
+      font-size: 1.2em;
+      margin-bottom: 10px;
+      color: $color1;
+   }
+
+   a {
+      color: $color4;
+   }
+
+   ul, ol {
+      margin: 10px 0;
+   }
+
+   figure {
+      text-align: center;
+      margin: 0;
+
+      img {
+         max-width: 100%;
       }
-    }
-  }
+
+      figcaption {
+         text-align: center;
+         color: $color3;
+         font-size: .8em;
+
+         a {
+            color: $color3;
+         }
+      }
+   }
 }
 
 .post.farsi {
-  font-family: IRANSans;
-  direction: rtl;
+   font-family: IRANSans;
+   direction: rtl;
 
-  h1 {
-    font-size: 2.1em;
-  }
+   h1 {
+      font-size: 2.1em;
+   }
 
-  h2 {
-    font-size: 1.3em;
-  }
+   h2 {
+      font-size: 1.3em;
+   }
 
-  p {
-    font-size: .9em;
-  }
+   p {
+      font-size: .9em;
+   }
+}
+
+.admin-bar {
+   direction: rtl;
+}
+
+.admin-bar.farsi {
+   direction: ltr;
 }
 
 /* Highlights */
 
 @mixin highlight($color) {
-  margin-bottom: 10px;
-  padding: 5px;
-  background: transparentize($color, .85);
-  color: $color1;
-  font-size: .82em;
-  border-radius: 5px;
+   margin-bottom: 10px;
+   padding: 5px;
+   background: transparentize($color, .85);
+   color: $color1;
+   font-size: .82em;
+   border-radius: 5px;
 }
 
 .note {
-  @include highlight(#00faac);
+   @include highlight(#00faac);
 }
 
 .warning {
-  @include highlight(#ff3796);
+   @include highlight(#ff3796);
 }
 
 .box-wrapper {
-  margin: 10px 0;
+   margin: 10px 0;
 }
 
 /* Code Boxes */
 
+@mixin code-highlight($a, $b, $c) {
+   background: $code-highlight;
+   display: inline-block;
+   width: 100%;
+   margin-left: $a;
+   padding-left: $b;
+   padding-right: $c;
+}
+
 .cmd pre {
-  @include cmd();
+   @include cmd();
 }
 
 .code pre {
-  @include code();
+   @include code();
 }
 
 pre {
-  line-height: 1.3em;
+   line-height: 1.3em;
+
+   td {
+      padding: 0;
+   }
+
+   & > .highlight {
+      @include code-highlight(-20px, 20px, 10px);
+   }
+
+   td:first-of-type {
+      color: red;
+      padding-right: 10px;
+      color: $code-line-number;
+      border-right: 1px dashed $code-line-number;
+
+      .highlight {
+         @include code-highlight(-22px, 22px, 10px);
+      }
+   }
+
+   td:nth-of-type(2) {
+      padding-left: 10px;
+      width: 100%;
+
+      .highlight {
+         @include code-highlight(-12px, 12px, 12px);
+      }
+   }
+}
+
+.code pre, .token.number, .token.function {
+   color: $color1;
+}
+
+.token.comment {
+   color: $code-comment;
+}
+
+.token.keyword, .token.operator, .token.tag, .token.selector {
+   color: $code-keyword;
+}
+
+.token.class-name, .token.property {
+   color: $code-class-name;
+}
+
+.token.string {
+   color: $code-string;
 }
 
 /* DISQUS */
-
 #disqus_thread {
-  margin-top: 100px;
+   margin-top: 100px;
 }

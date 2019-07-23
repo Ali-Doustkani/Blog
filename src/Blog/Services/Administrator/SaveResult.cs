@@ -17,6 +17,9 @@ namespace Blog.Services.Administrator
       public IEnumerable<Problem> Problems { get; }
       public string Url { get; }
 
+      public static SaveResult Failure(string message) =>
+         new SaveResult(true, new[] { new Problem(string.Empty, message) }, null);
+
       public static SaveResult Failure(IEnumerable<Problem> problems) =>
          new SaveResult(true, problems, null);
 

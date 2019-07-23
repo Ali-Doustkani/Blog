@@ -10,18 +10,23 @@ namespace Blog.Services.Administrator
 {
    public class Service
    {
-      public Service(BlogContext context, IMapper mapper, IImageContext imageContext, DraftValidator validator)
+      public Service(BlogContext context, IMapper mapper,
+         IImageContext imageContext,
+         DraftValidator validator,
+         ICodeFormatter codeFormatter)
       {
          _context = context;
          _mapper = mapper;
          _imageContext = imageContext;
          _validator = validator;
+         _codeFormatter = codeFormatter;
       }
 
       private readonly BlogContext _context;
       private readonly IMapper _mapper;
       private readonly IImageContext _imageContext;
       private readonly DraftValidator _validator;
+      private readonly ICodeFormatter _codeFormatter;
 
       public DraftEntry Create() =>
           new DraftEntry { PublishDate = DateTime.Now };
@@ -48,18 +53,18 @@ namespace Blog.Services.Administrator
             .Include(x => x.Info)
             .SingleOrDefault(x => x.Id == id);
          if (draft == null) return null;
-         return _mapper.Map<Home.PostViewModel>(draft.Publish());
+         return _mapper.Map<Home.PostViewModel>(draft.Publish(_codeFormatter));
       }
 
       public SaveResult Save(DraftEntry viewModel)
       {
          var draft = _mapper.Map<Draft>(viewModel);
 
-         var result = _validator.Validate(draft);
-         if (result.Any())
-            return SaveResult.Failure(result);
+         var validationResult = _validator.Validate(draft);
+         if (validationResult.Any())
+            return SaveResult.Failure(validationResult);
 
-         var url = string.Empty;
+         var result = SaveResult.Success(string.Empty);
          var images = draft.RenderImages();
 
          var oldDraft = _context.Drafts.Include(x => x.Info).SingleOrDefault(x => x.Id == draft.Id);
@@ -76,9 +81,16 @@ namespace Blog.Services.Administrator
 
          if (viewModel.Publish)
          {
-            var post = draft.Publish();
-            _context.AddOrUpdate(post);
-            url = post.Url;
+            try
+            {
+               var post = draft.Publish(_codeFormatter);
+               _context.AddOrUpdate(post);
+               result = SaveResult.Success(post.Url);
+            }
+            catch (CodeFormatException)
+            {
+               result = SaveResult.Failure("Draft saved but couldn't publish because code formatting failed");
+            }
          }
          else if (_context.Posts.Any(draft.Id))
          {
@@ -89,7 +101,7 @@ namespace Blog.Services.Administrator
          _context.SaveChanges();
 
          _imageContext.SaveChanges(oldPostDirectory, draft.Info.Slugify(), images);
-         return SaveResult.Success(url);
+         return result;
       }
 
       public void Delete(int id)

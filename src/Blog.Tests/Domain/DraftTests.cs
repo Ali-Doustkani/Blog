@@ -1,5 +1,7 @@
 ﻿using Blog.Domain;
+using Blog.Utils;
 using FluentAssertions;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +11,16 @@ namespace Blog.Tests.Domain
 {
    public class DraftTests
    {
+      public DraftTests()
+      {
+         _codeFormatter = new Mock<ICodeFormatter>();
+         _codeFormatter
+          .Setup(x => x.Format(It.IsAny<string>(), It.IsAny<string>()))
+          .Returns((string language, string code) => code);
+      }
+
+      private Mock<ICodeFormatter> _codeFormatter;
+
       private IEnumerable<Image> RenderImages(string html)
       {
          var draft = new Draft();
@@ -25,8 +37,11 @@ namespace Blog.Tests.Domain
          draft.Info = new PostInfo { Title = "the post" };
          draft.Content = html;
          draft.RenderImages();
-         return draft.Publish().PostContent.Content;
+         return draft.Publish(_codeFormatter.Object).PostContent.Content;
       }
+
+      private string Publish(params string[] htmlLines) =>
+         Publish(htmlLines.JoinLines());
 
       [Fact]
       public void Return_the_same_for_not_known_elements() =>
@@ -48,9 +63,65 @@ namespace Blog.Tests.Domain
 
       [Fact]
       public void Wrap_codes() =>
-           Publish("<pre class=\"code\"><b>CODE</b></pre>")
+           Publish("<pre class=\"code\">", "csharp, no-line-number", "<b>CODE</b></pre>")
           .Should()
           .Be("<div class=\"code\"><pre><b>CODE</b></pre></div>");
+
+      [Fact]
+      public void Format_code()
+      {
+         Publish(
+            "<pre class=\"code\">js, no-line-number",
+            "var a = 1;",
+            "var b = 2;</pre>")
+         .Should()
+         .BeLines(
+            "<div class=\"code\"><pre>var a = 1;",
+            "var b = 2;</pre></div>");
+
+         _codeFormatter.Verify(x => x.Format("js", string.Join(Environment.NewLine, "var a = 1;", "var b = 2;")));
+      }
+
+      [Fact]
+      public void Set_line_numbers() =>
+         Publish(
+            "<pre class=\"code\">csharp",
+            "var a = 12;",
+            "var b = 13;</pre>")
+         .Should()
+         .BeLines(
+            "<div class=\"code\"><pre><table><tr><td>1",
+            "2</td><td>var a = 12;",
+            "var b = 13;</td></tr></table></pre></div>");
+
+      [Fact]
+      public void Highlight_marked_lines_with_line_numbers() =>
+         Publish(
+            "<pre class=\"code\">csharp",
+            "var a = 12; #hl",
+            "var b = 13;</pre>")
+         .Should()
+         .BeLines(
+            "<div class=\"code\"><pre><table><tr><td><span class=\"highlight\">1</span>",
+            "2</td><td><span class=\"highlight\">var a = 12;</span>",
+            "var b = 13;</td></tr></table></pre></div>");
+
+      [Fact]
+      public void Highlight_html() =>
+         Publish("<pre class=\"code\">html, no-line-number", "<div>TEXT</div> #hl</pre>")
+            .Should()
+            .Be("<div class=\"code\"><pre><span class=\"highlight\"><div>TEXT</div></span></pre></div>");
+
+      [Fact]
+      public void Hightlight_marked_lines_without_line_numbers() =>
+         Publish(
+            "<pre class=\"code\">csharp, no-line-number",
+            "var a = 12; #hl",
+            "var b = 13;</pre>")
+         .Should()
+         .BeLines(
+            "<div class=\"code\"><pre><span class=\"highlight\">var a = 12;</span>",
+            "var b = 13;</pre></div>");
 
       [Fact]
       public void Wrap_terminals() =>
@@ -122,7 +193,7 @@ namespace Blog.Tests.Domain
          draft.Info = new PostInfo { Title = "the post" };
          draft.Content = "<figure><img data-filename=\"pic.png\" src=\"data:image/png;base64,DATA\"></figure><figure><img data-filename=\"pic.png\" src=\"data:image/png;base64,DATA\"></figure>";
          var images = draft.RenderImages();
-         var publish = draft.Publish();
+         var publish = draft.Publish(_codeFormatter.Object);
 
          publish.PostContent
              .Content
