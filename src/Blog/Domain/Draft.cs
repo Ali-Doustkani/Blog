@@ -1,4 +1,5 @@
-﻿using HtmlAgilityPack;
+﻿using Blog.Utils;
+using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,23 +57,54 @@ namespace Blog.Domain
       private string Code(HtmlNode node, ICodeFormatter codeFormatter)
       {
          var plain = node.InnerHtml.Trim();
-         var code = plain.Substring(plain.IndexOf(Environment.NewLine)).Trim();
-         var formattedCode = codeFormatter.Format(GetLanguage(plain), HtmlEntity.DeEntitize(code)).Trim();
+         var highlightedLines = GetHighlightedLines(GetCode(plain));
+         var formattedCode = codeFormatter.Format(
+            GetLanguage(plain),
+            GetCode(plain).ReplaceWithPattern(@"\s*#hl", string.Empty));
+
+         var lineNumbers = string.Empty;
+         var lines = formattedCode.SplitWithPattern(@"\r?\n");
+
+         for (var i = 0; i < lines.Count(); i++)
+         {
+            var no = i + 1;
+            if (highlightedLines.Contains(i))
+            {
+               lines[i] = Emmet.El("span.highlight", lines[i]);
+               Increment(ref lineNumbers, Emmet.El("span.highlight", no));
+            }
+            else
+            {
+               Increment(ref lineNumbers, no);
+            }
+         }
+
+         formattedCode = lines.JoinLines();
 
          if (GetDefinitionLine(plain).Contains("no-line-number"))
             return Emmet.El("div.code>pre", formattedCode);
 
-         var lineNumbers = string.Empty;
-         for (var i = 1; i <= formattedCode.Split('\n').Count(); i++)
-            lineNumbers += Environment.NewLine + i;
          var table = $"<table><tr><td>{lineNumbers.Trim()}</td><td>{formattedCode}</td></tr></table>";
          return Emmet.El("div.code>pre", table);
       }
+
+      private IEnumerable<int> GetHighlightedLines(string code) =>
+         code
+         .Split('\n')
+         .Select((line, index) => new { line, index })
+         .Where(x => x.line.Contains("#hl"))
+         .Select(x => x.index);
+
+      private void Increment(ref string lineNumbers, object value) =>
+         lineNumbers = string.Concat(lineNumbers, Environment.NewLine, value);
 
       private static string GetDefinitionLine(string plain) =>
          plain.Substring(0, plain.IndexOf(Environment.NewLine));
 
       public static string GetLanguage(string plain) =>
          GetDefinitionLine(plain).Split(',').First();
+
+      private string GetCode(string plain) =>
+          HtmlEntity.DeEntitize(plain.Substring(plain.IndexOf(Environment.NewLine)).Trim());
    }
 }

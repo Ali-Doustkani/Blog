@@ -112,6 +112,15 @@
 
 /* Code Boxes */
 
+@mixin code-highlight($a, $b, $c) {
+   background: $code-highlight;
+   display: inline-block;
+   width: 100%;
+   margin-left: $a;
+   padding-left: $b;
+   padding-right: $c;
+}
+
 .cmd pre {
    @include cmd();
 }
@@ -127,15 +136,28 @@ pre {
       padding: 0;
    }
 
+   & > .highlight {
+      @include code-highlight(-20px, 20px, 10px);
+   }
+
    td:first-of-type {
       color: red;
       padding-right: 10px;
       color: $code-line-number;
       border-right: 1px dashed $code-line-number;
+
+      .highlight {
+         @include code-highlight(-22px, 22px, 10px);
+      }
    }
 
    td:nth-of-type(2) {
       padding-left: 10px;
+      width: 100%;
+
+      .highlight {
+         @include code-highlight(-12px, 12px, 12px);
+      }
    }
 }
 

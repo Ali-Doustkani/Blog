@@ -8,8 +8,14 @@ namespace Blog.Utils
 {
    public static class StringExtensions
    {
+      public static bool IsMatch(this string value, string pattern) =>
+         Regex.IsMatch(value, pattern);
+
       public static string ReplaceWithPattern(this string value, string pattern, string replacement) =>
          Regex.Replace(value, pattern, replacement);
+
+      public static string[] SplitWithPattern(this string value, string pattern) =>
+         Regex.Split(value, pattern);
 
       public static string ThrowIfNullOrEmpty(this string value, string message = null)
       {
@@ -35,5 +41,8 @@ namespace Blog.Utils
          foreach (var prob in problems)
             dic.AddModelError(prob.Property, prob.Message);
       }
+
+      public static string JoinLines(this string[] lines) =>
+         string.Join(Environment.NewLine, lines);
    }
 }

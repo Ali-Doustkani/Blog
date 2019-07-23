@@ -1,4 +1,5 @@
 ﻿using Blog.Domain;
+using Blog.Utils;
 using FluentAssertions;
 using Moq;
 using System;
@@ -13,6 +14,9 @@ namespace Blog.Tests.Domain
       public DraftTests()
       {
          _codeFormatter = new Mock<ICodeFormatter>();
+         _codeFormatter
+          .Setup(x => x.Format(It.IsAny<string>(), It.IsAny<string>()))
+          .Returns((string language, string code) => code);
       }
 
       private Mock<ICodeFormatter> _codeFormatter;
@@ -29,16 +33,15 @@ namespace Blog.Tests.Domain
 
       private string Publish(string html)
       {
-         _codeFormatter
-            .Setup(x => x.Format(It.IsAny<string>(), It.IsAny<string>()))
-            .Returns((string language, string code) => code);
-
          var draft = new Draft();
          draft.Info = new PostInfo { Title = "the post" };
          draft.Content = html;
          draft.RenderImages();
          return draft.Publish(_codeFormatter.Object).PostContent.Content;
       }
+
+      private string Publish(params string[] htmlLines) =>
+         Publish(htmlLines.JoinLines());
 
       [Fact]
       public void Return_the_same_for_not_known_elements() =>
@@ -60,36 +63,65 @@ namespace Blog.Tests.Domain
 
       [Fact]
       public void Wrap_codes() =>
-           Publish(string.Join(Environment.NewLine, "<pre class=\"code\">", "csharp, no-line-number", "<b>CODE</b></pre>"))
+           Publish("<pre class=\"code\">", "csharp, no-line-number", "<b>CODE</b></pre>")
           .Should()
           .Be("<div class=\"code\"><pre><b>CODE</b></pre></div>");
 
       [Fact]
       public void Format_code()
       {
-         Publish(string.Join(Environment.NewLine,
+         Publish(
             "<pre class=\"code\">js, no-line-number",
             "var a = 1;",
-            "var b = 2;</pre>"))
-            .Should()
-            .Be(string.Join(Environment.NewLine,
+            "var b = 2;</pre>")
+         .Should()
+         .BeLines(
             "<div class=\"code\"><pre>var a = 1;",
-            "var b = 2;</pre></div>"));
+            "var b = 2;</pre></div>");
 
          _codeFormatter.Verify(x => x.Format("js", string.Join(Environment.NewLine, "var a = 1;", "var b = 2;")));
       }
 
       [Fact]
-      public void Format_set_line_numbers() =>
-         Publish(string.Join(Environment.NewLine,
+      public void Set_line_numbers() =>
+         Publish(
             "<pre class=\"code\">csharp",
             "var a = 12;",
-            "var b = 13;</pre>"))
-            .Should()
-            .Be(string.Join(Environment.NewLine,
+            "var b = 13;</pre>")
+         .Should()
+         .BeLines(
             "<div class=\"code\"><pre><table><tr><td>1",
             "2</td><td>var a = 12;",
-            "var b = 13;</td></tr></table></pre></div>"));
+            "var b = 13;</td></tr></table></pre></div>");
+
+      [Fact]
+      public void Highlight_marked_lines_with_line_numbers() =>
+         Publish(
+            "<pre class=\"code\">csharp",
+            "var a = 12; #hl",
+            "var b = 13;</pre>")
+         .Should()
+         .BeLines(
+            "<div class=\"code\"><pre><table><tr><td><span class=\"highlight\">1</span>",
+            "2</td><td><span class=\"highlight\">var a = 12;</span>",
+            "var b = 13;</td></tr></table></pre></div>");
+
+      [Fact]
+      public void Highlight_html() =>
+         Publish("<pre class=\"code\">html, no-line-number", "<div>TEXT</div> #hl</pre>")
+            .Should()
+            .Be("<div class=\"code\"><pre><span class=\"highlight\"><div>TEXT</div></span></pre></div>");
+
+      [Fact]
+      public void Hightlight_marked_lines_without_line_numbers() =>
+         Publish(
+            "<pre class=\"code\">csharp, no-line-number",
+            "var a = 12; #hl",
+            "var b = 13;</pre>")
+         .Should()
+         .BeLines(
+            "<div class=\"code\"><pre><span class=\"highlight\">var a = 12;</span>",
+            "var b = 13;</pre></div>");
 
       [Fact]
       public void Wrap_terminals() =>

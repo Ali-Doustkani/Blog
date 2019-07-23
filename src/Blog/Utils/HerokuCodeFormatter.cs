@@ -27,7 +27,7 @@ namespace Blog.Utils
             _logger.LogInformation("Beautify Endpoint {0}, Status {1}", url, response.StatusCode);
             response.EnsureSuccessStatusCode();
 
-            return response.Content.ReadAsStringAsync().Result;
+            return response.Content.ReadAsStringAsync().Result.Trim();
          }
          catch (Exception ex)
          {
