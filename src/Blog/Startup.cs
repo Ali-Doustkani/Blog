@@ -50,6 +50,7 @@ namespace Blog
          services.AddTransient<DraftValidator>();
          services.AddTransient<ICodeFormatter, HerokuCodeFormatter>();
          services.AddTransient<IImageProcessor, CloudImageProcessor>();
+         services.AddTransient<Services.Administrator.DraftSaveCommand>();
       }
 
       public void Configure(IApplicationBuilder app)
