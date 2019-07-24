@@ -3,8 +3,8 @@
    "name": "blog",
    "private": true,
    "scripts": {
-      "build-styles": "parcel build Views/Site.scss --out-dir wwwroot --out-file ~site.css --no-source-maps",
-      "build-js": "parcel build Views/Administrator/Index.js --out-dir wwwroot --out-file ~admin.min.js && parcel build Views/Administrator/Post.js --out-dir wwwroot --out-file ~post.min.js",
+      "build-styles": "parcel build Views/Site.scss --out-dir wwwroot --out-file site.min.css --no-source-maps",
+      "build-js": "parcel build Views/Administrator/Index.js --out-dir wwwroot --out-file admin.min.js && parcel build Views/Administrator/Post.js --out-dir wwwroot --out-file post.min.js",
       "copy-assets": "cpx Assets/Images/**/* wwwroot/images",
       "build-assets": "npm run copy-assets && npm run build-styles && npm run build-js",
       "test:cy": "start-server-and-test start http://localhost:5000 cy:open",
