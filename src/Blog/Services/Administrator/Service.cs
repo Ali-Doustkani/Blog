@@ -10,26 +10,27 @@ namespace Blog.Services.Administrator
 {
    public class Service
    {
-      public Service(BlogContext context, IMapper mapper,
+      public Service(BlogContext context,
+         IMapper mapper,
          IImageContext imageContext,
-         DraftValidator validator,
          ICodeFormatter codeFormatter,
-         IImageProcessor imageProcessor)
+         IImageProcessor imageProcessor,
+         DraftSaveCommand saveCommand)
       {
          _context = context;
          _mapper = mapper;
          _imageContext = imageContext;
-         _validator = validator;
          _codeFormatter = codeFormatter;
          _imageProcessor = imageProcessor;
+         _saveCommand = saveCommand;
       }
 
       private readonly BlogContext _context;
       private readonly IMapper _mapper;
       private readonly IImageContext _imageContext;
-      private readonly DraftValidator _validator;
       private readonly ICodeFormatter _codeFormatter;
       private readonly IImageProcessor _imageProcessor;
+      private readonly DraftSaveCommand _saveCommand;
 
       public DraftEntry Create() =>
           new DraftEntry { PublishDate = DateTime.Now };
@@ -59,53 +60,8 @@ namespace Blog.Services.Administrator
          return _mapper.Map<Home.PostViewModel>(draft.Publish(_codeFormatter, _imageProcessor));
       }
 
-      public SaveResult Save(DraftEntry viewModel)
-      {
-         var draft = _mapper.Map<Draft>(viewModel);
-
-         var validationResult = _validator.Validate(draft);
-         if (validationResult.Any())
-            return SaveResult.Failure(validationResult);
-
-         var result = SaveResult.Success(string.Empty);
-         var images = draft.RenderImages();
-
-         var oldDraft = _context.Drafts.Include(x => x.Info).SingleOrDefault(x => x.Id == draft.Id);
-         var oldPostDirectory = oldDraft?.Info?.Slugify();
-         if (oldDraft == null)
-         {
-            _context.Drafts.Add(draft);
-         }
-         else
-         {
-            _context.Entry(oldDraft).CurrentValues.SetValues(draft);
-            _context.Entry(oldDraft.Info).CurrentValues.SetValues(draft.Info);
-         }
-
-         if (viewModel.Publish)
-         {
-            try
-            {
-               var post = draft.Publish(_codeFormatter, _imageProcessor);
-               _context.AddOrUpdate(post);
-               result = SaveResult.Success(post.Url);
-            }
-            catch (ServiceDependencyException ex)
-            {
-               result = SaveResult.Failure($"Draft saved but couldn't publish. {ex.Message}.");
-            }
-         }
-         else if (_context.Posts.Any(draft.Id))
-         {
-            _context.Posts.Delete(draft.Id);
-            _context.PostContents.Delete(draft.Id);
-         }
-
-         _context.SaveChanges();
-
-         _imageContext.SaveChanges(oldPostDirectory, draft.Info.Slugify(), images);
-         return result;
-      }
+      public SaveResult Save(DraftEntry viewModel) =>
+         _saveCommand.Run(viewModel);
 
       public void Delete(int id)
       {

@@ -96,12 +96,18 @@ namespace Blog.Tests.Services.Administrator
             cfg.AddProfile<Blog.Services.Home.PostProfile>();
          });
          _imageContext = new Mock<IImageContext>();
+         var mapper = config.CreateMapper();
          return new Service(context,
-            config.CreateMapper(),
+            mapper,
             _imageContext.Object,
-            new DraftValidator(context),
             _codeFormatter.Object,
-            _imageProcessor.Object);
+            _imageProcessor.Object,
+            new DraftSaveCommand(context,
+            mapper,
+            new DraftValidator(context),
+            _imageContext.Object,
+            _codeFormatter.Object,
+            _imageProcessor.Object));
       }
 
       [Fact]
@@ -435,6 +441,41 @@ namespace Blog.Tests.Services.Administrator
             .Problems
             .Should()
             .ContainEquivalentOf(new { Property = "", Message = "Draft saved but couldn't publish. Error Happened." });
+      }
+
+      [Fact]
+      public void Save_again_after_service_dependency_problem_fixed()
+      {
+         _codeFormatter
+            .SetupSequence(x => x.Format(It.IsAny<string>(), It.IsAny<string>()))
+            .Throws(new ServiceDependencyException("Error happened", null))
+            .Returns("CODE");
+
+         var toAdd = new DraftEntry
+         {
+            Language = Language.English,
+            PublishDate = new DateTime(2019, 7, 24),
+            Title = "title",
+            Summary = "summary",
+            Tags = "tags",
+            Publish = true,
+            Content = "<pre class=\"code\">js\r\nCODE</pre>"
+         };
+         toAdd.Id = Service().Save(toAdd).Id;
+         Service().Save(toAdd);
+
+         Service()
+            .Get(4)
+            .Should()
+            .BeEquivalentTo(new
+            {
+               Language = Language.English,
+               PublishDate = new DateTime(2019, 7, 24),
+               Title = "title",
+               Summary = "summary",
+               Tags = "tags",
+               Content = "<pre class=\"code\">js\r\nCODE</pre>"
+            });
       }
    }
 }
