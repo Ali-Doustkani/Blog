@@ -22,16 +22,20 @@ steps:
     command: 'install'
     workingDir: '$(blogDirectory)'
 
-- script: ls
-  workingDirectory: $(blogDirectory)
+
 - script: mkdir wwwroot
+  workingDirectory: $(blogDirectory) 
+- script: ls
   workingDirectory: $(blogDirectory) 
 
 - task: CmdLine@2
   displayName: build assets
   inputs:
-    script: 'npm run build-assets'
+    script: 'npx cpx "Assets/**/*.{png,jpg}" "wwwroot/images"'
     workingDirectory: '$(blogDirectory)'
+
+- script: ls wwwroot
+  workingDirectory: $(blogDirectory) 
 
 - task: DotNetCoreCLI@2
   enabled: false
