@@ -411,7 +411,7 @@ namespace Blog.Tests.Services.Administrator
       {
          _codeFormatter
             .Setup(x => x.Format(It.IsAny<string>(), It.IsAny<string>()))
-            .Callback(() => throw new ServiceDependencyException("", null));
+            .Callback(() => throw new ServiceDependencyException("Error Happened", null));
 
          var result = Service().Save(new DraftEntry
          {
@@ -434,7 +434,7 @@ namespace Blog.Tests.Services.Administrator
          result
             .Problems
             .Should()
-            .ContainEquivalentOf(new { Property = "", Message = "Draft saved but couldn't publish because code formatting failed" });
+            .ContainEquivalentOf(new { Property = "", Message = "Draft saved but couldn't publish. Error Happened." });
       }
    }
 }
