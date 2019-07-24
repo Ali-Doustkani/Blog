@@ -17,7 +17,6 @@ steps:
     workingDirectory: '$(srcDirectory)'
 
 - task: Npm@1
-  enabled: false
   displayName: install node modules
   inputs:
     command: 'install'
@@ -25,10 +24,11 @@ steps:
 
 - script: ls
   workingDirectory: $(blogDirectory)
+- script: mkdir wwwroot
+  workingDirectory: $(blogDirectory) 
 
 - task: CmdLine@2
   displayName: build assets
-  enabled: false
   inputs:
     script: 'npm run build-assets'
     workingDirectory: '$(blogDirectory)'
