@@ -15,6 +15,7 @@ namespace Blog.Domain
       public DbSet<Draft> Drafts { get; set; }
       public DbSet<Post> Posts { get; set; }
       public DbSet<PostContent> PostContents { get; set; }
+      public DbSet<Developer> Developers { get; set; }
 
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
@@ -93,6 +94,58 @@ namespace Blog.Domain
             pc
                .Property(x => x.Content)
                .IsRequired();
+         });
+
+         modelBuilder.Entity<Developer>(dev =>
+         {
+            dev
+            .Property(x => x.Summary)
+            .IsRequired();
+
+            dev
+            .Property(x => x.Skills)
+            .IsRequired();
+
+            dev
+            .HasMany(x => x.Experiences)
+            .WithOne()
+            .HasForeignKey("DeveloperId");
+
+            dev
+            .HasMany(x => x.SideProjects)
+            .WithOne()
+            .HasForeignKey("DeveloperId");
+
+         });
+
+         modelBuilder.Entity<WorkExperience>(ex =>
+         {
+            ex
+            .Property(x => x.Title)
+            .IsRequired();
+
+            ex
+            .Property(x => x.Content)
+            .IsRequired();
+
+            ex
+            .Property("DeveloperId")
+            .IsRequired();
+         });
+
+         modelBuilder.Entity<SideProject>(sp =>
+         {
+            sp
+            .Property(x => x.Title)
+            .IsRequired();
+
+            sp
+            .Property(x => x.Content)
+            .IsRequired();
+
+            sp
+            .Property("DeveloperId")
+            .IsRequired();
          });
       }
    }
