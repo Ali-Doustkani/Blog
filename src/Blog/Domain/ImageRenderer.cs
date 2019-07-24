@@ -31,24 +31,30 @@ namespace Blog.Domain
             {
                var img = node.Child("img");
                if (Image.IsDataUrl(img.Attr("src")))
-               {
-                  var image = Image.Create(img, GenerateFilename(img), _postDirectory);
-                  images.Add(image);
-                  img.Attributes.RemoveAll();
-                  img.SetAttributeValue("src", image.RelativePath);
-               }
+                  CreateNewImage(images, img);
                else
-               {
-                  var image = new Image(Path.GetFileName(img.Attr("src")), _postDirectory);
-                  img.SetAttributeValue("src", image.RelativePath);
-                  images.Add(image);
-               }
+                  UpdateImage(images, img);
             }
          });
 
          var sw = new StringWriter();
          doc.Save(sw);
          return new ImageRenderResult(sw.ToString(), images);
+      }
+
+      private void CreateNewImage(List<Image> images, HtmlNode img)
+      {
+         var image = Image.Create(img, GenerateFilename(img), _postDirectory);
+         images.Add(image);
+         img.Attributes.RemoveAll();
+         img.SetAttributeValue("src", image.RelativePath);
+      }
+
+      private void UpdateImage(List<Image> images, HtmlNode img)
+      {
+         var image = new Image(Path.GetFileName(img.Attr("src")), _postDirectory);
+         img.SetAttributeValue("src", image.RelativePath);
+         images.Add(image);
       }
 
       private string GenerateFilename(HtmlNode img)

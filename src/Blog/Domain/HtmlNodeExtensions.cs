@@ -28,24 +28,6 @@ namespace Blog.Domain
       public static string ElChildren(this HtmlNode node) =>
            Emmet.El(node.OriginalName, string.Join("", node.ChildNodes.Select(El)));
 
-      public static string Figure(this HtmlNode node)
-      {
-         var img = node.Child("img");
-         if (Image.IsDataUrl(img.Attr("src")))
-            throw new InvalidOperationException("<img> src is not rendered yet.");
-
-         var caption = node.Child("figcaption");
-         if (string.IsNullOrWhiteSpace(caption?.InnerHtml))
-            return Emmet.El("figure", img.OuterHtml);
-
-         if (caption.Attributes.Contains("contenteditable"))
-            caption.Attributes["contenteditable"].Remove();
-
-         img.SetAttributeValue("alt", caption.InnerText);
-
-         return Emmet.El("figure", string.Join("", img.OuterHtml, caption.OuterHtml));
-      }
-
       public static HtmlNode Child(this HtmlNode node, string tagName) =>
           node.ChildNodes.SingleOrDefault(x => string.Equals(x.OriginalName, tagName, System.StringComparison.OrdinalIgnoreCase));
 

@@ -31,7 +31,7 @@ namespace Blog.Utils
          }
          catch (Exception ex)
          {
-            throw new CodeFormatException(ex);
+            throw new ServiceDependencyException("Formatting code failed.", ex);
          }
       }
    }

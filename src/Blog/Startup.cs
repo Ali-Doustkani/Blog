@@ -49,6 +49,7 @@ namespace Blog
          services.AddTransient<IFileSystem, FileSystem>();
          services.AddTransient<DraftValidator>();
          services.AddTransient<ICodeFormatter, HerokuCodeFormatter>();
+         services.AddTransient<IImageProcessor, CloudImageProcessor>();
       }
 
       public void Configure(IApplicationBuilder app)

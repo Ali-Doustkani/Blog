@@ -9,6 +9,6 @@
 /build
 /.vs
 
+**/*/secrets.json
 *.csproj.user
-
 npm-debug.log*

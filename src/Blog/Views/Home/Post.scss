@@ -58,6 +58,11 @@
          max-width: 100%;
       }
 
+      img.lazyloading {
+         width: 800px;
+         filter: blur(20px);
+      }
+
       figcaption {
          text-align: center;
          color: $color3;

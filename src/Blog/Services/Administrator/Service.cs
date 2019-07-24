@@ -13,13 +13,15 @@ namespace Blog.Services.Administrator
       public Service(BlogContext context, IMapper mapper,
          IImageContext imageContext,
          DraftValidator validator,
-         ICodeFormatter codeFormatter)
+         ICodeFormatter codeFormatter,
+         IImageProcessor imageProcessor)
       {
          _context = context;
          _mapper = mapper;
          _imageContext = imageContext;
          _validator = validator;
          _codeFormatter = codeFormatter;
+         _imageProcessor = imageProcessor;
       }
 
       private readonly BlogContext _context;
@@ -27,6 +29,7 @@ namespace Blog.Services.Administrator
       private readonly IImageContext _imageContext;
       private readonly DraftValidator _validator;
       private readonly ICodeFormatter _codeFormatter;
+      private readonly IImageProcessor _imageProcessor;
 
       public DraftEntry Create() =>
           new DraftEntry { PublishDate = DateTime.Now };
@@ -53,7 +56,7 @@ namespace Blog.Services.Administrator
             .Include(x => x.Info)
             .SingleOrDefault(x => x.Id == id);
          if (draft == null) return null;
-         return _mapper.Map<Home.PostViewModel>(draft.Publish(_codeFormatter));
+         return _mapper.Map<Home.PostViewModel>(draft.Publish(_codeFormatter, _imageProcessor));
       }
 
       public SaveResult Save(DraftEntry viewModel)
@@ -83,13 +86,13 @@ namespace Blog.Services.Administrator
          {
             try
             {
-               var post = draft.Publish(_codeFormatter);
+               var post = draft.Publish(_codeFormatter, _imageProcessor);
                _context.AddOrUpdate(post);
                result = SaveResult.Success(post.Url);
             }
-            catch (CodeFormatException)
+            catch (ServiceDependencyException ex)
             {
-               result = SaveResult.Failure("Draft saved but couldn't publish because code formatting failed");
+               result = SaveResult.Failure($"Draft saved but couldn't publish. {ex.Message}.");
             }
          }
          else if (_context.Posts.Any(draft.Id))

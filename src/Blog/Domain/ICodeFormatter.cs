@@ -6,7 +6,7 @@
       /// Tokenize the code to HTML <span>s
       /// </summary>
       /// <returns>HTML of beautified code</returns>
-      /// <exception cref="CodeFormatException">If anything happens during formatting.</exception>
+      /// <exception cref="ServiceDependencyException">If anything happens during formatting.</exception>
       string Format(string language, string code);
    }
 }

@@ -3,41 +3,32 @@ using Blog.Utils;
 using FluentAssertions;
 using Moq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 
 namespace Blog.Tests.Domain
 {
    public class DraftTests
    {
-      public DraftTests()
+      private Mock<ICodeFormatter> _codeFormatter;
+      private Mock<IImageProcessor> _imageProcessor;
+
+      private string Publish(string html)
       {
          _codeFormatter = new Mock<ICodeFormatter>();
          _codeFormatter
           .Setup(x => x.Format(It.IsAny<string>(), It.IsAny<string>()))
           .Returns((string language, string code) => code);
-      }
 
-      private Mock<ICodeFormatter> _codeFormatter;
+         _imageProcessor = new Mock<IImageProcessor>();
+         _imageProcessor
+            .Setup(x => x.Minimize(It.IsAny<string>()))
+            .Returns("minImage");
 
-      private IEnumerable<Image> RenderImages(string html)
-      {
-         var draft = new Draft();
-         draft.Info = new PostInfo { Title = "the post" };
-         draft.Content = html;
-         return draft.RenderImages();
-      }
-
-      #region Publishing
-
-      private string Publish(string html)
-      {
          var draft = new Draft();
          draft.Info = new PostInfo { Title = "the post" };
          draft.Content = html;
          draft.RenderImages();
-         return draft.Publish(_codeFormatter.Object).PostContent.Content;
+         return draft.Publish(_codeFormatter.Object, _imageProcessor.Object).PostContent.Content;
       }
 
       private string Publish(params string[] htmlLines) =>
@@ -160,82 +151,22 @@ namespace Blog.Tests.Domain
           .Be("<p><strong>Hello</strong>World</p>");
 
       [Fact]
-      public void Set_img_src_to_file() =>
+      public void Set_img_attributes() =>
           Publish("<figure><button>Remove</button><img data-filename=\"pic.png\" src=\"data:image/png;base64,DATA\"><figcaption contenteditable=\"true\">CAP</figcaption></figure>")
           .Should()
-          .BePath("<figure><img src=\"/images/posts/the-post/pic.png\" alt=\"CAP\"><figcaption>CAP</figcaption></figure>");
+          .BePath("<figure><img class=\"lazyload lazyloading\" src=\"minImage\" data-src=\"/images/posts/the-post/pic.png\" alt=\"CAP\"><figcaption>CAP</figcaption></figure>");
 
       [Fact]
       public void Figures_without_captions() =>
           Publish("<figure><img data-filename=\"pic.jpeg\" src=\"data:image/jpeg;base64,DATA\"></figure>")
           .Should()
-          .BePath("<figure><img src=\"/images/posts/the-post/pic.jpeg\"></figure>");
+          .BePath("<figure><img class=\"lazyload lazyloading\" src=\"minImage\" data-src=\"/images/posts/the-post/pic.jpeg\"></figure>");
 
       [Fact]
       public void Figures_with_empty_captions() =>
           Publish("<figure><img data-filename=\"pic.jpeg\" src=\"data:image/jpeg;base64,DATA\"><figcaption></figcaption></figure>")
           .Should()
-          .BePath("<figure><img src=\"/images/posts/the-post/pic.jpeg\"></figure>");
+          .BePath("<figure><img class=\"lazyload lazyloading\" src=\"minImage\" data-src=\"/images/posts/the-post/pic.jpeg\"></figure>");
 
-      #endregion
-
-      [Fact]
-      public void Throw_when_filename_is_not_available()
-      {
-         Action act = () => RenderImages("<figure><img src=\"data:image/jpeg;base64,DATA\"></figure>");
-         act.Should().Throw<InvalidOperationException>();
-      }
-
-      [Fact]
-      public void Multiple_images_with_the_same_name()
-      {
-         var draft = new Draft();
-         draft.Info = new PostInfo { Title = "the post" };
-         draft.Content = "<figure><img data-filename=\"pic.png\" src=\"data:image/png;base64,DATA\"></figure><figure><img data-filename=\"pic.png\" src=\"data:image/png;base64,DATA\"></figure>";
-         var images = draft.RenderImages();
-         var publish = draft.Publish(_codeFormatter.Object);
-
-         publish.PostContent
-             .Content
-             .Should()
-             .BePath("<figure><img src=\"/images/posts/the-post/pic.png\"></figure><figure><img src=\"/images/posts/the-post/pic-1.png\"></figure>");
-         images.First()
-             .Filename
-             .Should()
-             .Be("pic.png");
-         images.ElementAt(1)
-             .Filename
-             .Should()
-             .Be("pic-1.png");
-      }
-
-      [Fact]
-      public void Update_content_to_file_paths_instead_of_data_urls()
-      {
-         var draft = new Draft();
-         draft.Info = new PostInfo { Title = "the post" };
-         draft.Content = "<figure><img data-filename=\"pic.png\" src=\"data:image/png;base64,DATA\"></figure>";
-
-         draft.RenderImages();
-
-         draft.Content
-             .Should()
-             .BePath("<figure><img src=\"/images/posts/the-post/pic.png\"></figure>");
-      }
-
-      [Fact]
-      public void Update_img_srcs_when_title_changes()
-      {
-         var draft = new Draft();
-         draft.Info = new PostInfo { Title = "the post" };
-         draft.Content = "<figure><img src=\"/images/posts/the-post/pic.png\"></figure>";
-
-         draft.Info.Title = "new title";
-         draft.RenderImages();
-
-         draft.Content
-             .Should()
-             .BePath("<figure><img src=\"/images/posts/new-title/pic.png\"></figure>");
-      }
    }
 }

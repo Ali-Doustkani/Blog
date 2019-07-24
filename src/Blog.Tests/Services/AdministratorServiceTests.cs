@@ -18,6 +18,7 @@ namespace Blog.Tests.Services.Administrator
       public AdministratorServiceTests()
       {
          _codeFormatter = new Mock<ICodeFormatter>();
+         _imageProcessor = new Mock<IImageProcessor>();
          _options = Db.CreateOptions();
          using (var seed = new BlogContext(_options))
          {
@@ -84,6 +85,7 @@ namespace Blog.Tests.Services.Administrator
       private readonly DbContextOptions _options;
       private Mock<IImageContext> _imageContext;
       private Mock<ICodeFormatter> _codeFormatter;
+      private Mock<IImageProcessor> _imageProcessor;
 
       private Service Service()
       {
@@ -98,7 +100,8 @@ namespace Blog.Tests.Services.Administrator
             config.CreateMapper(),
             _imageContext.Object,
             new DraftValidator(context),
-            _codeFormatter.Object);
+            _codeFormatter.Object,
+            _imageProcessor.Object);
       }
 
       [Fact]
@@ -408,7 +411,7 @@ namespace Blog.Tests.Services.Administrator
       {
          _codeFormatter
             .Setup(x => x.Format(It.IsAny<string>(), It.IsAny<string>()))
-            .Callback(() => throw new CodeFormatException(null));
+            .Callback(() => throw new ServiceDependencyException("", null));
 
          var result = Service().Save(new DraftEntry
          {

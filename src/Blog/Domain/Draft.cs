@@ -21,8 +21,8 @@ namespace Blog.Domain
          return result.Images;
       }
 
-      /// <exception cref="CodeFormatException"/>
-      public Post Publish(ICodeFormatter codeFormatter)
+      /// <exception cref="ServiceDependencyException"/>
+      public Post Publish(ICodeFormatter codeFormatter, IImageProcessor imageProcessor)
       {
          var display = new StringBuilder(1000);
          var doc = new HtmlDocument();
@@ -40,7 +40,7 @@ namespace Blog.Domain
            else if (node.Is("ul") || node.Is("ol"))
               display.Append(node.ElChildren());
            else if (node.Is("figure"))
-              display.Append(node.Figure());
+              display.Append(Figure(node, imageProcessor));
            else
               display.Append(node.El());
         });
@@ -106,5 +106,29 @@ namespace Blog.Domain
 
       private string GetCode(string plain) =>
           HtmlEntity.DeEntitize(plain.Substring(plain.IndexOf(Environment.NewLine)).Trim());
+
+      private string Figure(HtmlNode node, IImageProcessor imageProcessor)
+      {
+         var img = node.Child("img");
+         if (Image.IsDataUrl(img.Attr("src")))
+            throw new InvalidOperationException("<img> src is not rendered yet.");
+
+         var src = img.Attr("src");
+         img.Attributes.RemoveAll();
+         img.SetAttributeValue("class", "lazyload lazyloading");
+         img.SetAttributeValue("src", imageProcessor.Minimize(src));
+         img.SetAttributeValue("data-src", src);
+
+         var caption = node.Child("figcaption");
+         if (string.IsNullOrWhiteSpace(caption?.InnerHtml))
+            return Emmet.El("figure", img.OuterHtml);
+
+         if (caption.Attributes.Contains("contenteditable"))
+            caption.Attributes["contenteditable"].Remove();
+
+         img.SetAttributeValue("alt", caption.InnerText);
+
+         return Emmet.El("figure", string.Join("", img.OuterHtml, caption.OuterHtml));
+      }
    }
 }
