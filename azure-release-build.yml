@@ -22,13 +22,23 @@ steps:
     command: 'install'
     workingDir: '$(blogDirectory)'
 
+
+- script: mkdir wwwroot
+  workingDirectory: $(blogDirectory) 
+- script: ls
+  workingDirectory: $(blogDirectory) 
+
 - task: CmdLine@2
   displayName: build assets
   inputs:
-    script: 'npm run build-assets'
+    script: 'npx cpx "Assets/**/*.{png,jpg}" "wwwroot/images"'
     workingDirectory: '$(blogDirectory)'
 
+- script: ls wwwroot
+  workingDirectory: $(blogDirectory) 
+
 - task: DotNetCoreCLI@2
+  enabled: false
   displayName: publish
   inputs:
     command: 'publish'
@@ -39,6 +49,7 @@ steps:
     workingDirectory: '$(blogDirectory)'
 
 - task: ArchiveFiles@2
+  enabled: false
   inputs:
     rootFolderOrFile: '$(blogDirectory)/bin/Release/netcoreapp2.1/publish'
     includeRootFolder: false
@@ -47,6 +58,7 @@ steps:
     replaceExistingArchive: true
 
 - task: PublishBuildArtifacts@1
+  enabled: false
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
