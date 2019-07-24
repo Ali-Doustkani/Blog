@@ -1,6 +1,7 @@
 ﻿using Blog.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,14 +11,18 @@ namespace Blog.Utils
 {
    public class CloudImageProcessor : IImageProcessor
    {
-      public CloudImageProcessor(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+      public CloudImageProcessor(IConfiguration configuration,
+         IHttpContextAccessor httpContextAccessor,
+         ILogger<CloudImageProcessor> logger)
       {
          _token = configuration["cloudImage:token"];
          _httpContextAccessor = httpContextAccessor;
+         _logger = logger;
       }
 
       private readonly string _token;
       private readonly IHttpContextAccessor _httpContextAccessor;
+      private readonly ILogger _logger;
 
       public string Minimize(string originalImage)
       {
@@ -25,7 +30,9 @@ namespace Blog.Utils
          {
             var req = _httpContextAccessor.HttpContext.Request;
             var client = new HttpClient();
-            var result = client.GetAsync($"https://{_token}.cloudimg.io/width/25/none/{req.Scheme}://{req.Host.Host}:{req.Host.Port}{originalImage}").Result;
+            var url = $"https://{_token}.cloudimg.io/width/25/none/{req.Scheme}://{req.Host.Host}:{req.Host.Port}{originalImage}";
+            _logger.LogInformation("Start Processing Image: {0}", url);
+            var result = client.GetAsync(url).Result;
             result.EnsureSuccessStatusCode();
             var base64 = Convert.ToBase64String(result.Content.ReadAsByteArrayAsync().Result);
             return DataUrl(originalImage, base64);
