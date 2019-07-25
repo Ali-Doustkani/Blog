@@ -68,5 +68,8 @@ namespace Blog.Controllers
          ViewData["language"] = post.Language;
          return View("Views/Home/Post.cshtml", post);
       }
+
+      public IActionResult Developer() =>
+         View();
    }
 }

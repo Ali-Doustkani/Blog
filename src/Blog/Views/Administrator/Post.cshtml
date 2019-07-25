@@ -9,7 +9,7 @@
    <script src="https://kit.fontawesome.com/4f69c52348.js"></script>
 }
 
-<div class="post-form">
+<div class="form post-form">
    <h1>Write a post</h1>
    <form id="save-post" class="english" asp-action="SavePost">
       <div asp-validation-summary="ModelOnly" class="error"></div>
@@ -44,7 +44,7 @@
          <textarea blog-testid="summary-input" asp-for="Summary"></textarea>
          <span asp-validation-for="Summary" class="error"></span>
       </div>
-      <div class="text-group">
+      <div class="text-group richtext-group">
          <label asp-for="Content"></label>
          <div class="toolbar">
             <button id="important"><i class="fas fa-bold"></i></button>

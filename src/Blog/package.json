@@ -11,7 +11,8 @@
       "test:e2e": "start-server-and-test start http://localhost:5000 cy:run",
       "start": "dotnet run --launch-profile E2E",
       "cy:open": "cypress open",
-      "cy:run": "cypress run"
+      "cy:run": "cypress run",
+      "start-client": "parcel watch ClientApp/app.js --out-dir wwwroot --out-file developer.js"
    },
    "devDependencies": {
       "autoprefixer": "^9.6.0",
@@ -22,6 +23,8 @@
       "start-server-and-test": "^1.9.1"
    },
    "dependencies": {
-      "@alidoustkani/richtext": "^1.0.24"
+      "@alidoustkani/richtext": "^1.0.24",
+      "react": "^16.8.6",
+      "react-dom": "^16.8.6"
    }
 }
