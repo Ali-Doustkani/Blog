@@ -121,7 +121,7 @@ namespace Blog.Domain
          modelBuilder.Entity<WorkExperience>(ex =>
          {
             ex
-            .Property(x => x.Title)
+            .Property(x => x.Company)
             .IsRequired();
 
             ex

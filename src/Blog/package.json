@@ -12,7 +12,7 @@
       "start": "dotnet run --launch-profile E2E",
       "cy:open": "cypress open",
       "cy:run": "cypress run",
-      "start-client": "parcel watch ClientApp/app.js --out-dir wwwroot --out-file developer.js"
+      "start-client": "parcel watch ClientApp/Developer/app.js --out-dir wwwroot --out-file developer.js"
    },
    "devDependencies": {
       "autoprefixer": "^9.6.0",

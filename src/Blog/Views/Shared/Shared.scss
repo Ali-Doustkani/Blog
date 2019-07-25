@@ -11,19 +11,19 @@
 }
 
 .tagset {
-   color: transparentize($color3, .1);
+   color: transparentize($color3, 0.1);
 
    > i {
-      font-size: .7em;
+      font-size: 0.7em;
    }
 
    > div {
       display: inline-block;
-      background-color: transparentize($color3, .8);
+      background-color: transparentize($color3, 0.8);
       border-radius: 3px;
       margin: 5px 3px 0 0;
       padding: 4px;
-      font-size: .8em;
+      font-size: 0.8em;
       direction: ltr;
    }
 }
@@ -63,7 +63,9 @@
       @include label();
    }
 
-   > input, > textarea, article {
+   > input,
+   > textarea,
+   article {
       width: 100%;
       font-size: 1em;
       font-family: sans-serif;
@@ -73,11 +75,11 @@
       box-sizing: border-box;
    }
 
-   > input[type=date] {
+   > input[type='date'] {
       height: 33px;
    }
 
-   > input[type=text] {
+   > input[type='text'] {
       height: 35px;
    }
 
@@ -85,18 +87,19 @@
       height: 70px;
    }
 
-   > input[type=radio] {
+   > input[type='radio'] {
       width: unset;
       cursor: pointer;
    }
 
-   > input[type=radio] + label {
+   > input[type='radio'] + label {
       display: inline;
       font-size: 1em;
       cursor: pointer;
    }
 
-   > input[type=text]:focus, textarea:focus {
+   > input[type='text']:focus,
+   textarea:focus {
       outline: 1px solid $color3;
    }
 }
@@ -110,6 +113,7 @@
 .single-row {
    > input {
       width: 160px;
+      margin-left: 6px;
    }
 }
 
@@ -154,7 +158,7 @@
 
          &:hover {
             border-radius: 6px;
-            background: transparentize($color3, .9);
+            background: transparentize($color3, 0.9);
          }
 
          &:focus {
@@ -167,7 +171,7 @@
       min-height: 200px;
       max-height: 500px;
       cursor: text;
-      font-family: "Roboto Condensed";
+      font-family: 'Roboto Condensed';
    }
 }
 
@@ -175,7 +179,7 @@
 
 @mixin codeBox() {
    font-family: Consolas;
-   font-size: .82em;
+   font-size: 0.82em;
    padding: 10px 10px 10px 20px;
    direction: ltr;
    border-radius: 9px;
@@ -195,7 +199,7 @@
 
 .inline-code {
    font-family: Consolas;
-   font-size: .82em;
+   font-size: 0.82em;
    padding: 2px 5px;
    border-radius: 3px;
    direction: ltr;
