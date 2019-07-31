@@ -70,35 +70,5 @@ namespace Blog.Services.Administrator
          _context.SaveChanges();
          _imageContext.Delete(info.Slugify());
       }
-
-      public Developer GetDeveloper()
-      {
-         return new Developer
-         {
-            Id = 1,
-            Summary = "<p contenteditable=\"true\">Some Content</p>",
-            Experiences = new List<Experience>
-            {
-               new Experience
-               {
-                  Id = 1,
-                  Company = "Parmis",
-                  Position = "Senior Developer",
-                  Content = "<p contenteditable='true'> parmis senior developer </p>",
-                  StartDate = "2017-01-29",
-                  EndDate = "2019-01-29"
-               },
-               new Experience
-               {
-                  Id = 2,
-                  Company = "Freelancer",
-                  Position = "C# Desktop Developer",
-                  Content = "<p contenteditable='true'> freelance desktop developer </p>",
-                  StartDate = "2016-03-25",
-                  EndDate = "2017-03-25"
-               }
-            }
-         };
-      }
    }
 }

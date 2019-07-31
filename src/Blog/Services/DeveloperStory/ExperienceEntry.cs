@@ -1,6 +1,6 @@
-﻿namespace Blog.Services.Administrator
+﻿namespace Blog.Services.DeveloperStory
 {
-   public class Experience
+   public class ExperienceEntry
    {
       public int Id { get; set; }
       public string Company { get; set; }

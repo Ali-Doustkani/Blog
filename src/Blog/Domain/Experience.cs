@@ -2,7 +2,7 @@
 
 namespace Blog.Domain
 {
-   public class WorkExperience : DomainEntity
+   public class Experience : DomainEntity
    {
       public string Company { get; set; }
       public string Position { get; set; }

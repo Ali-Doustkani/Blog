@@ -45,6 +45,7 @@ namespace Blog
          services.AddAutoMapper(GetType().Assembly);
          services.AddTransient<Services.Home.Service>();
          services.AddTransient<Services.Administrator.Service>();
+         services.AddTransient<Services.DeveloperStory.Service>();
          services.AddTransient<IImageContext, ImageContext>();
          services.AddTransient<IFileSystem, FileSystem>();
          services.AddTransient<DraftValidator>();

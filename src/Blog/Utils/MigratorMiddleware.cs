@@ -10,41 +10,48 @@ using System.Threading.Tasks;
 
 namespace Blog.Utils
 {
-    public static class MigratorExtension
-    {
-        public static void MigrateDatabase(this IApplicationBuilder app)
-        {
-            app.UseMiddleware<MigratorMiddleware>();
-        }
-    }
+   public static class MigratorExtension
+   {
+      public static void MigrateDatabase(this IApplicationBuilder app)
+      {
+         app.UseMiddleware<MigratorMiddleware>();
+      }
+   }
 
-    public class MigratorMiddleware
-    {
-        public MigratorMiddleware(RequestDelegate next)
-        {
-            this.next = next;
-        }
+   public class MigratorMiddleware
+   {
+      public MigratorMiddleware(RequestDelegate next)
+      {
+         this.next = next;
+      }
 
-        private readonly RequestDelegate next;
+      private readonly RequestDelegate next;
 
-        public async Task Invoke(HttpContext httpContext, [FromServices]BlogContext dbContext, [FromServices]IConfiguration configuration,
-            [FromServices]UserManager<IdentityUser> userManager)
-        {
-            dbContext.Database.Migrate();
-
-            if (!dbContext.Users.Any())
-            {
-                var admin = new IdentityUser();
-                admin.UserName = configuration["seed:username"];
-                admin.NormalizedUserName = admin.UserName.ToUpper();
-                admin.PasswordHash = configuration["seed:passwordHash"];
-                admin.LockoutEnabled = true;
-                admin.SecurityStamp = "2ENRK26CZS2IAUJQHCG5PLZ7QDO3U7KX";
-                dbContext.Users.Add(admin);
-                dbContext.SaveChanges();
-            }
-
+      public async Task Invoke(HttpContext httpContext,
+         [FromServices]BlogContext dbContext,
+         [FromServices]IConfiguration configuration)
+      {
+         if (dbContext.Database.ProviderName.Contains("Sqlite"))
+         {
             await next(httpContext);
-        }
-    }
+            return;
+         }
+
+         dbContext.Database.Migrate();
+
+         if (!dbContext.Users.Any())
+         {
+            var admin = new IdentityUser();
+            admin.UserName = configuration["seed:username"];
+            admin.NormalizedUserName = admin.UserName.ToUpper();
+            admin.PasswordHash = configuration["seed:passwordHash"];
+            admin.LockoutEnabled = true;
+            admin.SecurityStamp = "2ENRK26CZS2IAUJQHCG5PLZ7QDO3U7KX";
+            dbContext.Users.Add(admin);
+            dbContext.SaveChanges();
+         }
+
+         await next(httpContext);
+      }
+   }
 }

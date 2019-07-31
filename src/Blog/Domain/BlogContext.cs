@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Blog.Domain
 {
@@ -16,6 +19,27 @@ namespace Blog.Domain
       public DbSet<Post> Posts { get; set; }
       public DbSet<PostContent> PostContents { get; set; }
       public DbSet<Developer> Developers { get; set; }
+
+      public void WriteOn<T, J>(T existing, T newEntity, Func<T, IList<J>> collectionSelector)
+       where T : DomainEntity
+       where J : DomainEntity
+      {
+         Entry(existing).CurrentValues.SetValues(newEntity);
+         foreach (var item in collectionSelector(newEntity))
+         {
+            var simillarChild = collectionSelector(existing).SingleOrDefault(x => x.Id == item.Id);
+            if (simillarChild == null)
+               collectionSelector(existing).Add(item);
+            else
+               Entry(simillarChild).CurrentValues.SetValues(item);
+         }
+
+         foreach (var item in collectionSelector(existing))
+         {
+            if (!collectionSelector(newEntity).Any(x => x.Id == item.Id))
+               Remove(item);
+         }
+      }
 
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
@@ -118,8 +142,10 @@ namespace Blog.Domain
 
          });
 
-         modelBuilder.Entity<WorkExperience>(ex =>
+         modelBuilder.Entity<Experience>(ex =>
          {
+            ex.ToTable("Experiences");
+
             ex
             .Property(x => x.Company)
             .IsRequired();
@@ -135,6 +161,8 @@ namespace Blog.Domain
 
          modelBuilder.Entity<SideProject>(sp =>
          {
+            sp.ToTable("SideProjects");
+
             sp
             .Property(x => x.Title)
             .IsRequired();

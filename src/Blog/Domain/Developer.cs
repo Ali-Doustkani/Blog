@@ -6,12 +6,12 @@ namespace Blog.Domain
    {
       public Developer()
       {
-         Experiences = new List<WorkExperience>();
+         Experiences = new List<Experience>();
          SideProjects = new List<SideProject>();
       }
 
       public string Summary { get; set; }
-      public List<WorkExperience> Experiences { get; }
+      public List<Experience> Experiences { get; }
       public List<SideProject> SideProjects { get; }
       public string Skills { get; set; }
    }
