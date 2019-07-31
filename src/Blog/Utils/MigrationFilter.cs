@@ -29,9 +29,6 @@ namespace Blog.Utils
          if (context.Filters.OfType<IgnoreMigrationAttribute>().Any())
             return;
 
-         if (_dbContext.Database.ProviderName.Contains("Sqlite"))
-            return;
-
          try
          {
             _dbContext.Database.Migrate();

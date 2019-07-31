@@ -49,7 +49,7 @@ namespace Blog
          services.AddAutoMapper(GetType().Assembly);
          services.AddTransient<Services.Home.Service>();
          services.AddTransient<Services.Administrator.Service>();
-         services.AddTransient<Services.DeveloperStory.Service>();
+         services.AddTransient<Services.DeveloperStory.DeveloperService>();
          services.AddTransient<IImageContext, ImageContext>();
          services.AddTransient<IFileSystem, FileSystem>();
          services.AddTransient<DraftValidator>();
@@ -77,7 +77,6 @@ namespace Blog
             app.UseDeveloperExceptionPage();
          }
 
-         //app.MigrateDatabase();
          app.UseStaticFiles();
          app.UseAuthentication();
          app.UseMvc(cfg =>
@@ -86,9 +85,7 @@ namespace Blog
                .MapRoute("langRoot", "{language:regex(^fa|en$)}", new { controller = "home", action = "index" })
                .MapRoute("post", "{language:regex(^fa|en$)}/{urlTitle}", new { controller = "home", action = "post" })
                .MapRoute("about", "about", new { controller = "home", action = "about" });
-
             cfg.MapRoute("admin", "admin/{action=index}/{id?}", new { controller = "administrator" });
-
             cfg.MapRoute("default", "{controller}/{action}");
          });
       }

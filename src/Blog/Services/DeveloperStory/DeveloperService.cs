@@ -6,9 +6,15 @@ using System.Linq;
 
 namespace Blog.Services.DeveloperStory
 {
-   public class Service
+   public interface IDeveloperService
    {
-      public Service(BlogContext context, IMapper mapper)
+      DeveloperEntry Get();
+      SaveResult Save(DeveloperEntry developer);
+   }
+
+   public class DeveloperService : IDeveloperService
+   {
+      public DeveloperService(BlogContext context, IMapper mapper)
       {
          _context = context;
          _mapper = mapper;
@@ -17,10 +23,10 @@ namespace Blog.Services.DeveloperStory
       private readonly BlogContext _context;
       private readonly IMapper _mapper;
 
-      public DeveloperEntry GetDeveloper() =>
+      public DeveloperEntry Get() =>
          _mapper.Map<DeveloperEntry>(TheDeveloper());
 
-      public SaveResult SaveDeveloper(DeveloperEntry developerEntry)
+      public SaveResult Save(DeveloperEntry developerEntry)
       {
          var developer = _mapper.Map<Developer>(developerEntry);
 
@@ -31,12 +37,12 @@ namespace Blog.Services.DeveloperStory
             _context.WriteOn(existing, developer, dev => dev.Experiences);
             _context.WriteOn(existing, developer, dev => dev.SideProjects);
             _context.SaveChanges();
-            return MakeResult(existing);
+            return SaveResult.Updated(developer);
          }
 
          _context.Developers.Add(developer);
          _context.SaveChanges();
-         return MakeResult(developer);
+         return SaveResult.Created(developer);
       }
 
       private Developer TheDeveloper() =>
@@ -45,12 +51,5 @@ namespace Blog.Services.DeveloperStory
             .Include(x => x.Experiences)
             .Include(x => x.SideProjects)
             .SingleOrDefault();
-
-      private SaveResult MakeResult(Developer developer) =>
-         new SaveResult
-         {
-            Experiences = developer.Experiences.Select(x => x.Id),
-            SideProjects = developer.SideProjects.Select(x => x.Id)
-         };
    }
 }

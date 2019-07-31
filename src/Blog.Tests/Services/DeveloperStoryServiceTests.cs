@@ -15,16 +15,16 @@ namespace Blog.Tests.Services
       {
          _factory = new ContextFactory();
          var mapperConfig = new MapperConfiguration(x => x.AddProfile<MappingProfile>());
-         _service = new Service(_factory.Create(), mapperConfig.CreateMapper());
+         _service = new DeveloperService(_factory.Create(), mapperConfig.CreateMapper());
       }
 
-      private readonly Service _service;
+      private readonly DeveloperService _service;
       private readonly ContextFactory _factory;
 
       [Fact]
       public void Return_null_when_there_is_no_developer() =>
          _service
-         .GetDeveloper()
+         .Get()
          .Should()
          .BeNull();
 
@@ -56,7 +56,7 @@ namespace Blog.Tests.Services
          }
 
          _service
-            .GetDeveloper()
+            .Get()
             .Should()
             .BeEquivalentTo(new
             {
@@ -87,7 +87,7 @@ namespace Blog.Tests.Services
       [Fact]
       public void Add_when_there_is_no_developer_available()
       {
-         var result = _service.SaveDeveloper(new DeveloperEntry
+         var result = _service.Save(new DeveloperEntry
          {
             Summary = "Cool guy!",
             Skills = "C#, Javascript, React",
@@ -116,12 +116,13 @@ namespace Blog.Tests.Services
             .Should()
             .BeEquivalentTo(new
             {
+               Status = Status.Created,
                Experiences = new[] { 1 },
                SideProjects = new[] { 1 }
             });
 
          _service
-            .GetDeveloper()
+            .Get()
             .Should()
             .BeEquivalentTo(new
             {
@@ -152,7 +153,32 @@ namespace Blog.Tests.Services
       [Fact]
       public void Update_when_there_is_already_a_developer_available()
       {
-         var result = _service.SaveDeveloper(new DeveloperEntry
+         using (var ctx = _factory.Create())
+         {
+            var developer = new Developer
+            {
+               Summary = "So Cool!",
+               Skills = "ES7, Node.js"
+            };
+            developer.Experiences.Add(new Experience
+            {
+               Company = "Lodgify",
+               Content = "as backend developer",
+               StartDate = new DateTime(2016, 2, 23),
+               EndDate = new DateTime(2017, 1, 2),
+               Position = "C# Developer"
+            });
+            developer.SideProjects.Add(new SideProject
+            {
+               Title = "Richtext Editor",
+               Content = "A simple richtext for web"
+            });
+
+            ctx.Developers.Add(developer);
+            ctx.SaveChanges();
+         }
+
+         var result = _service.Save(new DeveloperEntry
          {
             Summary = "Not so cool",
             Skills = "ES7, Node.js",
@@ -160,6 +186,7 @@ namespace Blog.Tests.Services
             {
                new ExperienceEntry
                {
+                  Id = 1,
                   Company = "Lodgify",
                   Content = "as backend developer",
                   StartDate = "2016-02-23",
@@ -171,6 +198,7 @@ namespace Blog.Tests.Services
             {
                new SideProjectEntry
                {
+                  Id = 1,
                   Title = "Richtext Editor",
                   Content = "A simple richtext for web"
                }
@@ -181,12 +209,13 @@ namespace Blog.Tests.Services
             .Should()
             .BeEquivalentTo(new
             {
+               Status = Status.Updated,
                Experiences = new[] { 1 },
                SideProjects = new[] { 1 }
             });
 
          _service
-            .GetDeveloper()
+            .Get()
             .Should()
             .BeEquivalentTo(new
             {
@@ -244,7 +273,7 @@ namespace Blog.Tests.Services
             ctx.SaveChanges();
          }
 
-         var result = _service.SaveDeveloper(new DeveloperEntry
+         var result = _service.Save(new DeveloperEntry
          {
             Summary = "Not so cool",
             Skills = "ES7, Node.js",
@@ -279,7 +308,7 @@ namespace Blog.Tests.Services
             });
 
          _service
-            .GetDeveloper()
+            .Get()
             .Should()
             .BeEquivalentTo(new DeveloperEntry
             {
@@ -334,7 +363,7 @@ namespace Blog.Tests.Services
             ctx.SaveChanges();
          }
 
-         var result = _service.SaveDeveloper(new DeveloperEntry
+         var result = _service.Save(new DeveloperEntry
          {
             Summary = "Cool guy!",
             Skills = "C#, SQL",
@@ -363,7 +392,7 @@ namespace Blog.Tests.Services
             });
 
          _service
-            .GetDeveloper()
+            .Get()
             .Should()
             .BeEquivalentTo(new DeveloperEntry
             {
