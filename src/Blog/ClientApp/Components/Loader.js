@@ -1,7 +1,7 @@
 import React from 'react'
 
 const Loader = props => (
-   <div style={{ textAlign: 'center', marginTop: 150 }}>
+   <div data-testid="loader-component" style={{ textAlign: 'center', marginTop: 150 }}>
       <div
          style={{
             display: 'inline-block',

@@ -2,12 +2,14 @@ import React from 'react'
 import Button from './Button'
 import { create } from '@alidoustkani/richtext'
 
-class InnerRichtext extends React.Component {
+class Richtext extends React.Component {
    constructor(props) {
       super(props)
+      this.editorRef = React.createRef()
+      this.blur = this.blur.bind(this)
    }
    componentDidMount() {
-      this.rich = create(this.props.editorRef.current, {
+      this.rich = create(this.editorRef.current, {
          defaultLink: '/',
          staySelected: false,
          decors: {
@@ -19,6 +21,14 @@ class InnerRichtext extends React.Component {
             terminal: { parent: true, tag: 'pre', className: 'terminal' },
             note: { parent: true, tag: 'div', className: 'note' },
             warning: { parent: true, tag: 'div', className: 'warning' }
+         }
+      })
+   }
+   blur() {
+      this.props.onChange({
+         target: {
+            name: this.props.name,
+            value: this.editorRef.current.innerHTML
          }
       })
    }
@@ -44,18 +54,17 @@ class InnerRichtext extends React.Component {
                <Button content="camera" onClick={() => this.rich.selectImage()} />
                <Button content="link" onClick={() => this.rich.styleLink()} />
             </div>
-            <input name="@ViewBag.Name" type="hidden" />
             <article
-               ref={this.props.editorRef}
+               data-testid={this.props['data-testid']}
+               ref={this.editorRef}
                className="entry"
                dangerouslySetInnerHTML={{ __html: this.props.innerHtml }}
+               onBlur={this.blur}
             />
             <span>{this.props.error}</span>
          </div>
       )
    }
 }
-
-const Richtext = React.forwardRef((props, ref) => <InnerRichtext editorRef={ref} {...props} />)
 
 export { Richtext }
