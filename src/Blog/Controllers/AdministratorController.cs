@@ -68,6 +68,7 @@ namespace Blog.Controllers
          return View("Views/Home/Post.cshtml", post);
       }
 
+      [IgnoreMigration]
       public IActionResult Developer() =>
          View();
    }

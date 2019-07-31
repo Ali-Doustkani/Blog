@@ -41,7 +41,10 @@ namespace Blog
             op.SlidingExpiration = false;
             op.ExpireTimeSpan = TimeSpan.FromDays(30);
          });
-         services.AddMvc();
+         services.AddMvc(cfg =>
+         {
+            cfg.Filters.Add<MigrationFilter>();
+         });
          services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<BlogContext>();
          services.AddAutoMapper(GetType().Assembly);
          services.AddTransient<Services.Home.Service>();
@@ -74,7 +77,7 @@ namespace Blog
             app.UseDeveloperExceptionPage();
          }
 
-         app.MigrateDatabase();
+         //app.MigrateDatabase();
          app.UseStaticFiles();
          app.UseAuthentication();
          app.UseMvc(cfg =>

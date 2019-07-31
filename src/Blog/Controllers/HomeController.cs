@@ -1,5 +1,6 @@
 ﻿using Blog.Domain.Blogging;
 using Blog.Services.Home;
+using Blog.Utils;
 using Microsoft.AspNetCore.Mvc;
 using System;
 
@@ -37,12 +38,14 @@ namespace Blog.Controllers
          return View(post);
       }
 
+      [IgnoreMigration]
       public ViewResult About()
       {
          ViewData["language"] = Language.English;
          return View();
       }
 
+      [IgnoreMigration]
       public IActionResult Error(int statusCode = -1)
       {
          ViewData["language"] = Language.English;
