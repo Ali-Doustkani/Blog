@@ -17,7 +17,7 @@ namespace Blog.Tests.Controllers
       }
 
       private readonly HttpClient _client;
-      private readonly Mock<IDeveloperService> _service;
+      private readonly Mock<IDeveloperServices> _service;
 
       [Fact]
       public async Task Return_204_when_no_developer_is_available()

@@ -15,10 +15,10 @@ namespace Blog.Tests.Services
       {
          _factory = new ContextFactory();
          var mapperConfig = new MapperConfiguration(x => x.AddProfile<MappingProfile>());
-         _service = new DeveloperService(_factory.Create(), mapperConfig.CreateMapper());
+         _service = new DeveloperServices(_factory.Create(), mapperConfig.CreateMapper());
       }
 
-      private readonly DeveloperService _service;
+      private readonly DeveloperServices _service;
       private readonly ContextFactory _factory;
 
       [Fact]

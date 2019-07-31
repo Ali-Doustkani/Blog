@@ -48,8 +48,8 @@ namespace Blog
          services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<BlogContext>();
          services.AddAutoMapper(GetType().Assembly);
          services.AddTransient<Services.Home.HomeServices>();
-         services.AddTransient<Services.Administrator.Service>();
-         services.AddTransient<Services.DeveloperStory.DeveloperService>();
+         services.AddTransient<Services.Administrator.AdminServices>();
+         services.AddTransient<Services.DeveloperStory.DeveloperServices>();
          services.AddTransient<IImageContext, ImageContext>();
          services.AddTransient<IFileSystem, FileSystem>();
          services.AddTransient<DraftValidator>();

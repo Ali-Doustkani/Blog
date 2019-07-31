@@ -9,9 +9,19 @@ using System.Linq;
 
 namespace Blog.Services.Administrator
 {
-   public class Service
+   public interface IAdminServices
    {
-      public Service(BlogContext context,
+      DraftEntry Create();
+      IEnumerable<DraftRow> GetDrafts();
+      DraftEntry Get(int id);
+      Home.PostViewModel GetView(int id);
+      SaveResult Save(DraftEntry viewModel);
+      void Delete(int id);
+   }
+
+   public class AdminServices : IAdminServices
+   {
+      public AdminServices(BlogContext context,
          IMapper mapper,
          IImageContext imageContext,
          ICodeFormatter codeFormatter,

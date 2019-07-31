@@ -9,12 +9,12 @@ namespace Blog.Controllers
    [Authorize]
    public class AdministratorController : Controller
    {
-      public AdministratorController(Service services)
+      public AdministratorController(AdminServices services)
       {
          _services = services;
       }
 
-      private readonly Service _services;
+      private readonly AdminServices _services;
 
       public ViewResult Index() => View(_services.GetDrafts());
 

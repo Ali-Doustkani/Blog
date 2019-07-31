@@ -6,15 +6,15 @@ using System.Linq;
 
 namespace Blog.Services.DeveloperStory
 {
-   public interface IDeveloperService
+   public interface IDeveloperServices
    {
       DeveloperEntry Get();
       SaveResult Save(DeveloperEntry developer);
    }
 
-   public class DeveloperService : IDeveloperService
+   public class DeveloperServices : IDeveloperServices
    {
-      public DeveloperService(BlogContext context, IMapper mapper)
+      public DeveloperServices(BlogContext context, IMapper mapper)
       {
          _context = context;
          _mapper = mapper;

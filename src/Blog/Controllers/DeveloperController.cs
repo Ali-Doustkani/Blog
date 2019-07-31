@@ -7,12 +7,12 @@ namespace Blog.Controllers
    [Route("/api/developer")]
    public class DeveloperController : Controller
    {
-      public DeveloperController(IDeveloperService service)
+      public DeveloperController(IDeveloperServices service)
       {
          _service = service;
       }
 
-      private readonly IDeveloperService _service;
+      private readonly IDeveloperServices _service;
 
       [HttpGet]
       public ActionResult<DeveloperEntry> Get()

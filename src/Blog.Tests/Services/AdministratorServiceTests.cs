@@ -88,7 +88,7 @@ namespace Blog.Tests.Services.Administrator
       private Mock<ICodeFormatter> _codeFormatter;
       private Mock<IImageProcessor> _imageProcessor;
 
-      private Service Service()
+      private AdminServices Service()
       {
          var context = new BlogContext(_options);
          var config = new MapperConfiguration(cfg =>
@@ -98,7 +98,7 @@ namespace Blog.Tests.Services.Administrator
          });
          _imageContext = new Mock<IImageContext>();
          var mapper = config.CreateMapper();
-         return new Service(context,
+         return new AdminServices(context,
             mapper,
             _imageContext.Object,
             _codeFormatter.Object,

@@ -15,7 +15,7 @@ namespace Blog.Tests.Controllers
    {
       public ClientFixture()
       {
-         DeveloperService = new Mock<IDeveloperService>();
+         DeveloperService = new Mock<IDeveloperServices>();
 
          var connection = new SqliteConnection("DataSource=:memory:");
          connection.Open();
@@ -38,6 +38,6 @@ namespace Blog.Tests.Controllers
       }
 
       public HttpClient Client { get; }
-      public Mock<IDeveloperService> DeveloperService { get; }
+      public Mock<IDeveloperServices> DeveloperService { get; }
    }
 }
