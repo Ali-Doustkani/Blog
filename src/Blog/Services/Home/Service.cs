@@ -7,9 +7,15 @@ using System.Linq;
 
 namespace Blog.Services.Home
 {
-   public class Service
+   public interface IHomeServices
    {
-      public Service(BlogContext context, IMapper mapper)
+      PostViewModel Get(string urlTitle);
+      IEnumerable<PostRow> GetPosts(Language language);
+   }
+
+   public class HomeServices : IHomeServices
+   {
+      public HomeServices(BlogContext context, IMapper mapper)
       {
          _context = context;
          _mapper = mapper;

@@ -8,12 +8,12 @@ namespace Blog.Controllers
 {
    public class HomeController : Controller
    {
-      public HomeController(Service services)
+      public HomeController(IHomeServices services)
       {
          _services = services;
       }
 
-      private readonly Service _services;
+      private readonly IHomeServices _services;
 
       public ViewResult Index(string language)
       {

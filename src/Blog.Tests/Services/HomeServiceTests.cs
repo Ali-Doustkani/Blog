@@ -72,10 +72,10 @@ namespace Blog.Tests.Services.Home
 
          var config = new MapperConfiguration(cfg => cfg.AddProfile<PostProfile>());
 
-         _services = new Service(context, config.CreateMapper());
+         _services = new HomeServices(context, config.CreateMapper());
       }
 
-      private readonly Service _services;
+      private readonly HomeServices _services;
 
       [Fact]
       public void GetPosts_with_english_posts()

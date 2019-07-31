@@ -47,7 +47,7 @@ namespace Blog
          });
          services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<BlogContext>();
          services.AddAutoMapper(GetType().Assembly);
-         services.AddTransient<Services.Home.Service>();
+         services.AddTransient<Services.Home.HomeServices>();
          services.AddTransient<Services.Administrator.Service>();
          services.AddTransient<Services.DeveloperStory.DeveloperService>();
          services.AddTransient<IImageContext, ImageContext>();
