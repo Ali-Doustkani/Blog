@@ -4,6 +4,7 @@
 @import 'Shared/Header';
 @import 'Administrator/Index';
 @import 'Administrator/Post';
+@import 'Administrator/Developer';
 @import 'Home/Index';
 @import 'Home/About';
 @import 'Home/Post';
@@ -11,9 +12,9 @@
 @import 'Home/NotFound';
 
 @media only screen and (min-width: 720px) {
-  @import 'Shared/Header_Wide';
+   @import 'Shared/Header_Wide';
 
-  main {
-    margin: 20px auto;
-  }
+   main {
+      margin: 20px auto;
+   }
 }
