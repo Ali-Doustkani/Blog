@@ -93,7 +93,7 @@ namespace Blog.Tests.Services.Administrator
          var context = new BlogContext(_options);
          var config = new MapperConfiguration(cfg =>
          {
-            cfg.AddProfile<PostProfile>();
+            cfg.AddProfile<MappingProfile>();
             cfg.AddProfile<Blog.Services.Home.PostProfile>();
          });
          _imageContext = new Mock<IImageContext>();

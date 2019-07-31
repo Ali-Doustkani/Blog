@@ -11,7 +11,7 @@ namespace Blog.Tests.Services
    {
       public DraftEntryMappingTests()
       {
-         var config = new MapperConfiguration(cfg => cfg.AddProfile<PostProfile>());
+         var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
          _mapper = config.CreateMapper();
       }
 

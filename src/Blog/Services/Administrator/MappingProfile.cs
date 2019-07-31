@@ -4,9 +4,9 @@ using System;
 
 namespace Blog.Services.Administrator
 {
-   public class PostProfile : Profile
+   public class MappingProfile : Profile
    {
-      public PostProfile()
+      public MappingProfile()
       {
          CreateMap<PostInfo, DraftRow>();
 
