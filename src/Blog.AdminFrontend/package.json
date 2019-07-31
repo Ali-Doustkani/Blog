@@ -1,0 +1,28 @@
+{
+   "name": "adminfrontend",
+   "private": true,
+   "version": "1.0.0",
+   "description": "administrator react pages",
+   "scripts": {
+      "start": "parcel watch Developer/index.js --out-file developer.js",
+      "build": "parcel build Developer/index.js --out-file developer.js",
+      "test": "jest --watchAll"
+   },
+   "devDependencies": {
+      "@babel/preset-env": "^7.5.5",
+      "@babel/preset-react": "^7.0.0",
+      "@testing-library/jest-dom": "^4.0.0",
+      "@testing-library/react": "^8.0.7",
+      "jest": "^24.8.0",
+      "parcel-bundler": "^1.12.3"
+   },
+   "dependencies": {
+      "@alidoustkani/richtext": "^1.0.24",
+      "react": "^16.8.6",
+      "react-dom": "^16.8.6",
+      "uuid": "^3.3.2"
+   },
+   "browserslist": [
+      "chrome > 55"
+   ]
+}
