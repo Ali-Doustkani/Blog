@@ -21,8 +21,8 @@ namespace Blog.Domain
       public DbSet<Developer> Developers { get; set; }
 
       public void WriteOn<T, J>(T existing, T newEntity, Func<T, IList<J>> collectionSelector)
-       where T : DomainEntity
-       where J : DomainEntity
+         where T : DomainEntity
+         where J : DomainEntity
       {
          Entry(existing).CurrentValues.SetValues(newEntity);
          foreach (var item in collectionSelector(newEntity))
@@ -39,6 +39,15 @@ namespace Blog.Domain
             if (!collectionSelector(newEntity).Any(x => x.Id == item.Id))
                Remove(item);
          }
+      }
+
+      public void AddOrUpdate<T>(T entity)
+         where T : DomainEntity
+      {
+         if (Set<T>().Any(x => x.Id == entity.Id))
+            Update(entity);
+         else
+            Set<T>().Add(entity);
       }
 
       protected override void OnModelCreating(ModelBuilder modelBuilder)
