@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Blog.Domain
+namespace Blog.Domain.DeveloperStory
 {
    public class Experience : DomainEntity
    {

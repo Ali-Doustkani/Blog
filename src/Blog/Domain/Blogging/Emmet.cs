@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace Blog.Domain
+namespace Blog.Domain.Blogging
 {
    public static class Emmet
    {

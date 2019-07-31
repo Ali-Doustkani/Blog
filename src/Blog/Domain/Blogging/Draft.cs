@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Blog.Domain
+namespace Blog.Domain.Blogging
 {
    public class Draft : DomainEntity
    {

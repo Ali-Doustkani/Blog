@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Blog.Domain
+namespace Blog.Domain.DeveloperStory
 {
    public class Developer : DomainEntity
    {

@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Blog.Domain;
+using Blog.Domain.DeveloperStory;
 
 namespace Blog.Services.DeveloperStory
 {

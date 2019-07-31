@@ -1,4 +1,5 @@
 ﻿using Blog.Domain;
+using Blog.Domain.Blogging;
 using FluentAssertions;
 using System;
 using Xunit;

@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace Blog.Domain
+namespace Blog.Domain.Blogging
 {
    public class Image
    {

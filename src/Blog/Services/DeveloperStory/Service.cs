@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Blog.Domain;
+using Blog.Domain.DeveloperStory;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 

@@ -1,4 +1,4 @@
-﻿using Blog.Domain;
+﻿using Blog.Domain.Blogging;
 using FluentAssertions;
 using HtmlAgilityPack;
 using System;

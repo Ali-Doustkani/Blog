@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Blog.Domain;
+using Blog.Domain.DeveloperStory;
 using Blog.Services.DeveloperStory;
 using FluentAssertions;
 using System;

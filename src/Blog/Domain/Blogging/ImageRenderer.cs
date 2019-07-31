@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Blog.Domain
+namespace Blog.Domain.Blogging
 {
    /// <summary>
    /// It creates Image objects from source DataURLs and also generates new HTML that contains image file paths.

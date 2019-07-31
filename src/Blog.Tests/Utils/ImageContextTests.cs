@@ -1,4 +1,4 @@
-﻿using Blog.Domain;
+﻿using Blog.Domain.Blogging;
 using Blog.Utils;
 using FluentAssertions;
 using Moq;

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Blog.Domain;
+using Blog.Domain.Blogging;
 using Blog.Services.Administrator;
 using Blog.Utils;
 using FluentAssertions;

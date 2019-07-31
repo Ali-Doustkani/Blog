@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Blog.Domain;
+using Blog.Domain.Blogging;
 using Blog.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

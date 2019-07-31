@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-namespace Blog.Domain
+namespace Blog.Domain.Blogging
 {
    public class PostInfo : DomainEntity
    {

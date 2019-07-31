@@ -1,4 +1,4 @@
-﻿using Blog.Domain;
+﻿using Blog.Domain.Blogging;
 using System.Collections.Generic;
 
 namespace Blog.Services.Home
