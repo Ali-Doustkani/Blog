@@ -7,6 +7,19 @@ import { getDeveloper, saveDeveloper } from './services'
 const assignFrom = source => target =>
    target.id === source.id ? Object.assign(target, source) : target
 
+const newDeveloper = () => ({
+   summary: '',
+   experiences: []
+})
+
+const newExperience = () => ({
+   id: uuid(),
+   company: '',
+   position: '',
+   startDate: new Date(),
+   endDate: null
+})
+
 class Developer extends React.Component {
    constructor(props) {
       super(props)
@@ -15,26 +28,18 @@ class Developer extends React.Component {
       this.updateExperience = this.updateExperience.bind(this)
       this.save = this.save.bind(this)
       this.state = {
-         isLoading: true,
-         summary: '',
-         experiences: []
+         isLoading: true
       }
    }
    async componentDidMount() {
-      const developer = await getDeveloper()
+      const developer = (await getDeveloper()) || newDeveloper()
       this.setState({
          isLoading: false,
          ...developer
       })
    }
    addExperience() {
-      this.state.experiences.push({
-         id: uuid(),
-         company: '',
-         position: '',
-         startDate: new Date(),
-         endDate: null
-      })
+      this.state.experiences.push(newExperience())
       this.setState({ experiences: this.state.experiences })
    }
    deleteExperience(id) {

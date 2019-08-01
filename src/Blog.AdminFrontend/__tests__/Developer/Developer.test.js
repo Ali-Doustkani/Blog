@@ -37,6 +37,18 @@ describe('loader when loading data', () => {
       const { queryByTestId } = render(<Developer />)
       await wait(() => expect(queryByTestId('loader-component')).not.toBeInTheDocument())
    })
+
+   it('show empty developer if no developer exists', async () => {
+      let developer
+      mockServer.saveDeveloper.mockImplementation(dev => (developer = dev))
+      mockServer.getDeveloper.mockResolvedValue(null)
+      const { getByTestId } = render(<Developer />)
+      await wait(() => fireEvent.click(getByTestId('save-button')))
+      expect(developer).toEqual({
+         summary: '',
+         experiences: []
+      })
+   })
 })
 
 describe('experiences', () => {

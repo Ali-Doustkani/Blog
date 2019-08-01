@@ -11,6 +11,9 @@ async function saveDeveloper(developer) {
       },
       body: JSON.stringify(developer)
    })
+   if (response.status === 204) {
+      return null
+   }
    return await response.json()
 }
 
