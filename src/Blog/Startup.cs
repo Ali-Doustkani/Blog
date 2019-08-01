@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Blog.Domain;
 using Blog.Domain.Blogging;
+using Blog.Services.Administrator;
 using Blog.Services.DeveloperStory;
+using Blog.Services.Home;
 using Blog.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -48,15 +50,15 @@ namespace Blog
          });
          services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<BlogContext>();
          services.AddAutoMapper(GetType().Assembly);
-         services.AddTransient<Services.Home.HomeServices>();
-         services.AddTransient<Services.Administrator.AdminServices>();
+         services.AddTransient<IHomeServices, HomeServices>();
+         services.AddTransient<IAdminServices, AdminServices>();
          services.AddTransient<IDeveloperServices, DeveloperServices>();
          services.AddTransient<IImageContext, ImageContext>();
          services.AddTransient<IFileSystem, FileSystem>();
          services.AddTransient<DraftValidator>();
          services.AddTransient<ICodeFormatter, HerokuCodeFormatter>();
          services.AddTransient<IImageProcessor, CloudImageProcessor>();
-         services.AddTransient<Services.Administrator.DraftSaveCommand>();
+         services.AddTransient<DraftSaveCommand>();
       }
 
       public void Configure(IApplicationBuilder app)
