@@ -1,5 +1,4 @@
-﻿using Blog.Utils;
-using HtmlAgilityPack;
+﻿using HtmlAgilityPack;
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -10,8 +9,8 @@ namespace Blog.Domain.Blogging
    {
       public Image(string filename, string postDirectory, byte[] data)
       {
-         Filename = Its.NotEmpty(filename, nameof(filename));
-         PostDirectory = Its.NotEmpty(postDirectory, nameof(postDirectory));
+         Filename = Its.NotEmpty(filename, nameof(Filename));
+         PostDirectory = Its.NotEmpty(postDirectory, nameof(PostDirectory));
          Data = data;
       }
 
@@ -27,7 +26,8 @@ namespace Blog.Domain.Blogging
 
       public static Image Create(HtmlNode img, string filename, string post)
       {
-         Its.NotEmpty(img, nameof(img));
+         if (img == null)
+            throw new ArgumentNullException(nameof(img));
 
          if (!img.Attributes.Contains("src"))
             throw new InvalidOperationException("<img> must have src attribute in order to read the image.");

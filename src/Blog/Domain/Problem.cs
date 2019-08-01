@@ -1,4 +1,4 @@
-﻿using Blog.Utils;
+﻿using System;
 
 namespace Blog.Domain
 {
@@ -6,8 +6,11 @@ namespace Blog.Domain
    {
       public Problem(string property, string message)
       {
+         if (string.IsNullOrEmpty(message))
+            throw new ArgumentNullException(nameof(message));
+
          Property = property;
-         Message = Its.NotEmpty(message, nameof(message));
+         Message = message;
       }
 
       public string Property { get; }

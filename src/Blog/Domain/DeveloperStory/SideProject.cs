@@ -2,7 +2,13 @@
 {
    public class SideProject : DomainEntity
    {
-      public string Title { get; set; }
-      public string Content { get; set; }
+      public SideProject(string title, string content)
+      {
+         Title = Its.NotEmpty(title, nameof(Title));
+         Content = Its.NotEmpty(content, nameof(Content));
+      }
+
+      public string Title { get; private set; }
+      public string Content { get; private set; }
    }
 }

@@ -1,5 +1,4 @@
-﻿using Blog.Utils;
-using HtmlAgilityPack;
+﻿using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,7 +13,7 @@ namespace Blog.Domain.Blogging
       public ImageRenderer(string postDirectory)
       {
          _imageUrls = new List<string>();
-         _postDirectory = Its.NotEmpty(postDirectory);
+         _postDirectory = Its.NotEmpty(postDirectory, nameof(postDirectory));
       }
 
       private readonly List<string> _imageUrls;

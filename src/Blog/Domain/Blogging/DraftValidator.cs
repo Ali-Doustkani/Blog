@@ -1,5 +1,4 @@
-﻿using Blog.Utils;
-using HtmlAgilityPack;
+﻿using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +9,7 @@ namespace Blog.Domain.Blogging
    {
       public DraftValidator(BlogContext context)
       {
-         _context = Its.NotEmpty(context, nameof(context));
+         _context = context;
          _languages = new[] { "csharp", "cs", "javascript", "js", "css", "sass", "less", "html", "sql" };
       }
 

@@ -35,24 +35,15 @@ namespace Blog.Tests.Services
       {
          using (var db = _context.GetDatabase())
          {
-            var developer = new Developer
-            {
-               Summary = "The best developer ever!",
-               Skills = "C#, Javascript, React"
-            };
-            developer.Experiences.Add(new Experience
-            {
-               Company = "Parmis",
-               Position = "C# Developer",
-               Content = "System Architect",
-               StartDate = new DateTime(2016, 1, 20),
-               EndDate = new DateTime(2017, 1, 1)
-            });
-            developer.SideProjects.Add(new SideProject
-            {
-               Title = "Richtext Editor",
-               Content = "A simple richtext for web"
-            });
+            var developer = new Developer("The best developer ever!", "C#, Javascript, React");
+            developer.Experiences.Add(
+               new Experience(
+                  "Parmis",
+                  "C# Developer",
+                  new DateTime(2016, 1, 20),
+                  new DateTime(2017, 1, 1),
+                  "System Architect"));
+            developer.SideProjects.Add(new SideProject("Richtext Editor", "A simple richtext for web"));
             db.Developers.Add(developer);
             db.SaveChanges();
          }
@@ -162,24 +153,15 @@ namespace Blog.Tests.Services
       {
          using (var db = _context.GetDatabase())
          {
-            var developer = new Developer
-            {
-               Summary = "So Cool!",
-               Skills = "ES7, Node.js"
-            };
-            developer.Experiences.Add(new Experience
-            {
-               Company = "Lodgify",
-               Content = "as backend developer",
-               StartDate = new DateTime(2016, 2, 23),
-               EndDate = new DateTime(2017, 1, 2),
-               Position = "C# Developer"
-            });
-            developer.SideProjects.Add(new SideProject
-            {
-               Title = "Richtext Editor",
-               Content = "A simple richtext for web"
-            });
+            var developer = new Developer("So Cool!", "ES7, Node.js");
+            developer.Experiences.Add(
+               new Experience(
+                  "Lodgify",
+                  "C# Developer",
+                  new DateTime(2016, 2, 23),
+                  new DateTime(2017, 1, 2),
+                  "as backend developer"));
+            developer.SideProjects.Add(new SideProject("Richtext Editor", "A simple richtext for web"));
 
             db.Developers.Add(developer);
             db.SaveChanges();
@@ -260,27 +242,21 @@ namespace Blog.Tests.Services
       {
          using (var db = _context.GetDatabase())
          {
-            var developer = new Developer
-            {
-               Summary = "Not so cool",
-               Skills = "ES7, Node.js",
-            };
-            developer.Experiences.Add(new Experience
-            {
-               Company = "Lodgify",
-               Content = "as backend developer",
-               StartDate = new DateTime(2016, 2, 23),
-               EndDate = new DateTime(2017, 1, 2),
-               Position = "C# Developer"
-            });
-            developer.Experiences.Add(new Experience
-            {
-               Company = "Parmis",
-               Content = "as the team lead",
-               StartDate = new DateTime(2014, 2, 23),
-               EndDate = new DateTime(2015, 1, 2),
-               Position = "Java Developer"
-            });
+            var developer = new Developer("Not so cool", "ES7, Node.js");
+            developer.Experiences.Add(
+               new Experience(
+                  "Lodgify",
+                  "C# Developer",
+                  new DateTime(2016, 2, 23),
+                  new DateTime(2017, 1, 2),
+                  "as backend developer"));
+            developer.Experiences.Add(
+               new Experience(
+                  "Parmis",
+                  "Java Developer",
+                  new DateTime(2014, 2, 23),
+                  new DateTime(2015, 1, 2),
+                  "as the team lead"));
             db.Developers.Add(developer);
             db.SaveChanges();
          }
@@ -361,21 +337,9 @@ namespace Blog.Tests.Services
       {
          using (var db = _context.GetDatabase())
          {
-            var developer = new Developer
-            {
-               Summary = "Cool guy!",
-               Skills = "C#, SQL"
-            };
-            developer.SideProjects.Add(new SideProject
-            {
-               Title = "Richtext Editor",
-               Content = "A simple web richtext"
-            });
-            developer.SideProjects.Add(new SideProject
-            {
-               Title = "CodePrac",
-               Content = "A simple app for practice coding"
-            });
+            var developer = new Developer("Cool guy!", "C#, SQL");
+            developer.SideProjects.Add(new SideProject("Richtext Editor", "A simple web richtext"));
+            developer.SideProjects.Add(new SideProject("CodePrac", "A simple app for practice coding"));
             db.Developers.Add(developer);
             db.SaveChanges();
          }
@@ -434,6 +398,63 @@ namespace Blog.Tests.Services
                          Title = "Blog",
                          Content = "A developers blog"
                      },
+                  }
+               });
+         }
+      }
+
+      [Fact]
+      public void Return_problem_when_developer_required_fields_are_empty()
+      {
+         using (var svc = _context.GetService())
+         {
+            var result = svc.Save(new DeveloperEntry
+            {
+               Summary = "Skills is not set!"
+            });
+
+            result.Should()
+               .BeEquivalentTo(new
+               {
+                  Status = Status.Problem,
+                  Problem = new
+                  {
+                     Property = "Skills",
+                     Message = "Value is required"
+                  }
+               });
+         }
+      }
+
+      [Fact]
+      public void Return_problem_when_experience_required_fields_are_empty()
+      {
+         using (var svc = _context.GetService())
+         {
+            var result = svc.Save(new DeveloperEntry
+            {
+               Summary = "Cool Developer!",
+               Skills = "C#, JS",
+               Experiences = new[]
+               {
+                  new ExperienceEntry
+                  {
+                     Position = "Senior Developer",
+                     StartDate = "2011-01-01",
+                     EndDate = "2012-01-01",
+                     Content = "an enterprise project"
+                  }
+               }
+            });
+
+            result.Should()
+               .BeEquivalentTo(new
+               {
+                  Status = Status.Problem,
+                  Problem = new
+                  {
+                     Property = "Company",
+                     Message = "Value is required"
                   }
                });
          }

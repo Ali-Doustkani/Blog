@@ -28,21 +28,32 @@ namespace Blog.Services.DeveloperStory
 
       public SaveResult Save(DeveloperEntry developerEntry)
       {
-         var developer = _mapper.Map<Developer>(developerEntry);
-
-         if (_context.Developers.Any())
+         try
          {
-            var existing = TheDeveloper();
-            developer.Id = existing.Id;
-            _context.WriteOn(existing, developer, dev => dev.Experiences);
-            _context.WriteOn(existing, developer, dev => dev.SideProjects);
+            var developer = _mapper.Map<Developer>(developerEntry);
+            if (_context.Developers.Any())
+            {
+               var existing = TheDeveloper();
+               developer.Id = existing.Id;
+               _context.WriteOn(existing, developer, dev => dev.Experiences);
+               _context.WriteOn(existing, developer, dev => dev.SideProjects);
+               _context.SaveChanges();
+               return SaveResult.Updated(developer);
+            }
+            _context.Developers.Add(developer);
             _context.SaveChanges();
-            return SaveResult.Updated(developer);
+            return SaveResult.Created(developer);
          }
-
-         _context.Developers.Add(developer);
-         _context.SaveChanges();
-         return SaveResult.Created(developer);
+         catch (DomainProblemException ex)
+         {
+            return SaveResult.Problematic(ex);
+         }
+         catch (AutoMapperMappingException ex)
+         {
+            if (ex.InnerException is DomainProblemException domainExc)
+               return SaveResult.Problematic(domainExc);
+            throw;
+         }
       }
 
       private Developer TheDeveloper() =>

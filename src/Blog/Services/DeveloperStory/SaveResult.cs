@@ -1,4 +1,5 @@
-﻿using Blog.Domain.DeveloperStory;
+﻿using Blog.Domain;
+using Blog.Domain.DeveloperStory;
 using Blog.Utils;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,8 @@ namespace Blog.Services.DeveloperStory
    public enum Status
    {
       Created,
-      Updated
+      Updated,
+      Problem
    }
 
    public class SaveResult
@@ -16,17 +18,29 @@ namespace Blog.Services.DeveloperStory
       public SaveResult(Status status, IEnumerable<int> experiences, IEnumerable<int> sideProjects)
       {
          Status = status;
-         Experiences = Its.NotEmpty(experiences);
-         SideProjects = Its.NotEmpty(sideProjects);
+         Experiences = experiences;
+         SideProjects = sideProjects;
       }
 
       public SaveResult(Status status)
          : this(status, Enumerable.Empty<int>(), Enumerable.Empty<int>())
       { }
 
+      public SaveResult(Problem problem)
+      {
+         Experiences = Enumerable.Empty<int>();
+         SideProjects = Enumerable.Empty<int>();
+         Status = Status.Problem;
+         Problem = problem;
+      }
+
       public Status Status { get; }
+      public Problem Problem { get; }
       public IEnumerable<int> Experiences { get; }
       public IEnumerable<int> SideProjects { get; }
+
+      public static SaveResult Problematic(DomainProblemException exception) =>
+         new SaveResult(exception.Problem);
 
       public static SaveResult Created(Developer developer) =>
          Create(Status.Created, developer);
