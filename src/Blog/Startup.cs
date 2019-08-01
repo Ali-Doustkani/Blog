@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
 using Blog.Domain;
-using Blog.Domain.Blogging;
-using Blog.Services.Administrator;
 using Blog.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,7 +8,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NetCore.AutoRegisterDi;
 using System;
 
 namespace Blog
@@ -49,10 +46,7 @@ namespace Blog
          });
          services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<BlogContext>();
          services.AddAutoMapper(GetType().Assembly);
-         services.AddTransient<DraftSaveCommand>();
-         services.AddTransient<DraftValidator>();
-         services.RegisterAssemblyPublicNonGenericClasses(GetType().Assembly)
-              .AsPublicImplementedInterfaces();
+         services.AddBlogTypes();
       }
 
       public void Configure(IApplicationBuilder app)
