@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Blog.Services.Home
 {
-   public interface IHomeServices
+   public interface IHomeServices : IService
    {
       PostViewModel Get(string urlTitle);
       IEnumerable<PostRow> GetPosts(Language language);
@@ -38,5 +38,8 @@ namespace Blog.Services.Home
           .Include(x => x.Info)
           .Where(x => x.Info.Language == language)
           .Select(_mapper.Map<PostRow>);
+
+      public void Dispose() =>
+         _context.Dispose();
    }
 }

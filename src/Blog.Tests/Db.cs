@@ -12,20 +12,9 @@ namespace Blog.Tests
          connection.Open();
          var optionBuilder = new DbContextOptionsBuilder();
          optionBuilder.UseSqlite(connection);
-
-         using (var ctx = new BlogContext(optionBuilder.Options))
-            ctx.Database.EnsureCreated();
-
-         return new BlogContext(optionBuilder.Options);
-      }
-
-      public static DbContextOptions CreateOptions()
-      {
-         var connection = new SqliteConnection("DataSource=:memory:");
-         connection.Open();
-         var optionBuilder = new DbContextOptionsBuilder();
-         optionBuilder.UseSqlite(connection);
-         return optionBuilder.Options;
+         var ctx = new BlogContext(optionBuilder.Options);
+         ctx.Database.EnsureCreated();
+         return ctx;
       }
    }
 }

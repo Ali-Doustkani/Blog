@@ -13,9 +13,9 @@ using Xunit;
 namespace Blog.Tests.Services
 {
    [Trait("Category", "Integration")]
-   public class AdministratorServiceTests
+   public class AdminiServiceTests
    {
-      public AdministratorServiceTests()
+      public AdminiServiceTests()
       {
          _context = new ServiceTestContext<AdminServices>();
          _context.Seed(db =>

@@ -8,9 +8,9 @@ using Xunit;
 
 namespace Blog.Tests.Controllers
 {
-   public class DeveloperControllerTests : IClassFixture<ClientFixture>
+   public class DeveloperControllerTests : IClassFixture<ApiTestContext>
    {
-      public DeveloperControllerTests(ClientFixture fixture)
+      public DeveloperControllerTests(ApiTestContext fixture)
       {
          _service = fixture.DeveloperService;
          _client = fixture.Client;

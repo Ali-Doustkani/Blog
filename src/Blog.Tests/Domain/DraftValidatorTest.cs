@@ -10,8 +10,7 @@ namespace Blog.Tests.Domain
    {
       public DraftValidatorTest()
       {
-         _context = new BlogContext(Db.CreateOptions());
-         _context.Database.EnsureCreated();
+         _context = Db.CreateInMemory();
          _validator = new DraftValidator(_context);
       }
 

@@ -11,9 +11,9 @@ using System.Net.Http;
 
 namespace Blog.Tests.Controllers
 {
-   public class ClientFixture
+   public class ApiTestContext
    {
-      public ClientFixture()
+      public ApiTestContext()
       {
          DeveloperService = new Mock<IDeveloperServices>();
 
