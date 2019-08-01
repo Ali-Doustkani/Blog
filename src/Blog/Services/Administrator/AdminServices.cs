@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace Blog.Services.Administrator
 {
-   public interface IAdminServices
+   public interface IAdminServices : IService
    {
       DraftEntry Create();
       IEnumerable<DraftRow> GetDrafts();
@@ -81,5 +81,8 @@ namespace Blog.Services.Administrator
          _context.SaveChanges();
          _imageContext.Delete(info.Slugify());
       }
+
+      public void Dispose() =>
+         _context.Dispose();
    }
 }

@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Blog.Services.DeveloperStory
 {
-   public interface IDeveloperServices
+   public interface IDeveloperServices : IService
    {
       DeveloperEntry Get();
       SaveResult Save(DeveloperEntry developer);
@@ -51,5 +51,8 @@ namespace Blog.Services.DeveloperStory
             .Include(x => x.Experiences)
             .Include(x => x.SideProjects)
             .SingleOrDefault();
+
+      public void Dispose() =>
+         _context.Dispose();
    }
 }

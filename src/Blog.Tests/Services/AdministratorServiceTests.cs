@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Blog.Domain;
+﻿using Blog.Domain;
 using Blog.Domain.Blogging;
 using Blog.Services.Administrator;
 using Blog.Utils;
@@ -11,20 +10,17 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace Blog.Tests.Services.Administrator
+namespace Blog.Tests.Services
 {
    [Trait("Category", "Integration")]
    public class AdministratorServiceTests
    {
       public AdministratorServiceTests()
       {
-         _codeFormatter = new Mock<ICodeFormatter>();
-         _imageProcessor = new Mock<IImageProcessor>();
-         _options = Db.CreateOptions();
-         using (var seed = new BlogContext(_options))
+         _context = new ServiceTestContext<AdminServices>();
+         _context.Seed(db =>
          {
-            seed.Database.EnsureCreated();
-            seed.Infos.Add(new PostInfo
+            db.Infos.Add(new PostInfo
             {
                Id = 1,
                Language = Language.English,
@@ -33,7 +29,7 @@ namespace Blog.Tests.Services.Administrator
                Tags = "JS, FP, Node.js",
                Title = "Javascript FP"
             });
-            seed.Infos.Add(new PostInfo
+            db.Infos.Add(new PostInfo
             {
                Id = 2,
                Language = Language.English,
@@ -42,7 +38,7 @@ namespace Blog.Tests.Services.Administrator
                Tags = "OOP, C#",
                Title = "Object Oriented C#"
             });
-            seed.Infos.Add(new PostInfo
+            db.Infos.Add(new PostInfo
             {
                Id = 3,
                Language = Language.Farsi,
@@ -52,129 +48,117 @@ namespace Blog.Tests.Services.Administrator
                Title = "جاوا و ویندوز",
                EnglishUrl = "java-windows"
             });
-            seed.Drafts.Add(new Draft
+            db.Drafts.Add(new Draft
             {
                Id = 1,
                Content = "<p>JS Functional Programming</p>"
             });
-            seed.Drafts.Add(new Draft
+            db.Drafts.Add(new Draft
             {
                Id = 2,
                Content = "<p>Object Oriented C#</p>"
             });
-            seed.Drafts.Add(new Draft
+            db.Drafts.Add(new Draft
             {
                Id = 3,
                Content = "<p>جاوا و ویندوز</p>"
             });
-            seed.Posts.Add(new Post
+            db.Posts.Add(new Post
             {
                Id = 1,
                Url = "Javascript-FP",
                PostContent = new PostContent { Id = 1, Content = "<p>JS Functional Programming</p>" }
             });
-            seed.Posts.Add(new Post
+            db.Posts.Add(new Post
             {
                Id = 2,
                Url = "Object-Oriented-Csharp",
                PostContent = new PostContent { Id = 2, Content = "<p>Object Oriented C#</p>" }
             });
-            seed.SaveChanges();
-         }
-      }
 
-      private readonly DbContextOptions _options;
-      private Mock<IImageContext> _imageContext;
-      private Mock<ICodeFormatter> _codeFormatter;
-      private Mock<IImageProcessor> _imageProcessor;
-
-      private AdminServices Service()
-      {
-         var context = new BlogContext(_options);
-         var config = new MapperConfiguration(cfg =>
-         {
-            cfg.AddProfile<MappingProfile>();
-            cfg.AddProfile<Blog.Services.Home.PostProfile>();
          });
-         _imageContext = new Mock<IImageContext>();
-         var mapper = config.CreateMapper();
-         return new AdminServices(context,
-            mapper,
-            _imageContext.Object,
-            _codeFormatter.Object,
-            _imageProcessor.Object,
-            new DraftSaveCommand(context,
-            mapper,
-            new DraftValidator(context),
-            _imageContext.Object,
-            _codeFormatter.Object,
-            _imageProcessor.Object));
+         _context.WithMock<ICodeFormatter>();
+         _context.WithMock<IImageProcessor>();
+         _context.WithMock<IImageContext>();
+         _context.WithProfile<MappingProfile>();
+         _context.WithProfile<Blog.Services.Home.PostProfile>();
+         _context.WithType<DraftSaveCommand>();
+         _context.WithType<DraftValidator>();
       }
+
+      private readonly ServiceTestContext<AdminServices> _context;
 
       [Fact]
       public void New_post_date_is_set_to_today()
       {
-         Service()
-            .Create()
-            .PublishDate
-            .Should()
-            .HaveDay(DateTime.Now.Day)
-            .And
-            .HaveMonth(DateTime.Now.Month)
-            .And
-            .HaveYear(DateTime.Now.Year);
+         using (var svc = _context.GetService())
+         {
+            svc.Create()
+               .PublishDate
+               .Should()
+               .HaveDay(DateTime.Now.Day)
+               .And
+               .HaveMonth(DateTime.Now.Month)
+               .And
+               .HaveYear(DateTime.Now.Year);
+         }
       }
 
       [Fact]
       public void GetDrafts_get_all_of_them()
       {
-         var drafts = Service().GetDrafts();
+         using (var svc = _context.GetService())
+         {
+            var drafts = svc.GetDrafts();
 
-         drafts.Should().HaveCount(3);
+            drafts.Should().HaveCount(3);
 
-         drafts
-             .First()
-             .Should()
-             .BeEquivalentTo(new
-             {
-                Id = 1,
-                Title = "Javascript FP",
-                Published = true
-             });
+            drafts
+                .First()
+                .Should()
+                .BeEquivalentTo(new
+                {
+                   Id = 1,
+                   Title = "Javascript FP",
+                   Published = true
+                });
 
-         drafts
-             .ElementAt(1)
-             .Should()
-             .BeEquivalentTo(new
-             {
-                Id = 2,
-                Title = "Object Oriented C#",
-                Published = true
-             });
+            drafts
+                .ElementAt(1)
+                .Should()
+                .BeEquivalentTo(new
+                {
+                   Id = 2,
+                   Title = "Object Oriented C#",
+                   Published = true
+                });
 
-         drafts
-             .ElementAt(2)
-             .Should()
-             .BeEquivalentTo(new
-             {
-                Id = 3,
-                Title = "جاوا و ویندوز",
-                Published = false
-             });
+            drafts
+                .ElementAt(2)
+                .Should()
+                .BeEquivalentTo(new
+                {
+                   Id = 3,
+                   Title = "جاوا و ویندوز",
+                   Published = false
+                });
+         }
       }
 
       [Fact]
       public void Get()
       {
-         var draft = Service().Get(1);
-
-         draft.Content.Should().Be("<p>JS Functional Programming</p>");
-         draft.Id.Should().Be(1);
-         draft.Language.Should().Be(Language.English);
-         draft.PublishDate.Should().Be(new DateTime(2019, 1, 1));
-         draft.Summary.Should().Be("Learning FP in Javascript");
-         draft.Tags.Should().Be("JS, FP, Node.js");
-         draft.Title.Should().Be("Javascript FP");
+         using (var svc = _context.GetService())
+         {
+            var draft = svc.Get(1);
+            draft.Content.Should().Be("<p>JS Functional Programming</p>");
+            draft.Id.Should().Be(1);
+            draft.Language.Should().Be(Language.English);
+            draft.PublishDate.Should().Be(new DateTime(2019, 1, 1));
+            draft.Summary.Should().Be("Learning FP in Javascript");
+            draft.Tags.Should().Be("JS, FP, Node.js");
+            draft.Title.Should().Be("Javascript FP");
+         }
       }
 
       [Fact]
@@ -190,33 +174,24 @@ namespace Blog.Tests.Services.Administrator
             Title = "Title"
          };
 
-         Service().Save(entry);
+         using (var svc = _context.GetService())
+            svc.Save(entry);
 
-         entry.Id = 4;
-         Service()
-            .Get(4)
-            .Should()
-            .BeEquivalentTo(entry);
+         using (var svc = _context.GetService())
+         {
+            entry.Id = 4;
+            svc.Get(4)
+               .Should()
+               .BeEquivalentTo(entry);
+         }
       }
 
       [Fact]
       public void Update_existing_drafts()
       {
-         Service().Save(new DraftEntry
+         using (var svc = _context.GetService())
          {
-            Id = 1,
-            Content = "<h1>FP</h1>",
-            Title = "Javascript FP",
-            Summary = "Summary",
-            Tags = "Tags",
-            Language = Language.English,
-            PublishDate = new DateTime(2018, 8, 8)
-         });
-
-         Service()
-            .Get(1)
-            .Should()
-            .BeEquivalentTo(new
+            svc.Save(new DraftEntry
             {
                Id = 1,
                Content = "<h1>FP</h1>",
@@ -226,151 +201,193 @@ namespace Blog.Tests.Services.Administrator
                Language = Language.English,
                PublishDate = new DateTime(2018, 8, 8)
             });
+         }
+
+         using (var svc = _context.GetService())
+         {
+            svc.Get(1)
+               .Should()
+               .BeEquivalentTo(new
+               {
+                  Id = 1,
+                  Content = "<h1>FP</h1>",
+                  Title = "Javascript FP",
+                  Summary = "Summary",
+                  Tags = "Tags",
+                  Language = Language.English,
+                  PublishDate = new DateTime(2018, 8, 8)
+               });
+         }
       }
 
       [Fact]
       public void Update_draft_title()
       {
-         Service().Save(new DraftEntry
+         using (var svc = _context.GetService())
          {
-            Id = 12,
-            Content = "<figure><img src=\"/images/posts/learn-js/a.png\"></figure>".Local(),
-            Title = "learn js",
-            Summary = "Summary",
-            Tags = "Tags",
-            Language = Language.English,
-            PublishDate = new DateTime(2018, 8, 8)
-         });
-
-         Service().Save(new DraftEntry
-         {
-            Id = 12,
-            Content = "<figure><img src=\"/images/posts/Learn-js/a.png\"></figure>".Local(),
-            Title = "learn c",
-            Summary = "Summary",
-            Tags = "Tags",
-            Language = Language.English,
-            PublishDate = new DateTime(2018, 8, 8)
-         });
-
-         Service()
-            .Get(12)
-            .Should()
-            .BeEquivalentTo(new
+            svc.Save(new DraftEntry
             {
-               Title = "learn c",
-               Content = "<figure><img src=\"/images/posts/learn-c/a.png\"></figure>".Local()
+               Id = 12,
+               Content = "<figure><img src=\"/images/posts/learn-js/a.png\"></figure>".Local(),
+               Title = "learn js",
+               Summary = "Summary",
+               Tags = "Tags",
+               Language = Language.English,
+               PublishDate = new DateTime(2018, 8, 8)
             });
+         }
+
+         using (var svc = _context.GetService())
+         {
+            svc.Save(new DraftEntry
+            {
+               Id = 12,
+               Content = "<figure><img src=\"/images/posts/Learn-js/a.png\"></figure>".Local(),
+               Title = "learn c",
+               Summary = "Summary",
+               Tags = "Tags",
+               Language = Language.English,
+               PublishDate = new DateTime(2018, 8, 8)
+            });
+         }
+
+         using (var svc = _context.GetService())
+         {
+            svc.Get(12)
+               .Should()
+               .BeEquivalentTo(new
+               {
+                  Title = "learn c",
+                  Content = "<figure><img src=\"/images/posts/learn-c/a.png\"></figure>".Local()
+               });
+         }
       }
 
       [Fact]
       public void Create_new_post_of_a_draft()
       {
-         Service().Save(new DraftEntry
+         using (var svc = _context.GetService())
          {
-            Content = "<h1>Content</h1>",
-            Language = Language.English,
-            PublishDate = new DateTime(2019, 1, 1),
-            Publish = true,
-            Summary = "Summary",
-            Tags = "Tags",
-            Title = "Title"
-         });
-
-         Service()
-            .Get(4)
-            .Should()
-            .BeEquivalentTo(new
+            svc.Save(new DraftEntry
             {
-               Content = "<h1>Content</h1>"
+               Content = "<h1>Content</h1>",
+               Language = Language.English,
+               PublishDate = new DateTime(2019, 1, 1),
+               Publish = true,
+               Summary = "Summary",
+               Tags = "Tags",
+               Title = "Title"
             });
+         }
+
+         using (var svc = _context.GetService())
+         {
+            svc.Get(4)
+               .Should()
+               .BeEquivalentTo(new
+               {
+                  Content = "<h1>Content</h1>"
+               });
+         }
       }
 
       [Fact]
       public void Update_old_post_of_a_draft()
       {
-         Service().Save(new DraftEntry
+         using (var svc = _context.GetService())
          {
-            Id = 1,
-            Content = "<p>New Content</p>",
-            Publish = true,
-            Title = "new title",
-            Summary = "new summary",
-            Tags = "new tag",
-            Language = Language.English,
-            PublishDate = new DateTime(2017, 7, 7)
-         });
+            svc.Save(new DraftEntry
+            {
+               Id = 1,
+               Content = "<p>New Content</p>",
+               Publish = true,
+               Title = "new title",
+               Summary = "new summary",
+               Tags = "new tag",
+               Language = Language.English,
+               PublishDate = new DateTime(2017, 7, 7)
+            });
+         }
 
-         using (var context = new BlogContext(_options))
+         using (var db = _context.GetDatabase())
          {
-            context
-                .Posts
-                .Include(x => x.PostContent)
-                .Single(x => x.Id == 1)
-                .Should()
-                .BeEquivalentTo(new
-                {
-                   Url = "new-title",
-                   PostContent = new { Content = "<p>New Content</p>" },
-                });
+            db.Posts
+               .Include(x => x.PostContent)
+               .Single(x => x.Id == 1)
+               .Should()
+               .BeEquivalentTo(new
+               {
+                  Url = "new-title",
+                  PostContent = new { Content = "<p>New Content</p>" },
+               });
          }
       }
 
       [Fact]
       public void Delete_post_when_draft_publish_is_not_checked()
       {
-         Service().Save(new DraftEntry
+         using (var svc = _context.GetService())
          {
-            Id = 1,
-            Title = "New Title",
-            Content = "<p>New Content</p>",
-            Summary = "SUMMARY",
-            Tags = "Tags",
-            Publish = false,
-            Language = Language.English
-         });
+            svc.Save(new DraftEntry
+            {
+               Id = 1,
+               Title = "New Title",
+               Content = "<p>New Content</p>",
+               Summary = "SUMMARY",
+               Tags = "Tags",
+               Publish = false,
+               Language = Language.English
+            });
 
-         using (var context = new BlogContext(_options))
+         }
+
+         using (var db = _context.GetDatabase())
          {
-            context
-                .Posts
-                .SingleOrDefault(x => x.Id == 1)
-                .Should()
-                .BeNull();
+            db.Posts
+               .SingleOrDefault(x => x.Id == 1)
+               .Should()
+               .BeNull();
          }
       }
 
       [Fact]
       public void Save_images()
       {
-         Service().Save(new DraftEntry
+         using (var svc = _context.GetService())
          {
-            Content = "<figure><img data-filename=\"pic.jpeg\" src=\"data:image/jpeg;base64,DATA\"></figure>",
-            Title = "the post",
-            Summary = "SUMMARY",
-            Language = Language.English,
-            Tags = "tags"
-         });
+            svc.Save(new DraftEntry
+            {
+               Content = "<figure><img data-filename=\"pic.jpeg\" src=\"data:image/jpeg;base64,DATA\"></figure>",
+               Title = "the post",
+               Summary = "SUMMARY",
+               Language = Language.English,
+               Tags = "tags"
+            });
 
-         _imageContext.Verify(x => x.SaveChanges(null, "the-post", It.IsAny<IEnumerable<Image>>()));
+            _context.GetMock<IImageContext>()
+               .Verify(x => x.SaveChanges(null, "the-post", It.IsAny<IEnumerable<Image>>()));
+         }
       }
 
       [Fact]
       public void Delete_draft()
       {
-         Service().Delete(3);
-
-         using (var ctx = new BlogContext(_options))
+         using (var svc = _context.GetService())
          {
-            ctx.Infos
+            svc.Delete(3);
+         }
+
+         using (var db = _context.GetDatabase())
+         {
+            db.Infos
                 .Should()
                 .HaveCount(2);
 
-            ctx.Drafts
+            db.Drafts
                 .Should()
                 .HaveCount(2);
 
-            ctx.Posts
+            db.Posts
                 .Should()
                 .HaveCount(2);
          }
@@ -379,19 +396,22 @@ namespace Blog.Tests.Services.Administrator
       [Fact]
       public void Delete_post()
       {
-         Service().Delete(1);
-
-         using (var ctx = new BlogContext(_options))
+         using (var svc = _context.GetService())
          {
-            ctx.Infos
+            svc.Delete(1);
+         }
+
+         using (var db = _context.GetDatabase())
+         {
+            db.Infos
                 .Should()
                 .HaveCount(2);
 
-            ctx.Drafts
+            db.Drafts
               .Should()
               .HaveCount(2);
 
-            ctx.Posts
+            db.Posts
               .Should()
               .HaveCount(1);
          }
@@ -400,54 +420,60 @@ namespace Blog.Tests.Services.Administrator
       [Fact]
       public void GetView()
       {
-         Service()
-            .GetView(3)
-            .Should()
-            .BeEquivalentTo(new
-            {
-               Title = "جاوا و ویندوز",
-               Date = "سه شنبه، 25 تیر 1398",
-               Content = "<p>جاوا و ویندوز</p>",
-               Tags = new[] { "Java" },
-               Language = Language.Farsi
-            });
+         using (var svc = _context.GetService())
+         {
+            svc.GetView(3)
+               .Should()
+               .BeEquivalentTo(new
+               {
+                  Title = "جاوا و ویندوز",
+                  Date = "سه شنبه، 25 تیر 1398",
+                  Content = "<p>جاوا و ویندوز</p>",
+                  Tags = new[] { "Java" },
+                  Language = Language.Farsi
+               });
+         }
       }
 
       [Fact]
       public void If_code_formatting_failed_just_save_the_draft()
       {
-         _codeFormatter
+         _context.GetMock<ICodeFormatter>()
             .Setup(x => x.Format(It.IsAny<string>(), It.IsAny<string>()))
             .Callback(() => throw new ServiceDependencyException("Error Happened", null));
 
-         var result = Service().Save(new DraftEntry
+         using (var svc = _context.GetService())
          {
-            Content = string.Join(Environment.NewLine, "<pre class=\"code\">", "js", "content</pre>"),
-            Language = Language.English,
-            Publish = true,
-            Summary = "summary",
-            Tags = "tags",
-            Title = "title"
-         });
-
-         result
-            .Should()
-            .BeEquivalentTo(new
+            var result = svc.Save(new DraftEntry
             {
-               Failed = true,
-               Url = (string)null,
+               Content = string.Join(Environment.NewLine, "<pre class=\"code\">", "js", "content</pre>"),
+               Language = Language.English,
+               Publish = true,
+               Summary = "summary",
+               Tags = "tags",
+               Title = "title"
             });
 
-         result
-            .Problems
-            .Should()
-            .ContainEquivalentOf(new { Property = "", Message = "Draft saved but couldn't publish. Error Happened." });
+            result
+               .Should()
+               .BeEquivalentTo(new
+               {
+                  Failed = true,
+                  Url = (string)null,
+               });
+
+            result
+               .Problems
+               .Should()
+               .ContainEquivalentOf(new { Property = "", Message = "Draft saved but couldn't publish. Error Happened." });
+         }
+
       }
 
       [Fact]
       public void Save_again_after_service_dependency_problem_fixed()
       {
-         _codeFormatter
+         _context.GetMock<ICodeFormatter>()
             .SetupSequence(x => x.Format(It.IsAny<string>(), It.IsAny<string>()))
             .Throws(new ServiceDependencyException("Error happened", null))
             .Returns("CODE");
@@ -462,21 +488,27 @@ namespace Blog.Tests.Services.Administrator
             Publish = true,
             Content = "<pre class=\"code\">js\r\nCODE</pre>"
          };
-         toAdd.Id = Service().Save(toAdd).Id;
-         Service().Save(toAdd);
 
-         Service()
-            .Get(4)
-            .Should()
-            .BeEquivalentTo(new
-            {
-               Language = Language.English,
-               PublishDate = new DateTime(2019, 7, 24),
-               Title = "title",
-               Summary = "summary",
-               Tags = "tags",
-               Content = "<pre class=\"code\">js\r\nCODE</pre>"
-            });
+         using (var svc = _context.GetService())
+            toAdd.Id = svc.Save(toAdd).Id;
+
+         using (var svc = _context.GetService())
+            svc.Save(toAdd);
+
+         using (var svc = _context.GetService())
+         {
+            svc.Get(4)
+               .Should()
+               .BeEquivalentTo(new
+               {
+                  Language = Language.English,
+                  PublishDate = new DateTime(2019, 7, 24),
+                  Title = "title",
+                  Summary = "summary",
+                  Tags = "tags",
+                  Content = "<pre class=\"code\">js\r\nCODE</pre>"
+               });
+         }
       }
    }
 }

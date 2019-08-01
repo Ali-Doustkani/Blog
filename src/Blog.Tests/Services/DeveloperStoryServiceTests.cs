@@ -13,25 +13,27 @@ namespace Blog.Tests.Services
    {
       public DeveloperStoryServiceTests()
       {
-         _factory = new ContextFactory();
-         var mapperConfig = new MapperConfiguration(x => x.AddProfile<MappingProfile>());
-         _service = new DeveloperServices(_factory.Create(), mapperConfig.CreateMapper());
+         _context = new ServiceTestContext<DeveloperServices>();
+         _context.WithProfile<MappingProfile>();
       }
 
-      private readonly DeveloperServices _service;
-      private readonly ContextFactory _factory;
+      private readonly ServiceTestContext<DeveloperServices> _context;
 
       [Fact]
-      public void Return_null_when_there_is_no_developer() =>
-         _service
-         .Get()
-         .Should()
-         .BeNull();
+      public void Return_null_when_there_is_no_developer()
+      {
+         using (var svc = _context.GetService())
+         {
+            svc.Get()
+               .Should()
+               .BeNull();
+         }
+      }
 
       [Fact]
       public void Return_developer_when_its_available()
       {
-         using (var context = _factory.Create())
+         using (var db = _context.GetDatabase())
          {
             var developer = new Developer
             {
@@ -51,12 +53,13 @@ namespace Blog.Tests.Services
                Title = "Richtext Editor",
                Content = "A simple richtext for web"
             });
-            context.Developers.Add(developer);
-            context.SaveChanges();
+            db.Developers.Add(developer);
+            db.SaveChanges();
          }
 
-         _service
-            .Get()
+         using (var svc = _context.GetService())
+         {
+            svc.Get()
             .Should()
             .BeEquivalentTo(new
             {
@@ -82,55 +85,21 @@ namespace Blog.Tests.Services
                   }
                }
             });
+         }
       }
 
       [Fact]
       public void Add_when_there_is_no_developer_available()
       {
-         var result = _service.Save(new DeveloperEntry
+         using (var svc = _context.GetService())
          {
-            Summary = "Cool guy!",
-            Skills = "C#, Javascript, React",
-            Experiences = new[]
-            {
-               new ExperienceEntry
-               {
-                  Company = "Microsoft",
-                  Content = "as backend developer",
-                  StartDate = "2016-02-23",
-                  EndDate = "2017-01-02",
-                  Position = "Lead Developer"
-               }
-            },
-            SideProjects = new[]
-            {
-               new SideProjectEntry
-               {
-                  Title = "Richtext Editor",
-                  Content = "A simple richtext for web"
-               }
-            }
-         });
-
-         result
-            .Should()
-            .BeEquivalentTo(new
-            {
-               Status = Status.Created,
-               Experiences = new[] { 1 },
-               SideProjects = new[] { 1 }
-            });
-
-         _service
-            .Get()
-            .Should()
-            .BeEquivalentTo(new
+            var result = svc.Save(new DeveloperEntry
             {
                Summary = "Cool guy!",
                Skills = "C#, Javascript, React",
                Experiences = new[]
                {
-                  new
+                  new ExperienceEntry
                   {
                      Company = "Microsoft",
                      Content = "as backend developer",
@@ -141,19 +110,57 @@ namespace Blog.Tests.Services
                },
                SideProjects = new[]
                {
-                  new
+                  new SideProjectEntry
                   {
                      Title = "Richtext Editor",
                      Content = "A simple richtext for web"
                   }
                }
             });
+
+            result.Should().BeEquivalentTo(new
+            {
+               Status = Status.Created,
+               Experiences = new[] { 1 },
+               SideProjects = new[] { 1 }
+            });
+         }
+
+         using (var svc = _context.GetService())
+         {
+            svc.Get()
+               .Should()
+               .BeEquivalentTo(new
+               {
+                  Summary = "Cool guy!",
+                  Skills = "C#, Javascript, React",
+                  Experiences = new[]
+                  {
+                     new
+                     {
+                        Company = "Microsoft",
+                        Content = "as backend developer",
+                        StartDate = "2016-02-23",
+                        EndDate = "2017-01-02",
+                        Position = "Lead Developer"
+                     }
+                  },
+                  SideProjects = new[]
+                  {
+                     new
+                     {
+                        Title = "Richtext Editor",
+                        Content = "A simple richtext for web"
+                     }
+                  }
+               });
+         }
       }
 
       [Fact]
       public void Update_when_there_is_already_a_developer_available()
       {
-         using (var ctx = _factory.Create())
+         using (var db = _context.GetDatabase())
          {
             var developer = new Developer
             {
@@ -174,79 +181,84 @@ namespace Blog.Tests.Services
                Content = "A simple richtext for web"
             });
 
-            ctx.Developers.Add(developer);
-            ctx.SaveChanges();
+            db.Developers.Add(developer);
+            db.SaveChanges();
          }
 
-         var result = _service.Save(new DeveloperEntry
+         using (var svc = _context.GetService())
          {
-            Summary = "Not so cool",
-            Skills = "ES7, Node.js",
-            Experiences = new[]
-            {
-               new ExperienceEntry
-               {
-                  Id = 1,
-                  Company = "Lodgify",
-                  Content = "as backend developer",
-                  StartDate = "2016-02-23",
-                  EndDate = "2017-01-02",
-                  Position = "C# Developer"
-               }
-            },
-            SideProjects = new[]
-            {
-               new SideProjectEntry
-               {
-                  Id = 1,
-                  Title = "Richtext Editor",
-                  Content = "A simple richtext for web"
-               }
-            }
-         });
-
-         result
-            .Should()
-            .BeEquivalentTo(new
-            {
-               Status = Status.Updated,
-               Experiences = new[] { 1 },
-               SideProjects = new[] { 1 }
-            });
-
-         _service
-            .Get()
-            .Should()
-            .BeEquivalentTo(new
+            var result = svc.Save(new DeveloperEntry
             {
                Summary = "Not so cool",
                Skills = "ES7, Node.js",
                Experiences = new[]
                {
-                  new
+                  new ExperienceEntry
                   {
-                     Company="Lodgify",
-                     Content="as backend developer",
-                     StartDate="2016-02-23",
-                     EndDate="2017-01-02",
-                     Position="C# Developer"
+                     Id = 1,
+                     Company = "Lodgify",
+                     Content = "as backend developer",
+                     StartDate = "2016-02-23",
+                     EndDate = "2017-01-02",
+                     Position = "C# Developer"
                   }
                },
                SideProjects = new[]
                {
-                  new
+                  new SideProjectEntry
                   {
+                     Id = 1,
                      Title = "Richtext Editor",
                      Content = "A simple richtext for web"
                   }
                }
             });
+
+            result
+               .Should()
+               .BeEquivalentTo(new
+               {
+                  Status = Status.Updated,
+                  Experiences = new[] { 1 },
+                  SideProjects = new[] { 1 }
+               });
+         }
+
+         using (var svc = _context.GetService())
+         {
+            svc.Get()
+               .Should()
+               .BeEquivalentTo(new
+               {
+                  Summary = "Not so cool",
+                  Skills = "ES7, Node.js",
+                  Experiences = new[]
+                  {
+                     new
+                     {
+                        Company="Lodgify",
+                        Content="as backend developer",
+                        StartDate="2016-02-23",
+                        EndDate="2017-01-02",
+                        Position="C# Developer"
+                     }
+                  },
+                  SideProjects = new[]
+                  {
+                     new
+                     {
+                        Title = "Richtext Editor",
+                        Content = "A simple richtext for web"
+                     }
+                  }
+               });
+         }
       }
 
       [Fact]
       public void Update_experiences()
       {
-         using (var ctx = _factory.Create())
+         using (var db = _context.GetDatabase())
          {
             var developer = new Developer
             {
@@ -269,48 +281,13 @@ namespace Blog.Tests.Services
                EndDate = new DateTime(2015, 1, 2),
                Position = "Java Developer"
             });
-            ctx.Developers.Add(developer);
-            ctx.SaveChanges();
+            db.Developers.Add(developer);
+            db.SaveChanges();
          }
 
-         var result = _service.Save(new DeveloperEntry
+         using (var svc = _context.GetService())
          {
-            Summary = "Not so cool",
-            Skills = "ES7, Node.js",
-            Experiences = new[]
-            {
-               new ExperienceEntry
-               {
-                  Id = 2,
-                  Company = "Parmis",
-                  Content = "as the team lead",
-                  StartDate = "2014-01-01",
-                  EndDate = "2015-01-01",
-                  Position = "Not Java Developer"
-               },
-               new ExperienceEntry
-               {
-                    Company = "Bellin",
-                    Content = "agile c# developer",
-                    StartDate = "2019-01-01",
-                    EndDate = "2022-01-01",
-                    Position = "Tester"
-               }
-            }
-         });
-
-         result
-            .Should()
-            .BeEquivalentTo(new
-            {
-               Experiences = new[] { 2, 3 },
-               SideProjects = Enumerable.Empty<int>()
-            });
-
-         _service
-            .Get()
-            .Should()
-            .BeEquivalentTo(new DeveloperEntry
+            var result = svc.Save(new DeveloperEntry
             {
                Summary = "Not so cool",
                Skills = "ES7, Node.js",
@@ -327,22 +304,62 @@ namespace Blog.Tests.Services
                   },
                   new ExperienceEntry
                   {
-                     Id = 3,
-                     Company = "Bellin",
-                     Content = "agile c# developer",
-                     StartDate = "2019-01-01",
-                     EndDate = "2022-01-01",
-                     Position = "Tester"
+                       Company = "Bellin",
+                       Content = "agile c# developer",
+                       StartDate = "2019-01-01",
+                       EndDate = "2022-01-01",
+                       Position = "Tester"
                   }
-               },
-               SideProjects = Enumerable.Empty<SideProjectEntry>()
+               }
             });
+
+            result
+               .Should()
+               .BeEquivalentTo(new
+               {
+                  Experiences = new[] { 2, 3 },
+                  SideProjects = Enumerable.Empty<int>()
+               });
+         }
+
+         using (var svc = _context.GetService())
+         {
+            svc.Get()
+               .Should()
+               .BeEquivalentTo(new DeveloperEntry
+               {
+                  Summary = "Not so cool",
+                  Skills = "ES7, Node.js",
+                  Experiences = new[]
+                  {
+                     new ExperienceEntry
+                     {
+                        Id = 2,
+                        Company = "Parmis",
+                        Content = "as the team lead",
+                        StartDate = "2014-01-01",
+                        EndDate = "2015-01-01",
+                        Position = "Not Java Developer"
+                     },
+                     new ExperienceEntry
+                     {
+                        Id = 3,
+                        Company = "Bellin",
+                        Content = "agile c# developer",
+                        StartDate = "2019-01-01",
+                        EndDate = "2022-01-01",
+                        Position = "Tester"
+                     }
+                  },
+                  SideProjects = Enumerable.Empty<SideProjectEntry>()
+               });
+         }
       }
 
       [Fact]
       public void Update_sideProjects()
       {
-         using (var ctx = _factory.Create())
+         using (var db = _context.GetDatabase())
          {
             var developer = new Developer
             {
@@ -359,62 +376,67 @@ namespace Blog.Tests.Services
                Title = "CodePrac",
                Content = "A simple app for practice coding"
             });
-            ctx.Developers.Add(developer);
-            ctx.SaveChanges();
+            db.Developers.Add(developer);
+            db.SaveChanges();
          }
 
-         var result = _service.Save(new DeveloperEntry
+         using (var svc = _context.GetService())
          {
-            Summary = "Cool guy!",
-            Skills = "C#, SQL",
-            SideProjects = new[]
-            {
-               new SideProjectEntry
-               {
-                  Id = 2,
-                  Title = "CodePrac V2",
-                  Content = "other description"
-               },
-               new SideProjectEntry
-               {
-                  Title = "Blog",
-                  Content = "A developers blog"
-               }
-            }
-         });
-
-         result
-            .Should()
-            .BeEquivalentTo(new
-            {
-               Experiences = Enumerable.Empty<int>(),
-               SideProjects = new[] { 2, 3 }
-            });
-
-         _service
-            .Get()
-            .Should()
-            .BeEquivalentTo(new DeveloperEntry
+            var result = svc.Save(new DeveloperEntry
             {
                Summary = "Cool guy!",
                Skills = "C#, SQL",
-               Experiences = Enumerable.Empty<ExperienceEntry>(),
                SideProjects = new[]
                {
                   new SideProjectEntry
                   {
-                      Id = 2,
-                      Title = "CodePrac V2",
-                      Content = "other description"
+                     Id = 2,
+                     Title = "CodePrac V2",
+                     Content = "other description"
                   },
                   new SideProjectEntry
                   {
-                      Id = 3,
-                      Title = "Blog",
-                      Content = "A developers blog"
-                  },
+                     Title = "Blog",
+                     Content = "A developers blog"
+                  }
                }
             });
+
+            result
+               .Should()
+               .BeEquivalentTo(new
+               {
+                  Experiences = Enumerable.Empty<int>(),
+                  SideProjects = new[] { 2, 3 }
+               });
+         }
+
+         using (var svc = _context.GetService())
+         {
+            svc.Get()
+               .Should()
+               .BeEquivalentTo(new DeveloperEntry
+               {
+                  Summary = "Cool guy!",
+                  Skills = "C#, SQL",
+                  Experiences = Enumerable.Empty<ExperienceEntry>(),
+                  SideProjects = new[]
+                  {
+                     new SideProjectEntry
+                     {
+                         Id = 2,
+                         Title = "CodePrac V2",
+                         Content = "other description"
+                     },
+                     new SideProjectEntry
+                     {
+                         Id = 3,
+                         Title = "Blog",
+                         Content = "A developers blog"
+                     },
+                  }
+               });
+         }
       }
    }
 }
