@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace Blog.Services.Administrator
 {
-   public interface IAdminServices : IService
+   public interface IAdminServices : IDisposable
    {
       DraftEntry Create();
       IEnumerable<DraftRow> GetDrafts();
@@ -82,7 +82,10 @@ namespace Blog.Services.Administrator
          _imageContext.Delete(info.Slugify());
       }
 
-      public void Dispose() =>
+      public void Dispose()
+      {
          _context.Dispose();
+         _saveCommand.Dispose();
+      }
    }
 }

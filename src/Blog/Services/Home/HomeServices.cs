@@ -2,12 +2,13 @@
 using Blog.Domain;
 using Blog.Domain.Blogging;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Blog.Services.Home
 {
-   public interface IHomeServices : IService
+   public interface IHomeServices : IDisposable
    {
       PostViewModel Get(string urlTitle);
       IEnumerable<PostRow> GetPosts(Language language);

@@ -11,7 +11,7 @@ using System.Linq;
 namespace Blog.Tests.Services
 {
    public class ServiceTestContext<TService>
-      where TService : IService
+      where TService : IDisposable
    {
       public ServiceTestContext()
       {

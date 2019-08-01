@@ -2,8 +2,6 @@
 using Blog.Domain;
 using Blog.Domain.Blogging;
 using Blog.Services.Administrator;
-using Blog.Services.DeveloperStory;
-using Blog.Services.Home;
 using Blog.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NetCore.AutoRegisterDi;
 using System;
 
 namespace Blog
@@ -50,15 +49,10 @@ namespace Blog
          });
          services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<BlogContext>();
          services.AddAutoMapper(GetType().Assembly);
-         services.AddTransient<IHomeServices, HomeServices>();
-         services.AddTransient<IAdminServices, AdminServices>();
-         services.AddTransient<IDeveloperServices, DeveloperServices>();
-         services.AddTransient<IImageContext, ImageContext>();
-         services.AddTransient<IFileSystem, FileSystem>();
-         services.AddTransient<DraftValidator>();
-         services.AddTransient<ICodeFormatter, HerokuCodeFormatter>();
-         services.AddTransient<IImageProcessor, CloudImageProcessor>();
          services.AddTransient<DraftSaveCommand>();
+         services.AddTransient<DraftValidator>();
+         services.RegisterAssemblyPublicNonGenericClasses(GetType().Assembly)
+              .AsPublicImplementedInterfaces();
       }
 
       public void Configure(IApplicationBuilder app)

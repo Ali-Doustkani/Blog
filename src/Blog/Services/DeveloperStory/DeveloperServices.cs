@@ -2,11 +2,12 @@
 using Blog.Domain;
 using Blog.Domain.DeveloperStory;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 
 namespace Blog.Services.DeveloperStory
 {
-   public interface IDeveloperServices : IService
+   public interface IDeveloperServices : IDisposable
    {
       DeveloperEntry Get();
       SaveResult Save(DeveloperEntry developer);

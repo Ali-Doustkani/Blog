@@ -3,12 +3,13 @@ using Blog.Domain;
 using Blog.Domain.Blogging;
 using Blog.Utils;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Blog.Services.Administrator
 {
-   public class DraftSaveCommand
+   public class DraftSaveCommand : IDisposable
    {
       public DraftSaveCommand(BlogContext context,
          IMapper mapper,
@@ -100,5 +101,8 @@ namespace Blog.Services.Administrator
          _context.SaveChanges();
          _imageContext.SaveChanges(_oldPostDirectory, _draft.Info.Slugify(), _images);
       }
+
+      public void Dispose() =>
+         _context.Dispose();
    }
 }
