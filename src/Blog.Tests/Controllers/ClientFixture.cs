@@ -27,9 +27,9 @@ namespace Blog.Tests.Controllers
          var builder = new WebHostBuilder()
             .UseStartup<Startup>()
             .UseEnvironment("Testing")
-            .ConfigureServices(services =>
+            .UseSetting("ConnectionStrings:Blog", "FakeConnectionString")
+            .ConfigureTestServices(services =>
             {
-               services.AddDbContext<BlogContext>(cfg => cfg.UseSqlite(connection));
                services.AddTransient(s => DeveloperService.Object);
                services.AddMvc(cfg => cfg.Filters.Add<IgnoreMigrationAttribute>());
             });
