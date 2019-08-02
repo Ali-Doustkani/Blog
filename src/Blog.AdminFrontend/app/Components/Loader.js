@@ -1,4 +1,5 @@
 import React from 'react'
+import image from './loader.svg'
 
 const Loader = props => (
    <div data-testid="loader-component" style={{ textAlign: 'center', marginTop: 150 }}>
@@ -10,7 +11,7 @@ const Loader = props => (
             padding: '10px 30px'
          }}
       >
-         <img src="/images/loader.svg" style={{ width: 50 }} />
+         <img src={image} style={{ width: 50 }} />
          <div>{props.text ? props.text : 'Loading...'}</div>
       </div>
    </div>

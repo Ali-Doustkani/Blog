@@ -4,7 +4,7 @@
    "version": "1.0.0",
    "description": "administrator react pages",
    "scripts": {
-      "start": "parcel watch Developer/index.js --out-file developer.js",
+      "start": "parcel app/index.html",
       "build": "parcel build Developer/index.js --out-file developer.js",
       "test": "jest --watchAll"
    },
