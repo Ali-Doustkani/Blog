@@ -1,24 +1,8 @@
 import React from 'react'
-import uuid from 'uuid/v1'
 import { Loader, Button, Richtext } from '../Components'
 import Experience from './Experience'
 import { getDeveloper, saveDeveloper } from './services'
-
-const assignFrom = source => target =>
-   target.id === source.id ? Object.assign(target, source) : target
-
-const newDeveloper = () => ({
-   summary: '',
-   experiences: []
-})
-
-const newExperience = () => ({
-   id: uuid(),
-   company: '',
-   position: '',
-   startDate: new Date(),
-   endDate: null
-})
+import reducer from './reducer'
 
 class Developer extends React.Component {
    constructor(props) {
@@ -26,37 +10,30 @@ class Developer extends React.Component {
       this.addExperience = this.addExperience.bind(this)
       this.deleteExperience = this.deleteExperience.bind(this)
       this.updateExperience = this.updateExperience.bind(this)
+      this.transit = this.transit.bind(this)
       this.save = this.save.bind(this)
       this.state = {
          isLoading: true
       }
    }
    async componentDidMount() {
-      const developer = (await getDeveloper()) || newDeveloper()
-      this.setState({
-         isLoading: false,
-         ...developer
-      })
+      const developer = await getDeveloper()
+      this.setState(reducer(this.state, { type: 'LOAD', developer }))
+   }
+   transit(action) {
+      this.setState(reducer(this.state, action))
    }
    addExperience() {
-      this.state.experiences.push(newExperience())
-      this.setState({ experiences: this.state.experiences })
+      this.setState(reducer(this.state, { type: 'NEW_EXPERIENCE' }))
    }
    deleteExperience(id) {
-      this.setState(prevState => ({
-         experiences: prevState.experiences.filter(x => x.id !== id)
-      }))
+      this.setState(reducer(this.state, { type: 'DELETE_EXPERIENCE', id }))
    }
    updateExperience(e) {
-      this.setState(prevState => ({
-         experiences: prevState.experiences.map(assignFrom(e))
-      }))
+      this.setState(reducer(this.state, { type: 'UPDATE_EXPERIENCE', experience: e }))
    }
    async save() {
-      const result = await saveDeveloper({
-         summary: this.state.summary,
-         experiences: this.state.experiences
-      })
+      const result = await saveDeveloper(reducer(this.state, { type: 'EXTRACT_DATA' }))
    }
    render() {
       if (this.state.isLoading) {

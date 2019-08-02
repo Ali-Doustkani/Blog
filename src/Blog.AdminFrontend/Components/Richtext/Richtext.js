@@ -25,12 +25,14 @@ class Richtext extends React.Component {
       })
    }
    blur() {
-      this.props.onChange({
-         target: {
-            name: this.props.name,
-            value: this.editorRef.current.innerHTML
-         }
-      })
+      if (this.props.onChange) {
+         this.props.onChange({
+            target: {
+               name: this.props.name,
+               value: this.editorRef.current.innerHTML
+            }
+         })
+      }
    }
    render() {
       return (
