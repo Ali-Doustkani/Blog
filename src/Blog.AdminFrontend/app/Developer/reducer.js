@@ -1,10 +1,13 @@
 import uuid from 'uuid/v1'
 
 const load = action => {
-   if (action.developer) {
-      return { isLoading: false, ...action.developer }
+   if (action.data.status === 'ok') {
+      if (action.data.developer) {
+         return { isLoading: false, ...action.data.developer }
+      }
+      return { isLoading: false, summary: '', experiences: [] }
    }
-   return { isLoading: false, summary: '', experiences: [] }
+   return { isLoading: false, errorMessage: action.data.message }
 }
 
 const newExperience = state => {
@@ -40,6 +43,8 @@ const extractData = state => {
 
 const reducer = (state, action) => {
    switch (action.type) {
+      case 'RESTART':
+         return { isLoading: true }
       case 'LOAD':
          return load(action)
       case 'NEW_EXPERIENCE':

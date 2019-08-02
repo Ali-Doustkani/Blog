@@ -1,6 +1,6 @@
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
-import { render, cleanup, fireEvent, wait } from '@testing-library/react'
+import { render, cleanup, fireEvent, wait, act, waitForElement } from '@testing-library/react'
 import Developer from '../../app/Developer/Developer'
 import reducer from '../../app/Developer/reducer'
 
@@ -27,19 +27,42 @@ const fullState = {
    experiences: [experience1]
 }
 
-afterEach(cleanup)
+afterEach(() => {
+   cleanup()
+   reducer.mockReset()
+})
 
-describe('loader when loading data', () => {
-   it('not finished yet', () => {
+describe('loading', () => {
+   it('show loader when data is not fetched yet', () => {
       reducer.mockReturnValue({ isLoading: true })
       const { getByTestId } = render(<Developer />)
       expect(getByTestId('loader-component')).toBeVisible()
    })
 
-   it('finished', async () => {
+   it('hide loader when data is fetched', async () => {
       reducer.mockReturnValue({ isLoading: false, summary: '', experiences: [] })
       const { queryByTestId } = render(<Developer />)
       await wait(() => expect(queryByTestId('loader-component')).not.toBeInTheDocument())
+   })
+
+   it('show error message when fetching in failes', async () => {
+      reducer.mockReturnValue({ isLoading: false, errorMessage: 'Could not fetch data' })
+      const { getByTestId } = render(<Developer />)
+      await wait(() => expect(getByTestId('message-component')).toBeVisible())
+   })
+
+   it('try again after failure', async () => {
+      reducer.mockReturnValueOnce({ isLoading: false, errorMessage: 'Could not fetch data' })
+      reducer.mockReturnValueOnce({ isLoading: false, summary: '', experiences: [] })
+      const { queryByTestId, getByText } = render(<Developer />)
+
+      const tryAgain = await waitForElement(() => getByText(/try again/i))
+      fireEvent.click(tryAgain)
+
+      expect(queryByTestId('loader-component')).not.toBeInTheDocument()
+
+      const message = await waitForElement(() => queryByTestId('message-component'))
+      expect(message).not.toBeInTheDocument()
    })
 })
 
@@ -49,7 +72,6 @@ describe('experiences', () => {
       const { getByTestId } = render(<Developer />)
       await wait(() => expect(getByTestId('experience-component')).toBeInTheDocument())
    })
-
    it('add experience', async () => {
       reducer.mockImplementation((state, action) => {
          switch (action.type) {
@@ -59,16 +81,15 @@ describe('experiences', () => {
                return { ...state, experiences: [experience1] }
          }
       })
-
       const { getByTestId, queryByTestId, queryAllByTestId } = render(<Developer />)
-
       await wait(() => {
          expect(queryByTestId('experience-component')).not.toBeInTheDocument()
-         fireEvent.click(getByTestId('addExperience-button'))
+         act(() => {
+            fireEvent.click(getByTestId('addExperience-button'))
+         })
          expect(queryAllByTestId('experience-component').length).toBe(1)
       })
    })
-
    it('delete experience', async () => {
       reducer.mockImplementation((state, action) => {
          switch (action.type) {
@@ -78,9 +99,7 @@ describe('experiences', () => {
                return { ...state, experiences: [] }
          }
       })
-
       const { getByTestId, queryAllByTestId } = render(<Developer />)
-
       await wait(() => {
          expect(queryAllByTestId('experience-component').length).toBe(1)
          fireEvent.click(getByTestId('deleteExperience-button'))

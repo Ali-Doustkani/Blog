@@ -2,18 +2,28 @@ const url_developer =
    process.env.NODE_ENV === 'production' ? '/api/developer' : 'http://localhost:3000/developer'
 
 async function getDeveloper() {
-   const response = await fetch(url_developer, {
-      headers: {
-         Accept: 'application/json'
-      }
-   })
-   if (response.status === 204) {
-      return null
-   }
    try {
-      return await response.json()
+      const response = await fetch(url_developer, {
+         headers: {
+            Accept: 'application/json'
+         }
+      })
+      if (response.status === 204) {
+         return {
+            status: 'ok',
+            developer: null
+         }
+      }
+      const developer = await response.json()
+      return {
+         status: 'ok',
+         developer
+      }
    } catch (err) {
-      return null
+      return {
+         status: 'error',
+         message: err.message
+      }
    }
 }
 

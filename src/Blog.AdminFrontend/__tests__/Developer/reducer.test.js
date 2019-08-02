@@ -1,4 +1,4 @@
-import reducer from '../../Developer/reducer'
+import reducer from '../../app/Developer/reducer'
 import uuid from 'uuid/v1'
 jest.mock('uuid/v1')
 
@@ -10,7 +10,10 @@ describe('loading', () => {
    it('create default values when no developer exists', () => {
       const newState = reducer(initial, {
          type: 'LOAD',
-         developer: null
+         data: {
+            status: 'ok',
+            developer: null
+         }
       })
 
       expect(newState.isLoading).toBe(false)
@@ -34,12 +37,27 @@ describe('loading', () => {
 
       const newState = reducer(initial, {
          type: 'LOAD',
-         developer
+         data: { status: 'ok', developer }
       })
 
       expect(newState.isLoading).toBe(false)
       expect(newState.summary).toBe(developer.summary)
       expect(newState.experiences).toEqual(developer.experiences)
+   })
+
+   it('create error message when error happend', () => {
+      const newState = reducer(initial, {
+         type: 'LOAD',
+         data: {
+            status: 'error',
+            message: 'Error Happened'
+         }
+      })
+
+      expect(newState).toEqual({
+         isLoading: false,
+         errorMessage: 'Error Happened'
+      })
    })
 })
 
