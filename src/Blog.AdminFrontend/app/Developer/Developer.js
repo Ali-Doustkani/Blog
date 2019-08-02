@@ -10,7 +10,6 @@ class Developer extends React.Component {
       this.addExperience = this.addExperience.bind(this)
       this.deleteExperience = this.deleteExperience.bind(this)
       this.updateExperience = this.updateExperience.bind(this)
-      this.transit = this.transit.bind(this)
       this.save = this.save.bind(this)
       this.state = {
          isLoading: true
@@ -19,9 +18,6 @@ class Developer extends React.Component {
    async componentDidMount() {
       const developer = await getDeveloper()
       this.setState(reducer(this.state, { type: 'LOAD', developer }))
-   }
-   transit(action) {
-      this.setState(reducer(this.state, action))
    }
    addExperience() {
       this.setState(reducer(this.state, { type: 'NEW_EXPERIENCE' }))
