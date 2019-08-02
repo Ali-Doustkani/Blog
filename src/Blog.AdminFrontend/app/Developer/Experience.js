@@ -52,6 +52,7 @@ const Experience = props => {
                data-testid="content-richtext"
                innerHtml={props.content}
                onChange={inputChange}
+               error={props.contentError}
             />
          </div>
          <button

@@ -33,7 +33,12 @@ const assignFrom = source => target =>
    target.id === source.id ? Object.assign(target, source) : target
 
 const updateExperience = (state, action) => {
-   return { ...state, experiences: state.experiences.map(assignFrom(action.experience)) }
+   const { experience } = action
+   experience.companyError = experience.company === '' ? 'company is required' : ''
+   experience.positionError = experience.position === '' ? 'position is required' : ''
+   experience.contentError =
+      experience.content === '<p contenteditable=""></p>' ? 'content is required' : ''
+   return { ...state, experiences: state.experiences.map(assignFrom(experience)) }
 }
 
 const extractData = state => {
