@@ -1,12 +1,13 @@
 import React from 'react'
 import Button from './Button'
 import { create } from '@alidoustkani/richtext'
+import InnerRichtext from './OriginalRichtext'
 
 class Richtext extends React.Component {
    constructor(props) {
       super(props)
       this.editorRef = React.createRef()
-      this.blur = this.blur.bind(this)
+      this.change = this.change.bind(this)
    }
    componentDidMount() {
       this.rich = create(this.editorRef.current, {
@@ -24,14 +25,9 @@ class Richtext extends React.Component {
          }
       })
    }
-   blur() {
+   change(e) {
       if (this.props.onChange) {
-         this.props.onChange({
-            target: {
-               name: this.props.name,
-               value: this.editorRef.current.innerHTML
-            }
-         })
+         this.props.onChange(e)
       }
    }
    render() {
@@ -56,13 +52,13 @@ class Richtext extends React.Component {
                <Button content="camera" onClick={() => this.rich.selectImage()} />
                <Button content="link" onClick={() => this.rich.styleLink()} />
             </div>
-            <article
-               data-testid={this.props['data-testid']}
-               ref={this.editorRef}
-               className={this.props.error ? 'entry incorrect' : 'entry'}
-               dangerouslySetInnerHTML={{ __html: this.props.innerHtml }}
-               onBlur={this.blur}
-            />
+            <div className={this.props.error ? 'entry incorrect' : 'entry'}>
+               <InnerRichtext
+                  ref={this.editorRef}
+                  onChange={this.change}
+                  innerHtml={this.props.innerHtml}
+               />
+            </div>
          </div>
       )
    }
