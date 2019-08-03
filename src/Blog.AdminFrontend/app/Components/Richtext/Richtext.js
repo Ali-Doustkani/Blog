@@ -8,6 +8,7 @@ class Richtext extends React.Component {
       super(props)
       this.editorRef = React.createRef()
       this.change = this.change.bind(this)
+      this.state = { hasFocus: false }
    }
    componentDidMount() {
       this.rich = create(this.editorRef.current, {
@@ -31,6 +32,13 @@ class Richtext extends React.Component {
       }
    }
    render() {
+      var classes = ['entry']
+      if (this.props.error) {
+         classes.push('incorrect')
+      }
+      if (this.state.hasFocus) {
+         classes.push('hasFocus')
+      }
       return (
          <div className="text-group richtext-group">
             <div className="toolbar">
@@ -52,12 +60,12 @@ class Richtext extends React.Component {
                <Button content="camera" onClick={() => this.rich.selectImage()} />
                <Button content="link" onClick={() => this.rich.styleLink()} />
             </div>
-            <div className={this.props.error ? 'entry incorrect' : 'entry'}>
-               <InnerRichtext
-                  ref={this.editorRef}
-                  onChange={this.change}
-                  innerHtml={this.props.innerHtml}
-               />
+            <div
+               className={classes.join(' ')}
+               onFocus={() => this.setState({ hasFocus: true })}
+               onBlur={() => this.setState({ hasFocus: false })}
+            >
+               <InnerRichtext ref={this.editorRef} {...this.props} />
             </div>
          </div>
       )

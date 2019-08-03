@@ -60,6 +60,7 @@ const extractData = state => {
 const updateDeveloper = (state, action) => {
    const newState = { ...state, ...action.change }
    newState.summaryError = isRichtextEmtpy(newState.summary)
+   newState.skillsError = isEmpty(newState.skills)
    return newState
 }
 

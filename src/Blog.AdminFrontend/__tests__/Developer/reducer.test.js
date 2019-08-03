@@ -64,18 +64,20 @@ describe('loading', () => {
 })
 
 describe('manipulating developer', () => {
-   it('updates summary', () => {
+   it('updates developer fields', () => {
       const initial = {
          summary: '<p></p>',
+         skills: 'none',
          experiences: ''
       }
 
       const newState = reducer(initial, {
          type: 'UPDATE_DEVELOPER',
-         change: { summary: '<p>New Summary</p>' }
+         change: { summary: '<p>New Summary</p>', skills: 'C#, JS' }
       })
 
       expect(newState.summary).toBe('<p>New Summary</p>')
+      expect(newState.skills).toBe('C#, JS')
    })
 
    it('validate', () => {

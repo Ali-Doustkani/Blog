@@ -80,8 +80,9 @@
       cursor: pointer;
    }
 
-   > input[type='text']:focus,
-   textarea:focus {
+   > input:focus:not(.incorrect),
+   textarea:focus:not(.incorrect),
+   .hasFocus:not(.incorrect) {
       outline: 1px solid $color3;
    }
 }
@@ -154,6 +155,10 @@
       max-height: 500px;
       cursor: text;
       font-family: 'Roboto Condensed';
+
+      article * {
+         outline: none;
+      }
    }
 }
 

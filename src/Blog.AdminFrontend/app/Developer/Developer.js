@@ -49,6 +49,18 @@ function Developer() {
                }
             />
          </div>
+         <div className="text-group">
+            <label>Skills</label>
+            <textarea
+               name="skills"
+               data-testid="skills-input"
+               defaultValue={state.skills}
+               className={state.skillsError ? 'incorrect' : null}
+               onChange={e =>
+                  dispatch({ type: 'UPDATE_DEVELOPER', change: { skills: e.target.value } })
+               }
+            />
+         </div>
          <div className="container">
             {state.experiences.map(e => (
                <Experience
