@@ -52,16 +52,21 @@ const updateExperience = (state, action) => {
    }
 }
 
-const extractData = state => {
-   const { isLoading, ...developer } = state
-   return developer
-}
-
 const updateDeveloper = (state, action) => {
    const newState = { ...state, ...action.change }
    newState.summaryError = isRichtextEmtpy(newState.summary)
    newState.skillsError = isEmpty(newState.skills)
    return newState
+}
+
+const updateIds = (state, action) => {
+   if (action.result.status === 'ok') {
+      const ids = action.result.data
+      return {
+         ...state,
+         experiences: state.experiences.map((exp, i) => ({ ...exp, id: ids.experiences[i] }))
+      }
+   }
 }
 
 const reducer = (state, action) => {
@@ -76,10 +81,10 @@ const reducer = (state, action) => {
          return deleteExperience(state, action)
       case 'UPDATE_EXPERIENCE':
          return updateExperience(state, action)
-      case 'EXTRACT_DATA':
-         return extractData(state)
       case 'UPDATE_DEVELOPER':
          return updateDeveloper(state, action)
+      case 'UPDATE_IDS':
+         return updateIds(state, action)
       default:
          return state
    }

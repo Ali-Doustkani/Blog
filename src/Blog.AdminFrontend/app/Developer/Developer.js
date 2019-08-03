@@ -23,7 +23,17 @@ function Developer() {
    }
 
    async function save() {
-      const result = await saveDeveloper(reducer(state, { type: 'EXTRACT_DATA' }))
+      const { isLoading, ...developer } = state
+      developer.experiences = developer.experiences.map(e => ({
+         id: e.id,
+         company: e.company,
+         position: e.position,
+         startDate: e.startDate,
+         endDate: e.endDate,
+         content: e.content
+      }))
+      const result = await saveDeveloper(developer)
+      dispatch({ type: 'UPDATE_IDS', result })
    }
 
    if (state.isLoading) {

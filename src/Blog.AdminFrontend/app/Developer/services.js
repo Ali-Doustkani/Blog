@@ -1,5 +1,5 @@
 const url_developer =
-   process.env.NODE_ENV === 'production' ? '/api/developer' : 'http://localhost:3000/developer'
+   process.env.NODE_ENV === 'production' ? '/api/developer' : 'http://localhost:3000/api/developer'
 
 async function getDeveloper() {
    try {
@@ -8,16 +8,28 @@ async function getDeveloper() {
             Accept: 'application/json'
          }
       })
+      if (response.status === 200) {
+         const developer = await response.json()
+         return {
+            status: 'ok',
+            developer
+         }
+      }
       if (response.status === 204) {
          return {
             status: 'ok',
             developer: null
          }
       }
-      const developer = await response.json()
+      if (response.status === 404) {
+         return {
+            status: 'error',
+            message: 'server not found'
+         }
+      }
       return {
-         status: 'ok',
-         developer
+         status: 'error',
+         message: 'problem loading data'
       }
    } catch (err) {
       return {
@@ -28,14 +40,27 @@ async function getDeveloper() {
 }
 
 async function saveDeveloper(developer) {
-   const response = await fetch(url_developer, {
-      method: 'PUT',
-      headers: {
-         'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(developer)
-   })
-   return await response.json()
+   try {
+      const response = await fetch(url_developer, {
+         method: 'PUT',
+         headers: {
+            'Content-Type': 'application/json'
+         },
+         body: JSON.stringify(developer)
+      })
+      if (response.status === 200) {
+         const data = await response.json()
+         return {
+            status: 'ok',
+            data
+         }
+      }
+   } catch (ex) {
+      return {
+         status: 'error',
+         message: ex.message
+      }
+   }
 }
 
 export { getDeveloper, saveDeveloper }
