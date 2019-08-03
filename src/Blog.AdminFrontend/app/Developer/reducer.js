@@ -42,8 +42,8 @@ const updateExperience = (state, action) => {
    return {
       ...state,
       experiences: state.experiences.map(exp => {
-         if (exp.id === action.experience.id) {
-            Object.assign(exp, action.experience)
+         if (exp.id === action.change.id) {
+            Object.assign(exp, action.change)
             validateExperience(exp)
             return exp
          }

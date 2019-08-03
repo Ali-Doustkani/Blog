@@ -127,7 +127,7 @@ describe('manipulating experiences', () => {
             }
          ]
       }
-      const changes = {
+      const change = {
          id: 1,
          company: 'Lodgify',
          position: 'Back-end developer',
@@ -137,7 +137,7 @@ describe('manipulating experiences', () => {
 
       const newState = reducer(initial, {
          type: 'UPDATE_EXPERIENCE',
-         experience: changes
+         change
       })
 
       expect(newState.experiences).toEqual([
@@ -176,7 +176,7 @@ describe('manipulating experiences', () => {
 
       const state2 = reducer(state1, {
          type: 'UPDATE_EXPERIENCE',
-         experience: {
+         change: {
             id: 1,
             company: ''
          }
@@ -184,7 +184,7 @@ describe('manipulating experiences', () => {
 
       const state3 = reducer(state2, {
          type: 'UPDATE_EXPERIENCE',
-         experience: {
+         change: {
             id: 1,
             position: ''
          }

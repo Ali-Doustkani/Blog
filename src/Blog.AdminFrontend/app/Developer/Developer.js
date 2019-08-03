@@ -49,7 +49,7 @@ function Developer() {
                   key={e.id}
                   {...e}
                   deleteClicked={id => dispatch({ type: 'DELETE_EXPERIENCE', id })}
-                  onChange={experience => dispatch({ type: 'UPDATE_EXPERIENCE', experience })}
+                  onChange={change => dispatch({ type: 'UPDATE_EXPERIENCE', change })}
                />
             ))}
             <Button
