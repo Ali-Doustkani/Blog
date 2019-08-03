@@ -57,6 +57,12 @@ const extractData = state => {
    return developer
 }
 
+const updateDeveloper = (state, action) => {
+   const newState = { ...state, ...action.change }
+   newState.summaryError = isRichtextEmtpy(newState.summary)
+   return newState
+}
+
 const reducer = (state, action) => {
    switch (action.type) {
       case 'RESTART':
@@ -71,6 +77,10 @@ const reducer = (state, action) => {
          return updateExperience(state, action)
       case 'EXTRACT_DATA':
          return extractData(state)
+      case 'UPDATE_DEVELOPER':
+         return updateDeveloper(state, action)
+      default:
+         return state
    }
 }
 

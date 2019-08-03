@@ -41,7 +41,13 @@ function Developer() {
          <h1>Write about yourself</h1>
          <div className="text-group richtext-group">
             <label>Summary</label>
-            <Richtext innerHtml={state.summary} />
+            <Richtext
+               innerHtml={state.summary}
+               error={state.summaryError}
+               onChange={e =>
+                  dispatch({ type: 'UPDATE_DEVELOPER', change: { summary: e.target.value } })
+               }
+            />
          </div>
          <div className="container">
             {state.experiences.map(e => (

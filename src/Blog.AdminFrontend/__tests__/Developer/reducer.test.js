@@ -63,6 +63,36 @@ describe('loading', () => {
    })
 })
 
+describe('manipulating developer', () => {
+   it('updates summary', () => {
+      const initial = {
+         summary: '<p></p>',
+         experiences: ''
+      }
+
+      const newState = reducer(initial, {
+         type: 'UPDATE_DEVELOPER',
+         change: { summary: '<p>New Summary</p>' }
+      })
+
+      expect(newState.summary).toBe('<p>New Summary</p>')
+   })
+
+   it('validate', () => {
+      validators.isRichtextEmtpy.mockReturnValue(true)
+      const initial = {
+         summary: '<p>TEXT</p>'
+      }
+
+      const newState = reducer(initial, {
+         type: 'UPDATE_DEVELOPER',
+         change: { summary: '<p></p>' }
+      })
+
+      expect(newState.summaryError).toBe(true)
+   })
+})
+
 describe('manipulating experiences', () => {
    it('add new experience', () => {
       global.Date = jest.fn(() => {
@@ -157,7 +187,7 @@ describe('manipulating experiences', () => {
       ])
    })
 
-   it('check validation for input fields', () => {
+   it('validate', () => {
       validators.isEmpty.mockImplementation(input => input === '')
       validators.isRichtextEmtpy.mockReturnValue(false)
 
