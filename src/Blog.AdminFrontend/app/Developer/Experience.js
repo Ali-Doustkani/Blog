@@ -33,7 +33,7 @@ const Experience = props => {
                name="startDate"
                data-testid="startDate-input"
                type="date"
-               className="hide-arrow"
+               className={props.startDateError ? 'hide-arrow incorrect' : 'hide-arrow'}
                defaultValue={props.startDate}
                onChange={inputChange}
             />
@@ -41,7 +41,7 @@ const Experience = props => {
                name="endDate"
                data-testid="endDate-input"
                type="date"
-               className="hide-arrow"
+               className={props.endDateError ? 'hide-arrow incorrect' : 'hide-arrow'}
                defaultValue={props.endDate}
                onChange={inputChange}
             />

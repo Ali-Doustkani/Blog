@@ -60,9 +60,7 @@ describe('loading', () => {
       fireEvent.click(tryAgain)
 
       expect(queryByTestId('loader-component')).not.toBeInTheDocument()
-
-      const message = await waitForElement(() => queryByTestId('message-component'))
-      expect(message).not.toBeInTheDocument()
+      expect(queryByTestId('message-component')).not.toBeInTheDocument()
    })
 })
 

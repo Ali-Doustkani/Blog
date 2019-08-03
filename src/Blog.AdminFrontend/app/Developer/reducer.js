@@ -1,4 +1,5 @@
 import uuid from 'uuid/v1'
+import { isEmpty, isRichtextEmtpy } from '../utils/validations'
 
 const load = action => {
    if (action.data.status === 'ok') {
@@ -29,16 +30,26 @@ const deleteExperience = (state, action) => {
    return { ...state, experiences: state.experiences.filter(x => x.id !== action.id) }
 }
 
-const assignFrom = source => target =>
-   target.id === source.id ? Object.assign(target, source) : target
+const validateExperience = experience => {
+   experience.companyError = isEmpty(experience.company)
+   experience.positionError = isEmpty(experience.position)
+   experience.startDateError = isEmpty(experience.startDate)
+   experience.endDateError = isEmpty(experience.endDate)
+   experience.contentError = isRichtextEmtpy(experience.content)
+}
 
 const updateExperience = (state, action) => {
-   const { experience } = action
-   experience.companyError = experience.company === '' ? 'company is required' : ''
-   experience.positionError = experience.position === '' ? 'position is required' : ''
-   experience.contentError =
-      experience.content === '<p contenteditable=""></p>' ? 'content is required' : ''
-   return { ...state, experiences: state.experiences.map(assignFrom(experience)) }
+   return {
+      ...state,
+      experiences: state.experiences.map(exp => {
+         if (exp.id === action.experience.id) {
+            Object.assign(exp, action.experience)
+            validateExperience(exp)
+            return exp
+         }
+         return exp
+      })
+   }
 }
 
 const extractData = state => {

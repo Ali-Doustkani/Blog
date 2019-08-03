@@ -59,11 +59,10 @@ class Richtext extends React.Component {
             <article
                data-testid={this.props['data-testid']}
                ref={this.editorRef}
-               className="entry incorrect"
+               className={this.props.error ? 'entry incorrect' : 'entry'}
                dangerouslySetInnerHTML={{ __html: this.props.innerHtml }}
                onBlur={this.blur}
             />
-            <span className="error">{this.props.error}</span>
          </div>
       )
    }

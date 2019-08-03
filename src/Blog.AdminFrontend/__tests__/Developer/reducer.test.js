@@ -1,6 +1,8 @@
 import reducer from '../../app/Developer/reducer'
+import * as validators from '../../app/utils/validations'
 import uuid from 'uuid/v1'
 jest.mock('uuid/v1')
+jest.mock('../../app/utils/validations')
 
 describe('loading', () => {
    const initial = {
@@ -110,6 +112,9 @@ describe('manipulating experiences', () => {
    })
 
    it('update an existing experience', () => {
+      validators.isEmpty.mockReturnValue(false)
+      validators.isRichtextEmtpy.mockReturnValue(false)
+
       const initial = {
          experiences: [
             {
@@ -117,11 +122,12 @@ describe('manipulating experiences', () => {
                company: 'Bellin',
                position: 'C# Developer',
                startDate: '2019-01-01',
-               endDate: '2020-01-01'
+               endDate: '2020-01-01',
+               content: '<p contenteditable>worked as a beck-end developer</p>'
             }
          ]
       }
-      const newExperience = {
+      const changes = {
          id: 1,
          company: 'Lodgify',
          position: 'Back-end developer',
@@ -131,10 +137,72 @@ describe('manipulating experiences', () => {
 
       const newState = reducer(initial, {
          type: 'UPDATE_EXPERIENCE',
-         experience: newExperience
+         experience: changes
       })
 
-      expect(newState.experiences).toEqual([newExperience])
+      expect(newState.experiences).toEqual([
+         {
+            id: 1,
+            company: 'Lodgify',
+            companyError: false,
+            position: 'Back-end developer',
+            positionError: false,
+            startDate: '2020-01-01',
+            startDateError: false,
+            endDate: '2022-01-01',
+            endDateError: false,
+            content: '<p contenteditable>worked as a beck-end developer</p>',
+            contentError: false
+         }
+      ])
+   })
+
+   it('check validation for input fields', () => {
+      validators.isEmpty.mockImplementation(input => input === '')
+      validators.isRichtextEmtpy.mockReturnValue(false)
+
+      const state1 = {
+         experiences: [
+            {
+               id: 1,
+               company: 'Lodgify',
+               position: 'C# Developer',
+               startDate: '2019-01-01',
+               endDate: '2020-01-01',
+               content: '<p contenteditable="">worked as a developer</p>'
+            }
+         ]
+      }
+
+      const state2 = reducer(state1, {
+         type: 'UPDATE_EXPERIENCE',
+         experience: {
+            id: 1,
+            company: ''
+         }
+      })
+
+      const state3 = reducer(state2, {
+         type: 'UPDATE_EXPERIENCE',
+         experience: {
+            id: 1,
+            position: ''
+         }
+      })
+
+      expect(state3.experiences[0]).toEqual({
+         id: 1,
+         company: '',
+         companyError: true,
+         position: '',
+         positionError: true,
+         startDate: '2019-01-01',
+         startDateError: false,
+         endDate: '2020-01-01',
+         endDateError: false,
+         content: '<p contenteditable="">worked as a developer</p>',
+         contentError: false
+      })
    })
 })
 
