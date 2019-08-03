@@ -1,0 +1,61 @@
+﻿@import 'Colors';
+
+#site-header {
+   text-align: center;
+
+   nav {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      margin-top: 10px;
+      padding: 0 15px;
+      ul {
+         margin-right: 20px;
+      }
+   }
+
+   img {
+      width: 150px;
+      height: 150px;
+      padding: 5px;
+      border: 3px solid $color4;
+      border-radius: 50%;
+   }
+
+   .menu-bar {
+      padding: 0;
+
+      &:first-of-type {
+         a {
+            font-size: 1.15em;
+         }
+      }
+
+      a {
+         font-size: 1.8em;
+         color: $color2;
+      }
+
+      li {
+         display: inline;
+      }
+   }
+
+   .logout-form {
+      display: inline;
+
+      button {
+         padding: 3px;
+         background-color: $color2;
+         font-size: 0.9em;
+      }
+   }
+
+   .separator {
+      background-color: #bbb;
+      width: 1px;
+      height: 1em;
+      display: inline-block;
+      margin: 0 3px;
+   }
+}
