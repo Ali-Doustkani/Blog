@@ -183,9 +183,9 @@
 }
 
 .error {
-   color: $error;
+   color: $toast-error;
 }
 
 .incorrect {
-   outline: 1px solid $error;
+   outline: 1px solid $toast-error;
 }

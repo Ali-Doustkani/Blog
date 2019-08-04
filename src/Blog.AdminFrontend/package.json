@@ -25,6 +25,7 @@
       "@alidoustkani/richtext": "^1.0.24",
       "react": "^16.8.6",
       "react-dom": "^16.8.6",
+      "react-toast-notifications": "^2.2.1",
       "uuid": "^3.3.2"
    },
    "browserslist": [

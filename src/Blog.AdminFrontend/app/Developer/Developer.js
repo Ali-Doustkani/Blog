@@ -1,4 +1,5 @@
 import React, { useReducer, useEffect } from 'react'
+import { useToasts } from 'react-toast-notifications'
 import { Loader, Message, Button, Richtext } from '../Components'
 import Experience from './Experience'
 import { getDeveloper, saveDeveloper } from './services'
@@ -10,6 +11,7 @@ const initialState = {
 
 function Developer() {
    const [state, dispatch] = useReducer(reducer, initialState)
+   const { addToast } = useToasts()
 
    useEffect(() => {
       if (state.isLoading) {
@@ -33,7 +35,18 @@ function Developer() {
          content: e.content
       }))
       const result = await saveDeveloper(developer)
-      dispatch({ type: 'UPDATE_IDS', result })
+      if (result.status === 'ok') {
+         dispatch({ type: 'UPDATE_IDS', result })
+         addToast('The developer saved successfully!', {
+            appearance: 'success',
+            autoDismiss: true
+         })
+      } else if (result.status === 'error') {
+         addToast('Could not save the developer information. Checkout the errors.', {
+            appearance: 'error',
+            autoDismiss: true
+         })
+      }
    }
 
    if (state.isLoading) {

@@ -10,12 +10,19 @@ app.use(bodyParser.json())
 app.get('/api/developer', (req, res) => res.send(developer))
 
 app.put('/api/developer', (req, res) => {
-   const ids = req.body.experiences.map((exp, i) => i + 100)
-   res.send({
-      experiences: ids
+   res.status(400).send({
+      summary: ['summary is required'],
+      experiences: [
+         {
+            company: ['company is required', 'company already exists']
+         },
+         {
+            position: ['position is not valid']
+         }
+      ]
    })
 })
 
 app.listen(3000, () => {
-   console.log('PUT OK => http://localhost:3000')
+   console.log('PUT ERROR => http://localhost:3000')
 })
