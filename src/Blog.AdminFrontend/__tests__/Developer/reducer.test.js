@@ -12,9 +12,9 @@ describe('loading', () => {
    it('create default values when no developer exists', () => {
       const newState = reducer(initial, {
          type: 'LOAD',
-         data: {
+         result: {
             status: 'ok',
-            developer: null
+            data: null
          }
       })
 
@@ -24,7 +24,7 @@ describe('loading', () => {
    })
 
    it('sets the developer info', () => {
-      const developer = {
+      const data = {
          summary: 'life of a programmer',
          experiences: [
             {
@@ -39,20 +39,20 @@ describe('loading', () => {
 
       const newState = reducer(initial, {
          type: 'LOAD',
-         data: { status: 'ok', developer }
+         result: { status: 'ok', data }
       })
 
       expect(newState.isLoading).toBe(false)
-      expect(newState.summary).toBe(developer.summary)
-      expect(newState.experiences).toEqual(developer.experiences)
+      expect(newState.summary).toBe(data.summary)
+      expect(newState.experiences).toEqual(data.experiences)
    })
 
-   it('create error message when error happend', () => {
+   it('create error message on fatal happend', () => {
       const newState = reducer(initial, {
          type: 'LOAD',
-         data: {
-            status: 'error',
-            message: 'Error Happened'
+         result: {
+            status: 'fatal',
+            data: 'Error Happened'
          }
       })
 
@@ -92,6 +92,40 @@ describe('manipulating developer', () => {
       })
 
       expect(newState.summaryError).toBe(true)
+   })
+
+   it('update experience ids', () => {
+      const initial = {
+         experiences: [
+            {
+               id: 1,
+               company: 'Lodgify'
+            },
+            {
+               id: 2,
+               company: 'Parmis'
+            }
+         ]
+      }
+
+      const newState = reducer(initial, {
+         type: 'UPDATE_IDS',
+         result: {
+            status: 'ok',
+            data: { experiences: [101, 202] }
+         }
+      })
+
+      expect(newState.experiences.map(exp => exp.id)).toEqual([101, 202])
+   })
+
+   it('update experience ids with fatal result', () => {
+      const newState = reducer(
+         {},
+         { type: 'UPDATE_IDS', result: { status: 'fatal', data: 'error message' } }
+      )
+
+      expect(newState.errorMessage).toBe('error message')
    })
 })
 
@@ -235,18 +269,5 @@ describe('manipulating experiences', () => {
          content: '<p contenteditable="">worked as a developer</p>',
          contentError: false
       })
-   })
-})
-
-it('extract developer', () => {
-   const initial = {
-      isLoading: false,
-      summary: 'about a developer',
-      experiences: []
-   }
-   const newState = reducer(initial, { type: 'EXTRACT_DATA' })
-   expect(newState).toEqual({
-      summary: 'about a developer',
-      experiences: []
    })
 })

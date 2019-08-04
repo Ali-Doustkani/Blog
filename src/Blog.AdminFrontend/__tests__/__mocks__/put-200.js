@@ -18,7 +18,7 @@ app.put('/api/developer', (req, res) => {
 })
 
 app.listen(3000, () => {
-   console.log('MOCK API SERVER STARTED...')
+   console.log('MOCK API SERVER STARTED => http://localhost:3000')
 })
 
 const developer = {

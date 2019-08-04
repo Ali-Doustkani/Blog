@@ -1,6 +1,6 @@
 module.exports = {
    transformIgnorePatterns: ['node_modules/(?!(@alidoustkani/richtext)/)'],
-   testPathIgnorePatterns: ['empty-module\\.js$'],
+   testPathIgnorePatterns: ['__mocks__'],
    moduleNameMapper: {
       '\\.(svg|jpg|png)$': '<rootDir>/__tests__/__mocks__/empty-module.js'
    }

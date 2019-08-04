@@ -2,13 +2,12 @@ import uuid from 'uuid/v1'
 import { isEmpty, isRichtextEmtpy } from '../utils/validations'
 
 const load = action => {
-   if (action.data.status === 'ok') {
-      if (action.data.developer) {
-         return { isLoading: false, ...action.data.developer }
-      }
-      return { isLoading: false, summary: '', experiences: [] }
+   if (action.result.status === 'ok') {
+      return action.result.data
+         ? { isLoading: false, ...action.result.data }
+         : { isLoading: false, summary: '', experiences: [] }
    }
-   return { isLoading: false, errorMessage: action.data.message }
+   return { isLoading: false, errorMessage: action.result.data }
 }
 
 const newExperience = state => {
@@ -60,12 +59,17 @@ const updateDeveloper = (state, action) => {
 }
 
 const updateIds = (state, action) => {
-   if (action.result.status === 'ok') {
-      const ids = action.result.data
-      return {
-         ...state,
-         experiences: state.experiences.map((exp, i) => ({ ...exp, id: ids.experiences[i] }))
-      }
+   switch (action.result.status) {
+      case 'ok':
+         const ids = action.result.data
+         return {
+            ...state,
+            experiences: state.experiences.map((exp, i) => ({ ...exp, id: ids.experiences[i] }))
+         }
+
+      case 'error':
+      case 'fatal':
+         return { ...state, errorMessage: action.result.data }
    }
 }
 

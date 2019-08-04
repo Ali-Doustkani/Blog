@@ -9,7 +9,7 @@
          "request": "launch",
          "name": "Jest All",
          "program": "${workspaceFolder}/node_modules/.bin/jest",
-         "args": ["developer", "--runInBand", "--watchAll"],
+         "args": ["service", "--runInBand", "--watchAll"],
          "console": "integratedTerminal",
          "internalConsoleOptions": "neverOpen",
          "disableOptimisticBPs": true,

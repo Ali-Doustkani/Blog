@@ -18,8 +18,8 @@ function Developer() {
    }, [state.isLoading])
 
    async function fetchDeveloper() {
-      const data = await getDeveloper()
-      dispatch({ type: 'LOAD', data })
+      const result = await getDeveloper()
+      dispatch({ type: 'LOAD', result })
    }
 
    async function save() {
