@@ -52,7 +52,7 @@ const Developer = () => {
    }
 
    if (state.isLoading && !state.disabled) {
-      return <Loader text="loading developer..." />
+      return <Loader text="Loading developer..." />
    }
 
    if (state.errorMessage) {
@@ -63,7 +63,7 @@ const Developer = () => {
 
    return (
       <DisabledContext.Provider value={state.disabled}>
-         {state.isLoading ? <Loader /> : null}
+         {state.isLoading ? <Loader text="Saving developer..." /> : null}
          <div className="form about-form">
             <h1>Write about yourself</h1>
             <Richtext
