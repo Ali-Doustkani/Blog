@@ -4,7 +4,9 @@ import { render, cleanup, fireEvent, wait, act, waitForElement } from '@testing-
 import Developer from '../../app/Developer/Developer'
 import reducer from '../../app/Developer/reducer'
 import { useToasts } from 'react-toast-notifications'
+import { ask } from '../../app/Components/ask'
 
+jest.mock('../../app/Components/ask')
 jest.mock('../../app/Developer/reducer')
 jest.mock('../../app/Developer/services')
 jest.mock('react-toast-notifications')
@@ -94,6 +96,12 @@ describe('experiences', () => {
       })
    })
    it('delete experience', async () => {
+      ask.mockImplementation(fn => {
+         return function(id) {
+            fn(id)
+         }
+      })
+
       reducer.mockImplementation((state, action) => {
          switch (action.type) {
             case 'LOAD':

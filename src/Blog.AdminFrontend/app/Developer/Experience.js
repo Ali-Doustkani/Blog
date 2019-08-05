@@ -67,7 +67,7 @@ const Experience = props => {
                data-testid="deleteExperience-button"
                onClick={() => props.deleteClicked(props.id)}
             >
-               <i class="fas fa-trash-alt" />
+               <i className="fas fa-trash-alt" />
             </Button>
          </div>
          <Richtext

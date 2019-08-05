@@ -1,6 +1,6 @@
 import React, { useReducer, useEffect } from 'react'
 import { useToasts } from 'react-toast-notifications'
-import { Loader, Message, Button, Richtext, Textarea } from '../Components'
+import { Loader, Message, Button, Richtext, Textarea, ask } from '../Components'
 import Experience from './Experience'
 import { getDeveloper, saveDeveloper } from './services'
 import reducer from './reducer'
@@ -92,7 +92,7 @@ function Developer() {
                <Experience
                   key={e.id}
                   {...e}
-                  deleteClicked={id => dispatch({ type: 'DELETE_EXPERIENCE', id })}
+                  deleteClicked={ask(id => dispatch({ type: 'DELETE_EXPERIENCE', id }))}
                   onChange={change => dispatch({ type: 'UPDATE_EXPERIENCE', change })}
                />
             ))}
