@@ -57,12 +57,8 @@ const updateExperience = (state, action) => {
 
 const updateDeveloper = (state, action) => {
    const newState = { ...state, ...action.change }
-   if (isRichtextEmtpy(newState.summary)) {
-      newState.summaryErrors = ['summary is required']
-   }
-   if (isEmpty(newState.skills)) {
-      newState.skillsErrors = ['skills is required']
-   }
+   newState.summaryErrors = isRichtextEmtpy(newState.summary) ? ['summary is required'] : []
+   newState.skillsErrors = isEmpty(newState.skills) ? ['skills is required'] : []
    return newState
 }
 
