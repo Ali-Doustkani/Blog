@@ -23,7 +23,12 @@ function Richtext(props) {
    const [rich, setRich] = useState(null)
    const [hasFocus, setFocus] = useState(false)
 
-   useEffect(() => setRich(create(editorRef.current, OPTIONS)), [])
+   useEffect(() => {
+      setRich(create(editorRef.current, OPTIONS))
+      if (props.autofocus) {
+         editorRef.current.firstChild.focus()
+      }
+   }, [])
 
    const article = useMemo(
       () => (

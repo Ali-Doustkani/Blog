@@ -32,7 +32,6 @@ const Experience = props => {
             <input
                name="company"
                data-testid="company-input"
-               autoFocus
                placeholder="Company"
                className={props.companyErrors ? 'incorrect' : null}
                defaultValue={props.company}
