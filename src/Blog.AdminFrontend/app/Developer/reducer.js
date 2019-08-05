@@ -34,11 +34,11 @@ const deleteExperience = (state, action) => {
 }
 
 const validateExperience = experience => {
-   experience.companyError = isEmpty(experience.company)
-   experience.positionError = isEmpty(experience.position)
-   experience.startDateError = isEmpty(experience.startDate)
-   experience.endDateError = isEmpty(experience.endDate)
-   experience.contentError = isRichtextEmtpy(experience.content)
+   experience.companyErrors = isEmpty(experience.company)
+   experience.positionErrors = isEmpty(experience.position)
+   experience.startDateErrors = isEmpty(experience.startDate)
+   experience.endDateErrors = isEmpty(experience.endDate)
+   experience.contentErrors = isRichtextEmtpy(experience.content)
 }
 
 const updateExperience = (state, action) => {
@@ -75,10 +75,27 @@ const updateIds = (state, action) => {
 }
 
 const showErrors = (state, action) => {
+   const experiences = []
+   for (let i = 0; i < state.experiences.length; i++) {
+      const a = action.data.experiences[i]
+      if (Object.getOwnPropertyNames(action.data.experiences[i]).length) {
+         experiences.push({
+            ...state.experiences[i],
+            companyErrors: a.company,
+            positionErrors: a.position,
+            startDateErrors: a.startDate,
+            endDateErrors: a.endDate,
+            contentErrors: a.content
+         })
+      } else {
+         experiences.push(state.experiences[i])
+      }
+   }
    return {
       ...state,
       summaryErrors: action.data.summary || [],
-      skillsErrors: action.data.skills || []
+      skillsErrors: action.data.skills || [],
+      experiences
    }
 }
 

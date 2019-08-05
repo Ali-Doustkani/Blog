@@ -4,7 +4,7 @@ import { Richtext, ErrorList } from '../Components'
 function concat() {
    let result = []
    ;[].forEach.call(arguments, arr => {
-      if (arr) {
+      if (arr && Array.isArray(arr)) {
          result = result.concat(arr)
       }
    })
@@ -24,6 +24,7 @@ const Experience = props => {
       props.endDateErrors,
       props.contentErrors
    )
+
    return (
       <div data-testid="experience-component" className="work-experience-group">
          <div className="text-group single-row ">

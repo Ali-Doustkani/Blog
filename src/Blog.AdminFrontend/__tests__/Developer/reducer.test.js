@@ -202,15 +202,15 @@ describe('manipulating experiences', () => {
          {
             id: 1,
             company: 'Lodgify',
-            companyError: false,
+            companyErrors: false,
             position: 'Back-end developer',
-            positionError: false,
+            positionErrors: false,
             startDate: '2020-01-01',
-            startDateError: false,
+            startDateErrors: false,
             endDate: '2022-01-01',
-            endDateError: false,
+            endDateErrors: false,
             content: '<p contenteditable>worked as a beck-end developer</p>',
-            contentError: false
+            contentErrors: false
          }
       ])
    })
@@ -251,15 +251,15 @@ describe('manipulating experiences', () => {
       expect(state3.experiences[0]).toEqual({
          id: 1,
          company: '',
-         companyError: true,
+         companyErrors: true,
          position: '',
-         positionError: true,
+         positionErrors: true,
          startDate: '2019-01-01',
-         startDateError: false,
+         startDateErrors: false,
          endDate: '2020-01-01',
-         endDateError: false,
+         endDateErrors: false,
          content: '<p contenteditable="">worked as a developer</p>',
-         contentError: false
+         contentErrors: false
       })
    })
 })
