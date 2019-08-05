@@ -45,7 +45,7 @@ class Richtext extends React.Component {
 
       return (
          <div className="text-group richtext-group">
-            <label>{this.props.label}</label>
+            {this.props.label ? <label>{this.props.label}</label> : null}
             <div className="toolbar">
                <Button content="bold" onClick={() => this.rich.style('important')} />
                <Button content="code" onClick={() => this.rich.style('inlineCode')} />
