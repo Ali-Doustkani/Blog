@@ -1,5 +1,5 @@
 import React from 'react'
-import { Richtext, ErrorList } from '../Components'
+import { Richtext, ErrorList, Button } from '../Components'
 
 function concat() {
    let result = []
@@ -27,8 +27,8 @@ const Experience = props => {
 
    return (
       <div data-testid="experience-component" className="work-experience-group">
-         <div className="text-group single-row ">
-            <label>Work Experience</label>
+         <div className="text-group toolbar">
+            <label>Work Experience:</label>
             <input
                name="company"
                data-testid="company-input"
@@ -62,6 +62,13 @@ const Experience = props => {
                defaultValue={props.endDate}
                onChange={inputChange}
             />
+            <div className="separator" />
+            <Button
+               data-testid="deleteExperience-button"
+               onClick={() => props.deleteClicked(props.id)}
+            >
+               <i class="fas fa-trash-alt" />
+            </Button>
          </div>
          <Richtext
             name="content"
@@ -71,12 +78,6 @@ const Experience = props => {
             error={props.contentErrors}
          />
          <ErrorList errors={errors} />
-         <button
-            data-testid="deleteExperience-button"
-            onClick={() => props.deleteClicked(props.id)}
-         >
-            Delete
-         </button>
       </div>
    )
 }

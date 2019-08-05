@@ -1,5 +1,14 @@
-﻿.about-form {
+﻿@import 'Colors';
+
+.about-form {
    .container {
       margin-top: 50px;
    }
+}
+
+.work-experience-group {
+   background: lighten($color3, 40);
+   padding: 10px;
+   border-radius: 5px;
+   margin-bottom: 20px;
 }
