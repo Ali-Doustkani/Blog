@@ -19,12 +19,14 @@ const Experience = props => {
                errors={props.companyErrors}
                value={props.company}
                onChange={inputChange}
+               disabled={props.disabled}
             />
             <Input
                name="position"
                errors={props.positionErrors}
                value={props.position}
                onChange={inputChange}
+               disabled={props.disabled}
             />
             <Input
                name="startDate"
@@ -33,6 +35,7 @@ const Experience = props => {
                value={props.startDate}
                onChange={inputChange}
                className="hide-arrow"
+               disabled={props.disabled}
             />
             <Input
                name="endDate"
@@ -41,11 +44,16 @@ const Experience = props => {
                value={props.endDate}
                onChange={inputChange}
                className="hide-arrow"
+               disabled={props.disabled}
             />
             <div className="separator" />
-            <Button data-testid="deleteExperience-button" onClick={() => props.onDelete(props.id)}>
+            <button
+               disabled={props.disabled}
+               data-testid="deleteExperience-button"
+               onClick={() => props.onDelete(props.id)}
+            >
                <i className="fas fa-trash-alt" />
-            </Button>
+            </button>
          </div>
          <Richtext
             name="content"
@@ -53,6 +61,7 @@ const Experience = props => {
             innerHtml={props.content}
             onChange={inputChange}
             errors={props.contentErrors}
+            disabled={props.disabled}
          />
          <ErrorList
             errors={[

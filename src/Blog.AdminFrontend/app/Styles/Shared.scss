@@ -10,6 +10,11 @@
    cursor: pointer;
 }
 
+.form-button:disabled {
+   background: grey;
+   cursor: default;
+}
+
 @mixin group() {
    margin-top: 10px;
 }
@@ -158,7 +163,7 @@
       cursor: pointer;
       color: $color1;
 
-      &:hover {
+      &:hover:not(:disabled) {
          border-radius: 6px;
          background: transparentize($color3, 0.9);
       }
@@ -167,11 +172,22 @@
          outline: none;
       }
    }
+
+   button:disabled {
+      color: grey;
+      cursor: default;
+   }
 }
 
 .page-message {
-   text-align: center;
-   margin-top: 150px;
+   position: fixed;
+   width: 210px;
+   height: 90px;
+   left: 50%;
+   margin-left: -105px;
+   top: 50%;
+   margin-top: -45px;
+
    & > div {
       display: flex;
       flex-direction: column;

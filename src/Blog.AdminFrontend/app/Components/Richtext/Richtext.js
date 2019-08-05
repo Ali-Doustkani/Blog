@@ -50,6 +50,11 @@ function Richtext(props) {
       ),
       []
    )
+
+   if (rich) {
+      //rich.disabled(props.disabled)
+   }
+
    const classes = ['entry']
    if (props.errors && props.errors.length) {
       classes.push('incorrect')
@@ -62,23 +67,59 @@ function Richtext(props) {
       <div className="text-group richtext-group">
          {props.label ? <label>{props.label}</label> : null}
          <div className="toolbar">
-            <Button content="bold" onClick={() => rich.style('important')} />
-            <Button content="code" onClick={() => rich.style('inlineCode')} />
+            <Button
+               disabled={props.disabled}
+               content="bold"
+               onClick={() => rich.style('important')}
+            />
+            <Button
+               disabled={props.disabled}
+               content="code"
+               onClick={() => rich.style('inlineCode')}
+            />
             <div className="separator" />
-            <Button content={<strong>H1</strong>} onClick={() => rich.apply('h1')} />
-            <Button content={<strong>H2</strong>} onClick={() => rich.apply('h2')} />
+            <Button
+               disabled={props.disabled}
+               content={<strong>H1</strong>}
+               onClick={() => rich.apply('h1')}
+            />
+            <Button
+               disabled={props.disabled}
+               content={<strong>H2</strong>}
+               onClick={() => rich.apply('h2')}
+            />
             <div className="separator" />
-            <Button content="code" onClick={() => rich.apply('code')} />
-            <Button content="terminal" onClick={() => rich.apply('terminal')} />
+            <Button disabled={props.disabled} content="code" onClick={() => rich.apply('code')} />
+            <Button
+               disabled={props.disabled}
+               content="terminal"
+               onClick={() => rich.apply('terminal')}
+            />
             <div className="separator" />
-            <Button content="exclamation" onClick={() => rich.apply('note')} />
-            <Button content="times" onClick={() => rich.apply('warning')} />
+            <Button
+               disabled={props.disabled}
+               content="exclamation"
+               onClick={() => rich.apply('note')}
+            />
+            <Button
+               disabled={props.disabled}
+               content="times"
+               onClick={() => rich.apply('warning')}
+            />
             <div className="separator" />
-            <Button content="list-ul" onClick={() => rich.applyUnorderedList()} />
-            <Button content="list-ol" onClick={() => rich.applyOrderedList()} />
+            <Button
+               disabled={props.disabled}
+               content="list-ul"
+               onClick={() => rich.applyUnorderedList()}
+            />
+            <Button
+               disabled={props.disabled}
+               content="list-ol"
+               onClick={() => rich.applyOrderedList()}
+            />
             <div className="separator" />
-            <Button content="camera" onClick={() => rich.selectImage()} />
-            <Button content="link" onClick={() => rich.styleLink()} />
+            <Button disabled={props.disabled} content="camera" onClick={() => rich.selectImage()} />
+            <Button disabled={props.disabled} content="link" onClick={() => rich.styleLink()} />
          </div>
          <div
             className={classes.join(' ')}
@@ -98,7 +139,8 @@ Richtext.propTypes = {
    onChange: PropTypes.func,
    name: PropTypes.string,
    errors: PropTypes.arrayOf(PropTypes.string),
-   label: PropTypes.string
+   label: PropTypes.string,
+   disabled: PropTypes.bool
 }
 
 export { Richtext }

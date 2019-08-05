@@ -16,6 +16,7 @@ const Input = props => {
          className={className}
          defaultValue={props.value}
          onChange={props.onChange}
+         disabled={props.disabled}
       />
    )
 }
@@ -27,7 +28,8 @@ Input.propTypes = {
    autoFocus: PropTypes.bool,
    value: PropTypes.string,
    type: PropTypes.string,
-   onChange: PropTypes.func
+   onChange: PropTypes.func,
+   disabled: PropTypes.bool
 }
 
 export { Input }

@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 const Button = props => (
-   <button onClick={props.onClick}>
+   <button onClick={props.onClick} disabled={props.disabled}>
       {typeof props.content === 'string' ? (
          <i className={`fas fa-${props.content}`} />
       ) : (
@@ -13,7 +13,8 @@ const Button = props => (
 
 Button.propTypes = {
    onClick: PropTypes.func.isRequired,
-   content: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
+   content: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+   disabled: PropTypes.bool
 }
 
 export default Button

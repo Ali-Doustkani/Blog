@@ -68,6 +68,7 @@ const updateIds = (state, action) => {
    const ids = action.data
    return {
       ...state,
+      disabled: false,
       experiences: state.experiences.map((exp, i) => ({ ...exp, id: ids.experiences[i] }))
    }
 }
@@ -91,10 +92,15 @@ const showErrors = (state, action) => {
    }
    return {
       ...state,
+      disabled: false,
       summaryErrors: action.data.summary || [],
       skillsErrors: action.data.skills || [],
       experiences
    }
+}
+
+const gotoSaveMode = state => {
+   return { ...state, isLoading: true, disabled: true }
 }
 
 const reducer = (state, action) => {
@@ -115,6 +121,8 @@ const reducer = (state, action) => {
          return updateIds(state, action)
       case 'SHOW_ERRORS':
          return showErrors(state, action)
+      case 'GOTO_SAVE_MODE':
+         return gotoSaveMode(state)
       default:
          return state
    }

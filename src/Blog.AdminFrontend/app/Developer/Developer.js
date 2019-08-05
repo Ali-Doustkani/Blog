@@ -7,6 +7,7 @@ import reducer from './reducer'
 
 const initialState = {
    isLoading: true,
+   disabled: false,
    errorMessage: '',
    summary: '',
    summaryErrors: [],
@@ -32,14 +33,7 @@ const Developer = () => {
 
    async function save() {
       const { isLoading, ...developer } = state
-      developer.experiences = developer.experiences.map(e => ({
-         id: e.id,
-         company: e.company,
-         position: e.position,
-         startDate: e.startDate,
-         endDate: e.endDate,
-         content: e.content
-      }))
+      dispatch({ type: 'GOTO_SAVE_MODE' })
       const result = await saveDeveloper(developer)
       if (result.status === 'ok') {
          dispatch({ type: 'UPDATE_IDS', data: result.data })
@@ -56,7 +50,7 @@ const Developer = () => {
       }
    }
 
-   if (state.isLoading) {
+   if (state.isLoading && !state.disabled) {
       return <Loader text="loading developer..." />
    }
 
@@ -67,47 +61,54 @@ const Developer = () => {
    }
 
    return (
-      <div className="form about-form">
-         <h1>Write about yourself</h1>
-         <Richtext
-            label="Summary"
-            autofocus
-            innerHtml={state.summary}
-            errors={state.summaryErrors}
-            onChange={e =>
-               dispatch({ type: 'UPDATE_DEVELOPER', change: { summary: e.target.value } })
-            }
-         />
-         <Textarea
-            label="Skills"
-            name="skills"
-            data-testid="skills-input"
-            defaultValue={state.skills}
-            errors={state.skillsErrors}
-            onChange={e =>
-               dispatch({ type: 'UPDATE_DEVELOPER', change: { skills: e.target.value } })
-            }
-         />
-         <div className="container">
-            {state.experiences.map(e => (
-               <Experience
-                  key={e.id}
-                  {...e}
-                  onDelete={ask(id => dispatch({ type: 'DELETE_EXPERIENCE', id }))}
-                  onChange={change => dispatch({ type: 'UPDATE_EXPERIENCE', change })}
-               />
-            ))}
-            <Button
-               data-testid="addExperience-button"
-               onClick={() => dispatch({ type: 'NEW_EXPERIENCE' })}
-            >
-               Add Work Experience
+      <>
+         {state.isLoading ? <Loader /> : null}
+         <div className="form about-form">
+            <h1>Write about yourself</h1>
+            <Richtext
+               label="Summary"
+               autofocus
+               innerHtml={state.summary}
+               errors={state.summaryErrors}
+               disabled={state.disabled}
+               onChange={e =>
+                  dispatch({ type: 'UPDATE_DEVELOPER', change: { summary: e.target.value } })
+               }
+            />
+            <Textarea
+               label="Skills"
+               name="skills"
+               data-testid="skills-input"
+               defaultValue={state.skills}
+               errors={state.skillsErrors}
+               disabled={state.disabled}
+               onChange={e =>
+                  dispatch({ type: 'UPDATE_DEVELOPER', change: { skills: e.target.value } })
+               }
+            />
+            <div className="container">
+               {state.experiences.map(e => (
+                  <Experience
+                     key={e.id}
+                     {...e}
+                     disabled={state.disabled}
+                     onDelete={ask(id => dispatch({ type: 'DELETE_EXPERIENCE', id }))}
+                     onChange={change => dispatch({ type: 'UPDATE_EXPERIENCE', change })}
+                  />
+               ))}
+               <Button
+                  data-testid="addExperience-button"
+                  disabled={state.disabled}
+                  onClick={() => dispatch({ type: 'NEW_EXPERIENCE' })}
+               >
+                  Add Work Experience
+               </Button>
+            </div>
+            <Button data-testid="save-button" disabled={state.disabled} onClick={save}>
+               Save
             </Button>
          </div>
-         <Button data-testid="save-button" onClick={save}>
-            Save
-         </Button>
-      </div>
+      </>
    )
 }
 

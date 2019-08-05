@@ -19,6 +19,7 @@ const Textarea = props => {
             defaultValue={props.defaultValue}
             className={className}
             onChange={props.onChange}
+            disabled={props.disabled}
          />
          {errorList}
       </div>
@@ -32,7 +33,8 @@ Textarea.propTypes = {
    'data-testid': PropTypes.string,
    defaultValue: PropTypes.string,
    className: PropTypes.string,
-   onChange: PropTypes.func
+   onChange: PropTypes.func,
+   disabled: PropTypes.bool
 }
 
 export { Textarea }
