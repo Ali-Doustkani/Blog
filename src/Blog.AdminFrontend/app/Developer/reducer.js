@@ -4,7 +4,12 @@ import { isEmpty, isRichtextEmtpy } from '../utils/validations'
 const load = (state, action) => {
    if (action.result.status === 'ok') {
       return action.result.data
-         ? { ...state, isLoading: false, ...action.result.data }
+         ? {
+              ...state,
+              isLoading: false,
+              ...action.result.data,
+              experiences: action.result.data.experiences.map(validateExperience)
+           }
          : { ...state, isLoading: false, summary: '', experiences: [] }
    }
    return { ...state, isLoading: false, errorMessage: action.result.data }
@@ -12,19 +17,15 @@ const load = (state, action) => {
 
 const newExperience = state => {
    const now = new Date()
-   const newExperience = {
+   const newExperience = validateExperience({
       id: uuid(),
       company: '',
-      companyErrors: [],
       position: '',
-      positionErrors: [],
       startDate: `${now.getFullYear()}-${String(now.getMonth()).padStart(2, 0)}-${String(
          now.getDay()
       ).padStart(2, 0)}`,
-      startDateErrors: [],
-      endDate: '',
-      endDateErrors: []
-   }
+      endDate: ''
+   })
    const experiences = [...state.experiences, newExperience]
    return { ...state, experiences }
 }
@@ -34,11 +35,12 @@ const deleteExperience = (state, action) => {
 }
 
 const validateExperience = experience => {
-   experience.companyErrors = isEmpty(experience.company)
-   experience.positionErrors = isEmpty(experience.position)
-   experience.startDateErrors = isEmpty(experience.startDate)
-   experience.endDateErrors = isEmpty(experience.endDate)
-   experience.contentErrors = isRichtextEmtpy(experience.content)
+   experience.companyErrors = isEmpty(experience.company) ? ['company is required'] : []
+   experience.positionErrors = isEmpty(experience.position) ? ['position is required'] : []
+   experience.startDateErrors = isEmpty(experience.startDate) ? ['start date is required'] : []
+   experience.endDateErrors = isEmpty(experience.endDate) ? ['end date is required'] : []
+   experience.contentErrors = isRichtextEmtpy(experience.content) ? ['content is required'] : []
+   return experience
 }
 
 const updateExperience = (state, action) => {

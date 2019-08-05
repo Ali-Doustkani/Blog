@@ -33,7 +33,8 @@ const Experience = props => {
                name="company"
                data-testid="company-input"
                placeholder="Company"
-               className={props.companyErrors ? 'incorrect' : null}
+               autoFocus
+               className={props.companyErrors.length ? 'incorrect' : null}
                defaultValue={props.company}
                onChange={inputChange}
             />
@@ -41,7 +42,7 @@ const Experience = props => {
                name="position"
                data-testid="position-input"
                placeholder="Position"
-               className={props.positionErrors ? 'incorrect' : null}
+               className={props.positionErrors.length ? 'incorrect' : null}
                defaultValue={props.position}
                onChange={inputChange}
             />
@@ -49,7 +50,7 @@ const Experience = props => {
                name="startDate"
                data-testid="startDate-input"
                type="date"
-               className={props.startDateErrors ? 'hide-arrow incorrect' : 'hide-arrow'}
+               className={props.startDateErrors.length ? 'hide-arrow incorrect' : 'hide-arrow'}
                defaultValue={props.startDate}
                onChange={inputChange}
             />
@@ -57,7 +58,7 @@ const Experience = props => {
                name="endDate"
                data-testid="endDate-input"
                type="date"
-               className={props.endDateErrors ? 'hide-arrow incorrect' : 'hide-arrow'}
+               className={props.endDateErrors.length ? 'hide-arrow incorrect' : 'hide-arrow'}
                defaultValue={props.endDate}
                onChange={inputChange}
             />
@@ -74,7 +75,7 @@ const Experience = props => {
             data-testid="content-richtext"
             innerHtml={props.content}
             onChange={inputChange}
-            error={props.contentErrors}
+            errors={props.contentErrors}
          />
          <ErrorList errors={errors} />
       </div>
