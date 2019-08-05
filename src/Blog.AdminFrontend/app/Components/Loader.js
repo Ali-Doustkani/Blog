@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import image from './loader.svg'
 
 const Loader = props => (
@@ -9,5 +10,9 @@ const Loader = props => (
       </div>
    </div>
 )
+
+Loader.propTypes = {
+   text: PropTypes.string
+}
 
 export { Loader }

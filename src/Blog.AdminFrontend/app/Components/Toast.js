@@ -1,6 +1,7 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
-function Toast(props) {
+const Toast = props => {
    const icon =
       props.appearance === 'success' ? (
          <i className="fas fa-check" />
@@ -14,6 +15,11 @@ function Toast(props) {
          <a onClick={props.onDismiss}>Dismiss</a>
       </div>
    )
+}
+
+Toast.propTypes = {
+   appearance: PropTypes.string,
+   onDismiss: PropTypes.func
 }
 
 export default Toast

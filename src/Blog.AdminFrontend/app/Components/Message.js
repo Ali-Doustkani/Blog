@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 const Message = props => (
    <div className="page-message">
@@ -10,5 +11,10 @@ const Message = props => (
       </div>
    </div>
 )
+
+Message.propTypes = {
+   message: PropTypes.string,
+   onTryAgain: PropTypes.func
+}
 
 export { Message }

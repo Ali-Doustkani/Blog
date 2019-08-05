@@ -144,7 +144,8 @@ describe('manipulating experiences', () => {
             startDate: '2019-08-02',
             startDateErrors: [],
             endDate: '',
-            endDateErrors: []
+            endDateErrors: [],
+            contentErrors: ['content is required']
          }
       ])
    })
@@ -202,15 +203,15 @@ describe('manipulating experiences', () => {
          {
             id: 1,
             company: 'Lodgify',
-            companyErrors: false,
+            companyErrors: [],
             position: 'Back-end developer',
-            positionErrors: false,
+            positionErrors: [],
             startDate: '2020-01-01',
-            startDateErrors: false,
+            startDateErrors: [],
             endDate: '2022-01-01',
-            endDateErrors: false,
+            endDateErrors: [],
             content: '<p contenteditable>worked as a beck-end developer</p>',
-            contentErrors: false
+            contentErrors: []
          }
       ])
    })
@@ -251,15 +252,15 @@ describe('manipulating experiences', () => {
       expect(state3.experiences[0]).toEqual({
          id: 1,
          company: '',
-         companyErrors: true,
+         companyErrors: ['company is required'],
          position: '',
-         positionErrors: true,
+         positionErrors: ['position is required'],
          startDate: '2019-01-01',
-         startDateErrors: false,
+         startDateErrors: [],
          endDate: '2020-01-01',
-         endDateErrors: false,
+         endDateErrors: [],
          content: '<p contenteditable="">worked as a developer</p>',
-         contentErrors: false
+         contentErrors: []
       })
    })
 })

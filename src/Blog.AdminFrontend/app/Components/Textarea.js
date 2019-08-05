@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { ErrorList } from './ErrorList'
 
 const Textarea = props => {
@@ -22,6 +23,16 @@ const Textarea = props => {
          {errorList}
       </div>
    )
+}
+
+Textarea.propTypes = {
+   errors: PropTypes.arrayOf(PropTypes.string),
+   label: PropTypes.string,
+   name: PropTypes.string,
+   'data-testid': PropTypes.string,
+   defaultValue: PropTypes.string,
+   className: PropTypes.string,
+   onChange: PropTypes.func
 }
 
 export { Textarea }

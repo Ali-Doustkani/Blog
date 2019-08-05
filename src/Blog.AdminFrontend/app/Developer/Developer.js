@@ -15,7 +15,7 @@ const initialState = {
    experiences: []
 }
 
-function Developer() {
+const Developer = () => {
    const [state, dispatch] = useReducer(reducer, initialState)
    const { addToast } = useToasts()
 
@@ -93,7 +93,7 @@ function Developer() {
                <Experience
                   key={e.id}
                   {...e}
-                  deleteClicked={ask(id => dispatch({ type: 'DELETE_EXPERIENCE', id }))}
+                  onDelete={ask(id => dispatch({ type: 'DELETE_EXPERIENCE', id }))}
                   onChange={change => dispatch({ type: 'UPDATE_EXPERIENCE', change })}
                />
             ))}

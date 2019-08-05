@@ -1,4 +1,5 @@
 import React, { useState, useRef, useMemo, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import Button from './Button'
 import { create } from '@alidoustkani/richtext'
 import { ErrorList } from '../ErrorList'
@@ -89,6 +90,15 @@ function Richtext(props) {
          <ErrorList errors={props.errors} />
       </div>
    )
+}
+
+Richtext.propTypes = {
+   autofocus: PropTypes.bool,
+   innerHtml: PropTypes.string.isRequired,
+   onChange: PropTypes.func,
+   name: PropTypes.string,
+   errors: PropTypes.arrayOf(PropTypes.string),
+   label: PropTypes.string
 }
 
 export { Richtext }

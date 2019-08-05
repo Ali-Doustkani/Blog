@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import uuid from 'uuid/v1'
 
 const ErrorList = props => {
@@ -14,6 +15,10 @@ const ErrorList = props => {
          ))}
       </ul>
    )
+}
+
+ErrorList.propTypes = {
+   errors: PropTypes.arrayOf(PropTypes.string)
 }
 
 export { ErrorList }

@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Richtext, ErrorList, Button } from '../Components'
 
 function concat() {
@@ -34,7 +35,7 @@ const Experience = props => {
                data-testid="company-input"
                placeholder="Company"
                autoFocus
-               className={props.companyErrors.length ? 'incorrect' : null}
+               className={props.companyErrors && props.companyErrors.length ? 'incorrect' : null}
                defaultValue={props.company}
                onChange={inputChange}
             />
@@ -42,7 +43,7 @@ const Experience = props => {
                name="position"
                data-testid="position-input"
                placeholder="Position"
-               className={props.positionErrors.length ? 'incorrect' : null}
+               className={props.positionErrors && props.positionErrors.length ? 'incorrect' : null}
                defaultValue={props.position}
                onChange={inputChange}
             />
@@ -50,7 +51,11 @@ const Experience = props => {
                name="startDate"
                data-testid="startDate-input"
                type="date"
-               className={props.startDateErrors.length ? 'hide-arrow incorrect' : 'hide-arrow'}
+               className={
+                  props.startDateErrors && props.startDateErrors.length
+                     ? 'hide-arrow incorrect'
+                     : 'hide-arrow'
+               }
                defaultValue={props.startDate}
                onChange={inputChange}
             />
@@ -58,15 +63,16 @@ const Experience = props => {
                name="endDate"
                data-testid="endDate-input"
                type="date"
-               className={props.endDateErrors.length ? 'hide-arrow incorrect' : 'hide-arrow'}
+               className={
+                  props.endDateErrors && props.endDateErrors.length
+                     ? 'hide-arrow incorrect'
+                     : 'hide-arrow'
+               }
                defaultValue={props.endDate}
                onChange={inputChange}
             />
             <div className="separator" />
-            <Button
-               data-testid="deleteExperience-button"
-               onClick={() => props.deleteClicked(props.id)}
-            >
+            <Button data-testid="deleteExperience-button" onClick={() => props.onDelete(props.id)}>
                <i className="fas fa-trash-alt" />
             </Button>
          </div>
@@ -80,6 +86,22 @@ const Experience = props => {
          <ErrorList errors={errors} />
       </div>
    )
+}
+
+Experience.propTypes = {
+   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+   company: PropTypes.string,
+   companyErrors: PropTypes.arrayOf(PropTypes.string),
+   position: PropTypes.string,
+   positionErrors: PropTypes.arrayOf(PropTypes.string),
+   startDate: PropTypes.string,
+   startDateErrors: PropTypes.arrayOf(PropTypes.string),
+   endDate: PropTypes.string,
+   endDateErrors: PropTypes.arrayOf(PropTypes.string),
+   content: PropTypes.string,
+   contentErrors: PropTypes.arrayOf(PropTypes.string),
+   onChange: PropTypes.func,
+   onDelete: PropTypes.func
 }
 
 export default Experience
