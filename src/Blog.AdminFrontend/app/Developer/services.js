@@ -17,43 +17,49 @@ const fatal = msg => ({
 })
 
 const processResponse = async response => {
+   switch (response.status) {
+      case 200:
+      case 201:
+         return ok(await response.json())
+      case 204:
+         return ok()
+      case 400:
+         return error(await response.json())
+      case 404:
+         return fatal('server not found')
+      default:
+         return fatal(await response.text())
+   }
+}
+
+const getDeveloper = async () => {
    try {
-      switch (response.status) {
-         case 200:
-         case 201:
-            return ok(await response.json())
-         case 204:
-            return ok()
-         case 400:
-            return error(await response.json())
-         case 404:
-            return fatal('server not found')
-         default:
-            return fatal(await response.text())
-      }
+      return await processResponse(
+         await fetch(url_developer, {
+            headers: {
+               Accept: 'application/json'
+            }
+         })
+      )
    } catch (err) {
       return fatal(err.message)
    }
 }
 
-const getDeveloper = async () =>
-   await processResponse(
-      await fetch(url_developer, {
-         headers: {
-            Accept: 'application/json'
-         }
-      })
-   )
-
-const saveDeveloper = async developer =>
-   await processResponse(
-      await fetch(url_developer, {
-         method: 'PUT',
-         headers: {
-            'Content-Type': 'application/json'
-         },
-         body: JSON.stringify(developer)
-      })
-   )
+const saveDeveloper = async developer => {
+   try {
+      return await processResponse(
+         await fetch(url_developer, {
+            method: 'PUT',
+            headers: {
+               'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(developer)
+         })
+      )
+   } catch (err) {
+      return fatal(err.message)
+   }
+}
 
 export { getDeveloper, saveDeveloper }

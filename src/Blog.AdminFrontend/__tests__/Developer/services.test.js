@@ -4,7 +4,7 @@ import { getDeveloper, saveDeveloper } from '../../app/Developer/services'
 beforeEach(fetchMock.reset)
 
 describe('GET', () => {
-   it('handle 200', async () => {
+   it('handles 200', async () => {
       fetchMock.status(200).data({ name: 'developer' })
 
       expect(await getDeveloper()).toEqual({
@@ -13,7 +13,7 @@ describe('GET', () => {
       })
    })
 
-   it('handle 204', async () => {
+   it('handles 204', async () => {
       fetchMock.status(204)
 
       expect(await getDeveloper()).toEqual({
@@ -22,7 +22,7 @@ describe('GET', () => {
       })
    })
 
-   it('handle 404', async () => {
+   it('handles 404', async () => {
       fetchMock.status(404)
 
       expect(await getDeveloper()).toEqual({
@@ -31,7 +31,7 @@ describe('GET', () => {
       })
    })
 
-   it('handle other status', async () => {
+   it('handles other status', async () => {
       fetchMock.status(500).data('error message')
 
       expect(await getDeveloper()).toEqual({
@@ -40,7 +40,7 @@ describe('GET', () => {
       })
    })
 
-   it('handle corrupted data', async () => {
+   it('handles corrupted data', async () => {
       fetchMock.status(200).throwOnData('corrupted data')
 
       expect(await getDeveloper()).toEqual({
@@ -48,10 +48,19 @@ describe('GET', () => {
          data: 'corrupted data'
       })
    })
+
+   it('handles ERR_CONNECTION_REFUSED', async () => {
+      fetchMock.throw('Error')
+
+      expect(await getDeveloper()).toEqual({
+         status: 'fatal',
+         data: 'Error'
+      })
+   })
 })
 
 describe('PUT', () => {
-   it('handle 200', async () => {
+   it('handles 200', async () => {
       fetchMock.status(200).data({ data: 'response' })
       const developer = { name: 'ali' }
 
@@ -62,7 +71,7 @@ describe('PUT', () => {
       expect(fetchMock.body).toEqual(JSON.stringify(developer))
    })
 
-   it('handle 200 with corrupted content', async () => {
+   it('handles 200 with corrupted content', async () => {
       fetchMock.status(200).throwOnData('corrupted data')
 
       expect(await saveDeveloper()).toEqual({
@@ -71,7 +80,7 @@ describe('PUT', () => {
       })
    })
 
-   it('handle 201', async () => {
+   it('handles 201', async () => {
       fetchMock.status(201).data({ data: 'result' })
 
       expect(await saveDeveloper()).toEqual({
@@ -80,7 +89,7 @@ describe('PUT', () => {
       })
    })
 
-   it('handle 400', async () => {
+   it('handles 400', async () => {
       fetchMock.status(400).data({ summary: ['the summary field is required'] })
 
       expect(await saveDeveloper()).toEqual({
@@ -89,7 +98,7 @@ describe('PUT', () => {
       })
    })
 
-   it('handle 404', async () => {
+   it('handles 404', async () => {
       fetchMock.status(404)
 
       expect(await saveDeveloper()).toEqual({
@@ -97,12 +106,22 @@ describe('PUT', () => {
          data: 'server not found'
       })
    })
-   it('handle other statuses', async () => {
+
+   it('handles other statuses', async () => {
       fetchMock.status(500).data('error on server')
 
       expect(await saveDeveloper()).toEqual({
          status: 'fatal',
          data: 'error on server'
+      })
+   })
+
+   it('handle ERR_CONNECTION_REFUSED', async () => {
+      fetchMock.throw('ERROR')
+
+      expect(await saveDeveloper()).toEqual({
+         status: 'fatal',
+         data: 'ERROR'
       })
    })
 })
