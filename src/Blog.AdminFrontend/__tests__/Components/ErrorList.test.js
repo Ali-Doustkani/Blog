@@ -21,3 +21,12 @@ it('shows nothing if errors array is empty', () => {
    const { queryByTestId } = render(<ErrorList errors={[]} />)
    expect(queryByTestId('error-list')).not.toBeInTheDocument()
 })
+
+it('shows arrays of elements', () => {
+   const { getByTestId } = render(<ErrorList errors={[['1', '2'], '3', undefined, [], ['4']]} />)
+   expect(getByTestId('error-list').childNodes.length).toBe(4)
+   expect(getByTestId('error-list').childNodes[0].textContent).toBe('1')
+   expect(getByTestId('error-list').childNodes[1].textContent).toBe('2')
+   expect(getByTestId('error-list').childNodes[2].textContent).toBe('3')
+   expect(getByTestId('error-list').childNodes[3].textContent).toBe('4')
+})

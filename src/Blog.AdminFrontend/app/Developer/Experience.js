@@ -1,16 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Richtext, ErrorList, Button } from '../Components'
-
-function concat() {
-   let result = []
-   ;[].forEach.call(arguments, arr => {
-      if (arr && Array.isArray(arr)) {
-         result = result.concat(arr)
-      }
-   })
-   return result
-}
+import { Richtext, ErrorList, Button, Input } from '../Components'
 
 const Experience = props => {
    const inputChange = e =>
@@ -18,58 +8,39 @@ const Experience = props => {
          id: props.id,
          [e.target.name]: e.target.value
       })
-   const errors = concat(
-      props.companyErrors,
-      props.positionErrors,
-      props.startDateErrors,
-      props.endDateErrors,
-      props.contentErrors
-   )
 
    return (
       <div data-testid="experience-component" className="work-experience-group">
          <div className="text-group toolbar">
             <label>Work Experience:</label>
-            <input
+            <Input
                name="company"
-               data-testid="company-input"
-               placeholder="Company"
                autoFocus
-               className={props.companyErrors && props.companyErrors.length ? 'incorrect' : null}
-               defaultValue={props.company}
+               errors={props.companyErrors}
+               value={props.company}
                onChange={inputChange}
             />
-            <input
+            <Input
                name="position"
-               data-testid="position-input"
-               placeholder="Position"
-               className={props.positionErrors && props.positionErrors.length ? 'incorrect' : null}
-               defaultValue={props.position}
+               errors={props.positionErrors}
+               value={props.position}
                onChange={inputChange}
             />
-            <input
+            <Input
                name="startDate"
-               data-testid="startDate-input"
                type="date"
-               className={
-                  props.startDateErrors && props.startDateErrors.length
-                     ? 'hide-arrow incorrect'
-                     : 'hide-arrow'
-               }
-               defaultValue={props.startDate}
+               errors={props.startDateErrors}
+               value={props.startDate}
                onChange={inputChange}
+               className="hide-arrow"
             />
-            <input
+            <Input
                name="endDate"
-               data-testid="endDate-input"
                type="date"
-               className={
-                  props.endDateErrors && props.endDateErrors.length
-                     ? 'hide-arrow incorrect'
-                     : 'hide-arrow'
-               }
-               defaultValue={props.endDate}
+               errors={props.endDateErrors}
+               value={props.endDate}
                onChange={inputChange}
+               className="hide-arrow"
             />
             <div className="separator" />
             <Button data-testid="deleteExperience-button" onClick={() => props.onDelete(props.id)}>
@@ -83,7 +54,15 @@ const Experience = props => {
             onChange={inputChange}
             errors={props.contentErrors}
          />
-         <ErrorList errors={errors} />
+         <ErrorList
+            errors={[
+               props.companyErrors,
+               props.positionErrors,
+               props.startDateErrors,
+               props.endDateErrors,
+               props.contentErrors
+            ]}
+         />
       </div>
    )
 }
