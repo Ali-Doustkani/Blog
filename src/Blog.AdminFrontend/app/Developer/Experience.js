@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Richtext, ErrorList, Button, Input } from '../Components'
+import { Richtext, ErrorList, Input } from '../Components'
+import Button from '../Components/Richtext/Button'
 
 const Experience = props => {
    const inputChange = e =>
@@ -19,14 +20,12 @@ const Experience = props => {
                errors={props.companyErrors}
                value={props.company}
                onChange={inputChange}
-               disabled={props.disabled}
             />
             <Input
                name="position"
                errors={props.positionErrors}
                value={props.position}
                onChange={inputChange}
-               disabled={props.disabled}
             />
             <Input
                name="startDate"
@@ -35,7 +34,6 @@ const Experience = props => {
                value={props.startDate}
                onChange={inputChange}
                className="hide-arrow"
-               disabled={props.disabled}
             />
             <Input
                name="endDate"
@@ -44,16 +42,13 @@ const Experience = props => {
                value={props.endDate}
                onChange={inputChange}
                className="hide-arrow"
-               disabled={props.disabled}
             />
             <div className="separator" />
-            <button
-               disabled={props.disabled}
+            <Button
+               content="trash-alt"
                data-testid="deleteExperience-button"
                onClick={() => props.onDelete(props.id)}
-            >
-               <i className="fas fa-trash-alt" />
-            </button>
+            />
          </div>
          <Richtext
             name="content"
@@ -61,7 +56,6 @@ const Experience = props => {
             innerHtml={props.content}
             onChange={inputChange}
             errors={props.contentErrors}
-            disabled={props.disabled}
          />
          <ErrorList
             errors={[

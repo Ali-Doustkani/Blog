@@ -1,7 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { DisabledContext } from '../DisabledContext'
 
 const Input = props => {
+   const disabled = React.useContext(DisabledContext)
    const ph = props.placeholder || props.name.charAt(0).toUpperCase() + props.name.slice(1)
    const className =
       props.errors && props.errors.length ? props.className + ' incorrect' : props.className
@@ -16,7 +18,7 @@ const Input = props => {
          className={className}
          defaultValue={props.value}
          onChange={props.onChange}
-         disabled={props.disabled}
+         disabled={disabled}
       />
    )
 }
@@ -28,8 +30,7 @@ Input.propTypes = {
    autoFocus: PropTypes.bool,
    value: PropTypes.string,
    type: PropTypes.string,
-   onChange: PropTypes.func,
-   disabled: PropTypes.bool
+   onChange: PropTypes.func
 }
 
 export { Input }

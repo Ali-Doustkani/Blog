@@ -1,8 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { ErrorList } from './ErrorList'
+import { DisabledContext } from '../DisabledContext'
 
 const Textarea = props => {
+   const disabled = React.useContext(DisabledContext)
    let className = null,
       errorList = null
    if (props.errors && props.errors.length) {
@@ -19,7 +21,7 @@ const Textarea = props => {
             defaultValue={props.defaultValue}
             className={className}
             onChange={props.onChange}
-            disabled={props.disabled}
+            disabled={disabled}
          />
          {errorList}
       </div>
@@ -33,8 +35,7 @@ Textarea.propTypes = {
    'data-testid': PropTypes.string,
    defaultValue: PropTypes.string,
    className: PropTypes.string,
-   onChange: PropTypes.func,
-   disabled: PropTypes.bool
+   onChange: PropTypes.func
 }
 
 export { Textarea }

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import Button from './Button'
 import { create } from '@alidoustkani/richtext'
 import { ErrorList } from '../ErrorList'
+import { DisabledContext } from '../../DisabledContext'
 
 const OPTIONS = {
    defaultLink: '/',
@@ -23,6 +24,7 @@ function Richtext(props) {
    const editorRef = useRef()
    const [rich, setRich] = useState(null)
    const [hasFocus, setFocus] = useState(false)
+   const disabled = React.useContext(DisabledContext)
 
    useEffect(() => {
       setRich(create(editorRef.current, OPTIONS))
@@ -52,7 +54,7 @@ function Richtext(props) {
    )
 
    if (rich) {
-      //rich.disabled(props.disabled)
+      //rich.disabled(disabled)
    }
 
    const classes = ['entry']
@@ -67,59 +69,27 @@ function Richtext(props) {
       <div className="text-group richtext-group">
          {props.label ? <label>{props.label}</label> : null}
          <div className="toolbar">
-            <Button
-               disabled={props.disabled}
-               content="bold"
-               onClick={() => rich.style('important')}
-            />
-            <Button
-               disabled={props.disabled}
-               content="code"
-               onClick={() => rich.style('inlineCode')}
-            />
+            <Button content="bold" onClick={() => rich.style('important')} />
+            <Button content="code" onClick={() => rich.style('inlineCode')} />
             <div className="separator" />
-            <Button
-               disabled={props.disabled}
-               content={<strong>H1</strong>}
-               onClick={() => rich.apply('h1')}
-            />
-            <Button
-               disabled={props.disabled}
-               content={<strong>H2</strong>}
-               onClick={() => rich.apply('h2')}
-            />
+            <Button onClick={() => rich.apply('h1')}>
+               <strong>H1</strong>
+            </Button>
+            <Button onClick={() => rich.apply('h2')}>
+               <strong>H2</strong>
+            </Button>
             <div className="separator" />
-            <Button disabled={props.disabled} content="code" onClick={() => rich.apply('code')} />
-            <Button
-               disabled={props.disabled}
-               content="terminal"
-               onClick={() => rich.apply('terminal')}
-            />
+            <Button content="code" onClick={() => rich.apply('code')} />
+            <Button content="terminal" onClick={() => rich.apply('terminal')} />
             <div className="separator" />
-            <Button
-               disabled={props.disabled}
-               content="exclamation"
-               onClick={() => rich.apply('note')}
-            />
-            <Button
-               disabled={props.disabled}
-               content="times"
-               onClick={() => rich.apply('warning')}
-            />
+            <Button content="exclamation" onClick={() => rich.apply('note')} />
+            <Button content="times" onClick={() => rich.apply('warning')} />
             <div className="separator" />
-            <Button
-               disabled={props.disabled}
-               content="list-ul"
-               onClick={() => rich.applyUnorderedList()}
-            />
-            <Button
-               disabled={props.disabled}
-               content="list-ol"
-               onClick={() => rich.applyOrderedList()}
-            />
+            <Button content="list-ul" onClick={() => rich.applyUnorderedList()} />
+            <Button content="list-ol" onClick={() => rich.applyOrderedList()} />
             <div className="separator" />
-            <Button disabled={props.disabled} content="camera" onClick={() => rich.selectImage()} />
-            <Button disabled={props.disabled} content="link" onClick={() => rich.styleLink()} />
+            <Button content="camera" onClick={() => rich.selectImage()} />
+            <Button content="link" onClick={() => rich.styleLink()} />
          </div>
          <div
             className={classes.join(' ')}
@@ -139,8 +109,7 @@ Richtext.propTypes = {
    onChange: PropTypes.func,
    name: PropTypes.string,
    errors: PropTypes.arrayOf(PropTypes.string),
-   label: PropTypes.string,
-   disabled: PropTypes.bool
+   label: PropTypes.string
 }
 
 export { Richtext }

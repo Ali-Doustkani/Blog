@@ -4,6 +4,7 @@ import { Loader, Message, Button, Richtext, Textarea, ask } from '../Components'
 import Experience from './Experience'
 import { getDeveloper, saveDeveloper } from './services'
 import reducer from './reducer'
+import { DisabledContext } from '../DisabledContext'
 
 const initialState = {
    isLoading: true,
@@ -61,7 +62,7 @@ const Developer = () => {
    }
 
    return (
-      <>
+      <DisabledContext.Provider value={state.disabled}>
          {state.isLoading ? <Loader /> : null}
          <div className="form about-form">
             <h1>Write about yourself</h1>
@@ -70,7 +71,6 @@ const Developer = () => {
                autofocus
                innerHtml={state.summary}
                errors={state.summaryErrors}
-               disabled={state.disabled}
                onChange={e =>
                   dispatch({ type: 'UPDATE_DEVELOPER', change: { summary: e.target.value } })
                }
@@ -81,7 +81,6 @@ const Developer = () => {
                data-testid="skills-input"
                defaultValue={state.skills}
                errors={state.skillsErrors}
-               disabled={state.disabled}
                onChange={e =>
                   dispatch({ type: 'UPDATE_DEVELOPER', change: { skills: e.target.value } })
                }
@@ -91,24 +90,22 @@ const Developer = () => {
                   <Experience
                      key={e.id}
                      {...e}
-                     disabled={state.disabled}
                      onDelete={ask(id => dispatch({ type: 'DELETE_EXPERIENCE', id }))}
                      onChange={change => dispatch({ type: 'UPDATE_EXPERIENCE', change })}
                   />
                ))}
                <Button
                   data-testid="addExperience-button"
-                  disabled={state.disabled}
                   onClick={() => dispatch({ type: 'NEW_EXPERIENCE' })}
                >
                   Add Work Experience
                </Button>
             </div>
-            <Button data-testid="save-button" disabled={state.disabled} onClick={save}>
+            <Button data-testid="save-button" onClick={save}>
                Save
             </Button>
          </div>
-      </>
+      </DisabledContext.Provider>
    )
 }
 
