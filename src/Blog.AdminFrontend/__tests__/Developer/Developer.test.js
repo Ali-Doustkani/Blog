@@ -3,9 +3,14 @@ import '@testing-library/jest-dom/extend-expect'
 import { render, cleanup, fireEvent, wait, act, waitForElement } from '@testing-library/react'
 import Developer from '../../app/Developer/Developer'
 import reducer from '../../app/Developer/reducer'
+import { useToasts } from 'react-toast-notifications'
 
 jest.mock('../../app/Developer/reducer')
 jest.mock('../../app/Developer/services')
+jest.mock('react-toast-notifications')
+useToasts.mockReturnValue({
+   addToast: jest.fn()
+})
 
 const experience1 = {
    id: 1,

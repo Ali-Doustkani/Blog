@@ -42,18 +42,45 @@ it('call onChange when data is changed', () => {
    })
 })
 
-it('set incorrect class on company error', () => {
-   let { getByTestId } = render(<Experience companyError="error" />)
+it('make company field red when has error', () => {
+   let { getByTestId } = render(<Experience companyErrors={['error']} />)
    expect(getByTestId('company-input')).toHaveClass('incorrect')
    cleanup()
    getByTestId = render(<Experience />).getByTestId
    expect(getByTestId('company-input')).not.toHaveClass('incorrect')
 })
 
-it('set incorrect class on position error', () => {
-   let { getByTestId } = render(<Experience positionError="error" />)
+it('make position field red when has error', () => {
+   let { getByTestId } = render(<Experience positionErrors={['error']} />)
    expect(getByTestId('position-input')).toHaveClass('incorrect')
    cleanup()
    getByTestId = render(<Experience />).getByTestId
    expect(getByTestId('position-input')).not.toHaveClass('incorrect')
+})
+
+it('make startDate field red when has error', () => {
+   let { getByTestId } = render(<Experience startDateErrors={['error1']} />)
+   expect(getByTestId('startDate-input')).toHaveClass('incorrect')
+   cleanup()
+   getByTestId = render(<Experience />).getByTestId
+   expect(getByTestId('startDate-input')).not.toHaveClass('incorrect')
+})
+
+it('make endDate field red when has error', () => {
+   let { getByTestId } = render(<Experience endDateErrors={['error']} />)
+   expect(getByTestId('endDate-input')).toHaveClass('incorrect')
+   cleanup()
+   getByTestId = render(<Experience />).getByTestId
+   expect(getByTestId('endDate-input')).not.toHaveClass('incorrect')
+})
+
+it('show list of all field errors', () => {
+   let { getByTestId } = render(
+      <Experience companyErrors={['err1', 'err2']} endDateErrors={['err3']} />
+   )
+   const list = getByTestId('error-list')
+   expect(list.childNodes.length).toBe(3)
+   expect(list.childNodes[0].textContent).toBe('err1')
+   expect(list.childNodes[1].textContent).toBe('err2')
+   expect(list.childNodes[2].textContent).toBe('err3')
 })

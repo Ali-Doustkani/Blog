@@ -91,7 +91,7 @@ describe('manipulating developer', () => {
          change: { summary: '<p></p>' }
       })
 
-      expect(newState.summaryError).toBe(true)
+      expect(newState.summaryErrors).toEqual(['summary is required'])
    })
 
    it('update experience ids', () => {
@@ -110,22 +110,10 @@ describe('manipulating developer', () => {
 
       const newState = reducer(initial, {
          type: 'UPDATE_IDS',
-         result: {
-            status: 'ok',
-            data: { experiences: [101, 202] }
-         }
+         data: { experiences: [101, 202] }
       })
 
       expect(newState.experiences.map(exp => exp.id)).toEqual([101, 202])
-   })
-
-   it('update experience ids with fatal result', () => {
-      const newState = reducer(
-         {},
-         { type: 'UPDATE_IDS', result: { status: 'fatal', data: 'error message' } }
-      )
-
-      expect(newState.errorMessage).toBe('error message')
    })
 })
 
@@ -150,9 +138,13 @@ describe('manipulating experiences', () => {
          {
             id: 123,
             company: '',
+            companyErrors: [],
             position: '',
+            positionErrors: [],
             startDate: '2019-08-02',
-            endDate: ''
+            startDateErrors: [],
+            endDate: '',
+            endDateErrors: []
          }
       ])
    })

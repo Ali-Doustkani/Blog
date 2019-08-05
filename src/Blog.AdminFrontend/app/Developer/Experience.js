@@ -1,5 +1,15 @@
 import React from 'react'
-import { Richtext } from '../Components'
+import { Richtext, ErrorList } from '../Components'
+
+function concat() {
+   let result = []
+   ;[].forEach.call(arguments, arr => {
+      if (arr) {
+         result = result.concat(arr)
+      }
+   })
+   return result
+}
 
 const Experience = props => {
    const inputChange = e =>
@@ -7,7 +17,13 @@ const Experience = props => {
          id: props.id,
          [e.target.name]: e.target.value
       })
-
+   const errors = concat(
+      props.companyErrors,
+      props.positionErrors,
+      props.startDateErrors,
+      props.endDateErrors,
+      props.contentErrors
+   )
    return (
       <div data-testid="experience-component" className="work-experience-group">
          <div className="text-group single-row ">
@@ -17,7 +33,7 @@ const Experience = props => {
                data-testid="company-input"
                autoFocus
                placeholder="Company"
-               className={props.companyError ? 'incorrect' : null}
+               className={props.companyErrors ? 'incorrect' : null}
                defaultValue={props.company}
                onChange={inputChange}
             />
@@ -25,7 +41,7 @@ const Experience = props => {
                name="position"
                data-testid="position-input"
                placeholder="Position"
-               className={props.positionError ? 'incorrect' : null}
+               className={props.positionErrors ? 'incorrect' : null}
                defaultValue={props.position}
                onChange={inputChange}
             />
@@ -33,7 +49,7 @@ const Experience = props => {
                name="startDate"
                data-testid="startDate-input"
                type="date"
-               className={props.startDateError ? 'hide-arrow incorrect' : 'hide-arrow'}
+               className={props.startDateErrors ? 'hide-arrow incorrect' : 'hide-arrow'}
                defaultValue={props.startDate}
                onChange={inputChange}
             />
@@ -41,20 +57,19 @@ const Experience = props => {
                name="endDate"
                data-testid="endDate-input"
                type="date"
-               className={props.endDateError ? 'hide-arrow incorrect' : 'hide-arrow'}
+               className={props.endDateErrors ? 'hide-arrow incorrect' : 'hide-arrow'}
                defaultValue={props.endDate}
                onChange={inputChange}
             />
          </div>
-         <div className="text-group richtext-group">
-            <Richtext
-               name="content"
-               data-testid="content-richtext"
-               innerHtml={props.content}
-               onChange={inputChange}
-               error={props.contentError}
-            />
-         </div>
+         <Richtext
+            name="content"
+            data-testid="content-richtext"
+            innerHtml={props.content}
+            onChange={inputChange}
+            error={props.contentErrors}
+         />
+         <ErrorList errors={errors} />
          <button
             data-testid="deleteExperience-button"
             onClick={() => props.deleteClicked(props.id)}

@@ -2,6 +2,7 @@ import React from 'react'
 import Button from './Button'
 import { create } from '@alidoustkani/richtext'
 import InnerRichtext from './OriginalRichtext'
+import { ErrorList } from '../ErrorList'
 
 class Richtext extends React.Component {
    constructor(props) {
@@ -32,15 +33,19 @@ class Richtext extends React.Component {
       }
    }
    render() {
-      var classes = ['entry']
-      if (this.props.error) {
+      const classes = ['entry']
+      let errorList = null
+      if (this.props.errors && this.props.errors.length) {
          classes.push('incorrect')
+         errorList = <ErrorList errors={this.props.errors} />
       }
       if (this.state.hasFocus) {
          classes.push('hasFocus')
       }
+
       return (
          <div className="text-group richtext-group">
+            <label>{this.props.label}</label>
             <div className="toolbar">
                <Button content="bold" onClick={() => this.rich.style('important')} />
                <Button content="code" onClick={() => this.rich.style('inlineCode')} />
@@ -67,6 +72,7 @@ class Richtext extends React.Component {
             >
                <InnerRichtext ref={this.editorRef} {...this.props} />
             </div>
+            {errorList}
          </div>
       )
    }

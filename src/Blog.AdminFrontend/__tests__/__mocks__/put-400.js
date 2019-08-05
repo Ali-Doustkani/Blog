@@ -11,7 +11,8 @@ app.get('/api/developer', (req, res) => res.send(developer))
 
 app.put('/api/developer', (req, res) => {
    res.status(400).send({
-      summary: ['summary is required'],
+      summary: ['summary is required', 'summary is bad'],
+      skills: ['skills is required', 'skills is bad'],
       experiences: [
          {
             company: ['company is required', 'company already exists']

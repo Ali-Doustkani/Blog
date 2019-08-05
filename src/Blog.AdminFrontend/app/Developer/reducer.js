@@ -1,13 +1,13 @@
 import uuid from 'uuid/v1'
 import { isEmpty, isRichtextEmtpy } from '../utils/validations'
 
-const load = action => {
+const load = (state, action) => {
    if (action.result.status === 'ok') {
       return action.result.data
-         ? { isLoading: false, ...action.result.data }
-         : { isLoading: false, summary: '', experiences: [] }
+         ? { ...state, isLoading: false, ...action.result.data }
+         : { ...state, isLoading: false, summary: '', experiences: [] }
    }
-   return { isLoading: false, errorMessage: action.result.data }
+   return { ...state, isLoading: false, errorMessage: action.result.data }
 }
 
 const newExperience = state => {
@@ -15,11 +15,15 @@ const newExperience = state => {
    const newExperience = {
       id: uuid(),
       company: '',
+      companyErrors: [],
       position: '',
+      positionErrors: [],
       startDate: `${now.getFullYear()}-${String(now.getMonth()).padStart(2, 0)}-${String(
          now.getDay()
       ).padStart(2, 0)}`,
-      endDate: ''
+      startDateErrors: [],
+      endDate: '',
+      endDateErrors: []
    }
    const experiences = [...state.experiences, newExperience]
    return { ...state, experiences }
@@ -53,23 +57,28 @@ const updateExperience = (state, action) => {
 
 const updateDeveloper = (state, action) => {
    const newState = { ...state, ...action.change }
-   newState.summaryError = isRichtextEmtpy(newState.summary)
-   newState.skillsError = isEmpty(newState.skills)
+   if (isRichtextEmtpy(newState.summary)) {
+      newState.summaryErrors = ['summary is required']
+   }
+   if (isEmpty(newState.skills)) {
+      newState.skillsErrors = ['skills is required']
+   }
    return newState
 }
 
 const updateIds = (state, action) => {
-   switch (action.result.status) {
-      case 'ok':
-         const ids = action.result.data
-         return {
-            ...state,
-            experiences: state.experiences.map((exp, i) => ({ ...exp, id: ids.experiences[i] }))
-         }
+   const ids = action.data
+   return {
+      ...state,
+      experiences: state.experiences.map((exp, i) => ({ ...exp, id: ids.experiences[i] }))
+   }
+}
 
-      case 'error':
-      case 'fatal':
-         return { ...state, errorMessage: action.result.data }
+const showErrors = (state, action) => {
+   return {
+      ...state,
+      summaryErrors: action.data.summary || [],
+      skillsErrors: action.data.skills || []
    }
 }
 
@@ -78,7 +87,7 @@ const reducer = (state, action) => {
       case 'RESTART':
          return { isLoading: true }
       case 'LOAD':
-         return load(action)
+         return load(state, action)
       case 'NEW_EXPERIENCE':
          return newExperience(state)
       case 'DELETE_EXPERIENCE':
@@ -89,6 +98,8 @@ const reducer = (state, action) => {
          return updateDeveloper(state, action)
       case 'UPDATE_IDS':
          return updateIds(state, action)
+      case 'SHOW_ERRORS':
+         return showErrors(state, action)
       default:
          return state
    }

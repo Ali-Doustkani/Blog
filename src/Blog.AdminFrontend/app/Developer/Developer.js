@@ -1,12 +1,18 @@
 import React, { useReducer, useEffect } from 'react'
 import { useToasts } from 'react-toast-notifications'
-import { Loader, Message, Button, Richtext } from '../Components'
+import { Loader, Message, Button, Richtext, Textarea } from '../Components'
 import Experience from './Experience'
 import { getDeveloper, saveDeveloper } from './services'
 import reducer from './reducer'
 
 const initialState = {
-   isLoading: true
+   isLoading: true,
+   errorMessage: '',
+   summary: '',
+   summaryErrors: [],
+   skills: '',
+   skillsErrors: [],
+   experiences: []
 }
 
 function Developer() {
@@ -36,12 +42,13 @@ function Developer() {
       }))
       const result = await saveDeveloper(developer)
       if (result.status === 'ok') {
-         dispatch({ type: 'UPDATE_IDS', result })
+         dispatch({ type: 'UPDATE_IDS', data: result.data })
          addToast('The developer saved successfully!', {
             appearance: 'success',
             autoDismiss: true
          })
       } else if (result.status === 'error') {
+         dispatch({ type: 'SHOW_ERRORS', data: result.data })
          addToast('Could not save the developer information. Checkout the errors.', {
             appearance: 'error',
             autoDismiss: true
@@ -62,28 +69,24 @@ function Developer() {
    return (
       <div className="form about-form">
          <h1>Write about yourself</h1>
-         <div className="text-group richtext-group">
-            <label>Summary</label>
-            <Richtext
-               innerHtml={state.summary}
-               error={state.summaryError}
-               onChange={e =>
-                  dispatch({ type: 'UPDATE_DEVELOPER', change: { summary: e.target.value } })
-               }
-            />
-         </div>
-         <div className="text-group">
-            <label>Skills</label>
-            <textarea
-               name="skills"
-               data-testid="skills-input"
-               defaultValue={state.skills}
-               className={state.skillsError ? 'incorrect' : null}
-               onChange={e =>
-                  dispatch({ type: 'UPDATE_DEVELOPER', change: { skills: e.target.value } })
-               }
-            />
-         </div>
+         <Richtext
+            label="Summary"
+            innerHtml={state.summary}
+            errors={state.summaryErrors}
+            onChange={e =>
+               dispatch({ type: 'UPDATE_DEVELOPER', change: { summary: e.target.value } })
+            }
+         />
+         <Textarea
+            label="Skills"
+            name="skills"
+            data-testid="skills-input"
+            defaultValue={state.skills}
+            errors={state.skillsErrors}
+            onChange={e =>
+               dispatch({ type: 'UPDATE_DEVELOPER', change: { skills: e.target.value } })
+            }
+         />
          <div className="container">
             {state.experiences.map(e => (
                <Experience
