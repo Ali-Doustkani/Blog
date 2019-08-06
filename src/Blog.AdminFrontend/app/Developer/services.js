@@ -46,7 +46,7 @@ const getDeveloper = async () => {
    }
 }
 
-const saveDeveloper = async developer => {
+const saveDeveloper = async state => {
    try {
       return await processResponse(
          await fetch(url_developer, {
@@ -54,11 +54,27 @@ const saveDeveloper = async developer => {
             headers: {
                'Content-Type': 'application/json'
             },
-            body: JSON.stringify(developer)
+            body: JSON.stringify(toDeveloper(state))
          })
       )
    } catch (err) {
       return fatal(err.message)
+   }
+}
+
+const toDeveloper = state => {
+   const experiences = state.experiences.map(exp => ({
+      id: exp.id,
+      company: exp.company,
+      position: exp.position,
+      startDate: exp.startDate,
+      endDate: exp.endDate,
+      content: exp.content
+   }))
+   return {
+      summary: state.summary,
+      skills: state.skills,
+      experiences
    }
 }
 
