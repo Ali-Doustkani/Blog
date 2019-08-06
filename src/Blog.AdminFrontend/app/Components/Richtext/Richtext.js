@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import Button from './Button'
 import { create } from '@alidoustkani/richtext'
 import { ErrorList } from '../ErrorList'
+import { DisabledContext } from '../../DisabledContext'
 
 const OPTIONS = {
    defaultLink: '/',
@@ -23,6 +24,7 @@ function Richtext(props) {
    const editorRef = useRef()
    const [rich, setRich] = useState(null)
    const [hasFocus, setFocus] = useState(false)
+   const disabled = React.useContext(DisabledContext)
 
    useEffect(() => {
       setRich(create(editorRef.current, OPTIONS))
@@ -52,7 +54,7 @@ function Richtext(props) {
    )
 
    if (rich) {
-      //rich.disabled(disabled)
+      rich.setOptions({ disabled })
    }
 
    const classes = ['entry']

@@ -134,6 +134,10 @@
       article * {
          outline: none;
       }
+
+      article.disabled {
+         color: grey;
+      }
    }
 }
 
