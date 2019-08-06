@@ -6,7 +6,8 @@
    "scripts": {
       "start": "parcel app/index.html",
       "build": "parcel build Developer/index.js --out-file developer.js",
-      "test": "jest --watchAll"
+      "test": "jest --watchAll",
+      "lint": "eslint ."
    },
    "devDependencies": {
       "@babel/preset-env": "^7.5.5",
@@ -26,6 +27,7 @@
       "eslint-plugin-react": "^7.14.3",
       "express": "^4.17.1",
       "fetch-mock": "^7.3.9",
+      "husky": "^3.0.2",
       "jest": "^24.8.0",
       "parcel-bundler": "^1.12.3",
       "prop-types": "^15.7.2",
