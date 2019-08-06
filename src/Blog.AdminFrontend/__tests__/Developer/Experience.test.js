@@ -19,7 +19,7 @@ it('display an experience', () => {
    expect(getByDisplayValue('C# Developer')).toBeVisible()
    expect(getByTestId('startDate-input')).toHaveValue('2018-03-29')
    expect(getByTestId('endDate-input')).toHaveValue('2019-04-29')
-   expect(getByText('Worked as a developer'))
+   expect(getByText('Worked as a developer')).toBeVisible()
 })
 
 it('call onChange when data is changed', () => {

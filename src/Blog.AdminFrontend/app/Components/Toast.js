@@ -19,7 +19,8 @@ const Toast = props => {
 
 Toast.propTypes = {
    appearance: PropTypes.string,
-   onDismiss: PropTypes.func
+   onDismiss: PropTypes.func,
+   children: PropTypes.element
 }
 
 export default Toast

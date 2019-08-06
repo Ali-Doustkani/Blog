@@ -30,7 +30,8 @@ Input.propTypes = {
    autoFocus: PropTypes.bool,
    value: PropTypes.string,
    type: PropTypes.string,
-   onChange: PropTypes.func
+   onChange: PropTypes.func,
+   errors: PropTypes.arrayOf(PropTypes.string)
 }
 
 export { Input }

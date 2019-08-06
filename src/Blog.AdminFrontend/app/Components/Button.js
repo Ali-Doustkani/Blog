@@ -19,7 +19,8 @@ const Button = props => {
 
 Button.propTypes = {
    'data-testid': PropTypes.string,
-   onClick: PropTypes.func
+   onClick: PropTypes.func,
+   children: PropTypes.element
 }
 
 export { Button }

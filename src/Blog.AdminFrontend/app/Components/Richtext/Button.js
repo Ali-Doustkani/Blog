@@ -19,7 +19,8 @@ const Button = props => {
 
 Button.propTypes = {
    onClick: PropTypes.func.isRequired,
-   content: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
+   content: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+   children: PropTypes.element
 }
 
 export default Button

@@ -33,9 +33,8 @@ const Developer = () => {
    }
 
    async function save() {
-      const { isLoading, ...developer } = state
       dispatch({ type: 'GOTO_SAVE_MODE' })
-      const result = await saveDeveloper(developer)
+      const result = await saveDeveloper(state)
       if (result.status === 'ok') {
          dispatch({ type: 'UPDATE_IDS', data: result.data })
          addToast('The developer saved successfully!', {
