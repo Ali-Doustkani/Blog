@@ -1,35 +1,96 @@
-import { isEmpty, isRichtextEmtpy } from '../../app/utils/validations'
+import { emptyValidator, richtextEmptyValidator } from '../../app/utils/validations'
 
-describe('isEmpty', () => {
-   test('null', () => {
-      expect(isEmpty(null)).toBe(true)
+describe('returning of server errors', () => {
+   it('returns both validator errors & server errors', () => {
+      const currentErrors = [
+         { type: 1, message: 'client error' },
+         { type: 2, message: 'server error' }
+      ]
+      const check = emptyValidator('age', currentErrors)
+
+      expect(check('')).toEqual([
+         { type: 2, message: 'server error' },
+         { type: 1, message: 'age is required' }
+      ])
    })
-   test('undefined', () => {
-      expect(isEmpty(undefined)).toBe(true)
-   })
-   test('empty string', () => {
-      expect(isEmpty('')).toBe(true)
-   })
-   test('whitespace string', () => {
-      expect(isEmpty('  ')).toBe(true)
-   })
-   test('non-whitespace string', () => {
-      expect(isEmpty('ALI')).toBe(false)
+
+   it('returns only server errors when there is no rule', () => {
+      const check = emptyValidator('', [
+         { type: 1, message: 'client error' },
+         { type: 2, message: 'server error' }
+      ])
+      expect(check('ali')).toEqual([{ type: 2, message: 'server error' }])
    })
 })
 
-describe('isRichtextEmpty', () => {
-   test('empty tag without attribute', () => {
-      expect(isRichtextEmtpy('<p> </p>')).toBe(true)
+describe('not empty rule', () => {
+   it('returns nothing for correct notEmpty rule', () => {
+      const check = emptyValidator('name')
+      expect(check('Ali')).toEqual([])
    })
-   test('tag with multiple attributes', () => {
-      expect(isRichtextEmtpy('<p contenteditable="" class="sth"> </p>')).toBe(true)
+
+   describe('failures', () => {
+      const check = emptyValidator('name')
+      let result
+
+      test('null', () => {
+         result = check(null)
+      })
+
+      test('undefined', () => {
+         result = check(undefined)
+      })
+
+      test('empty string', () => {
+         result = check('')
+      })
+
+      test('whitespace string', () => {
+         result = check('  ')
+      })
+
+      afterEach(() => {
+         expect(result).toEqual([{ type: 1, message: 'name is required' }])
+      })
    })
-   test('other tags', () => {
-      expect(isRichtextEmtpy('<a>TEXT</a>')).toBe(false)
+})
+
+describe('not richtext empty rule', () => {
+   const check = richtextEmptyValidator('content')
+
+   describe('successes', () => {
+      let result
+
+      test('other tags', () => {
+         result = check('<a>TEXT</a>')
+      })
+
+      test('non-tag text', () => {
+         result = check('ali')
+      })
+
+      afterEach(() => {
+         expect(result).toEqual([])
+      })
    })
-   test('non-tag text', () => {
-      expect(isRichtextEmtpy('ali')).toBe(false)
-      expect(isRichtextEmtpy('')).toBe(true)
+
+   describe('failures', () => {
+      let result
+
+      test('empty tag without attribute', () => {
+         result = check('<p> </p>')
+      })
+
+      test('tag with multiple attributes', () => {
+         result = check('<p contenteditable="" class="sth"> </p>')
+      })
+
+      test('non-tag text', () => {
+         result = check('')
+      })
+
+      afterEach(() => {
+         expect(result).toEqual([{ type: 1, message: 'content is required' }])
+      })
    })
 })

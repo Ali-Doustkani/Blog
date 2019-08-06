@@ -1,5 +1,5 @@
 import uuid from 'uuid/v1'
-import { isEmpty, isRichtextEmtpy } from '../utils/validations'
+import { emptyValidator, richtextEmptyValidator } from '../utils/validations'
 
 const load = (state, action) => {
    if (action.result.status === 'ok') {
@@ -35,11 +35,22 @@ const deleteExperience = (state, action) => {
 }
 
 const validateExperience = experience => {
-   experience.companyErrors = isEmpty(experience.company) ? ['company is required'] : []
-   experience.positionErrors = isEmpty(experience.position) ? ['position is required'] : []
-   experience.startDateErrors = isEmpty(experience.startDate) ? ['start date is required'] : []
-   experience.endDateErrors = isEmpty(experience.endDate) ? ['end date is required'] : []
-   experience.contentErrors = isRichtextEmtpy(experience.content) ? ['content is required'] : []
+   experience.companyErrors = emptyValidator('company', experience.companyErrors)(
+      experience.company
+   )
+   experience.positionErrors = emptyValidator('position', experience.positionErrors)(
+      experience.position
+   )
+
+   experience.startDateErrors = emptyValidator('start date', experience.startDateErrors)(
+      experience.startDate
+   )
+   experience.endDateErrors = emptyValidator('end date', experience.endDateErrors)(
+      experience.endDate
+   )
+   experience.contentErrors = richtextEmptyValidator('content', experience.contentErrors)(
+      experience.content
+   )
    return experience
 }
 
@@ -59,8 +70,8 @@ const updateExperience = (state, action) => {
 
 const updateDeveloper = (state, action) => {
    const newState = { ...state, ...action.change }
-   newState.summaryErrors = isRichtextEmtpy(newState.summary) ? ['summary is required'] : []
-   newState.skillsErrors = isEmpty(newState.skills) ? ['skills is required'] : []
+   newState.summaryErrors = richtextEmptyValidator('summary', state.summaryErrors)(newState.summary)
+   newState.skillsErrors = emptyValidator('skills', state.skillsErrors)(newState.skills)
    return newState
 }
 

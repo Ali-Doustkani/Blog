@@ -1,14 +1,38 @@
-const emptyString = input => input.match(/^\s*$/) !== null
+import { compose } from './fn'
 
-const isEmpty = input => (!input ? true : emptyString(input))
+const isWhitespace = input => input.match(/^\s*$/) !== null
 
-const isRichtextEmtpy = input => {
-   const regex = /<p.*?>(?<inner>.*?)<\/p>/
-   const result = regex.exec(input)
-   if (!result) {
-      return isEmpty(input)
-   }
-   return isEmpty(result.groups.inner)
+const isEmpty = input => !input || isWhitespace(input)
+
+const isRichtextEmpty = input => {
+   const result = /<p.*?>(?<inner>.*?)<\/p>/.exec(input)
+   return result ? isEmpty(result.groups.inner) : isEmpty(input)
 }
 
-export { isEmpty, isRichtextEmtpy }
+const message = msg => result => (result ? msg : undefined)
+
+const requiredMessage = field => message(`${field} is required`)
+
+const errorListGenerator = errors => message => {
+   const result = !errors || !errors.length ? [] : errors.filter(x => x.type === 2)
+   if (message) {
+      result.push({ type: 1, message })
+   }
+   return result
+}
+
+const emptyValidator = (field, errors) =>
+   compose(
+      errorListGenerator(errors),
+      requiredMessage(field),
+      isEmpty
+   )
+
+const richtextEmptyValidator = (field, errors) =>
+   compose(
+      errorListGenerator(errors),
+      requiredMessage(field),
+      isRichtextEmpty
+   )
+
+export { emptyValidator, richtextEmptyValidator }
