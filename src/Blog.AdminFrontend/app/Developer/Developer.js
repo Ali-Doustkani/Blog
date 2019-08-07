@@ -69,8 +69,7 @@ const Developer = () => {
                label="Summary"
                name="summary"
                autofocus
-               innerHtml={state.summary}
-               errors={state.summaryErrors}
+               {...state}
                onChange={e =>
                   dispatch({ type: 'UPDATE_DEVELOPER', change: { summary: e.summary } })
                }
@@ -78,12 +77,8 @@ const Developer = () => {
             <Textarea
                label="Skills"
                name="skills"
-               data-testid="skills-input"
-               defaultValue={state.skills}
-               errors={state.skillsErrors}
-               onChange={e =>
-                  dispatch({ type: 'UPDATE_DEVELOPER', change: { skills: e.target.value } })
-               }
+               {...state}
+               onChange={e => dispatch({ type: 'UPDATE_DEVELOPER', change: { skills: e.skills } })}
             />
             <ExperienceList
                experiences={state.experiences}

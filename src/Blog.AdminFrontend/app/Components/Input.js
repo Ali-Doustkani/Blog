@@ -1,15 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { emitChange, renderClassNames } from './utils'
 import { DisabledContext } from '../DisabledContext'
-
-const renderClassNames = props => {
-   const errors = props[props.name + 'Errors']
-   const className = props.className
-   if (errors && errors.length) {
-      return className ? className + ' incorrect' : 'incorrect'
-   }
-   return className
-}
 
 const Input = props => {
    const disabled = React.useContext(DisabledContext)
@@ -22,12 +14,7 @@ const Input = props => {
          autoFocus={props.autoFocus}
          className={renderClassNames(props)}
          defaultValue={props[props.name]}
-         onChange={e =>
-            props.onChange({
-               id: props.id,
-               [props.name]: e.target.value
-            })
-         }
+         onChange={emitChange(props)}
          disabled={disabled}
       />
    )
