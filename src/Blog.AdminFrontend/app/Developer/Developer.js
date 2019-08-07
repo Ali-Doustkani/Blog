@@ -1,7 +1,7 @@
 import React, { useReducer, useEffect } from 'react'
 import { useToasts } from 'react-toast-notifications'
 import { Loader, Message, Button, Richtext, Textarea, ask } from '../Components'
-import Experience from './Experience'
+import ExperienceList from './ExperienceList'
 import { getDeveloper, saveDeveloper } from './services'
 import reducer from './reducer'
 import { DisabledContext } from '../DisabledContext'
@@ -85,25 +85,13 @@ const Developer = () => {
                   dispatch({ type: 'UPDATE_DEVELOPER', change: { skills: e.target.value } })
                }
             />
-            <div className="container">
-               {state.experiences.map(e => (
-                  <Experience
-                     key={e.id}
-                     {...e}
-                     onDelete={ask(id => dispatch({ type: 'DELETE_EXPERIENCE', id }))}
-                     onChange={change => dispatch({ type: 'UPDATE_EXPERIENCE', change })}
-                  />
-               ))}
-               <Button
-                  data-testid="addExperience-button"
-                  onClick={() => dispatch({ type: 'NEW_EXPERIENCE' })}
-               >
-                  Add Work Experience
-               </Button>
-            </div>
-            <Button data-testid="save-button" onClick={save}>
-               Save
-            </Button>
+            <ExperienceList
+               experiences={state.experiences}
+               onAdd={() => dispatch({ type: 'NEW_EXPERIENCE' })}
+               onChange={change => dispatch({ type: 'UPDATE_EXPERIENCE', change })}
+               onDelete={ask(id => dispatch({ type: 'DELETE_EXPERIENCE', id }))}
+            />
+            <Button onClick={save}>Save</Button>
          </div>
       </DisabledContext.Provider>
    )
