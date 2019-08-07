@@ -34,7 +34,7 @@ const Input = props => {
 }
 
 Input.propTypes = {
-   id: PropTypes.oneOfType(PropTypes.number, PropTypes.string).isRequired,
+   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
    name: PropTypes.string.isRequired,
    placeholder: PropTypes.string,
    className: PropTypes.string,

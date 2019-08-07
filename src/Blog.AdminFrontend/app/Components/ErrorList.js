@@ -34,7 +34,7 @@ const ErrorList = props => {
 }
 
 ErrorList.propTypes = {
-   errors: PropTypes.arrayOf(PropTypes.any)
+   errors: PropTypes.arrayOf(PropTypes.string)
 }
 
 export { ErrorList }

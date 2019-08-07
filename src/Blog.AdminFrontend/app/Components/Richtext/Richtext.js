@@ -102,7 +102,7 @@ function Richtext(props) {
 }
 
 Richtext.propTypes = {
-   id: PropTypes.oneOfType(PropTypes.number, PropTypes.string).isRequired,
+   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
    name: PropTypes.string.isRequired,
    autofocus: PropTypes.bool,
    onChange: PropTypes.func,

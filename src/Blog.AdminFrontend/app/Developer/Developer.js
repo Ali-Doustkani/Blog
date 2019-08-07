@@ -72,7 +72,7 @@ const Developer = () => {
                innerHtml={state.summary}
                errors={state.summaryErrors}
                onChange={e =>
-                  dispatch({ type: 'UPDATE_DEVELOPER', change: { summary: e.target.value } })
+                  dispatch({ type: 'UPDATE_DEVELOPER', change: { summary: e.summary } })
                }
             />
             <Textarea
