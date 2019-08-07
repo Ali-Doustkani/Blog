@@ -1,6 +1,6 @@
 import React from 'react'
 import { render, shallow, mount } from 'enzyme'
-import { Richtext } from '../../app/controls'
+import { Richtext } from './Richtext'
 
 it('sets hasFocus class when focused', () => {
    const richtext = shallow(<Richtext name="content" />)

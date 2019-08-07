@@ -1,6 +1,6 @@
 import React from 'react'
 import { shallow } from 'enzyme'
-import ExperienceList from '../../app/components/Developer/ExperienceList'
+import ExperienceList from './ExperienceList'
 
 it('displays an experience component for each experience object', () => {
    const data = [{ id: 11 }, { id: 22 }]

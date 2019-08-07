@@ -1,6 +1,6 @@
 import React from 'react'
-import { Input } from '../../app/controls'
 import { shallow } from 'enzyme'
+import { Input } from './Input'
 
 it('renders name', () => {
    expect(

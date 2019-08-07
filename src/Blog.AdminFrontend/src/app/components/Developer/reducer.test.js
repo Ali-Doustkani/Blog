@@ -1,4 +1,4 @@
-import reducer from '../../app/components/Developer/reducer'
+import reducer from './reducer'
 
 describe('loading', () => {
    const initial = {

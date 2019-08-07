@@ -1,6 +1,6 @@
 import React from 'react'
 import { shallow } from 'enzyme'
-import { ErrorList } from '../../app/controls/ErrorList'
+import { ErrorList } from './ErrorList'
 
 it('shows errors', () => {
    const errorlist = shallow(

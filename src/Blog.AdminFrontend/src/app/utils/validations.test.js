@@ -1,4 +1,4 @@
-import { emptyValidator, richtextEmptyValidator } from '../../app/utils/validations'
+import { emptyValidator, richtextEmptyValidator } from './validations'
 
 describe('returning of server errors', () => {
    it('returns both validator errors & server errors', () => {

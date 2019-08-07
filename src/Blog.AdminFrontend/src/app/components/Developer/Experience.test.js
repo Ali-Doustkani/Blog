@@ -1,6 +1,6 @@
 import React from 'react'
 import { shallow } from 'enzyme'
-import Experience from '../../app/components/Developer/Experience'
+import Experience from './Experience'
 
 const sample = {
    company: 'Bellin',
