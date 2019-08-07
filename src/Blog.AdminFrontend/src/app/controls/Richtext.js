@@ -1,8 +1,8 @@
 import React, { useState, useRef, useMemo, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import Button from './Button'
+import { ToolbarButton } from './ToolbarButton'
 import { create } from '@alidoustkani/richtext'
-import { ErrorList } from '../ErrorList'
+import { ErrorList } from './ErrorList'
 import DisabledContext from 'DisabledContext'
 
 const OPTIONS = {
@@ -67,27 +67,27 @@ function Richtext(props) {
       <div className="text-group richtext-group">
          {props.label ? <label>{props.label}</label> : null}
          <div className="toolbar">
-            <Button content="bold" onClick={() => rich.style('important')} />
-            <Button content="code" onClick={() => rich.style('inlineCode')} />
+            <ToolbarButton content="bold" onClick={() => rich.style('important')} />
+            <ToolbarButton content="code" onClick={() => rich.style('inlineCode')} />
             <div className="separator" />
-            <Button onClick={() => rich.apply('h1')}>
+            <ToolbarButton onClick={() => rich.apply('h1')}>
                <strong>H1</strong>
-            </Button>
-            <Button onClick={() => rich.apply('h2')}>
+            </ToolbarButton>
+            <ToolbarButton onClick={() => rich.apply('h2')}>
                <strong>H2</strong>
-            </Button>
+            </ToolbarButton>
             <div className="separator" />
-            <Button content="code" onClick={() => rich.apply('code')} />
-            <Button content="terminal" onClick={() => rich.apply('terminal')} />
+            <ToolbarButton content="code" onClick={() => rich.apply('code')} />
+            <ToolbarButton content="terminal" onClick={() => rich.apply('terminal')} />
             <div className="separator" />
-            <Button content="exclamation" onClick={() => rich.apply('note')} />
-            <Button content="times" onClick={() => rich.apply('warning')} />
+            <ToolbarButton content="exclamation" onClick={() => rich.apply('note')} />
+            <ToolbarButton content="times" onClick={() => rich.apply('warning')} />
             <div className="separator" />
-            <Button content="list-ul" onClick={() => rich.applyUnorderedList()} />
-            <Button content="list-ol" onClick={() => rich.applyOrderedList()} />
+            <ToolbarButton content="list-ul" onClick={() => rich.applyUnorderedList()} />
+            <ToolbarButton content="list-ol" onClick={() => rich.applyOrderedList()} />
             <div className="separator" />
-            <Button content="camera" onClick={() => rich.selectImage()} />
-            <Button content="link" onClick={() => rich.styleLink()} />
+            <ToolbarButton content="camera" onClick={() => rich.selectImage()} />
+            <ToolbarButton content="link" onClick={() => rich.styleLink()} />
          </div>
          <div
             className={classes.join(' ')}

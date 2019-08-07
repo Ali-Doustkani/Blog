@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import DisabledContext from 'DisabledContext'
 
-const Button = props => {
+const ToolbarButton = props => {
    const disabled = React.useContext(DisabledContext)
    const content =
       typeof props.content === 'string' ? (
@@ -17,10 +17,10 @@ const Button = props => {
    )
 }
 
-Button.propTypes = {
+ToolbarButton.propTypes = {
    onClick: PropTypes.func.isRequired,
    content: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
    children: PropTypes.element
 }
 
-export default Button
+export { ToolbarButton }

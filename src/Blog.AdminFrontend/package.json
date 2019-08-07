@@ -45,6 +45,7 @@
       "chrome > 55"
    ],
    "alias": {
-      "DisabledContext": "./src/app/components/DisabledContext.js"
+      "DisabledContext": "./src/app/components/DisabledContext.js",
+      "Controls": "./src/app/controls"
    }
 }

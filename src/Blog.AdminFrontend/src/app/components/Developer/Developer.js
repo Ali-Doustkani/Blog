@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useToasts } from 'react-toast-notifications'
-import { Loader, Message, Button, Richtext, Textarea, ask } from '../../controls'
+import { Loader, Message, Button, Richtext, Textarea, ask } from 'Controls'
 import ExperienceList from './ExperienceList'
 import { getDeveloper, saveDeveloper } from './services'
 import DisabledContext from 'DisabledContext'

@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Richtext, ErrorList, Input } from '../../controls'
-import Button from '../../controls/Richtext/Button'
+import { Richtext, ErrorList, Input, ToolbarButton } from 'Controls'
 
 const Experience = props => (
    <div data-testid="experience-component" className="work-experience-group">
@@ -12,7 +11,7 @@ const Experience = props => (
          <Input name="startDate" {...props} type="date" className="hide-arrow" />
          <Input name="endDate" {...props} type="date" className="hide-arrow" />
          <div className="separator" />
-         <Button content="trash-alt" onClick={() => props.onDelete(props.id)} />
+         <ToolbarButton content="trash-alt" onClick={() => props.onDelete(props.id)} />
       </div>
       <Richtext name="content" {...props} />
       <ErrorList {...props} />
