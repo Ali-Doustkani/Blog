@@ -1,9 +1,11 @@
 import React from 'react'
 import { shallow } from 'enzyme'
-import { ErrorList } from '../../app/Components/ErrorList'
+import { ErrorList } from '../../app/controls/ErrorList'
 
 it('shows errors', () => {
-   const errorlist = shallow(<ErrorList errors={['err1', 'err2']} />).find('ul')
+   const errorlist = shallow(
+      <ErrorList errors={[{ type: 1, message: 'err1' }, { type: 1, message: 'err2' }]} />
+   ).find('ul')
    expect(errorlist.children().length).toBe(2)
    expect(errorlist.childAt(0).text()).toBe('err1')
    expect(errorlist.childAt(1).text()).toBe('err2')
@@ -20,10 +22,10 @@ it('shows nothing if errors array is empty', () => {
 it('uses naming conventions if no errors prop is available', () => {
    const list = shallow(
       <ErrorList
-         companyErrors={['1']}
+         companyErrors={[{ type: 1, message: '1' }]}
          positionErrors={[]}
          contentErrors={undefined}
-         surnameErrors={['2', '3']}
+         surnameErrors={[{ type: 1, message: '2' }, { type: 1, message: '3' }]}
       />
    ).find('ul')
    expect(list.children().length).toBe(3)

@@ -26,7 +26,7 @@ const ErrorList = props => {
       <ul data-testid="error-list">
          {array.map(err => (
             <li key={uuid()} className="error">
-               {err}
+               {err.message}
             </li>
          ))}
       </ul>
@@ -34,7 +34,7 @@ const ErrorList = props => {
 }
 
 ErrorList.propTypes = {
-   errors: PropTypes.arrayOf(PropTypes.string)
+   errors: PropTypes.arrayOf(PropTypes.object)
 }
 
 export { ErrorList }

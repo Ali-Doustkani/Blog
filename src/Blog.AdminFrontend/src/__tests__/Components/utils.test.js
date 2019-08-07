@@ -1,4 +1,4 @@
-import { emitChange, renderClassNames } from '../../app/Components/utils'
+import { emitChange, renderClassNames } from '../../app/controls/utils'
 
 test('emitChange calls the onChange func', () => {
    expect.assertions(1)

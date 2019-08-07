@@ -1,4 +1,4 @@
-import reducer from '../../app/Developer/reducer'
+import reducer from '../../app/components/Developer/reducer'
 
 describe('loading', () => {
    const initial = {
@@ -50,10 +50,7 @@ describe('manipulating developer', () => {
          ]
       }
 
-      const newState = reducer(initial, {
-         type: 'UPDATE_IDS',
-         data: { experiences: [101, 202] }
-      })
+      const newState = reducer(initial, { type: 'UPDATE_IDS', data: { experiences: [101, 202] } })
 
       expect(newState.experiences.map(exp => exp.id)).toEqual([101, 202])
    })

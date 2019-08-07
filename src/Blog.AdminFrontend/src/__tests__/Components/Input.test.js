@@ -1,5 +1,5 @@
 import React from 'react'
-import { Input } from '../../app/Components'
+import { Input } from '../../app/controls'
 import { shallow } from 'enzyme'
 
 it('renders name', () => {

@@ -1,5 +1,5 @@
 import fetchMock from '../__mocks__/fetchMock'
-import { getDeveloper, saveDeveloper } from '../../app/Developer/services'
+import { getDeveloper, saveDeveloper } from '../../app/components/Developer/services'
 
 const sample = {
    summary: 'started to code as a young boy',

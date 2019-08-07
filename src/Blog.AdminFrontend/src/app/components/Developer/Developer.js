@@ -1,24 +1,14 @@
-import React, { useReducer, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useToasts } from 'react-toast-notifications'
 import { Loader, Message, Button, Richtext, Textarea, ask } from '../../controls'
 import ExperienceList from './ExperienceList'
 import { getDeveloper, saveDeveloper } from './services'
-import reducer from './reducer'
 import DisabledContext from 'DisabledContext'
-
-const initialState = {
-   isLoading: true,
-   disabled: false,
-   errorMessage: '',
-   summary: '',
-   summaryErrors: [],
-   skills: '',
-   skillsErrors: [],
-   experiences: []
-}
+import reducer from './reducer'
+import { useActions } from './actions'
 
 const Developer = () => {
-   const [state, dispatch] = useReducer(reducer, initialState)
+   const [state, actions] = useActions(reducer)
    const { addToast } = useToasts()
 
    useEffect(() => {
@@ -29,20 +19,20 @@ const Developer = () => {
 
    async function fetchDeveloper() {
       const result = await getDeveloper()
-      dispatch({ type: 'LOAD', result })
+      actions.load(result)
    }
 
    async function save() {
-      dispatch({ type: 'GOTO_SAVE_MODE' })
+      actions.toSaveMode()
       const result = await saveDeveloper(state)
       if (result.status === 'ok') {
-         dispatch({ type: 'UPDATE_IDS', data: result.data })
+         actions.updateIds(result.data)
          addToast('The developer saved successfully!', {
             appearance: 'success',
             autoDismiss: true
          })
       } else if (result.status === 'error') {
-         dispatch({ type: 'SHOW_ERRORS', data: result.data })
+         actions.showErrors(result.data)
          addToast('Could not save the developer information. Checkout the errors.', {
             appearance: 'error',
             autoDismiss: true
@@ -55,9 +45,7 @@ const Developer = () => {
    }
 
    if (state.errorMessage) {
-      return (
-         <Message message={state.errorMessage} onTryAgain={() => dispatch({ type: 'RESTART' })} />
-      )
+      return <Message message={state.errorMessage} onTryAgain={actions.restart} />
    }
 
    return (
@@ -70,21 +58,19 @@ const Developer = () => {
                name="summary"
                autofocus
                {...state}
-               onChange={e =>
-                  dispatch({ type: 'UPDATE_DEVELOPER', change: { summary: e.summary } })
-               }
+               onChange={e => actions.updateDeveloper({ summary: e.summary })}
             />
             <Textarea
                label="Skills"
                name="skills"
                {...state}
-               onChange={e => dispatch({ type: 'UPDATE_DEVELOPER', change: { skills: e.skills } })}
+               onChange={e => actions.updateDeveloper({ skills: e.skills })}
             />
             <ExperienceList
                experiences={state.experiences}
-               onAdd={() => dispatch({ type: 'NEW_EXPERIENCE' })}
-               onChange={change => dispatch({ type: 'UPDATE_EXPERIENCE', change })}
-               onDelete={ask(id => dispatch({ type: 'DELETE_EXPERIENCE', id }))}
+               onAdd={actions.addExperience}
+               onChange={actions.updateExperience}
+               onDelete={ask(actions.deleteExperience)}
             />
             <Button onClick={save}>Save</Button>
          </div>

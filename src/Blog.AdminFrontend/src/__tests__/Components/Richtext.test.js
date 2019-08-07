@@ -1,6 +1,6 @@
 import React from 'react'
 import { render, shallow, mount } from 'enzyme'
-import { Richtext } from '../../app/Components/Richtext/Richtext'
+import { Richtext } from '../../app/controls'
 
 it('sets hasFocus class when focused', () => {
    const richtext = shallow(<Richtext name="content" />)
@@ -46,7 +46,12 @@ it('sets innerHtml with naming convention', () => {
 })
 
 it('sets errors with naming convention', () => {
-   const errors = render(<Richtext name="content" contentErrors={['first', 'second']} />).find('li')
+   const errors = render(
+      <Richtext
+         name="content"
+         contentErrors={[{ type: 1, message: 'first' }, { type: 1, message: 'second' }]}
+      />
+   ).find('li')
    expect(errors.first().text()).toBe('first')
    expect(errors.last().text()).toBe('second')
 })

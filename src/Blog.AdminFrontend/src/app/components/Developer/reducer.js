@@ -1,6 +1,17 @@
 import uuid from 'uuid/v1'
 import { emptyValidator, richtextEmptyValidator } from '../../utils/validations'
 
+const initialState = {
+   isLoading: true,
+   disabled: false,
+   errorMessage: '',
+   summary: '',
+   summaryErrors: [],
+   skills: '',
+   skillsErrors: [],
+   experiences: []
+}
+
 const load = (state, action) => {
    if (action.result.status === 'ok') {
       return action.result.data
@@ -15,7 +26,7 @@ const load = (state, action) => {
    return { ...state, isLoading: false, errorMessage: action.result.data }
 }
 
-const newExperience = state => {
+const addExperience = state => {
    const now = new Date()
    const newExperience = validateExperience({
       id: uuid(),
@@ -115,13 +126,17 @@ const gotoSaveMode = state => {
 }
 
 const reducer = (state, action) => {
+   if (!state) {
+      return initialState
+   }
+
    switch (action.type) {
       case 'RESTART':
          return { isLoading: true }
       case 'LOAD':
          return load(state, action)
-      case 'NEW_EXPERIENCE':
-         return newExperience(state)
+      case 'ADD_EXPERIENCE':
+         return addExperience(state)
       case 'DELETE_EXPERIENCE':
          return deleteExperience(state, action)
       case 'UPDATE_EXPERIENCE':

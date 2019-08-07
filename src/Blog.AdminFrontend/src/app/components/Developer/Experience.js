@@ -22,15 +22,15 @@ const Experience = props => (
 Experience.propTypes = {
    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
    company: PropTypes.string,
-   companyErrors: PropTypes.arrayOf(PropTypes.string),
+   companyErrors: PropTypes.arrayOf(PropTypes.object),
    position: PropTypes.string,
-   positionErrors: PropTypes.arrayOf(PropTypes.string),
+   positionErrors: PropTypes.arrayOf(PropTypes.object),
    startDate: PropTypes.string,
-   startDateErrors: PropTypes.arrayOf(PropTypes.string),
+   startDateErrors: PropTypes.arrayOf(PropTypes.object),
    endDate: PropTypes.string,
-   endDateErrors: PropTypes.arrayOf(PropTypes.string),
+   endDateErrors: PropTypes.arrayOf(PropTypes.object),
    content: PropTypes.string,
-   contentErrors: PropTypes.arrayOf(PropTypes.string),
+   contentErrors: PropTypes.arrayOf(PropTypes.object),
    onChange: PropTypes.func,
    onDelete: PropTypes.func
 }
