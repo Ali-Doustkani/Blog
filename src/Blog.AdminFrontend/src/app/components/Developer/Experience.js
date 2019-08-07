@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Richtext, ErrorList, Input } from '../Components'
-import Button from '../Components/Richtext/Button'
+import { Richtext, ErrorList, Input } from '../../controls'
+import Button from '../../controls/Richtext/Button'
 
 const Experience = props => (
    <div data-testid="experience-component" className="work-experience-group">

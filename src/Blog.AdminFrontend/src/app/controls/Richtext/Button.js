@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { DisabledContext } from '../../DisabledContext'
+import DisabledContext from 'DisabledContext'
 
 const Button = props => {
    const disabled = React.useContext(DisabledContext)

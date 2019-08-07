@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import Button from './Button'
 import { create } from '@alidoustkani/richtext'
 import { ErrorList } from '../ErrorList'
-import { DisabledContext } from '../../DisabledContext'
+import DisabledContext from 'DisabledContext'
 
 const OPTIONS = {
    defaultLink: '/',

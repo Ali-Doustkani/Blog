@@ -4,7 +4,7 @@
    "version": "1.0.0",
    "description": "administrator react pages",
    "scripts": {
-      "start": "parcel app/index.html",
+      "start": "parcel public/index.html",
       "build": "parcel build Developer/index.js --out-file developer.js",
       "test": "jest --watchAll",
       "lint": "eslint ."
@@ -43,5 +43,8 @@
    },
    "browserslist": [
       "chrome > 55"
-   ]
+   ],
+   "alias": {
+      "DisabledContext": "./src/app/components/DisabledContext.js"
+   }
 }

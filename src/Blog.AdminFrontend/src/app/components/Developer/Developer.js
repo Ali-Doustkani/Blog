@@ -1,10 +1,10 @@
 import React, { useReducer, useEffect } from 'react'
 import { useToasts } from 'react-toast-notifications'
-import { Loader, Message, Button, Richtext, Textarea, ask } from '../Components'
+import { Loader, Message, Button, Richtext, Textarea, ask } from '../../controls'
 import ExperienceList from './ExperienceList'
 import { getDeveloper, saveDeveloper } from './services'
 import reducer from './reducer'
-import { DisabledContext } from '../DisabledContext'
+import DisabledContext from 'DisabledContext'
 
 const initialState = {
    isLoading: true,

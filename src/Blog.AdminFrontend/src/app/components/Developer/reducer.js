@@ -1,5 +1,5 @@
 import uuid from 'uuid/v1'
-import { emptyValidator, richtextEmptyValidator } from '../utils/validations'
+import { emptyValidator, richtextEmptyValidator } from '../../utils/validations'
 
 const load = (state, action) => {
    if (action.result.status === 'ok') {

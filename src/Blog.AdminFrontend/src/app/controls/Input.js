@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { emitChange, renderClassNames } from './utils'
-import { DisabledContext } from '../DisabledContext'
+import DisabledContext from 'DisabledContext'
 
 const Input = props => {
    const disabled = React.useContext(DisabledContext)

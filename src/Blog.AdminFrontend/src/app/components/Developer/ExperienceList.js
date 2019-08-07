@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Experience from './Experience'
-import { Button } from '../Components'
+import { Button } from '../../controls'
 
 const ExperienceList = props => {
    return (

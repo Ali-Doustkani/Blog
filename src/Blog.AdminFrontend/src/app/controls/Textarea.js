@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { ErrorList } from './ErrorList'
 import { emitChange, renderClassNames } from './utils'
-import { DisabledContext } from '../DisabledContext'
+import DisabledContext from 'DisabledContext'
 
 const Textarea = props => {
    const disabled = React.useContext(DisabledContext)
