@@ -4,59 +4,18 @@ import { Richtext, ErrorList, Input } from '../Components'
 import Button from '../Components/Richtext/Button'
 
 const Experience = props => {
-   const inputChange = e =>
-      props.onChange({
-         id: props.id,
-         [e.target.name]: e.target.value
-      })
-
    return (
       <div data-testid="experience-component" className="work-experience-group">
          <div className="text-group toolbar">
             <label>Work Experience:</label>
-            <Input
-               name="company"
-               autoFocus
-               errors={props.companyErrors}
-               value={props.company}
-               onChange={inputChange}
-            />
-            <Input
-               name="position"
-               errors={props.positionErrors}
-               value={props.position}
-               onChange={inputChange}
-            />
-            <Input
-               name="startDate"
-               type="date"
-               errors={props.startDateErrors}
-               value={props.startDate}
-               onChange={inputChange}
-               className="hide-arrow"
-            />
-            <Input
-               name="endDate"
-               type="date"
-               errors={props.endDateErrors}
-               value={props.endDate}
-               onChange={inputChange}
-               className="hide-arrow"
-            />
+            <Input name="company" {...props} autoFocus />
+            <Input name="position" {...props} />
+            <Input name="startDate" {...props} type="date" className="hide-arrow" />
+            <Input name="endDate" {...props} type="date" className="hide-arrow" />
             <div className="separator" />
-            <Button
-               content="trash-alt"
-               data-testid="deleteExperience-button"
-               onClick={() => props.onDelete(props.id)}
-            />
+            <Button content="trash-alt" onClick={() => props.onDelete(props.id)} />
          </div>
-         <Richtext
-            name="content"
-            data-testid="content-richtext"
-            innerHtml={props.content}
-            onChange={inputChange}
-            errors={props.contentErrors}
-         />
+         <Richtext name="content" {...props} />
          <ErrorList
             errors={[
                props.companyErrors,

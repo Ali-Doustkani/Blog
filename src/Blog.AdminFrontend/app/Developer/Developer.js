@@ -67,6 +67,7 @@ const Developer = () => {
             <h1>Write about yourself</h1>
             <Richtext
                label="Summary"
+               name="summary"
                autofocus
                innerHtml={state.summary}
                errors={state.summaryErrors}

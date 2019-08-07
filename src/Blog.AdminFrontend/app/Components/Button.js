@@ -6,21 +6,15 @@ const Button = props => {
    const disabled = React.useContext(DisabledContext)
 
    return (
-      <button
-         data-testid={props['data-testid']}
-         disabled={disabled}
-         className="form-button"
-         onClick={props.onClick}
-      >
+      <button disabled={disabled} className="form-button" onClick={props.onClick}>
          {props.children}
       </button>
    )
 }
 
 Button.propTypes = {
-   'data-testid': PropTypes.string,
    onClick: PropTypes.func,
-   children: PropTypes.element
+   children: PropTypes.any
 }
 
 export { Button }

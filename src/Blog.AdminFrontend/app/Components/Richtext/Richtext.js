@@ -36,16 +36,13 @@ function Richtext(props) {
    const article = useMemo(
       () => (
          <article
-            data-testid={props['data-testid']}
             ref={editorRef}
             className="entry"
-            dangerouslySetInnerHTML={{ __html: props.innerHtml }}
+            dangerouslySetInnerHTML={{ __html: props[props.name] }}
             onBlur={() =>
                props.onChange({
-                  target: {
-                     name: props.name,
-                     value: editorRef.current.innerHTML
-                  }
+                  id: props.id,
+                  [props.name]: editorRef.current.innerHTML
                })
             }
          />
@@ -57,8 +54,9 @@ function Richtext(props) {
       rich.setOptions({ disabled })
    }
 
+   const errors = props[props.name + 'Errors']
    const classes = ['entry']
-   if (props.errors && props.errors.length) {
+   if (errors && errors.length) {
       classes.push('incorrect')
    }
    if (hasFocus) {
@@ -98,19 +96,17 @@ function Richtext(props) {
          >
             {article}
          </div>
-         <ErrorList errors={props.errors} />
+         <ErrorList errors={errors} />
       </div>
    )
 }
 
 Richtext.propTypes = {
+   id: PropTypes.oneOfType(PropTypes.number, PropTypes.string).isRequired,
+   name: PropTypes.string.isRequired,
    autofocus: PropTypes.bool,
-   innerHtml: PropTypes.string.isRequired,
    onChange: PropTypes.func,
-   name: PropTypes.string,
-   errors: PropTypes.arrayOf(PropTypes.string),
-   label: PropTypes.string,
-   'data-testid': PropTypes.string
+   label: PropTypes.string
 }
 
 export { Richtext }
