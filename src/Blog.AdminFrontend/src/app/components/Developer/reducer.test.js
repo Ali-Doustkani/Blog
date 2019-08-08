@@ -1,4 +1,6 @@
 import reducer from './reducer'
+import { map } from '../../utils'
+jest.mock('../../utils')
 
 describe('loading', () => {
    const initial = {
@@ -35,45 +37,49 @@ describe('loading', () => {
    })
 })
 
-describe('manipulating developer', () => {
-   it('update experience ids', () => {
-      const initial = {
-         experiences: [
-            {
-               id: 1,
-               company: 'Lodgify'
-            },
-            {
-               id: 2,
-               company: 'Parmis'
-            }
-         ]
-      }
+it('update experience ids', () => {
+   const initial = {
+      experiences: [
+         {
+            id: 1,
+            company: 'Lodgify'
+         },
+         {
+            id: 2,
+            company: 'Parmis'
+         }
+      ]
+   }
 
-      const newState = reducer(initial, { type: 'UPDATE_IDS', data: { experiences: [101, 202] } })
+   const newState = reducer(initial, { type: 'UPDATE_IDS', data: { experiences: [101, 202] } })
 
-      expect(newState.experiences.map(exp => exp.id)).toEqual([101, 202])
-   })
+   expect(newState.experiences.map(exp => exp.id)).toEqual([101, 202])
 })
 
-describe('manipulating experiences', () => {
-   it('delete an existing experience', () => {
-      const initial = {
-         summary: 'will not change',
-         experiences: [
-            {
-               id: 1,
-               company: 'Lodgify',
-               position: 'C# Developer',
-               startDate: '2019-01-01',
-               endDate: '2020-01-01'
-            }
-         ]
-      }
+it('delete an existing experience', () => {
+   const initial = {
+      summary: 'will not change',
+      experiences: [
+         {
+            id: 1,
+            company: 'Lodgify',
+            position: 'C# Developer',
+            startDate: '2019-01-01',
+            endDate: '2020-01-01'
+         }
+      ]
+   }
 
-      const newState = reducer(initial, { type: 'DELETE_EXPERIENCE', id: 1 })
+   const newState = reducer(initial, { type: 'DELETE_EXPERIENCE', id: 1 })
 
-      expect(newState.summary).toBe('will not change')
-      expect(newState.experiences).toEqual([])
-   })
+   expect(newState.summary).toBe('will not change')
+   expect(newState.experiences).toEqual([])
+})
+
+it('enables the form when showing errors', () => {
+   map.mockImplementation((errors, state) => state)
+   const init = { disabled: true }
+   const newState = reducer(init, { type: 'SHOW_ERRORS', errors: null })
+
+   expect(newState.disabled).toEqual(false)
 })

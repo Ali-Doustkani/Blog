@@ -95,11 +95,14 @@ describe('PUT', () => {
    })
 
    it('handles 400', async () => {
-      fetchMock.status(400).data({ summary: ['the summary field is required'] })
+      fetchMock.status(400).data({
+         title: 'Invalid Request',
+         validationErrors: [{ error: 'isRequired', path: ['summary'] }]
+      })
 
       expect(await saveDeveloper(sample)).toEqual({
          status: 'error',
-         data: { summary: ['the summary field is required'] }
+         data: [{ error: 'isRequired', path: ['summary'] }]
       })
    })
 

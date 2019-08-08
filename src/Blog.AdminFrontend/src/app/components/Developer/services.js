@@ -8,7 +8,7 @@ const ok = data => ({
 
 const error = data => ({
    status: 'error',
-   data
+   data: data.validationErrors
 })
 
 const fatal = msg => ({

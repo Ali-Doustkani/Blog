@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
-import { useToasts } from 'react-toast-notifications'
-import { Loader, Message, Button, Richtext, Textarea, ask } from 'Controls'
+// import { useToasts } from 'react-toast-notifications'
+import { Loader, Message, Button, Richtext, Textarea, ErrorList, ask } from 'Controls'
 import ExperienceList from './ExperienceList'
 import { getDeveloper, saveDeveloper } from './services'
 import DisabledContext from 'DisabledContext'
@@ -9,13 +9,11 @@ import { useActions } from './actions'
 
 const Developer = () => {
    const [state, actions] = useActions(reducer)
-   const { addToast } = useToasts()
+   // const { addToast } = useToasts()
 
    useEffect(() => {
-      if (state.isLoading) {
-         fetchDeveloper()
-      }
-   }, [state.isLoading])
+      fetchDeveloper()
+   }, [])
 
    async function fetchDeveloper() {
       const result = await getDeveloper()
@@ -25,18 +23,19 @@ const Developer = () => {
    async function save() {
       actions.toSaveMode()
       const result = await saveDeveloper(state)
+
       if (result.status === 'ok') {
          actions.updateIds(result.data)
-         addToast('The developer saved successfully!', {
-            appearance: 'success',
-            autoDismiss: true
-         })
+         // addToast('The developer saved successfully!', {
+         //    appearance: 'success',
+         //    autoDismiss: true
+         // })
       } else if (result.status === 'error') {
          actions.showErrors(result.data)
-         addToast('Could not save the developer information. Checkout the errors.', {
-            appearance: 'error',
-            autoDismiss: true
-         })
+         // addToast('Could not save the developer information. Checkout the errors.', {
+         //    appearance: 'error',
+         //    autoDismiss: true
+         // })
       }
    }
 
@@ -53,6 +52,7 @@ const Developer = () => {
          {state.isLoading ? <Loader text="Saving developer..." /> : null}
          <div className="form about-form">
             <h1>Write about yourself</h1>
+            <ErrorList errors={state.experiencesErrors} />
             <Richtext
                label="Summary"
                name="summary"

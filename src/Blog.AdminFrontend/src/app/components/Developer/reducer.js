@@ -1,5 +1,5 @@
 import uuid from 'uuid/v1'
-import { emptyValidator, richtextEmptyValidator } from '../../utils/validations'
+import { emptyValidator, richtextEmptyValidator, map } from '../../utils'
 
 const initialState = {
    isLoading: true,
@@ -9,7 +9,8 @@ const initialState = {
    summaryErrors: [],
    skills: '',
    skillsErrors: [],
-   experiences: []
+   experiences: [],
+   experiencesErrors: []
 }
 
 const load = (state, action) => {
@@ -96,29 +97,9 @@ const updateIds = (state, action) => {
 }
 
 const showErrors = (state, action) => {
-   const experiences = []
-   for (let i = 0; i < state.experiences.length; i++) {
-      const a = action.data.experiences[i]
-      if (Object.getOwnPropertyNames(action.data.experiences[i]).length) {
-         experiences.push({
-            ...state.experiences[i],
-            companyErrors: a.company,
-            positionErrors: a.position,
-            startDateErrors: a.startDate,
-            endDateErrors: a.endDate,
-            contentErrors: a.content
-         })
-      } else {
-         experiences.push(state.experiences[i])
-      }
-   }
-   return {
-      ...state,
-      disabled: false,
-      summaryErrors: action.data.summary || [],
-      skillsErrors: action.data.skills || [],
-      experiences
-   }
+   const result = { ...state, disabled: false, isLoading: false }
+   map(action.data, result)
+   return result
 }
 
 const gotoSaveMode = state => {

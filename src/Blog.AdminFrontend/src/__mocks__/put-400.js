@@ -12,15 +12,16 @@ app.get('/api/developer', (req, res) => res.send(developer))
 app.put('/api/developer', (req, res) => {
    setTimeout(() => {
       res.status(400).send({
-         summary: ['summary is required', 'summary is bad'],
-         skills: ['skills is required', 'skills is bad'],
-         experiences: [
-            {
-               company: ['company is required', 'company already exists']
-            },
-            {
-               position: ['position is not valid']
-            }
+         type: 'validation-error',
+         title: 'Invalid Request',
+         validationErrors: [
+            { error: 'isRequired', path: ['summary'] },
+            { error: 'isBad', path: ['summary'] },
+            { error: 'isRequired', path: ['skills'] },
+            { error: 'isEmpty', path: ['experiences'] },
+            { error: 'isRequired', path: ['experiences', 0, 'company'] },
+            { error: 'isBad', path: ['experiences', 0, 'company'] },
+            { error: 'isRequired', path: ['experiences', 0, 'position'] }
          ]
       })
    }, 6000)
