@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-// import { useToasts } from 'react-toast-notifications'
+import { useToasts } from 'react-toast-notifications'
 import { Loader, Message, Button, Richtext, Textarea, ErrorList, ask } from 'Controls'
 import ExperienceList from './ExperienceList'
 import { getDeveloper, saveDeveloper } from './services'
@@ -9,7 +9,7 @@ import { useActions } from './actions'
 
 const Developer = () => {
    const [state, actions] = useActions(reducer)
-   // const { addToast } = useToasts()
+   const { addToast } = useToasts()
 
    useEffect(() => {
       fetchDeveloper()
@@ -27,16 +27,16 @@ const Developer = () => {
 
       if (result.status === 'ok') {
          actions.updateIds(result.data)
-         // addToast('The developer saved successfully!', {
-         //    appearance: 'success',
-         //    autoDismiss: true
-         // })
+         addToast('The developer saved successfully!', {
+            appearance: 'success',
+            autoDismiss: true
+         })
       } else if (result.status === 'error') {
          actions.showErrors(result.data)
-         // addToast('Could not save the developer information. Checkout the errors.', {
-         //    appearance: 'error',
-         //    autoDismiss: true
-         // })
+         addToast('Could not save the developer information. Checkout the errors.', {
+            appearance: 'error',
+            autoDismiss: true
+         })
       }
    }
 
