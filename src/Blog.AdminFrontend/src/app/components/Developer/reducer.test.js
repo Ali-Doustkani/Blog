@@ -1,10 +1,10 @@
-import reducer from './reducer'
+import { reducer, STATUS } from './reducer'
 import { map } from '../../utils'
 jest.mock('../../utils')
 
 describe('loading', () => {
    const initial = {
-      isLoading: true
+      status: STATUS.LOADING
    }
 
    it('create default values when no developer exists', () => {
@@ -16,12 +16,12 @@ describe('loading', () => {
          }
       })
 
-      expect(newState.isLoading).toBe(false)
+      expect(newState.status).toBe(STATUS.IDLE)
       expect(newState.summary).toBe('')
       expect(newState.experiences).toEqual([])
    })
 
-   it('create error message on fatal happend', () => {
+   it('put form in STOPPED mode when fatal happens', () => {
       const newState = reducer(initial, {
          type: 'LOAD',
          result: {
@@ -31,7 +31,7 @@ describe('loading', () => {
       })
 
       expect(newState).toEqual({
-         isLoading: false,
+         status: STATUS.STOPPED,
          errorMessage: 'Error Happened'
       })
    })
@@ -76,10 +76,10 @@ it('delete an existing experience', () => {
    expect(newState.experiences).toEqual([])
 })
 
-it('enables the form when showing errors', () => {
+it('put form in idle mode when showing errors', () => {
    map.mockImplementation((errors, state) => state)
-   const init = { disabled: true }
+   const init = { status: STATUS.SAVING }
    const newState = reducer(init, { type: 'SHOW_ERRORS', errors: null })
 
-   expect(newState.disabled).toEqual(false)
+   expect(newState.status).toEqual(STATUS.IDLE)
 })

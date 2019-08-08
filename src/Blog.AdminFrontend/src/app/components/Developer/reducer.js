@@ -1,9 +1,15 @@
 import uuid from 'uuid/v1'
 import { emptyValidator, richtextEmptyValidator, map } from '../../utils'
 
+const STATUS = {
+   LOADING: 1,
+   SAVING: 2,
+   IDLE: 3,
+   STOPPED: 4
+}
+
 const initialState = {
-   isLoading: true,
-   disabled: false,
+   status: STATUS.LOADING,
    errorMessage: '',
    summary: '',
    summaryErrors: [],
@@ -18,13 +24,13 @@ const load = (state, action) => {
       return action.result.data
          ? {
               ...state,
-              isLoading: false,
+              status: STATUS.IDLE,
               ...action.result.data,
               experiences: action.result.data.experiences.map(validateExperience)
            }
-         : { ...state, isLoading: false, summary: '', experiences: [] }
+         : { ...state, status: STATUS.IDLE, summary: '', experiences: [] }
    }
-   return { ...state, isLoading: false, errorMessage: action.result.data }
+   return { ...state, status: STATUS.STOPPED, errorMessage: action.result.data }
 }
 
 const addExperience = state => {
@@ -91,19 +97,15 @@ const updateIds = (state, action) => {
    const ids = action.data
    return {
       ...state,
-      disabled: false,
+      status: STATUS.IDLE,
       experiences: state.experiences.map((exp, i) => ({ ...exp, id: ids.experiences[i] }))
    }
 }
 
 const showErrors = (state, action) => {
-   const result = { ...state, disabled: false, isLoading: false }
+   const result = { ...state, status: STATUS.IDLE }
    map(action.data, result)
    return result
-}
-
-const gotoSaveMode = state => {
-   return { ...state, isLoading: true, disabled: true }
 }
 
 const reducer = (state, action) => {
@@ -112,8 +114,6 @@ const reducer = (state, action) => {
    }
 
    switch (action.type) {
-      case 'RESTART':
-         return { isLoading: true }
       case 'LOAD':
          return load(state, action)
       case 'ADD_EXPERIENCE':
@@ -128,11 +128,13 @@ const reducer = (state, action) => {
          return updateIds(state, action)
       case 'SHOW_ERRORS':
          return showErrors(state, action)
-      case 'GOTO_SAVE_MODE':
-         return gotoSaveMode(state)
+      case 'TO_SAVING':
+         return { ...state, status: STATUS.SAVING }
+      case 'TO_LOADING':
+         return { ...state, status: STATUS.LOADING }
       default:
          return state
    }
 }
 
-export default reducer
+export { reducer, STATUS }

@@ -9,7 +9,8 @@ function actions(dispatch) {
    return {
       load: result => dispatch({ type: 'LOAD', result }),
       updateIds: data => dispatch({ type: 'UPDATE_IDS', data }),
-      toSaveMode: () => dispatch({ type: 'GOTO_SAVE_MODE' }),
+      toLoading: () => dispatch({ type: 'TO_LOADING' }),
+      toSaving: () => dispatch({ type: 'TO_SAVING' }),
       showErrors: data => dispatch({ type: 'SHOW_ERRORS', data }),
       restart: () => dispatch({ type: 'RESTART' }),
       updateDeveloper: change => dispatch({ type: 'UPDATE_DEVELOPER', change }),

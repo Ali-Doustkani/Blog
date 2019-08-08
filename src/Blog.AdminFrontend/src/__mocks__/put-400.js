@@ -7,7 +7,11 @@ const developer = require('./developer')
 app.use(cors())
 app.use(bodyParser.json())
 
-app.get('/api/developer', (req, res) => res.send(developer))
+app.get('/api/developer', (req, res) =>
+   setTimeout(() => {
+      res.send(developer)
+   }, 3000)
+)
 
 app.put('/api/developer', (req, res) => {
    setTimeout(() => {

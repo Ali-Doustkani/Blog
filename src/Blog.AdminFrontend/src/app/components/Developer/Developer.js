@@ -4,7 +4,7 @@ import { Loader, Message, Button, Richtext, Textarea, ErrorList, ask } from 'Con
 import ExperienceList from './ExperienceList'
 import { getDeveloper, saveDeveloper } from './services'
 import DisabledContext from 'DisabledContext'
-import reducer from './reducer'
+import { reducer, STATUS } from './reducer'
 import { useActions } from './actions'
 
 const Developer = () => {
@@ -16,12 +16,13 @@ const Developer = () => {
    }, [])
 
    async function fetchDeveloper() {
+      actions.toLoading()
       const result = await getDeveloper()
       actions.load(result)
    }
 
    async function save() {
-      actions.toSaveMode()
+      actions.toSaving()
       const result = await saveDeveloper(state)
 
       if (result.status === 'ok') {
@@ -39,17 +40,17 @@ const Developer = () => {
       }
    }
 
-   if (state.isLoading && !state.disabled) {
+   if (state.status === STATUS.LOADING) {
       return <Loader text="Loading developer..." />
-   }
-
-   if (state.errorMessage) {
-      return <Message message={state.errorMessage} onTryAgain={actions.restart} />
+   } else if (state.status === STATUS.STOPPED) {
+      return (
+         <Message message={state.errorMessage} onTryAgain={async () => await fetchDeveloper()} />
+      )
    }
 
    return (
-      <DisabledContext.Provider value={state.disabled}>
-         {state.isLoading ? <Loader text="Saving developer..." /> : null}
+      <DisabledContext.Provider value={state.status === STATUS.SAVING}>
+         {state.status === STATUS.SAVING ? <Loader text="Saving developer..." /> : null}
          <div className="form about-form">
             <h1>Write about yourself</h1>
             <ErrorList errors={state.experiencesErrors} />
