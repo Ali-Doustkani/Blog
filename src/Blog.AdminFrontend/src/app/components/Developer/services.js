@@ -78,4 +78,21 @@ const toDeveloper = state => {
    }
 }
 
-export { getDeveloper, saveDeveloper }
+const clientError = err => err.type === 1
+
+const anyError = state =>
+   Boolean(
+      state.summaryErrors.some(clientError) ||
+         state.skillsErrors.some(clientError) ||
+         state.experiencesErrors.some(clientError) ||
+         state.experiences.some(
+            exp =>
+               exp.companyErrors.some(clientError) ||
+               exp.positionErrors.some(clientError) ||
+               exp.startDateErrors.some(clientError) ||
+               exp.endDateErrors.some(clientError) ||
+               exp.contentErrors.some(clientError)
+         )
+   )
+
+export { getDeveloper, saveDeveloper, anyError }

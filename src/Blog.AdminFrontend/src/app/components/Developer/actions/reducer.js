@@ -1,19 +1,16 @@
 import uuid from 'uuid/v1'
-import prepareForSave from './prepareForSave'
+import removeServerErrors from './removeServerErrors'
 import { emptyValidator, richtextEmptyValidator, map } from '../../../utils'
 
 const STATUS = {
    LOADING: 1,
-   PREPARING_TO_SAVE: 2,
-   SAVING: 3,
-   IDLE: 4,
-   STOPPED: 5
+   SAVING: 2,
+   IDLE: 3,
+   STOPPED: 4
 }
 
 const initialState = {
    status: STATUS.LOADING,
-   hasError: false,
-   save: false,
    errorMessage: '',
    summary: '',
    summaryErrors: [],
@@ -132,8 +129,8 @@ const reducer = (state, action) => {
          return updateIds(state, action)
       case 'SHOW_ERRORS':
          return showErrors(state, action)
-      case 'TO_PREPARE_FOR_SAVE':
-         return prepareForSave(state)
+      case 'REMOVE_SERVER_ERRORS':
+         return removeServerErrors(state)
       case 'TO_IDLE':
          return { ...state, status: STATUS.IDLE }
       case 'TO_SAVING':

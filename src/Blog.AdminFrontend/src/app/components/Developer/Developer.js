@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useToasts } from 'react-toast-notifications'
 import { Loader, Message, Button, Richtext, Textarea, ErrorList, ask } from 'Controls'
 import ExperienceList from './ExperienceList'
-import { getDeveloper, saveDeveloper } from './services'
+import { getDeveloper, saveDeveloper, anyError } from './services'
 import DisabledContext from 'DisabledContext'
 import { useActions, STATUS } from './actions'
 
@@ -14,18 +14,6 @@ const Developer = () => {
       fetchDeveloper()
    }, [])
 
-   useEffect(() => {
-      if (state.status !== STATUS.PREPARING_TO_SAVE) {
-         return
-      }
-      if (state.hasError) {
-         addToast('Resolve the problems first', { appearance: 'error', autoDismiss: true })
-         actions.toIdle()
-      } else {
-         save()
-      }
-   }, [state.status])
-
    async function fetchDeveloper() {
       actions.toLoading()
       const result = await getDeveloper()
@@ -33,6 +21,12 @@ const Developer = () => {
    }
 
    async function save() {
+      actions.removeServerErrors()
+      if (anyError(state)) {
+         addToast('Resolve the problems first', { appearance: 'error', autoDismiss: true })
+         return
+      }
+
       actions.toSaving()
       const result = await saveDeveloper(state)
       if (result.status === 'ok') {
@@ -83,7 +77,7 @@ const Developer = () => {
                onChange={actions.updateExperience}
                onDelete={ask(actions.deleteExperience)}
             />
-            <Button onClick={() => actions.toPrepareForSave()}>Save</Button>
+            <Button onClick={save}>Save</Button>
          </div>
       </DisabledContext.Provider>
    )

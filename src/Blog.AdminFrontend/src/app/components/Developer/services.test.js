@@ -1,5 +1,5 @@
 import fetchMock from 'fetchMock'
-import { getDeveloper, saveDeveloper } from './services'
+import { getDeveloper, saveDeveloper, anyError } from './services'
 
 const sample = {
    summary: 'started to code as a young boy',
@@ -174,5 +174,70 @@ describe('PUT', () => {
             ]
          })
       )
+   })
+})
+
+describe('anyError', () => {
+   test.each([
+      { summaryErrors: [{ type: 1, message: 'err1' }] },
+      { skillsErrors: [{ type: 1, message: 'err1' }] },
+      { experiencesErrors: [{ type: 1, message: 'err1' }] }
+   ])('sets hasError if developer has any error in %p', arg => {
+      const init = {
+         hasError: false,
+         summaryErrors: [],
+         skillsErrors: [],
+         experiencesErrors: [],
+         experiences: []
+      }
+      Object.assign(init, arg)
+
+      expect(anyError(init)).toBe(true)
+   })
+
+   test.each([
+      { companyErrors: [{ type: 1, message: 'err1' }] },
+      { positionErrors: [{ type: 1, message: 'err1' }] },
+      { startDateErrors: [{ type: 1, message: 'err1' }] },
+      { endDateErrors: [{ type: 1, message: 'err1' }] },
+      { contentErrors: [{ type: 1, message: 'err1' }] }
+   ])('sets hasError if experience has any error in %p', arg => {
+      const init = {
+         hasError: false,
+         summaryErrors: [],
+         skillsErrors: [],
+         experiencesErrors: [],
+         experiences: [
+            {
+               companyErrors: [],
+               positionErrors: [],
+               startDateErrors: [],
+               endDateErrors: [],
+               contentErrors: []
+            }
+         ]
+      }
+      Object.assign(init.experiences[0], arg)
+
+      expect(anyError(init)).toBe(true)
+   })
+
+   it('does not set hasError for server errors', () => {
+      const init = {
+         hasError: true,
+         summaryErrors: [{ type: 2, message: 'err2' }],
+         skillsErrors: [{ type: 2, message: 'err2' }],
+         experiencesErrors: [{ type: 2, message: 'err2' }],
+         experiences: [
+            {
+               companyErrors: [{ type: 2, message: 'err2' }],
+               positionErrors: [{ type: 2, message: 'err2' }],
+               startDateErrors: [{ type: 2, message: 'err2' }],
+               endDateErrors: [{ type: 2, message: 'err2' }],
+               contentErrors: [{ type: 2, message: 'err2' }]
+            }
+         ]
+      }
+      expect(anyError(init)).toBe(false)
    })
 })

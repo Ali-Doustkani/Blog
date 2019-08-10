@@ -16,7 +16,7 @@ function actions(dispatch) {
       addExperience: () => dispatch({ type: 'ADD_EXPERIENCE' }),
       updateExperience: change => dispatch({ type: 'UPDATE_EXPERIENCE', change }),
       deleteExperience: id => dispatch({ type: 'DELETE_EXPERIENCE', id }),
-      toPrepareForSave: () => dispatch({ type: 'TO_PREPARE_FOR_SAVE' }),
+      removeServerErrors: () => dispatch({ type: 'REMOVE_SERVER_ERRORS' }),
       toSaving: () => dispatch({ type: 'TO_SAVING' }),
       toLoading: () => dispatch({ type: 'TO_LOADING' }),
       toIdle: () => dispatch({ type: 'TO_IDLE' })
