@@ -19,13 +19,13 @@ app.put('/api/developer', (req, res) => {
          type: 'validation-error',
          title: 'Invalid Request',
          validationErrors: [
-            { error: 'isRequired', path: ['summary'] },
-            { error: 'isBad', path: ['summary'] },
-            { error: 'isRequired', path: ['skills'] },
-            { error: 'isEmpty', path: ['experiences'] },
-            { error: 'isRequired', path: ['experiences', 0, 'company'] },
-            { error: 'isBad', path: ['experiences', 0, 'company'] },
-            { error: 'isRequired', path: ['experiences', 0, 'position'] }
+            //  { error: 'isRequired', path: ['summary'] },
+            { error: 'isBad', path: ['summary'] }
+            // { error: 'isRequired', path: ['skills'] },
+            // { error: 'isEmpty', path: ['experiences'] },
+            // { error: 'isRequired', path: ['experiences', 0, 'company'] },
+            // { error: 'isBad', path: ['experiences', 0, 'company'] },
+            // { error: 'isRequired', path: ['experiences', 0, 'position'] }
          ]
       })
    }, 6000)

@@ -1,6 +1,6 @@
 import { reducer, STATUS } from './reducer'
-import { map } from '../../utils'
-jest.mock('../../utils')
+import { map } from '../../../utils'
+jest.mock('../../../utils')
 
 describe('loading', () => {
    const initial = {

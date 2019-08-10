@@ -4,16 +4,27 @@ import { Loader, Message, Button, Richtext, Textarea, ErrorList, ask } from 'Con
 import ExperienceList from './ExperienceList'
 import { getDeveloper, saveDeveloper } from './services'
 import DisabledContext from 'DisabledContext'
-import { reducer, STATUS } from './reducer'
-import { useActions } from './actions'
+import { useActions, STATUS } from './actions'
 
 const Developer = () => {
-   const [state, actions] = useActions(reducer)
+   const [state, actions] = useActions()
    const { addToast } = useToasts()
 
    useEffect(() => {
       fetchDeveloper()
    }, [])
+
+   useEffect(() => {
+      if (state.status !== STATUS.PREPARING_TO_SAVE) {
+         return
+      }
+      if (state.hasError) {
+         addToast('Resolve the problems first', { appearance: 'error', autoDismiss: true })
+         actions.toIdle()
+      } else {
+         save()
+      }
+   }, [state.status])
 
    async function fetchDeveloper() {
       actions.toLoading()
@@ -24,7 +35,6 @@ const Developer = () => {
    async function save() {
       actions.toSaving()
       const result = await saveDeveloper(state)
-
       if (result.status === 'ok') {
          actions.updateIds(result.data)
          addToast('The developer saved successfully!', {
@@ -73,7 +83,7 @@ const Developer = () => {
                onChange={actions.updateExperience}
                onDelete={ask(actions.deleteExperience)}
             />
-            <Button onClick={save}>Save</Button>
+            <Button onClick={() => actions.toPrepareForSave()}>Save</Button>
          </div>
       </DisabledContext.Provider>
    )
