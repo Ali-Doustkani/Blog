@@ -9,7 +9,7 @@ const Message = props => {
          <i className="fas fa-times" />
       ) : null
    return (
-      <div className={'instant-message ' + props.appearance}>
+      <div className={'message-box ' + props.appearance}>
          {icon}
          {props.message}
          <a onClick={props.onDismiss}>Dismiss</a>

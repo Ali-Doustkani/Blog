@@ -4,8 +4,8 @@ import Message from './Message'
 
 it('displays the message', () => {
    expect(
-      shallow(<Message message="The Message" />)
-         .childAt(0)
+      shallow(<Message message="The Message" appearance="error" />)
+         .childAt(1)
          .text()
    ).toBe('The Message')
 })
@@ -31,6 +31,7 @@ it('calls dismiss when clicked', () => {
    shallow(
       <Message
          message="MSG"
+         appearance="error"
          onDismiss={() => {
             expect(true).toBe(true)
          }}
