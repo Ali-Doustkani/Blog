@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const Toast = props => {
+const Message = props => {
    const icon =
       props.appearance === 'success' ? (
          <i className="fas fa-check" />
@@ -9,18 +9,18 @@ const Toast = props => {
          <i className="fas fa-times" />
       ) : null
    return (
-      <div className={'toast ' + props.appearance}>
+      <div className={'instant-message ' + props.appearance}>
          {icon}
-         {props.children}
+         {props.message}
          <a onClick={props.onDismiss}>Dismiss</a>
       </div>
    )
 }
 
-Toast.propTypes = {
-   appearance: PropTypes.string,
-   onDismiss: PropTypes.func,
-   children: PropTypes.string
+Message.propTypes = {
+   message: PropTypes.string.isRequired,
+   appearance: PropTypes.string.isRequired,
+   onDismiss: PropTypes.func
 }
 
-export default Toast
+export default Message

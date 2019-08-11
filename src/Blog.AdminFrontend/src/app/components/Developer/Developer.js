@@ -1,14 +1,13 @@
 import React, { useEffect } from 'react'
-import { useToasts } from 'react-toast-notifications'
+import PropTypes from 'prop-types'
 import { Loader, Message, Button, Richtext, Textarea, ErrorList, ask } from 'Controls'
 import ExperienceList from './ExperienceList'
 import { getDeveloper, saveDeveloper, anyError } from './services'
 import DisabledContext from 'DisabledContext'
 import { useActions, STATUS } from './actions'
 
-const Developer = () => {
+const Developer = ({ notify }) => {
    const [state, actions] = useActions()
-   const { addToast } = useToasts()
 
    useEffect(() => {
       fetchDeveloper()
@@ -23,7 +22,7 @@ const Developer = () => {
    async function save() {
       actions.removeServerErrors()
       if (anyError(state)) {
-         addToast('Resolve the problems first', { appearance: 'error', autoDismiss: true })
+         notify('Resolve the problems first', 'error')
          return
       }
 
@@ -31,16 +30,10 @@ const Developer = () => {
       const result = await saveDeveloper(state)
       if (result.status === 'ok') {
          actions.updateIds(result.data)
-         addToast('The developer saved successfully!', {
-            appearance: 'success',
-            autoDismiss: true
-         })
+         notify('The developer saved successfully!', 'success')
       } else if (result.status === 'error') {
          actions.showErrors(result.data)
-         addToast('Could not save the developer information. Checkout the errors.', {
-            appearance: 'error',
-            autoDismiss: true
-         })
+         notify('Could not save the developer information. Checkout the errors.', 'error')
       }
    }
 
@@ -81,6 +74,10 @@ const Developer = () => {
          </div>
       </DisabledContext.Provider>
    )
+}
+
+Developer.propTypes = {
+   notify: PropTypes.func.isRequired
 }
 
 export default Developer

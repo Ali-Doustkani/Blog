@@ -1,12 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { ToastProvider } from 'react-toast-notifications'
 import Developer from './Developer'
-import Toast from '../../controls/Toast'
+import { InstantMessage, notify } from '../Notification'
 
 ReactDOM.render(
-   <ToastProvider placement="bottom-center" autoDismissTimeout="3000" components={{ Toast }}>
-      <Developer />
-   </ToastProvider>,
+   <>
+      <Developer notify={notify} />
+      <InstantMessage />
+   </>,
    document.getElementById('root')
 )
