@@ -8,5 +8,10 @@ ReactDOM.render(
       <Developer notify={notify} />
       <InstantMessage />
    </>,
-   document.getElementById('root')
+   document.getElementsByTagName('main')[0]
+)
+
+ReactDOM.render(
+   <p>© 2018 - {new Date().getFullYear()} Ali Doustkani</p>,
+   document.getElementsByTagName('footer')[0]
 )
