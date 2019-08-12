@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`create default values when no developer exists 1`] = `
+Object {
+  "errorMessage": "",
+  "experiences": Array [],
+  "experiencesErrors": Array [],
+  "skills": "",
+  "skillsErrors": Array [],
+  "status": 3,
+  "summary": "",
+  "summaryErrors": Array [],
+}
+`;
+
+exports[`put form in STOPPED mode when fatal happens 1`] = `
+Object {
+  "errorMessage": "Error Happened",
+  "experiences": Array [],
+  "experiencesErrors": Array [],
+  "skills": "",
+  "skillsErrors": Array [],
+  "status": 4,
+  "summary": "",
+  "summaryErrors": Array [],
+}
+`;
+
+exports[`stores experience format 1`] = `
+Object {
+  "errorMessage": "",
+  "experiences": Array [
+    Object {
+      "company": "Lodgify",
+      "companyErrors": Array [],
+      "contentErrors": Array [],
+      "endDateErrors": Array [],
+      "id": 1,
+      "positionErrors": Array [],
+      "startDateErrors": Array [],
+    },
+  ],
+  "experiencesErrors": Array [],
+  "skills": "",
+  "skillsErrors": Array [],
+  "status": 3,
+  "summary": "",
+  "summaryErrors": Array [],
+}
+`;

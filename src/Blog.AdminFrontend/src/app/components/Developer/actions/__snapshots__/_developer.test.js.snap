@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`updating updates fields 1`] = `
+Object {
+  "errorMessage": "",
+  "experiences": Array [],
+  "experiencesErrors": Array [],
+  "skills": "C#",
+  "skillsErrors": Array [],
+  "status": 1,
+  "summary": "summary",
+  "summaryErrors": Array [],
+}
+`;
+
+exports[`updating validates fields 1`] = `
+Object {
+  "errorMessage": "",
+  "experiences": Array [],
+  "experiencesErrors": Array [],
+  "skills": "",
+  "skillsErrors": "skillsError",
+  "status": 1,
+  "summary": "the summary",
+  "summaryErrors": "summaryError",
+}
+`;

@@ -1,13 +1,31 @@
 import { useReducer } from 'react'
-import { reducer, STATUS } from './reducer'
+import { STATUS, initialState } from './initials'
+import { dict, evolve } from '../../../utils/fn'
+import { load } from './_loading'
+import { addExperience, updateExperience, deleteExperience } from './_experiences'
+import { showErrors, updateIds, updateDeveloper, prepareForSave } from './_developer'
 
-function useActions() {
-   const [state, dispatch] = useReducer(reducer, reducer())
-   return [state, actions(dispatch)]
+const reducer = (state, action) => {
+   const selectBy = dict(
+      ['LOAD', load],
+      ['ADD_EXPERIENCE', addExperience],
+      ['DELETE_EXPERIENCE', deleteExperience],
+      ['UPDATE_EXPERIENCE', updateExperience],
+      ['UPDATE_DEVELOPER', updateDeveloper],
+      ['UPDATE_IDS', updateIds],
+      ['SHOW_ERRORS', showErrors],
+      ['REMOVE_SERVER_ERRORS', prepareForSave],
+      ['TO_IDLE', evolve({ status: STATUS.IDLE })],
+      ['TO_SAVING', evolve({ status: STATUS.SAVING })],
+      ['TO_LOADING', evolve({ status: STATUS.LOADING })]
+   )
+   return selectBy(action.type)(state, action)
 }
 
-function actions(dispatch) {
-   return {
+function useActions() {
+   const [state, dispatch] = useReducer(reducer, initialState)
+
+   const actions = {
       load: result => dispatch({ type: 'LOAD', result }),
       updateIds: data => dispatch({ type: 'UPDATE_IDS', data }),
       showErrors: data => dispatch({ type: 'SHOW_ERRORS', data }),
@@ -21,6 +39,8 @@ function actions(dispatch) {
       toLoading: () => dispatch({ type: 'TO_LOADING' }),
       toIdle: () => dispatch({ type: 'TO_IDLE' })
    }
+
+   return [state, actions]
 }
 
 export { useActions, STATUS }
