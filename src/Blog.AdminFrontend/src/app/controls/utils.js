@@ -5,10 +5,9 @@ const ask = fn => id => {
 }
 
 const emitChange = props => args => {
-   props.onChange({
-      id: props.id,
-      [props.name]: args.target.value
-   })
+   const changes = props.id ? { id: props.id } : {}
+   changes[props.name] = args.target.value
+   props.onChange(changes)
 }
 
 const renderClassNames = props => {

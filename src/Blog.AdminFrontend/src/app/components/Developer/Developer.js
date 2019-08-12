@@ -56,14 +56,9 @@ const Developer = ({ notify }) => {
                name="summary"
                autofocus
                {...state}
-               onChange={e => actions.updateDeveloper({ summary: e.summary })}
+               onChange={actions.updateDeveloper}
             />
-            <Textarea
-               label="Skills"
-               name="skills"
-               {...state}
-               onChange={e => actions.updateDeveloper({ skills: e.skills })}
-            />
+            <Textarea label="Skills" name="skills" {...state} onChange={actions.updateDeveloper} />
             <ExperienceList
                experiences={state.experiences}
                onAdd={actions.addExperience}

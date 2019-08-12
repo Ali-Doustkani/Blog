@@ -10,6 +10,14 @@ test('emitChange calls the onChange func', () => {
    emitChange(props)({ target: { value: 'C++ Developer' } })
 })
 
+test('that emitChange does not put id when its not available', () => {
+   const props = {
+      name: 'position',
+      onChange: e => expect(e).toEqual({ position: 'C++ Developer' })
+   }
+   emitChange(props)({ target: { value: 'C++ Developer' } })
+})
+
 test('renderClassNames returns original class', () => {
    expect(renderClassNames({ className: 'text-box' })).toBe('text-box')
 })
