@@ -28,7 +28,7 @@ namespace Blog.Controllers
       {
          var result = _service.Save(developer);
          if (result.Status == Status.Created)
-            return CreatedAtAction(nameof(Get), new { result.Experiences, result.SideProjects });
+            return CreatedAtAction(nameof(Get), developer);
 
          return Ok(new { result.Experiences, result.SideProjects });
       }
