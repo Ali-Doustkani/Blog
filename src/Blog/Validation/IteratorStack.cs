@@ -21,11 +21,22 @@ namespace Blog.Validation
       public PropertyInfo CurrentProperty { get => (PropertyInfo)iterator.Current; }
       public object CurrentOwner { get => _pool.Peek().Item1; }
 
-      public void PushCollection(IEnumerable collection) =>
-         _pool.Push(new Tuple<object, IEnumerator>(collection, collection.GetEnumerator()));
+      public void PushCurrentAsCollection()
+      {
+         var collection = (IEnumerable)CurrentProperty.GetValue(CurrentOwner);
+         if (collection != null)
+            _pool.Push(new Tuple<object, IEnumerator>(collection, collection.GetEnumerator()));
+      }
 
-      public void PushObjectType(object model, Type type) =>
-         _pool.Push(new Tuple<object, IEnumerator>(model, type.GetProperties().GetEnumerator()));
+      public void PushCurrentAsObject()
+      {
+         var value = CurrentProperty.GetValue(CurrentOwner);
+         if (value != null)
+            _pool.Push(
+               new Tuple<object, IEnumerator>(
+                  value,
+                  CurrentProperty.PropertyType.GetProperties().GetEnumerator()));
+      }
 
       public void PushObject(object model) =>
          _pool.Push(new Tuple<object, IEnumerator>(model, model.GetType().GetProperties().GetEnumerator()));

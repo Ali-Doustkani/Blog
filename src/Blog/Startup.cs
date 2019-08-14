@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Blog.Domain;
 using Blog.Utils;
+using Blog.Validation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -44,6 +45,7 @@ namespace Blog
          services.AddMvc(cfg =>
          {
             cfg.Filters.Add<MigrationFilter>();
+            cfg.Filters.Add<ValidationFilter>();
          });
          services.Configure<ApiBehaviorOptions>(op =>
          {

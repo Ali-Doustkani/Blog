@@ -63,6 +63,11 @@ namespace Blog.Tests.Validation
          public IEnumerable<object> Flats { get; set; }
       }
 
+      public class NullProperty
+      {
+         public Flat1 TheProperty { get; set; }
+      }
+
       private List<Property> Read(object model)
       {
          var nav = new PropertyNavigator(model);
@@ -148,6 +153,14 @@ namespace Blog.Tests.Validation
       }
 
       [Fact]
+      public void Read_null_properties()
+      {
+         var result = Read(new NullProperty());
+
+         result.Should().HaveCount(0);
+      }
+
+      [Fact]
       public void Read_nullable_primitive_types()
       {
          var model = new NullableModel { Value = null };
@@ -205,6 +218,15 @@ namespace Blog.Tests.Validation
          result[1].Attributes.ElementAt(0).Should().BeAssignableTo<RequiredAttribute>();
          result[1].Value.Should().Be("");
          result[1].Path.Should().BeEquivalentTo(new object[] { "flats", 1, "thisShouldBeCamelCase" });
+      }
+
+      [Fact]
+      public void Read_null_collections()
+      {
+         var model = new CollectionProperty { Flats = null };
+         var result = Read(model);
+
+         result.Should().HaveCount(0);
       }
    }
 }

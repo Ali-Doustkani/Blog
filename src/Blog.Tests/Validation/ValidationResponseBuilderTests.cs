@@ -52,7 +52,7 @@ namespace Blog.Tests.Validation
          builder.Result.Errors.Should().ContainEquivalentOf(new
          {
             Error = ValidationErrorType.IsRequired,
-            Paths = new[] { "summary" }
+            Path = new[] { "summary" }
          });
       }
 
@@ -65,7 +65,7 @@ namespace Blog.Tests.Validation
          builder.Result.Errors.Should().ContainEquivalentOf(new
          {
             Error = ValidationErrorType.IsRequired,
-            Paths = new[] { "value" }
+            Path = new[] { "value" }
          });
       }
 
@@ -94,7 +94,7 @@ namespace Blog.Tests.Validation
          builder.Result.Errors.Should().ContainEquivalentOf(new
          {
             Error = ValidationErrorType.IsRequired,
-            Paths = new[] { "prop", "summary" }
+            Path = new[] { "prop", "summary" }
          });
       }
 
@@ -118,7 +118,7 @@ namespace Blog.Tests.Validation
          builder.Result.Errors.Should().BeEquivalentTo(new
          {
             Error = ValidationErrorType.IsEmpty,
-            Paths = new[] { "values" }
+            Path = new[] { "values" }
          });
       }
    }

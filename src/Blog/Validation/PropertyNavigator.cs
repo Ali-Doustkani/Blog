@@ -70,14 +70,12 @@ namespace Blog.Validation
          if (IsCollection())
          {
             _path.Push(CamelCase(_iterator.CurrentProperty.Name));
-            var col = (IEnumerable)_iterator.CurrentProperty.GetValue(_iterator.CurrentOwner);
-            _iterator.PushCollection(col);
+            _iterator.PushCurrentAsCollection();
          }
          else if (_iterator.Current is PropertyInfo)
          {
             _path.Push(CamelCase(_iterator.CurrentProperty.Name));
-            var model = _iterator.CurrentProperty.GetValue(_iterator.CurrentOwner);
-            _iterator.PushObjectType(model, _iterator.CurrentProperty.PropertyType);
+            _iterator.PushCurrentAsObject();
          }
          else
          {
