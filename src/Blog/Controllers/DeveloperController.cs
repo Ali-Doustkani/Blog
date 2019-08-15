@@ -5,7 +5,7 @@ namespace Blog.Controllers
 {
    [ApiController]
    [Route("/api/developer")]
-   public class DeveloperController : Controller
+   public class DeveloperController : ControllerBase
    {
       public DeveloperController(IDeveloperServices service)
       {
@@ -26,11 +26,13 @@ namespace Blog.Controllers
       [HttpPut]
       public IActionResult Put(DeveloperEntry developer)
       {
+         if (developer == null)
+            return Ok();
          var result = _service.Save(developer);
          if (result.Status == Status.Created)
-            return CreatedAtAction(nameof(Get), developer);
+            return CreatedAtAction(nameof(Get), null);
 
-         return Ok(new { result.Experiences, result.SideProjects });
+         return Ok();
       }
    }
 }

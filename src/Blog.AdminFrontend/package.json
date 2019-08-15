@@ -5,7 +5,7 @@
    "description": "administrator react pages",
    "scripts": {
       "start": "parcel public/index.html",
-      "build": "parcel build ./src/app/components/Developer/index.js --out-file developer.js",
+      "build": "parcel build public/index.html",
       "test": "jest --watchAll",
       "lint": "eslint ."
    },
