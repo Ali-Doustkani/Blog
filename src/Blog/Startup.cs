@@ -64,6 +64,8 @@ namespace Blog
                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
             app.UseExceptionHandler("/home/error");
+            app.UseHsts();
+            app.UseHttpsRedirection();
             app.UseXXssProtection(options => options.EnabledWithBlockMode());
             app.UseXContentTypeOptions();
          }
