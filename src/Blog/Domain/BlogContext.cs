@@ -131,6 +131,40 @@ namespace Blog.Domain
                .IsRequired();
          });
 
+         modelBuilder.Entity<Experience>(ex =>
+         {
+            ex.ToTable("Experiences");
+
+            ex
+            .Property(x => x.Company)
+            .IsRequired();
+
+            ex
+            .Property(x => x.Content)
+            .IsRequired();
+
+            ex
+            .Property("DeveloperId")
+            .IsRequired();
+         });
+
+         modelBuilder.Entity<SideProject>(sp =>
+         {
+            sp.ToTable("SideProjects");
+
+            sp
+            .Property(x => x.Title)
+            .IsRequired();
+
+            sp
+            .Property(x => x.Content)
+            .IsRequired();
+
+            sp
+            .Property("DeveloperId")
+            .IsRequired();
+         });
+
          modelBuilder.Entity<Developer>(dev =>
          {
             dev
@@ -151,40 +185,6 @@ namespace Blog.Domain
             .WithOne()
             .HasForeignKey("DeveloperId");
 
-         });
-
-         modelBuilder.Entity<Experience>(ex =>
-         {
-            ex.ToTable("Experiences");
-
-            ex
-            .Property(x => x.Company)
-            .IsRequired();
-
-            ex
-            .Property(x => x.Content)
-            .IsRequired();
-
-            ex
-            .Property(x => x.DeveloperId)
-            .IsRequired();
-         });
-
-         modelBuilder.Entity<SideProject>(sp =>
-         {
-            sp.ToTable("SideProjects");
-
-            sp
-            .Property(x => x.Title)
-            .IsRequired();
-
-            sp
-            .Property(x => x.Content)
-            .IsRequired();
-
-            sp
-            .Property(x => x.DeveloperId)
-            .IsRequired();
          });
       }
    }
