@@ -1,12 +1,11 @@
 ﻿using AutoMapper;
 using Blog.Domain;
 using Blog.Utils;
-using Blog.Validation;
+using Elegant400;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -45,12 +44,8 @@ namespace Blog
          services.AddMvc(cfg =>
          {
             cfg.Filters.Add<MigrationFilter>();
-            cfg.Filters.Add<ValidationFilter>();
          });
-         services.Configure<ApiBehaviorOptions>(op =>
-         {
-            op.SuppressModelStateInvalidFilter = true;
-         });
+         services.AddElegant400();
          services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<BlogContext>();
          services.AddAutoMapper(GetType().Assembly);
          services.AddBlogTypes();

@@ -26,8 +26,6 @@ namespace Blog.Controllers
       [HttpPut]
       public IActionResult Put(DeveloperEntry developer)
       {
-         if (developer == null)
-            return Ok();
          var result = _service.Save(developer);
          if (result.Status == Status.Created)
             return CreatedAtAction(nameof(Get), null);

@@ -1,7 +1,9 @@
 ﻿using Blog.Services.DeveloperStory;
 using FluentAssertions;
+using FluentAssertions.Json;
 using Moq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -95,24 +97,28 @@ namespace Blog.Tests.Controllers
       [Fact]
       public async Task Return_400_when_developer_is_not_valid()
       {
-         var developer = new DeveloperEntry();
+         var developer = new
+         {
+            Experiences = new[]
+            {
+               new{ Id="sdf"}
+            }
+         };
          using (var response = await _client.PutAsJsonAsync("/api/developer", developer))
          {
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            var result = JsonConvert.DeserializeObject<ValidationResult>(await response.Content.ReadAsStringAsync());
+            var result = JToken.Parse(await response.Content.ReadAsStringAsync());
 
-            result.Errors.Should().HaveCount(2);
-            result.Errors[0].Should().BeEquivalentTo(new
+            var expected = JsonConvert.SerializeObject(new
             {
-               Error = "isRequired",
-               Path = new object[] { "summary" }
+               title = "Validation",
+               errors = new[]
+               {
+                  new{error="convert", path=new object[]{"Experiences", 0, "Id"}, type="integer"}
+               }
             });
 
-            result.Errors[1].Should().BeEquivalentTo(new
-            {
-               Error = "isRequired",
-               Path = new object[] { "skills" }
-            });
+            result.Should().BeEquivalentTo(expected);
          }
       }
    }

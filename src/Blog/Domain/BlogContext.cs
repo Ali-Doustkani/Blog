@@ -166,7 +166,7 @@ namespace Blog.Domain
             .IsRequired();
 
             ex
-            .Property("DeveloperId")
+            .Property(x => x.DeveloperId)
             .IsRequired();
          });
 
@@ -183,7 +183,7 @@ namespace Blog.Domain
             .IsRequired();
 
             sp
-            .Property("DeveloperId")
+            .Property(x => x.DeveloperId)
             .IsRequired();
          });
       }
