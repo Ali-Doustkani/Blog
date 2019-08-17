@@ -23,9 +23,33 @@ namespace Blog.Services.DeveloperStory
             .ForMember(
                dest => dest.EndDate,
                o => o.MapFrom(src => src.EndDate.ToString("yyyy-MM-dd")))
-            .ReverseMap();
+            .ReverseMap()
+            .ForMember(
+               dest => dest.Id,
+               o => o.MapFrom(src => ToInt(src.Id)));
 
-         CreateMap<SideProject, SideProjectEntry>().ReverseMap();
+         CreateMap<SideProject, SideProjectEntry>()
+            .ReverseMap()
+            .ForMember(
+               dest => dest.Id,
+               o => o.MapFrom(src => ToInt(src.Id)));
+      }
+
+      private int ToInt(string id)
+      {
+         int result;
+         int.TryParse(id, out result);
+         return result;
+      }
+   }
+
+
+
+   public class IdResolver : IValueResolver<ExperienceEntry, Experience, int>
+   {
+      public int Resolve(ExperienceEntry source, Experience destination, int destMember, ResolutionContext context)
+      {
+         throw new System.NotImplementedException();
       }
    }
 }

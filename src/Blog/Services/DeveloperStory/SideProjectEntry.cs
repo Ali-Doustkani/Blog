@@ -4,7 +4,8 @@ namespace Blog.Services.DeveloperStory
 {
    public class SideProjectEntry
    {
-      public int Id { get; set; }
+      [Required]
+      public string Id { get; set; }
 
       [Required]
       public string Title { get; set; }

@@ -57,7 +57,7 @@ namespace Blog.Tests.Controllers
       {
          _service
             .Setup(x => x.Save(It.IsAny<DeveloperEntry>()))
-            .Returns(new SaveResult(Status.Created));
+            .Returns(new SaveResult(Status.Created, new[] { 1 }, new[] { 1 }));
 
          var developer = new
          {
@@ -70,6 +70,14 @@ namespace Blog.Tests.Controllers
             response.StatusCode
                .Should()
                .Be(HttpStatusCode.Created);
+
+            var result = JToken.Parse(await response.Content.ReadAsStringAsync());
+            var expected = JsonConvert.SerializeObject(new
+            {
+               experiences = new[] { 1 }
+            });
+
+            result.Should().BeEquivalentTo(expected);
          }
       }
 
@@ -78,7 +86,7 @@ namespace Blog.Tests.Controllers
       {
          _service
             .Setup(x => x.Save(It.IsAny<DeveloperEntry>()))
-            .Returns(new SaveResult(Status.Updated));
+            .Returns(new SaveResult(Status.Updated, new[] { 1 }, new[] { 1 }));
 
          var developer = new
          {
@@ -91,6 +99,13 @@ namespace Blog.Tests.Controllers
             response.StatusCode
                .Should()
                .Be(HttpStatusCode.OK);
+
+            var result = JToken.Parse(await response.Content.ReadAsStringAsync());
+            var expected = JsonConvert.SerializeObject(new
+            {
+               experiences = new[] { 1 }
+            });
+            result.Should().BeEquivalentTo(expected);
          }
       }
 
@@ -101,7 +116,7 @@ namespace Blog.Tests.Controllers
          {
             Experiences = new[]
             {
-               new{ Id="sdf"}
+               new { Id = "abc-123" }
             }
          };
          using (var response = await _client.PutAsJsonAsync("/api/developer", developer))
@@ -114,7 +129,13 @@ namespace Blog.Tests.Controllers
                title = "Validation",
                errors = new[]
                {
-                  new{error="convert", path=new object[]{"Experiences", 0, "Id"}, type="integer"}
+                  new{error="required", path=new object[]{"summary"}},
+                  new{error="required", path=new object[]{"skills"}},
+                  new{error="required", path=new object[]{"experiences", 0, "company"}},
+                  new{error="required", path=new object[]{"experiences", 0, "position"}},
+                  new{error="required", path=new object[]{"experiences", 0, "startDate"}},
+                  new{error="required", path=new object[]{"experiences", 0, "endDate"}},
+                  new{error="required", path=new object[]{"experiences", 0, "content"}}
                }
             });
 

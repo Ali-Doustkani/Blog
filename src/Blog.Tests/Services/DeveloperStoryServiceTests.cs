@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Blog.Domain.DeveloperStory;
+﻿using Blog.Domain.DeveloperStory;
 using Blog.Services.DeveloperStory;
 using FluentAssertions;
 using System;
@@ -92,6 +91,7 @@ namespace Blog.Tests.Services
                {
                   new ExperienceEntry
                   {
+                     Id = "abc-123-efg",
                      Company = "Microsoft",
                      Content = "as backend developer",
                      StartDate = "2016-02-23",
@@ -103,6 +103,7 @@ namespace Blog.Tests.Services
                {
                   new SideProjectEntry
                   {
+                     Id = "abc-123-efg",
                      Title = "Richtext Editor",
                      Content = "A simple richtext for web"
                   }
@@ -177,7 +178,7 @@ namespace Blog.Tests.Services
                {
                   new ExperienceEntry
                   {
-                     Id = 1,
+                     Id = "1",
                      Company = "Lodgify",
                      Content = "as backend developer",
                      StartDate = "2016-02-23",
@@ -189,7 +190,7 @@ namespace Blog.Tests.Services
                {
                   new SideProjectEntry
                   {
-                     Id = 1,
+                     Id = "1",
                      Title = "Richtext Editor",
                      Content = "A simple richtext for web"
                   }
@@ -271,7 +272,7 @@ namespace Blog.Tests.Services
                {
                   new ExperienceEntry
                   {
-                     Id = 2,
+                     Id = "2",
                      Company = "Parmis",
                      Content = "as the team lead",
                      StartDate = "2014-01-01",
@@ -310,7 +311,7 @@ namespace Blog.Tests.Services
                   {
                      new ExperienceEntry
                      {
-                        Id = 2,
+                        Id = "2",
                         Company = "Parmis",
                         Content = "as the team lead",
                         StartDate = "2014-01-01",
@@ -319,7 +320,7 @@ namespace Blog.Tests.Services
                      },
                      new ExperienceEntry
                      {
-                        Id = 3,
+                        Id = "3",
                         Company = "Bellin",
                         Content = "agile c# developer",
                         StartDate = "2019-01-01",
@@ -354,7 +355,7 @@ namespace Blog.Tests.Services
                {
                   new SideProjectEntry
                   {
-                     Id = 2,
+                     Id = "2",
                      Title = "CodePrac V2",
                      Content = "other description"
                   },
@@ -388,13 +389,13 @@ namespace Blog.Tests.Services
                   {
                      new SideProjectEntry
                      {
-                         Id = 2,
+                         Id = "2",
                          Title = "CodePrac V2",
                          Content = "other description"
                      },
                      new SideProjectEntry
                      {
-                         Id = 3,
+                         Id = "3",
                          Title = "Blog",
                          Content = "A developers blog"
                      },

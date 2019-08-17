@@ -28,9 +28,9 @@ namespace Blog.Controllers
       {
          var result = _service.Save(developer);
          if (result.Status == Status.Created)
-            return CreatedAtAction(nameof(Get), null);
+            return CreatedAtAction(nameof(Get), new { result.Experiences });
 
-         return Ok();
+         return Ok(new { result.Experiences });
       }
    }
 }
