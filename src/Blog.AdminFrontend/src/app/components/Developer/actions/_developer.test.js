@@ -2,6 +2,7 @@ import { updateDeveloper, showErrors, updateIds, prepareForSave } from './_devel
 import { initialState, STATUS } from './initials'
 import { richtextEmptyValidator, emptyValidator } from '../../../utils'
 
+jest.mock('./_serverErrorWriter')
 jest.mock('../../../utils')
 
 describe('updating', () => {

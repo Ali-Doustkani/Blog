@@ -1,5 +1,6 @@
 import { evolve, take } from '../../../utils/fn'
-import { emptyValidator, richtextEmptyValidator, map } from '../../../utils'
+import { emptyValidator, richtextEmptyValidator } from '../../../utils'
+import { writeErrors } from './_serverErrorWriter'
 import { STATUS } from './initials'
 
 const updateDeveloper = (state, action) => {
@@ -18,7 +19,7 @@ const setId = ids => (exp, index) => ({ ...exp, id: ids[index] })
 
 const showErrors = (state, action) => {
    const result = { ...state, status: STATUS.IDLE }
-   map(action.data, result)
+   writeErrors(action.data, result)
    return result
 }
 
