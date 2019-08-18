@@ -4,6 +4,7 @@ using FluentAssertions.Json;
 using Moq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -124,22 +125,18 @@ namespace Blog.Tests.Controllers
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             var result = JToken.Parse(await response.Content.ReadAsStringAsync());
 
-            var expected = JsonConvert.SerializeObject(new
+            var dic = new Dictionary<string, object>
             {
-               title = "Validation",
-               errors = new[]
-               {
-                  new{error="required", path=new object[]{"summary"}},
-                  new{error="required", path=new object[]{"skills"}},
-                  new{error="required", path=new object[]{"experiences", 0, "company"}},
-                  new{error="required", path=new object[]{"experiences", 0, "position"}},
-                  new{error="required", path=new object[]{"experiences", 0, "startDate"}},
-                  new{error="required", path=new object[]{"experiences", 0, "endDate"}},
-                  new{error="required", path=new object[]{"experiences", 0, "content"}}
-               }
-            });
+               { "Skills", new[] {"The Skills field is required."}},
+               { "Summary", new[] {"The Summary field is required."}},
+               { "Experiences[0].Company", new[] {"The Company field is required."}},
+               { "Experiences[0].Content", new[] {"The Content field is required."}},
+               { "Experiences[0].EndDate", new[] {"The EndDate field is required."}},
+               { "Experiences[0].Position", new[] {"The Position field is required."}},
+               { "Experiences[0].StartDate", new[] {"The StartDate field is required."}},
+            };
 
-            result.Should().BeEquivalentTo(expected);
+            result.Should().BeEquivalentTo(JsonConvert.SerializeObject(dic));
          }
       }
    }

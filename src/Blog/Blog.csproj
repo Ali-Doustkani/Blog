@@ -40,10 +40,4 @@
     <Folder Include="Domain\Blogging\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="Elegant400">
-      <HintPath>..\..\..\Elegant400\src\Elegant400\bin\Debug\netcoreapp2.2\Elegant400.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>

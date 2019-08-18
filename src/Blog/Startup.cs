@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Blog.Domain;
 using Blog.Utils;
-using Elegant400;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -45,7 +44,6 @@ namespace Blog
          {
             cfg.Filters.Add<MigrationFilter>();
          });
-         services.AddElegant400();
          services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<BlogContext>();
          services.AddAutoMapper(GetType().Assembly);
          services.AddBlogTypes();
