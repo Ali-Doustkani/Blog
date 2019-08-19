@@ -7,13 +7,7 @@ namespace Blog.Services.DeveloperStory
    {
       public MappingProfile()
       {
-         CreateMap<Developer, DeveloperEntry>()
-            .ForMember(
-               dest => dest.Experiences,
-               o => o.MapFrom(src => src.Experiences))
-            .ForMember(
-               dest => dest.SideProjects,
-               o => o.MapFrom(src => src.SideProjects));
+         CreateMap<Developer, DeveloperEntry>();
 
          CreateMap<Experience, ExperienceEntry>()
             .ForMember(

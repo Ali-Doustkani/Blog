@@ -3,7 +3,6 @@ using Blog.Domain;
 using Blog.Domain.DeveloperStory;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Blog.Services.DeveloperStory
@@ -27,22 +26,6 @@ namespace Blog.Services.DeveloperStory
 
       public DeveloperEntry Get() =>
          _mapper.Map<DeveloperEntry>(TheDeveloper());
-
-      public void UpdateList<TDomainEntity, TDomainItem, TDto>(TDomainEntity parent,
-         IReadOnlyCollection<TDomainItem> entityCollection,
-         IEnumerable<TDto> dtoCollection,
-         Func<TDomainEntity, Action<TDomainItem>> remove,
-         Func<TDomainItem, TDto, bool> equality
-         )
-      {
-         foreach (var item in entityCollection)
-         {
-            if (!dtoCollection.Any(x => equality(item, x)))
-            {
-               remove(parent)(item);
-            }
-         }
-      }
 
       public SaveResult Save(DeveloperEntry developerEntry)
       {
