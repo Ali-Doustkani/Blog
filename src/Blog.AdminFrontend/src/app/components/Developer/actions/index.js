@@ -1,6 +1,6 @@
 import { useReducer } from 'react'
 import { STATUS, initialState } from './initials'
-import { dict, evolve } from '../../../utils/fn'
+import { dict } from '../../../utils/fn'
 import { load } from './_loading'
 import { addExperience, updateExperience, deleteExperience } from './_experiences'
 import { showErrors, updateIds, updateDeveloper, prepareForSave } from './_developer'
@@ -15,9 +15,9 @@ const reducer = (state, action) => {
       ['UPDATE_IDS', updateIds],
       ['SHOW_ERRORS', showErrors],
       ['REMOVE_SERVER_ERRORS', prepareForSave],
-      ['TO_IDLE', evolve({ status: STATUS.IDLE })],
-      ['TO_SAVING', evolve({ status: STATUS.SAVING })],
-      ['TO_LOADING', evolve({ status: STATUS.LOADING })]
+      ['TO_IDLE', state => ({ ...state, status: STATUS.IDLE })],
+      ['TO_SAVING', state => ({ ...state, status: STATUS.SAVING })],
+      ['TO_LOADING', state => ({ ...state, status: STATUS.LOADING })]
    )
    return selectBy(action.type)(state, action)
 }

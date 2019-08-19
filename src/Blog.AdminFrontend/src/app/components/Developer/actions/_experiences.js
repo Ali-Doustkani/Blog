@@ -1,4 +1,3 @@
-import { evolve, take } from '../../../utils/fn'
 import uuid from 'uuid/v1'
 
 const initialExperienceErrors = experience => ({
@@ -19,26 +18,23 @@ const createExperience = () =>
       endDate: ''
    })
 
-const addExperience = evolve(
-   take(op => ({ experiences: [...op.state.experiences, createExperience()] }))
-)
+const addExperience = state => ({
+   ...state,
+   experiences: [...state.experiences, createExperience()]
+})
 
-const deleteExperience = evolve(
-   take(op => ({ experiences: op.state.experiences.filter(x => x.id !== op.action.id) }))
-)
+const deleteExperience = (state, action) => ({
+   ...state,
+   experiences: state.experiences.filter(x => x.id !== action.id)
+})
 
-const updateExperience = evolve(
-   take(op => ({ experiences: op.state.experiences.map(update(op.action.change)) }))
-)
+const updateExperience = (state, action) => ({
+   ...state,
+   experiences: state.experiences.map(update(action.change))
+})
 
-const update = change => experience => {
-   if (change.id === experience.id) {
-      const result = { ...experience, ...change }
-      //validateExperience(result)
-      return result
-   }
-   return experience
-}
+const update = change => experience =>
+   change.id === experience.id ? { ...experience, ...change } : experience
 
 function today() {
    const now = new Date()

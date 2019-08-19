@@ -1,13 +1,13 @@
-import { evolve, take } from '../../../utils/fn'
 import { writeErrors } from './_serverErrorWriter'
 import { STATUS } from './initials'
 
 const updateDeveloper = (state, action) => ({ ...state, ...action.change })
 
-const updateIds = evolve(
-   take(op => ({ experiences: op.state.experiences.map(setId(op.action.data.experiences)) })),
-   { status: STATUS.IDLE }
-)
+const updateIds = (state, action) => ({
+   ...state,
+   experiences: state.experiences.map(setId(action.data.experiences)),
+   status: STATUS.IDLE
+})
 
 const setId = ids => (exp, index) => ({ ...exp, id: ids[index] })
 
@@ -19,24 +19,22 @@ const showErrors = (state, action) => {
 
 const clientError = err => err.type === 1
 
-const clientErrors = op => ({
-   companyErrors: op.state.companyErrors.filter(clientError),
-   positionErrors: op.state.positionErrors.filter(clientError),
-   startDateErrors: op.state.startDateErrors.filter(clientError),
-   endDateErrors: op.state.endDateErrors.filter(clientError),
-   contentErrors: op.state.contentErrors.filter(clientError)
+const selectClientErrors = experience => ({
+   ...experience,
+   companyErrors: experience.companyErrors.filter(clientError),
+   positionErrors: experience.positionErrors.filter(clientError),
+   startDateErrors: experience.startDateErrors.filter(clientError),
+   endDateErrors: experience.endDateErrors.filter(clientError),
+   contentErrors: experience.contentErrors.filter(clientError)
 })
 
-const selectClientErrors = evolve(take(clientErrors))
-
-const prepareForSave = evolve(
-   take(op => ({
-      summaryErrors: op.state.summaryErrors.filter(clientError),
-      skillsErrors: op.state.skillsErrors.filter(clientError),
-      experiencesErrors: op.state.experiencesErrors.filter(clientError),
-      experiences: op.state.experiences.map(selectClientErrors)
-   })),
-   { status: STATUS.PREPARING_TO_SAVE }
-)
+const prepareForSave = state => ({
+   ...state,
+   summaryErrors: state.summaryErrors.filter(clientError),
+   skillsErrors: state.skillsErrors.filter(clientError),
+   experiencesErrors: state.experiencesErrors.filter(clientError),
+   experiences: state.experiences.map(selectClientErrors),
+   status: STATUS.PREPARING_TO_SAVE
+})
 
 export { updateDeveloper, updateIds, showErrors, prepareForSave }
