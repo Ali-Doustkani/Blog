@@ -96,7 +96,7 @@ function Richtext(props) {
          >
             {article}
          </div>
-         <ErrorList errors={errors} />
+         {props.showErrors ? <ErrorList errors={errors} /> : null}
       </div>
    )
 }
@@ -106,7 +106,12 @@ Richtext.propTypes = {
    name: PropTypes.string.isRequired,
    autofocus: PropTypes.bool,
    onChange: PropTypes.func,
-   label: PropTypes.string
+   label: PropTypes.string,
+   showErrors: PropTypes.bool
+}
+
+Richtext.defaultProps = {
+   showErrors: true
 }
 
 export { Richtext }

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Loader, Message, Button, Richtext, Textarea, ErrorList, ask } from 'Controls'
 import ExperienceList from './ExperienceList'
-import { getDeveloper, saveDeveloper, anyError } from './services'
+import { getDeveloper, saveDeveloper, anyError, validate } from './services'
 import DisabledContext from 'DisabledContext'
 import { useActions, STATUS } from './actions'
 
@@ -21,6 +21,7 @@ const Developer = ({ notify }) => {
 
    async function save() {
       actions.removeServerErrors()
+      validate(state)
       if (anyError(state)) {
          notify('Resolve the problems first', 'error')
          return

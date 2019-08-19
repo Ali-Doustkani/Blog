@@ -16,14 +16,11 @@ app.get('/api/developer', (req, res) =>
 app.put('/api/developer', (req, res) => {
    setTimeout(() => {
       res.status(400).send({
-         title: 'Validation',
-         errors: [
-            { error: 'required', path: ['summary'] },
-            { error: 'required', path: ['skills'] },
-            { error: 'required', path: ['experiences'] },
-            { error: 'required', path: ['experiences', 0, 'company'] },
-            { error: 'required', path: ['experiences', 0, 'position'] }
-         ]
+         summary: ['the summary field is required'],
+         skills: ['the skills field is required'],
+         experiences: ['the experiences is required'],
+         'experiences[0].company': ['the company field is required'],
+         'experiences[0].position': ['the position is required']
       })
    }, 6000)
 })

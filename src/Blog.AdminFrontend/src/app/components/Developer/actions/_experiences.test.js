@@ -1,6 +1,5 @@
 import { addExperience, deleteExperience, updateExperience } from './_experiences'
 import { initialState } from './initials'
-import { emptyValidator, richtextEmptyValidator } from '../../../utils'
 import uuid from 'uuid/v1'
 
 jest.mock('uuid/v1')
@@ -67,22 +66,6 @@ describe('deleting', () => {
 describe('updating', () => {
    it('updates company fields', () => {
       uuid.mockReturnValue(1)
-      emptyValidator.mockImplementation(() => () => [])
-      richtextEmptyValidator.mockImplementation(() => () => [])
-      let state = addExperience(initialState)
-      state = updateExperience(state, { change: { id: 1, company: 'Parmis' } })
-      state = updateExperience(state, { change: { id: 1, position: 'JS' } })
-      state = updateExperience(state, { change: { id: 1, startDate: '2013-01-02' } })
-      state = updateExperience(state, { change: { id: 1, endDate: '2015-01-01' } })
-      state = updateExperience(state, { change: { id: 1, content: 'Description' } })
-
-      expect(state).toMatchSnapshot()
-   })
-
-   it('validates company fields', () => {
-      uuid.mockReturnValue(1)
-      emptyValidator.mockImplementation(field => () => field + 'Error')
-      richtextEmptyValidator.mockImplementation(field => () => field + 'Error')
       let state = addExperience(initialState)
       state = updateExperience(state, { change: { id: 1, company: 'Parmis' } })
       state = updateExperience(state, { change: { id: 1, position: 'JS' } })

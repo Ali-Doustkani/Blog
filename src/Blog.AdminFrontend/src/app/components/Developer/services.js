@@ -1,3 +1,5 @@
+import { emptyValidator, richtextEmptyValidator } from '../../utils'
+
 const url_developer =
    process.env.NODE_ENV === 'production' ? '/api/developer' : 'http://localhost:3000/api/developer'
 
@@ -8,7 +10,7 @@ const ok = data => ({
 
 const error = data => ({
    status: 'error',
-   data: data.errors
+   data
 })
 
 const fatal = msg => ({
@@ -95,4 +97,29 @@ const anyError = state =>
          )
    )
 
-export { getDeveloper, saveDeveloper, anyError }
+const validate = state => {
+   state.summaryErrors = richtextEmptyValidator('summary', state.summaryErrors)(state.summary)
+   state.skillsErrors = emptyValidator('skills', state.skillsErrors)(state.skills)
+   state.experiences.forEach(validateExperience)
+}
+
+const validateExperience = experience => {
+   experience.companyErrors = emptyValidator('company', experience.companyErrors)(
+      experience.company
+   )
+   experience.positionErrors = emptyValidator('position', experience.positionErrors)(
+      experience.position
+   )
+   experience.startDateErrors = emptyValidator('start date', experience.startDateErrors)(
+      experience.startDate
+   )
+   experience.endDateErrors = emptyValidator('end date', experience.endDateErrors)(
+      experience.endDate
+   )
+   experience.contentErrors = richtextEmptyValidator('content', experience.contentErrors)(
+      experience.content
+   )
+   return experience
+}
+
+export { getDeveloper, saveDeveloper, anyError, validate }

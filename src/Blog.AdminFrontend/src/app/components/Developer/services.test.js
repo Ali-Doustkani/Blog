@@ -1,5 +1,8 @@
 import fetchMock from 'fetchMock'
-import { getDeveloper, saveDeveloper, anyError } from './services'
+import { getDeveloper, saveDeveloper, anyError, validate } from './services'
+import { emptyValidator, richtextEmptyValidator } from '../../utils'
+
+jest.mock('../../utils')
 
 const sample = {
    summary: 'started to code as a young boy',
@@ -96,13 +99,12 @@ describe('PUT', () => {
 
    it('handles 400', async () => {
       fetchMock.status(400).data({
-         title: 'Invalid Request',
-         errors: [{ error: 'isRequired', path: ['summary'] }]
+         summary: ['summary field is required']
       })
 
       expect(await saveDeveloper(sample)).toEqual({
          status: 'error',
-         data: [{ error: 'isRequired', path: ['summary'] }]
+         data: { summary: ['summary field is required'] }
       })
    })
 
@@ -240,4 +242,26 @@ describe('anyError', () => {
       }
       expect(anyError(init)).toBe(false)
    })
+})
+
+it('validates company fields', () => {
+   emptyValidator.mockImplementation(field => () => field + 'Error')
+   richtextEmptyValidator.mockImplementation(field => () => field + 'Error')
+
+   const state = {
+      summary: 'summary',
+      skills: 'skills',
+      experiences: [
+         {
+            company: 'company',
+            position: 'position',
+            startDate: 'startDate',
+            endDate: 'endDate',
+            content: 'content'
+         }
+      ]
+   }
+   validate(state)
+
+   expect(state).toMatchSnapshot()
 })

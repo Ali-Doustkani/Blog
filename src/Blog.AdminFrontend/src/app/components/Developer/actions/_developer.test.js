@@ -14,14 +14,6 @@ describe('updating', () => {
 
       expect(state).toMatchSnapshot()
    })
-
-   it('validates fields', () => {
-      emptyValidator.mockImplementation(field => () => field + 'Error')
-      richtextEmptyValidator.mockImplementation(field => () => field + 'Error')
-      const state = updateDeveloper(initialState, { change: { summary: 'the summary' } })
-
-      expect(state).toMatchSnapshot()
-   })
 })
 
 describe('updating ids', () => {

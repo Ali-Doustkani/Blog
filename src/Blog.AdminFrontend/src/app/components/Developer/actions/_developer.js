@@ -1,14 +1,8 @@
 import { evolve, take } from '../../../utils/fn'
-import { emptyValidator, richtextEmptyValidator } from '../../../utils'
 import { writeErrors } from './_serverErrorWriter'
 import { STATUS } from './initials'
 
-const updateDeveloper = (state, action) => {
-   const newState = { ...state, ...action.change }
-   newState.summaryErrors = richtextEmptyValidator('summary', state.summaryErrors)(newState.summary)
-   newState.skillsErrors = emptyValidator('skills', state.skillsErrors)(newState.skills)
-   return newState
-}
+const updateDeveloper = (state, action) => ({ ...state, ...action.change })
 
 const updateIds = evolve(
    take(op => ({ experiences: op.state.experiences.map(setId(op.action.data.experiences)) })),

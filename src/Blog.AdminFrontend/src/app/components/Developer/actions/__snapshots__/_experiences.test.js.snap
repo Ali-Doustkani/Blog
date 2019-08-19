@@ -52,30 +52,3 @@ Object {
   "summaryErrors": Array [],
 }
 `;
-
-exports[`updating validates company fields 1`] = `
-Object {
-  "errorMessage": "",
-  "experiences": Array [
-    Object {
-      "company": "Parmis",
-      "companyErrors": "companyError",
-      "content": "Description",
-      "contentErrors": "contentError",
-      "endDate": "2015-01-01",
-      "endDateErrors": "end dateError",
-      "id": 1,
-      "position": "JS",
-      "positionErrors": "positionError",
-      "startDate": "2013-01-02",
-      "startDateErrors": "start dateError",
-    },
-  ],
-  "experiencesErrors": Array [],
-  "skills": "",
-  "skillsErrors": Array [],
-  "status": 1,
-  "summary": "",
-  "summaryErrors": Array [],
-}
-`;
