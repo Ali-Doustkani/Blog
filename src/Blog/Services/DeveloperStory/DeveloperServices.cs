@@ -58,22 +58,15 @@ namespace Blog.Services.DeveloperStory
                var developer = TheDeveloper();
                developer.Update(developerEntry.Summary, developerEntry.Skills);
 
-               UpdateList(
-                  developer,
-                  developer.Experiences,
-                  developerEntry.Experiences,
-                  d => d.RemoveExperience,
-                  (experienceEntry, experience) => experience.Id == experienceEntry.Id.ToString()
-                  );
+               // experiences
 
-
-               //foreach (var experience in developer.Experiences)
-               //{
-               //   if (!developerEntry.Experiences.Any(x => x.Id == experience.Id.ToString()))
-               //   {
-               //      developer.RemoveExperience(experience);
-               //   }
-               //}
+               foreach (var experience in developer.Experiences)
+               {
+                  if (!developerEntry.Experiences.Any(x => x.Id == experience.Id.ToString()))
+                  {
+                     developer.RemoveExperience(experience);
+                  }
+               }
 
                foreach (var experience in developerEntry.Experiences)
                {
@@ -98,30 +91,30 @@ namespace Blog.Services.DeveloperStory
                   }
                }
 
-               var toDel = developer
-                  .SideProjects
-                  .Where(x => !developerEntry.SideProjects.Any(y => y.Id == x.Id.ToString()))
-                  .ToArray();
-               foreach (var t in toDel)
-                  developer.SideProjects.Remove(t);
+               // side projects
 
-               foreach (var side in developerEntry.SideProjects)
+               foreach (var proj in developer.SideProjects)
                {
-                  if (int.TryParse(side.Id, out int id))
+                  if (!developerEntry.SideProjects.Any(x => x.Id == proj.Id.ToString()))
                   {
-                     var toRemove = developer.SideProjects.Single(x => x.Id.ToString() == side.Id);
-                     _context.Entry(toRemove).State = EntityState.Detached;
-                     developer.SideProjects.Remove(toRemove);
-                     var newSide = new SideProject(side.Title, side.Content);
-                     newSide.Id = id;
-                     developer.SideProjects.Add(newSide);
-                     _context.Entry(newSide).State = EntityState.Modified;
+                     developer.RemoveSideProject(proj);
+                  }
+               }
+
+               foreach (var proj in developerEntry.SideProjects)
+               {
+                  if (int.TryParse(proj.Id, out int id))
+                  {
+                     _context.Entry(developer.SideProjects.Single(x => x.Id.ToString() == proj.Id)).State = EntityState.Detached;
+                     developer.UpdateSideProject(id, proj.Title, proj.Content);
+                     _context.Entry(developer.SideProjects.Single(x => x.Id.ToString() == proj.Id)).State = EntityState.Modified;
                   }
                   else
                   {
-                     developer.SideProjects.Add(new SideProject(side.Title, side.Content));
+                     developer.AddSideProject(proj.Title, proj.Content);
                   }
                }
+
                _context.SaveChanges();
                return SaveResult.Updated(developer);
             }
@@ -138,7 +131,7 @@ namespace Blog.Services.DeveloperStory
                }
                foreach (var side in developerEntry.SideProjects)
                {
-                  developer.SideProjects.Add(new SideProject(side.Title, side.Content));
+                  developer.AddSideProject(side.Title, side.Content);
                }
                _context.Developers.Add(developer);
                _context.SaveChanges();

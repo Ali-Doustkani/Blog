@@ -186,10 +186,14 @@ namespace Blog.Domain
             .SetPropertyAccessMode(PropertyAccessMode.Field);
 
             dev
-            .HasMany(x => x.SideProjects)
+            .HasMany<SideProject>("_sideProjects")
             .WithOne()
             .HasForeignKey("DeveloperId");
 
+            dev
+            .Metadata
+            .FindNavigation("SideProjects")
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
          });
       }
    }

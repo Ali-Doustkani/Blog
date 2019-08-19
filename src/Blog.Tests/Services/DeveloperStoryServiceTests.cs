@@ -41,7 +41,7 @@ namespace Blog.Tests.Services
                new DateTime(2016, 1, 20),
                new DateTime(2017, 1, 1),
                "System Architect");
-            developer.SideProjects.Add(new SideProject("Richtext Editor", "A simple richtext for web"));
+            developer.AddSideProject("Richtext Editor", "A simple richtext for web");
             db.Developers.Add(developer);
             db.SaveChanges();
          }
@@ -160,7 +160,7 @@ namespace Blog.Tests.Services
                new DateTime(2016, 2, 23),
                new DateTime(2017, 1, 2),
                "as backend developer");
-            developer.SideProjects.Add(new SideProject("Richtext Editor", "A simple richtext for web"));
+            developer.AddSideProject("Richtext Editor", "A simple richtext for web");
 
             db.Developers.Add(developer);
             db.SaveChanges();
@@ -335,8 +335,8 @@ namespace Blog.Tests.Services
          using (var db = _context.GetDatabase())
          {
             var developer = new Developer("Cool guy!", "C#, SQL");
-            developer.SideProjects.Add(new SideProject("Richtext Editor", "A simple web richtext"));
-            developer.SideProjects.Add(new SideProject("CodePrac", "A simple app for practice coding"));
+            developer.AddSideProject("Richtext Editor", "A simple web richtext");
+            developer.AddSideProject("CodePrac", "A simple app for practice coding");
             db.Developers.Add(developer);
             db.SaveChanges();
          }

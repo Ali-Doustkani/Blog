@@ -11,16 +11,17 @@ namespace Blog.Domain.DeveloperStory
          Summary = Its.NotEmpty(summary, nameof(Summary));
          Skills = Its.NotEmpty(skills, nameof(Skills));
          _experiences = new List<Experience>();
-         SideProjects = new List<SideProject>();
+         _sideProjects = new List<SideProject>();
       }
 
       private readonly List<Experience> _experiences;
+      private readonly List<SideProject> _sideProjects;
 
       public int Id { get; private set; }
       public string Summary { get; private set; }
       public string Skills { get; private set; }
-      public IReadOnlyCollection<Experience> Experiences => _experiences.ToArray();
-      public List<SideProject> SideProjects { get; }
+      public IReadOnlyCollection<Experience> Experiences => _experiences.OrderBy(x => x.StartDate).ToArray();
+      public IReadOnlyCollection<SideProject> SideProjects => _sideProjects.ToArray();
 
       public void Update(string summary, string skills)
       {
@@ -37,20 +38,41 @@ namespace Blog.Domain.DeveloperStory
          AddExperience(id, newCompany, newPosition, newStartDate, newEndDate, newContent);
       }
 
+      public void RemoveExperience(Experience experience)
+      {
+         _experiences.Remove(experience);
+      }
+
+      public void AddSideProject(string title, string content) =>
+         AddSideProject(0, title, content);
+
+      public void UpdateSideProject(int id, string newTitle, string newContent)
+      {
+         RemoveSideProject(_sideProjects.Single(x => x.Id == id));
+         AddSideProject(id, newTitle, newContent);
+      }
+
+      public void RemoveSideProject(SideProject sideProject)
+      {
+         _sideProjects.Remove(sideProject);
+      }
+
       private void AddExperience(int id, string company, string position, DateTime startDate, DateTime endDate, string content)
       {
          if (_experiences.Any(x => x.Company == company && x.Position == position))
             throw new DomainProblemException($"An experience of {position} at {company} already exists");
 
-         if (_experiences.Any(x => x.EndDate > startDate))
+         if (_experiences.Any(x => (startDate > x.StartDate && startDate < x.EndDate) || (endDate > x.StartDate && endDate < x.EndDate)))
             throw new DomainProblemException("Experiences cannot have time overlaps with eachothers");
 
          _experiences.Add(new Experience(id, company, position, startDate, endDate, content));
       }
 
-      public void RemoveExperience(Experience experience)
+      private void AddSideProject(int id, string title, string content)
       {
-         _experiences.Remove(experience);
+         if (_sideProjects.Any(x => x.Title == title))
+            throw new DomainProblemException("Title", $"The '{title}' project already exists");
+         _sideProjects.Add(new SideProject(id, title, content));
       }
    }
 }

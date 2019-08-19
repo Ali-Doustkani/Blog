@@ -156,7 +156,33 @@ namespace Blog.Tests.Domain.DeveloperStory
 
          developer.Experiences
             .Should()
-            .HaveCount(0);
+            .BeEmpty();
+      }
+
+      [Fact]
+      public void Sort_experiences_by_date()
+      {
+         var developer = new Developer("passionate dev", "C#");
+         developer.AddExperience("Parmis", "C# Developer", new DateTime(2016, 1, 1), new DateTime(2017, 1, 1), "desc");
+         developer.AddExperience("Lodgify", "C# Developer", new DateTime(2013, 1, 1), new DateTime(2014, 1, 1), "desc");
+
+         developer.Experiences
+            .ElementAt(0)
+            .Should()
+            .BeEquivalentTo(new
+            {
+               StartDate = new DateTime(2013, 1, 1),
+               EndDate = new DateTime(2014, 1, 1)
+            });
+
+         developer.Experiences
+            .ElementAt(1)
+            .Should()
+            .BeEquivalentTo(new
+            {
+               StartDate = new DateTime(2016, 1, 1),
+               EndDate = new DateTime(2017, 1, 1)
+            });
       }
 
       [Fact]
@@ -166,6 +192,66 @@ namespace Blog.Tests.Domain.DeveloperStory
          developer.Invoking(d => d.Update("Depressed Developer", ""))
             .Should()
             .Throw<DomainProblemException>();
+      }
+
+      [Fact]
+      public void Add_a_new_sideProject()
+      {
+         var developer = new Developer("passionate dev", "C#");
+         developer.AddSideProject("Richtext", "web editor");
+
+         developer.SideProjects
+            .Should()
+            .HaveCount(1)
+            .And
+            .ContainEquivalentOf(new
+            {
+               Title = "Richtext",
+               Content = "web editor"
+            });
+      }
+
+      [Fact]
+      public void Do_not_add_side_projects_with_duplicate_titles()
+      {
+         var developer = new Developer("passionate dev", "C#");
+         developer.AddSideProject("Richtext", "web editor");
+         developer.Invoking(d => d.AddSideProject("Richtext", "web editor"))
+            .Should()
+            .Throw<DomainProblemException>()
+            .WithMessage("The 'Richtext' project already exists");
+      }
+
+      [Fact]
+      public void Can_update_a_side_project()
+      {
+         var developer = new Developer("passionate dev", "C#");
+         developer.AddSideProject("Richtext", "web editor");
+
+         developer.UpdateSideProject(0, "Richtext Editor", "HTML Editor");
+
+         developer.SideProjects
+            .Should()
+            .HaveCount(1)
+            .And
+            .ContainEquivalentOf(new
+            {
+               Title = "Richtext Editor",
+               Content = "HTML Editor"
+            });
+      }
+
+      [Fact]
+      public void Can_remove_a_side_project()
+      {
+         var developer = new Developer("passionate developer", "C#");
+         developer.AddSideProject("Richtext", "HTML Editor");
+
+         developer.RemoveSideProject(developer.SideProjects.First());
+
+         developer.SideProjects
+            .Should()
+            .BeEmpty();
       }
    }
 }
