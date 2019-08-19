@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`validates company fields 1`] = `
+exports[`validation checks emptiness 1`] = `
 Object {
   "experiences": Array [
     Object {

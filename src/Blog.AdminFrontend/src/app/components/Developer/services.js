@@ -100,10 +100,12 @@ const anyError = state =>
 const validate = state => {
    state.summaryErrors = richtextEmptyValidator('summary', state.summaryErrors)(state.summary)
    state.skillsErrors = emptyValidator('skills', state.skillsErrors)(state.skills)
-   state.experiences.forEach(validateExperience)
+   state.experiences.forEach(checkExperienceEmptiness)
+   checkDuplicateExperiences(state.experiences)
+   checkDateOverlaps(state.experiences)
 }
 
-const validateExperience = experience => {
+const checkExperienceEmptiness = experience => {
    experience.companyErrors = emptyValidator('company', experience.companyErrors)(
       experience.company
    )
@@ -121,5 +123,54 @@ const validateExperience = experience => {
    )
    return experience
 }
+
+const checkDuplicateExperiences = experiences => {
+   const reverse = experiences
+      .filter(exp => isNotEmpty(exp.company) && isNotEmpty(exp.position))
+      .reverse()
+   for (const experience of reverse) {
+      if (experiences.some(isDuplicate(experience))) {
+         experience.companyErrors.push(experienceDuplicateError(experience))
+      }
+      return
+   }
+}
+
+const isDuplicate = experience1 => experience2 =>
+   experience1 !== experience2 &&
+   experience2.company === experience1.company &&
+   experience2.position === experience1.position
+
+const experienceDuplicateError = experience => ({
+   type: 1,
+   message: `another experience as ${experience.position} at ${experience.company} already exists`
+})
+
+const checkDateOverlaps = experiences => {
+   const reversed = experiences
+      .filter(exp => isNotEmpty(exp.startDate) && isNotEmpty(exp.endDate))
+      .reverse()
+
+   for (const experience of reversed) {
+      const found = experiences.find(overlaps(experience))
+      if (found) {
+         experience.startDateErrors.push(experienceDateOverlapError(found))
+         return
+      }
+   }
+}
+
+const overlaps = experience1 => experience2 =>
+   (new Date(experience1.startDate) > new Date(experience2.startDate) &&
+      new Date(experience1.startDate) < new Date(experience2.endDate)) ||
+   (new Date(experience1.endDate) > new Date(experience2.startDate) &&
+      new Date(experience1.endDate) < new Date(experience2.endDate))
+
+const experienceDateOverlapError = experience => ({
+   type: 1,
+   message: `the date overlaps with ${experience.position} at ${experience.company}`
+})
+
+const isNotEmpty = text => !/^\s*$/.test(text)
 
 export { getDeveloper, saveDeveloper, anyError, validate }

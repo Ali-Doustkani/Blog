@@ -244,24 +244,136 @@ describe('anyError', () => {
    })
 })
 
-it('validates company fields', () => {
-   emptyValidator.mockImplementation(field => () => field + 'Error')
-   richtextEmptyValidator.mockImplementation(field => () => field + 'Error')
+describe('validation', () => {
+   it('checks emptiness', () => {
+      emptyValidator.mockImplementation(field => () => field + 'Error')
+      richtextEmptyValidator.mockImplementation(field => () => field + 'Error')
 
-   const state = {
-      summary: 'summary',
-      skills: 'skills',
-      experiences: [
-         {
-            company: 'company',
-            position: 'position',
-            startDate: 'startDate',
-            endDate: 'endDate',
-            content: 'content'
-         }
-      ]
-   }
-   validate(state)
+      const state = {
+         summary: 'summary',
+         skills: 'skills',
+         experiences: [
+            {
+               company: 'company',
+               position: 'position',
+               startDate: 'startDate',
+               endDate: 'endDate',
+               content: 'content'
+            }
+         ]
+      }
+      validate(state)
 
-   expect(state).toMatchSnapshot()
+      expect(state).toMatchSnapshot()
+   })
+
+   it('prevents experience duplication', () => {
+      emptyValidator.mockImplementation((field, errors) => () => errors)
+      richtextEmptyValidator.mockImplementation((field, errors) => () => errors)
+
+      const state = {
+         experiences: [
+            {
+               company: 'Parmis',
+               companyErrors: [],
+               position: 'C# Developer'
+            },
+            {
+               company: 'Parmis',
+               companyErrors: [],
+               position: 'C# Developer'
+            }
+         ]
+      }
+
+      validate(state)
+
+      expect(state.experiences[0].companyErrors).toEqual([])
+      expect(state.experiences[1].companyErrors).toEqual([
+         { type: 1, message: 'another experience as C# Developer at Parmis already exists' }
+      ])
+   })
+
+   it('does not check experiences with empty company for duplication', () => {
+      emptyValidator.mockImplementation((field, errors) => () => errors)
+      richtextEmptyValidator.mockImplementation((field, errors) => () => errors)
+
+      const state = {
+         experiences: [
+            {
+               company: '',
+               position: 'C# Developer'
+            },
+            {
+               company: '',
+               position: 'C# Developer'
+            }
+         ]
+      }
+
+      validate(state)
+
+      expect(state.experiences[0].companyErrors).toBe(undefined)
+      expect(state.experiences[1].companyErrors).toBe(undefined)
+   })
+
+   it('does not check experiences with empty position for duplication', () => {
+      emptyValidator.mockImplementation((field, errors) => () => errors)
+      richtextEmptyValidator.mockImplementation((field, errors) => () => errors)
+
+      const state = {
+         experiences: [
+            {
+               company: 'Parmis',
+               position: ' '
+            },
+            {
+               company: 'Parmis',
+               position: ' '
+            }
+         ]
+      }
+
+      validate(state)
+
+      expect(state.experiences[0].companyErrors).toBe(undefined)
+      expect(state.experiences[1].companyErrors).toBe(undefined)
+   })
+
+   it('checks date overlaps', () => {
+      emptyValidator.mockImplementation((field, errors) => () => errors)
+      richtextEmptyValidator.mockImplementation((field, errors) => () => errors)
+
+      const state = {
+         experiences: [
+            {
+               company: 'Parmis',
+               position: 'C# Developer',
+               startDate: '2010-1-1',
+               startDateErrors: [],
+               endDate: '2011-1-1'
+            },
+            {
+               company: 'Lodgify',
+               position: 'C# Developer',
+               startDate: '2011-1-2',
+               startDateErrors: [],
+               endDate: '2012-1-1'
+            },
+            {
+               startDate: '2010-6-1',
+               startDateErrors: [],
+               endDate: '2012-1-1'
+            }
+         ]
+      }
+
+      validate(state)
+
+      expect(state.experiences[0].startDateErrors).toEqual([])
+      expect(state.experiences[1].startDateErrors).toEqual([])
+      expect(state.experiences[2].startDateErrors).toEqual([
+         { type: 1, message: 'the date overlaps with C# Developer at Parmis' }
+      ])
+   })
 })
