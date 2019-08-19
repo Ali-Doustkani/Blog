@@ -154,7 +154,7 @@ namespace Blog.Services.DeveloperStory
       private Developer TheDeveloper() =>
          _context
             .Developers
-            .Include("_experiences")
+            .Include(x => x.Experiences)
             .Include(x => x.SideProjects)
             .SingleOrDefault();
 
