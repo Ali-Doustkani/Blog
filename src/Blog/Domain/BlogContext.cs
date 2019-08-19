@@ -22,27 +22,6 @@ namespace Blog.Domain
       public DbSet<PostContent> PostContents { get; set; }
       public DbSet<Developer> Developers { get; set; }
 
-      public void WriteOn<T, J>(T existing, T newEntity, Func<T, IList<J>> collectionSelector)
-         where T : DomainEntity
-         where J : DomainEntity
-      {
-         Entry(existing).CurrentValues.SetValues(newEntity);
-         foreach (var item in collectionSelector(newEntity))
-         {
-            var simillarChild = collectionSelector(existing).SingleOrDefault(x => x.Id == item.Id);
-            if (simillarChild == null)
-               collectionSelector(existing).Add(item);
-            else
-               Entry(simillarChild).CurrentValues.SetValues(item);
-         }
-
-         foreach (var item in collectionSelector(existing))
-         {
-            if (!collectionSelector(newEntity).Any(x => x.Id == item.Id))
-               Remove(item);
-         }
-      }
-
       public void AddOrUpdate<T>(T entity)
          where T : DomainEntity
       {
@@ -131,6 +110,27 @@ namespace Blog.Domain
                .IsRequired();
          });
 
+         modelBuilder.Entity<Developer>(dev =>
+         {
+            dev
+            .Property(x => x.Summary)
+            .IsRequired();
+
+            dev
+            .Property(x => x.Skills)
+            .IsRequired();
+
+            dev
+            .Metadata
+            .FindNavigation("Experiences")
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
+
+            dev
+            .Metadata
+            .FindNavigation("SideProjects")
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
+         });
+
          modelBuilder.Entity<Experience>(ex =>
          {
             ex.ToTable("Experiences");
@@ -163,37 +163,6 @@ namespace Blog.Domain
             sp
             .Property("DeveloperId")
             .IsRequired();
-         });
-
-         modelBuilder.Entity<Developer>(dev =>
-         {
-            dev
-            .Property(x => x.Summary)
-            .IsRequired();
-
-            dev
-            .Property(x => x.Skills)
-            .IsRequired();
-
-            dev
-            .HasMany<Experience>("_experiences")
-            .WithOne()
-            .HasForeignKey("DeveloperId");
-
-            dev
-            .Metadata
-            .FindNavigation("Experiences")
-            .SetPropertyAccessMode(PropertyAccessMode.Field);
-
-            dev
-            .HasMany<SideProject>("_sideProjects")
-            .WithOne()
-            .HasForeignKey("DeveloperId");
-
-            dev
-            .Metadata
-            .FindNavigation("SideProjects")
-            .SetPropertyAccessMode(PropertyAccessMode.Field);
          });
       }
    }
