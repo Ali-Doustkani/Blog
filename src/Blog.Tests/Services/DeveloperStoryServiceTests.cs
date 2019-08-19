@@ -35,13 +35,12 @@ namespace Blog.Tests.Services
          using (var db = _context.GetDatabase())
          {
             var developer = new Developer("The best developer ever!", "C#, Javascript, React");
-            developer.Experiences.Add(
-               new Experience(
-                  "Parmis",
-                  "C# Developer",
-                  new DateTime(2016, 1, 20),
-                  new DateTime(2017, 1, 1),
-                  "System Architect"));
+            developer.AddExperience(
+               "Parmis",
+               "C# Developer",
+               new DateTime(2016, 1, 20),
+               new DateTime(2017, 1, 1),
+               "System Architect");
             developer.SideProjects.Add(new SideProject("Richtext Editor", "A simple richtext for web"));
             db.Developers.Add(developer);
             db.SaveChanges();
@@ -155,13 +154,12 @@ namespace Blog.Tests.Services
          using (var db = _context.GetDatabase())
          {
             var developer = new Developer("So Cool!", "ES7, Node.js");
-            developer.Experiences.Add(
-               new Experience(
-                  "Lodgify",
-                  "C# Developer",
-                  new DateTime(2016, 2, 23),
-                  new DateTime(2017, 1, 2),
-                  "as backend developer"));
+            developer.AddExperience(
+               "Lodgify",
+               "C# Developer",
+               new DateTime(2016, 2, 23),
+               new DateTime(2017, 1, 2),
+               "as backend developer");
             developer.SideProjects.Add(new SideProject("Richtext Editor", "A simple richtext for web"));
 
             db.Developers.Add(developer);
@@ -244,20 +242,18 @@ namespace Blog.Tests.Services
          using (var db = _context.GetDatabase())
          {
             var developer = new Developer("Not so cool", "ES7, Node.js");
-            developer.Experiences.Add(
-               new Experience(
-                  "Lodgify",
-                  "C# Developer",
-                  new DateTime(2016, 2, 23),
-                  new DateTime(2017, 1, 2),
-                  "as backend developer"));
-            developer.Experiences.Add(
-               new Experience(
-                  "Parmis",
-                  "Java Developer",
-                  new DateTime(2014, 2, 23),
-                  new DateTime(2015, 1, 2),
-                  "as the team lead"));
+            developer.AddExperience(
+               "Lodgify",
+               "C# Developer",
+               new DateTime(2016, 2, 23),
+               new DateTime(2017, 1, 2),
+               "as backend developer");
+            developer.AddExperience(
+               "Parmis",
+               "Java Developer",
+               new DateTime(2017, 2, 23),
+               new DateTime(2018, 1, 2),
+               "as the team lead");
             db.Developers.Add(developer);
             db.SaveChanges();
          }

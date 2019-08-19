@@ -175,8 +175,10 @@ namespace Blog.Domain
             .Property(x => x.Skills)
             .IsRequired();
 
+            dev.Ignore(x => x.Experiences);
+
             dev
-            .HasMany(x => x.Experiences)
+            .HasMany<Experience>("_experiences")
             .WithOne()
             .HasForeignKey("DeveloperId");
 

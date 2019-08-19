@@ -8,6 +8,10 @@ namespace Blog.Domain
    /// </summary>
    public class DomainProblemException : Exception
    {
+      public DomainProblemException(string message)
+         : this(string.Empty, message)
+      { }
+
       public DomainProblemException(string property, string message)
          : base(message)
       {
