@@ -1,5 +1,6 @@
 import React from 'react'
 import { shallow } from 'enzyme'
+import { Button } from 'Controls'
 import ExperienceList from './ExperienceList'
 import Experience from './Experience'
 
@@ -28,8 +29,10 @@ it('calls for change when an experience is changed', () => {
 })
 
 it('calls for add when an experience needs to be added', () => {
-   expect.assertions(1)
-   const data = [{ id: 1 }]
-   const list = shallow(<ExperienceList experiences={data} onAdd={() => expect(true).toBe(true)} />)
-   list.find(Experience).prop('onAdd')()
+   const fn = jest.fn()
+   shallow(<ExperienceList experiences={[]} onAdd={fn} />)
+      .find(Button)
+      .simulate('click')
+
+   expect(fn).toHaveBeenCalled()
 })

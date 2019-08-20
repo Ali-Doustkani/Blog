@@ -7,13 +7,7 @@ const ExperienceList = props => {
    return (
       <div className="container">
          {props.experiences.map(e => (
-            <Experience
-               key={e.id}
-               {...e}
-               onAdd={props.onAdd}
-               onChange={props.onChange}
-               onDelete={props.onDelete}
-            />
+            <Experience key={e.id} {...e} onChange={props.onChange} onDelete={props.onDelete} />
          ))}
          <Button onClick={props.onAdd}>Add Work Experience</Button>
       </div>

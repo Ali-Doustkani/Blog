@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Loader, Message, Button, Richtext, Textarea, ErrorList, ask } from 'Controls'
 import ExperienceList from './ExperienceList'
+import SideProjectList from './SideProjectList'
 import { getDeveloper, saveDeveloper, anyError, validate } from './services'
 import DisabledContext from 'DisabledContext'
 import { useActions, STATUS } from './actions'
@@ -65,6 +66,12 @@ const Developer = ({ notify }) => {
                onAdd={actions.addExperience}
                onChange={actions.updateExperience}
                onDelete={ask(actions.deleteExperience)}
+            />
+            <SideProjectList
+               sideProjects={state.sideProjects}
+               onAdd={actions.addSideProject}
+               onChange={actions.updateSideProject}
+               onDelete={ask(actions.deleteSideProject)}
             />
             <Button onClick={save}>Save</Button>
          </div>

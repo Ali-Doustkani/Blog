@@ -13,7 +13,9 @@ const initialState = {
    skills: '',
    skillsErrors: [],
    experiences: [],
-   experiencesErrors: []
+   experiencesErrors: [],
+   sideProjects: [],
+   sideProjectErrors: []
 }
 
 export { initialState, STATUS }

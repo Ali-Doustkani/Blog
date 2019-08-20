@@ -3,6 +3,7 @@ import { STATUS, initialState } from './initials'
 import { dict } from '../../../utils/fn'
 import { load } from './_loading'
 import { addExperience, updateExperience, deleteExperience } from './_experiences'
+import { addSideProject, updateSideProject, deleteSideProject } from './_sideProjects'
 import { showErrors, updateIds, updateDeveloper, prepareForSave } from './_developer'
 
 const reducer = (state, action) => {
@@ -11,6 +12,9 @@ const reducer = (state, action) => {
       ['ADD_EXPERIENCE', addExperience],
       ['DELETE_EXPERIENCE', deleteExperience],
       ['UPDATE_EXPERIENCE', updateExperience],
+      ['ADD_SIDEPROJECT', addSideProject],
+      ['UPDATE_SIDEPROJECT', updateSideProject],
+      ['DELETE_SIDEPROJECT', deleteSideProject],
       ['UPDATE_DEVELOPER', updateDeveloper],
       ['UPDATE_IDS', updateIds],
       ['SHOW_ERRORS', showErrors],
@@ -34,6 +38,9 @@ function useActions() {
       addExperience: () => dispatch({ type: 'ADD_EXPERIENCE' }),
       updateExperience: change => dispatch({ type: 'UPDATE_EXPERIENCE', change }),
       deleteExperience: id => dispatch({ type: 'DELETE_EXPERIENCE', id }),
+      addSideProject: () => dispatch({ type: 'ADD_SIDEPROJECT' }),
+      updateSideProject: change => dispatch({ type: 'UPDATE_SIDEPROJECT', change }),
+      deleteSideProject: id => dispatch({ type: 'DELETE_SIDEPROJECT', id }),
       removeServerErrors: () => dispatch({ type: 'REMOVE_SERVER_ERRORS' }),
       toSaving: () => dispatch({ type: 'TO_SAVING' }),
       toLoading: () => dispatch({ type: 'TO_LOADING' }),

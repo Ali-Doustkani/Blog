@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`keeps the state intact 1`] = `
+Object {
+  "errorMessage": "",
+  "experiences": Array [],
+  "experiencesErrors": Array [],
+  "sideProjectErrors": Array [],
+  "sideProjects": Array [
+    Object {
+      "content": "Desc",
+      "contentErrors": Array [],
+      "id": 1,
+      "title": "Richtext",
+      "titleErrors": Array [],
+    },
+  ],
+  "skills": "",
+  "skillsErrors": Array [],
+  "status": 1,
+  "summary": "",
+  "summaryErrors": Array [],
+}
+`;
