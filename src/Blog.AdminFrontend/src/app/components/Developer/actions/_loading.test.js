@@ -28,7 +28,8 @@ it('stores experience format', () => {
       result: {
          status: 'ok',
          data: {
-            experiences: [{ id: 1, company: 'Lodgify' }]
+            experiences: [{ id: 1, company: 'Lodgify' }],
+            sideProjects: []
          }
       }
    })

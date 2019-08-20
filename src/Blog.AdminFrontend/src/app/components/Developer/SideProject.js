@@ -10,7 +10,7 @@ const SideProject = props => (
          <div className="separator" />
          <ToolbarButton content="trash-alt" onClick={() => props.onDelete(props.id)} />
       </div>
-      <Richtext name="content" {...props} />
+      <Richtext name="content" showErrors={false} {...props} />
       <ErrorList {...props} />
    </div>
 )

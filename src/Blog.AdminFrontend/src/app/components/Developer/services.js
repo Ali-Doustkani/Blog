@@ -94,6 +94,10 @@ const anyError = state =>
                exp.startDateErrors.some(clientError) ||
                exp.endDateErrors.some(clientError) ||
                exp.contentErrors.some(clientError)
+         ) ||
+         state.sideProjectErrors.some(clientError) ||
+         state.sideProjects.some(
+            proj => proj.titleErrors.some(clientError) || proj.contentErrors.some(clientError)
          )
    )
 
@@ -101,8 +105,10 @@ const validate = state => {
    state.summaryErrors = richtextEmptyValidator('summary', state.summaryErrors)(state.summary)
    state.skillsErrors = emptyValidator('skills', state.skillsErrors)(state.skills)
    state.experiences.forEach(checkExperienceEmptiness)
+   state.sideProjects.forEach(checkSideProjectEmptiness)
    checkDuplicateExperiences(state.experiences)
    checkDateOverlaps(state.experiences)
+   checkDuplicateSideProject(state.sideProjects)
 }
 
 const checkExperienceEmptiness = experience => {
@@ -122,6 +128,13 @@ const checkExperienceEmptiness = experience => {
       experience.content
    )
    return experience
+}
+
+const checkSideProjectEmptiness = sideProject => {
+   sideProject.titleErrors = emptyValidator('title', sideProject.titleErrors)(sideProject.title)
+   sideProject.contentErrors = richtextEmptyValidator('content', sideProject.contentErrors)(
+      sideProject.content
+   )
 }
 
 const checkDuplicateExperiences = experiences => {
@@ -172,5 +185,15 @@ const experienceDateOverlapError = experience => ({
 })
 
 const isNotEmpty = text => !/^\s*$/.test(text)
+
+const checkDuplicateSideProject = sideProjects => {
+   const reverse = sideProjects.filter(x => isNotEmpty(x.title)).reverse()
+   for (const proj of reverse) {
+      if (sideProjects.some(x => x !== proj && x.title === proj.title)) {
+         proj.titleErrors.push({ type: 1, message: 'a project with this title already exists' })
+         return
+      }
+   }
+}
 
 export { getDeveloper, saveDeveloper, anyError, validate }

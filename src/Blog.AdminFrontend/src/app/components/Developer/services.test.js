@@ -238,33 +238,47 @@ describe('anyError', () => {
                endDateErrors: [{ type: 2, message: 'err2' }],
                contentErrors: [{ type: 2, message: 'err2' }]
             }
-         ]
+         ],
+         sideProjectErrors: [],
+         sideProjects: []
       }
       expect(anyError(init)).toBe(false)
    })
 })
 
-describe('validation', () => {
+describe('experience validations', () => {
    it('checks emptiness', () => {
       emptyValidator.mockImplementation(field => () => field + 'Error')
       richtextEmptyValidator.mockImplementation(field => () => field + 'Error')
 
       const state = {
-         summary: 'summary',
-         skills: 'skills',
          experiences: [
             {
-               company: 'company',
-               position: 'position',
-               startDate: 'startDate',
-               endDate: 'endDate',
-               content: 'content'
+               company: 'Parmis',
+               position: 'C# Developer',
+               startDate: '2010-01-01',
+               endDate: '2012-01-01',
+               content: 'DESC'
             }
-         ]
+         ],
+         sideProjects: []
       }
       validate(state)
 
-      expect(state).toMatchSnapshot()
+      expect(state.experiences).toEqual([
+         {
+            company: 'Parmis',
+            companyErrors: 'companyError',
+            position: 'C# Developer',
+            positionErrors: 'positionError',
+            startDate: '2010-01-01',
+            startDateErrors: 'start dateError',
+            endDate: '2012-01-01',
+            endDateErrors: 'end dateError',
+            content: 'DESC',
+            contentErrors: 'contentError'
+         }
+      ])
    })
 
    it('prevents experience duplication', () => {
@@ -283,7 +297,8 @@ describe('validation', () => {
                companyErrors: [],
                position: 'C# Developer'
             }
-         ]
+         ],
+         sideProjects: []
       }
 
       validate(state)
@@ -308,7 +323,8 @@ describe('validation', () => {
                company: '',
                position: 'C# Developer'
             }
-         ]
+         ],
+         sideProjects: []
       }
 
       validate(state)
@@ -331,7 +347,8 @@ describe('validation', () => {
                company: 'Parmis',
                position: ' '
             }
-         ]
+         ],
+         sideProjects: []
       }
 
       validate(state)
@@ -365,7 +382,8 @@ describe('validation', () => {
                startDateErrors: [],
                endDate: '2012-1-1'
             }
-         ]
+         ],
+         sideProjects: []
       }
 
       validate(state)
@@ -375,5 +393,67 @@ describe('validation', () => {
       expect(state.experiences[2].startDateErrors).toEqual([
          { type: 1, message: 'the date overlaps with C# Developer at Parmis' }
       ])
+   })
+})
+
+describe('sideProject validations', () => {
+   it('checks emptiness', () => {
+      emptyValidator.mockImplementation(field => () => field + 'Error')
+      richtextEmptyValidator.mockImplementation(field => () => field + 'Error')
+      const state = {
+         experiences: [],
+         sideProjects: [{ id: 1, title: '', titleErrors: [], content: '', contentErrors: [] }]
+      }
+      validate(state)
+
+      expect(state.sideProjects).toEqual([
+         {
+            id: 1,
+            title: '',
+            titleErrors: 'titleError',
+            content: '',
+            contentErrors: 'contentError'
+         }
+      ])
+   })
+
+   it('prevents side project duplication', () => {
+      emptyValidator.mockImplementation((field, errors) => () => errors)
+      richtextEmptyValidator.mockImplementation((field, errors) => () => errors)
+
+      const state = {
+         experiences: [],
+         sideProjects: [
+            { id: 1, title: 'richtext', titleErrors: [] },
+            { id: 2, title: 'richtext', titleErrors: [] }
+         ]
+      }
+
+      validate(state)
+
+      expect(state.sideProjects[0]).toEqual({ id: 1, title: 'richtext', titleErrors: [] })
+      expect(state.sideProjects[1]).toEqual({
+         id: 2,
+         title: 'richtext',
+         titleErrors: [{ type: 1, message: 'a project with this title already exists' }]
+      })
+   })
+
+   it('does not check side project with empty title for duplication', () => {
+      emptyValidator.mockImplementation((field, errors) => () => errors)
+      richtextEmptyValidator.mockImplementation((field, errors) => () => errors)
+
+      const state = {
+         experiences: [],
+         sideProjects: [
+            { id: 1, title: '', titleErrors: [] },
+            { id: 2, title: ' ', titleErrors: [] }
+         ]
+      }
+
+      validate(state)
+
+      expect(state.sideProjects[0]).toEqual({ id: 1, title: '', titleErrors: [] })
+      expect(state.sideProjects[1]).toEqual({ id: 2, title: ' ', titleErrors: [] })
    })
 })

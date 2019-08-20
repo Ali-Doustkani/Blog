@@ -72,7 +72,9 @@ describe('prepare for saving', () => {
                endDateErrors: [{ type: 1, message: 'err1' }, { type: 2, message: 'err2' }],
                contentErrors: [{ type: 1, message: 'err1' }, { type: 2, message: 'err2' }]
             }
-         ]
+         ],
+         sideProjects: [],
+         sideProjectErrors: []
       }
 
       const newState = prepareForSave(init)
