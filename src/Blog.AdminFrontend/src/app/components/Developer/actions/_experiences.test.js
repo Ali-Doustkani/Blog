@@ -7,72 +7,86 @@ jest.mock('../../../utils')
 
 afterEach(jest.restoreAllMocks)
 
-describe('adding', () => {
-   it('adds a new valid experience', () => {
-      uuid.mockReturnValue('1')
-      jest.spyOn(global, 'Date').mockImplementation(() => ({
-         getFullYear: () => 2012,
-         getMonth: () => 5,
-         getDay: () => 20
-      }))
+it('adds a new valid experience', () => {
+   uuid.mockReturnValue(123)
+   jest.spyOn(global, 'Date').mockImplementation(() => ({
+      getFullYear: () => 2012,
+      getMonth: () => 5,
+      getDay: () => 20
+   }))
+   const init = {
+      experiences: []
+   }
+   const newState = addExperience(init)
 
-      const newState = addExperience(initialState)
-
-      expect(newState.experiences[0].id).toBe('1')
-      expect(newState.experiences[0].startDate).toBe('2012-05-20')
-      expect(newState.experiences[0].endDate).toBe('')
-      expect(newState).toMatchSnapshot()
-   })
-
-   it('sets the id of new experience', () => {
-      uuid.mockReturnValue('123')
-      const newState = addExperience(initialState)
-      expect(newState.experiences[0].id).toBe('123')
-   })
-
-   it('sets startDate value to today', () => {
-      jest.spyOn(global, 'Date').mockImplementation(() => ({
-         getFullYear: () => 2019,
-         getMonth: () => 5,
-         getDay: () => 2
-      }))
-      const newState = addExperience(initialState)
-      expect(newState.experiences[0].startDate).toBe('2019-05-02')
-   })
-})
-
-describe('deleting', () => {
-   it('delete an existing experience', () => {
-      const initial = {
-         summary: 'will not change',
-         experiences: [
-            {
-               id: 1,
-               company: 'Lodgify',
-               position: 'C# Developer',
-               startDate: '2019-01-01',
-               endDate: '2020-01-01'
-            }
-         ]
+   expect(newState.experiences).toEqual([
+      {
+         id: 123,
+         company: '',
+         companyErrors: [],
+         position: '',
+         positionErrors: [],
+         startDate: '2012-05-20',
+         startDateErrors: [],
+         endDate: '',
+         endDateErrors: [],
+         content: '',
+         contentErrors: []
       }
-
-      const newState = deleteExperience(initial, { id: 1 })
-
-      expect(newState.summary).toBe('will not change')
-      expect(newState.experiences).toEqual([])
-   })
+   ])
 })
 
-describe('updating', () => {
-   it('updates company fields', () => {
-      uuid.mockReturnValue(1)
-      let state = addExperience(initialState)
-      state = updateExperience(state, { change: { id: 1, company: 'Parmis' } })
-      state = updateExperience(state, { change: { id: 1, position: 'JS' } })
-      state = updateExperience(state, { change: { id: 1, startDate: '2013-01-02' } })
-      state = updateExperience(state, { change: { id: 1, endDate: '2015-01-01' } })
-      state = updateExperience(state, { change: { id: 1, content: 'Description' } })
+it('deletes an existing experience', () => {
+   const initial = {
+      experiences: [{ id: 1 }, { id: 2 }]
+   }
 
-      expect(state).toMatchSnapshot()
-   })
+   const newState = deleteExperience(initial, { id: 1 })
+
+   expect(newState.experiences).toEqual([{ id: 2 }])
+})
+
+it('updates an experience', () => {
+   uuid.mockReturnValue(1)
+   const init = {
+      experiences: [
+         {
+            id: 1,
+            company: 'Lodgify',
+            position: 'C# Developer',
+            startDate: '2010-01-01',
+            endDate: '2011-01-01',
+            content: 'DESC'
+         }
+      ]
+   }
+
+   let state = updateExperience(init, { change: { id: 1, company: 'Parmis' } })
+   state = updateExperience(state, { change: { id: 1, position: 'JS' } })
+   state = updateExperience(state, { change: { id: 1, startDate: '2013-01-02' } })
+   state = updateExperience(state, { change: { id: 1, endDate: '2015-01-01' } })
+   state = updateExperience(state, { change: { id: 1, content: 'Description' } })
+
+   expect(state.experiences).toEqual([
+      {
+         id: 1,
+         company: 'Parmis',
+         position: 'JS',
+         startDate: '2013-01-02',
+         endDate: '2015-01-01',
+         content: 'Description'
+      }
+   ])
+})
+
+it('keeps the state intact', () => {
+   uuid.mockReturnValueOnce(1)
+   uuid.mockReturnValueOnce(2)
+   let state = addExperience(initialState)
+   state = addExperience(state)
+   state = updateExperience(state, { change: { id: 2, company: 'Lodgify' } })
+   state = updateExperience(state, { change: { id: 2, position: 'C# Developer' } })
+   state = deleteExperience(state, { id: 2 })
+
+   expect(state).toMatchSnapshot()
 })

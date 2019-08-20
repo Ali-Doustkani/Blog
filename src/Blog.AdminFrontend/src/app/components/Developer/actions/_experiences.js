@@ -1,4 +1,5 @@
 import uuid from 'uuid/v1'
+import { update } from '../../../utils/fn'
 
 const initialExperienceErrors = experience => ({
    ...experience,
@@ -15,7 +16,8 @@ const createExperience = () =>
       company: '',
       position: '',
       startDate: today(),
-      endDate: ''
+      endDate: '',
+      content: ''
    })
 
 const addExperience = state => ({
@@ -32,9 +34,6 @@ const updateExperience = (state, action) => ({
    ...state,
    experiences: state.experiences.map(update(action.change))
 })
-
-const update = change => experience =>
-   change.id === experience.id ? { ...experience, ...change } : experience
 
 function today() {
    const now = new Date()

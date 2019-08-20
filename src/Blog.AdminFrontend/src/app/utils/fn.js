@@ -11,4 +11,6 @@ const dict = (...pairs) => key => {
 const ifElse = (predicate, onTrue, onFalse) => (state, action) =>
    predicate(action) ? onTrue(state, action) : onFalse(state, action)
 
-export { compose, dict, ifElse }
+const update = change => obj => (change.id === obj.id ? { ...obj, ...change } : obj)
+
+export { compose, dict, ifElse, update }
