@@ -1,24 +1,10 @@
 import uuid from 'uuid/v1'
 import { initialState } from './initials'
-import {
-   addSideProject,
-   deleteSideProject,
-   updateSideProject,
-   initSideProjectErrors
-} from './_sideProjects'
+import { addSideProject, deleteSideProject, updateSideProject } from './_sideProjects'
 
 jest.mock('uuid/v1')
 
 afterEach(jest.restoreAllMocks)
-
-it('initializes errors', () => {
-   const result = initSideProjectErrors({ id: 1 })
-   expect(result).toEqual({
-      id: 1,
-      titleErrors: [],
-      contentErrors: []
-   })
-})
 
 it('adds a new side project', () => {
    uuid.mockReturnValue(123)
@@ -27,30 +13,14 @@ it('adds a new side project', () => {
    }
    const state = addSideProject(initial)
 
-   expect(state.sideProjects).toEqual([
-      {
-         id: 123,
-         title: '',
-         titleErrors: [],
-         content: '',
-         contentErrors: []
-      }
-   ])
+   expect(state.sideProjects).toEqual([{ id: 123, title: '', content: '' }])
 })
 
 it('deletes a side project', () => {
    const initial = {
       sideProjects: [
-         {
-            id: 1,
-            title: 'Richtext',
-            content: 'Richtext Desc'
-         },
-         {
-            id: 2,
-            title: 'CodePrac',
-            content: 'CodePrac Desc'
-         }
+         { id: 1, title: 'Richtext', content: 'Richtext Desc' },
+         { id: 2, title: 'CodePrac', content: 'CodePrac Desc' }
       ]
    }
 

@@ -3,12 +3,14 @@ import PropTypes from 'prop-types'
 import { Loader, Message, Button, Richtext, Textarea, ErrorList, ask } from 'Controls'
 import ExperienceList from './ExperienceList'
 import SideProjectList from './SideProjectList'
-import { getDeveloper, saveDeveloper, anyError, validate } from './services'
+import { getDeveloper, saveDeveloper } from './services'
 import DisabledContext from 'DisabledContext'
 import { useActions, STATUS } from './actions'
+import { useValidation } from './validation'
 
 const Developer = ({ notify }) => {
    const [state, actions] = useActions()
+   const [errors, validate] = useValidation()
 
    useEffect(() => {
       fetchDeveloper()
@@ -21,9 +23,8 @@ const Developer = ({ notify }) => {
    }
 
    async function save() {
-      actions.removeServerErrors()
-      validate(state)
-      if (anyError(state)) {
+      const errorResult = validate(state)
+      if (errorResult.hasError) {
          notify('Resolve the problems first', 'error')
          return
       }
@@ -52,17 +53,25 @@ const Developer = ({ notify }) => {
          {state.status === STATUS.SAVING ? <Loader text="Saving developer..." /> : null}
          <div className="form about-form">
             <h1>Write about yourself</h1>
-            <ErrorList errors={state.experiencesErrors} />
+            <ErrorList errors={errors.experiencesErrors} />
             <Richtext
                label="Summary"
                name="summary"
                autofocus
                {...state}
+               summaryErrors={errors.summaryErrors}
                onChange={actions.updateDeveloper}
             />
-            <Textarea label="Skills" name="skills" {...state} onChange={actions.updateDeveloper} />
+            <Textarea
+               label="Skills"
+               name="skills"
+               {...state}
+               skillsErrors={errors.skillsErrors}
+               onChange={actions.updateDeveloper}
+            />
             <ExperienceList
                experiences={state.experiences}
+               errors={errors.experiences}
                onAdd={actions.addExperience}
                onChange={actions.updateExperience}
                onDelete={ask(actions.deleteExperience)}

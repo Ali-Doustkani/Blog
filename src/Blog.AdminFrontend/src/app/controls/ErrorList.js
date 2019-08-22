@@ -2,39 +2,41 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import uuid from 'uuid/v1'
 
-function flatten(props) {
-   if (props.errors) {
-      return props.errors
+function flatten(errors) {
+   if (!errors) {
+      return []
    }
-
-   let result = []
-   Object.getOwnPropertyNames(props).forEach(p => {
-      if (p.endsWith('Errors') && Array.isArray(props[p])) {
-         result = result.concat(props[p])
-      }
-   })
-   return result
+   if (typeof errors === 'string') {
+      return [errors]
+   }
+   if (Array.isArray(errors)) {
+      let result = []
+      errors.forEach(item => {
+         if (typeof item === 'string') {
+            result.push(item)
+         } else if (Array.isArray(item)) {
+            result = result.concat(item)
+         }
+      })
+      return result
+   }
 }
 
 const ErrorList = props => {
-   const array = flatten(props)
-   if (!array.length) {
-      return null
-   }
-
-   return (
-      <ul data-testid="error-list">
-         {array.map(err => (
+   const errors = flatten(props.errors)
+   return errors.length ? (
+      <ul>
+         {errors.map(err => (
             <li key={uuid()} className="error">
-               {err.message}
+               {err}
             </li>
          ))}
       </ul>
-   )
+   ) : null
 }
 
 ErrorList.propTypes = {
-   errors: PropTypes.arrayOf(PropTypes.object)
+   errors: PropTypes.oneOfType([PropTypes.string, PropTypes.array])
 }
 
 export { ErrorList }

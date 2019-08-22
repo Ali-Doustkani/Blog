@@ -1,6 +1,4 @@
 import { initialState, STATUS } from './initials'
-import { initialExperienceErrors } from './_experiences'
-import { initSideProjectErrors } from './_sideProjects'
 import { ifElse } from '../../../utils/fn'
 
 const loadOK = ifElse(
@@ -8,8 +6,6 @@ const loadOK = ifElse(
    (state, action) => ({
       ...state,
       ...action.result.data,
-      experiences: action.result.data.experiences.map(initialExperienceErrors),
-      sideProjects: action.result.data.sideProjects.map(initSideProjectErrors),
       status: STATUS.IDLE
    }),
    () => ({ ...initialState, status: STATUS.IDLE })

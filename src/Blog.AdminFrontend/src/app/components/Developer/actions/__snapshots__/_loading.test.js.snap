@@ -36,12 +36,7 @@ Object {
   "experiences": Array [
     Object {
       "company": "Lodgify",
-      "companyErrors": Array [],
-      "contentErrors": Array [],
-      "endDateErrors": Array [],
       "id": 1,
-      "positionErrors": Array [],
-      "startDateErrors": Array [],
     },
   ],
   "experiencesErrors": Array [],

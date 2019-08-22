@@ -3,7 +3,6 @@ import { initialState } from './initials'
 import uuid from 'uuid/v1'
 
 jest.mock('uuid/v1')
-jest.mock('../../../utils')
 
 afterEach(jest.restoreAllMocks)
 
@@ -11,8 +10,8 @@ it('adds a new valid experience', () => {
    uuid.mockReturnValue(123)
    jest.spyOn(global, 'Date').mockImplementation(() => ({
       getFullYear: () => 2012,
-      getMonth: () => 5,
-      getDay: () => 20
+      getMonth: () => 4,
+      getDate: () => 20
    }))
    const init = {
       experiences: []
@@ -23,15 +22,10 @@ it('adds a new valid experience', () => {
       {
          id: 123,
          company: '',
-         companyErrors: [],
          position: '',
-         positionErrors: [],
          startDate: '2012-05-20',
-         startDateErrors: [],
          endDate: '',
-         endDateErrors: [],
-         content: '',
-         contentErrors: []
+         content: ''
       }
    ])
 })
@@ -82,6 +76,12 @@ it('updates an experience', () => {
 it('keeps the state intact', () => {
    uuid.mockReturnValueOnce(1)
    uuid.mockReturnValueOnce(2)
+   jest.spyOn(global, 'Date').mockImplementation(() => ({
+      getFullYear: () => 2019,
+      getMonth: () => 6,
+      getDate: () => 2
+   }))
+
    let state = addExperience(initialState)
    state = addExperience(state)
    state = updateExperience(state, { change: { id: 2, company: 'Lodgify' } })

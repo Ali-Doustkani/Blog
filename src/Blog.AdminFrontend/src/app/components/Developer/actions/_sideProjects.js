@@ -1,18 +1,11 @@
 import uuid from 'uuid/v1'
 import { update } from '../../../utils/fn'
 
-const initSideProjectErrors = sideProject => ({
-   ...sideProject,
-   titleErrors: [],
-   contentErrors: []
+const newSideProject = () => ({
+   id: uuid(),
+   title: '',
+   content: ''
 })
-
-const newSideProject = () =>
-   initSideProjectErrors({
-      id: uuid(),
-      title: '',
-      content: ''
-   })
 
 const addSideProject = state => ({
    ...state,
@@ -29,4 +22,4 @@ const updateSideProject = (state, action) => ({
    sideProjects: state.sideProjects.map(update(action.change))
 })
 
-export { addSideProject, deleteSideProject, updateSideProject, initSideProjectErrors }
+export { addSideProject, deleteSideProject, updateSideProject }

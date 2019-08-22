@@ -6,16 +6,11 @@ Object {
   "experiences": Array [
     Object {
       "company": "",
-      "companyErrors": Array [],
       "content": "",
-      "contentErrors": Array [],
       "endDate": "",
-      "endDateErrors": Array [],
       "id": 1,
       "position": "",
-      "positionErrors": Array [],
       "startDate": "2019-07-02",
-      "startDateErrors": Array [],
     },
   ],
   "experiencesErrors": Array [],

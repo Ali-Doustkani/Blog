@@ -14,22 +14,30 @@ const Experience = props => (
          <ToolbarButton content="trash-alt" onClick={() => props.onDelete(props.id)} />
       </div>
       <Richtext name="content" showErrors={false} {...props} />
-      <ErrorList {...props} />
+      <ErrorList
+         errors={[
+            props.companyErrors,
+            props.positionErrors,
+            props.startDateErrors,
+            props.endDateErrors,
+            props.contentErrors
+         ]}
+      />
    </div>
 )
 
 Experience.propTypes = {
    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
    company: PropTypes.string,
-   companyErrors: PropTypes.arrayOf(PropTypes.object),
+   companyErrors: PropTypes.arrayOf(PropTypes.string),
    position: PropTypes.string,
-   positionErrors: PropTypes.arrayOf(PropTypes.object),
+   positionErrors: PropTypes.arrayOf(PropTypes.string),
    startDate: PropTypes.string,
-   startDateErrors: PropTypes.arrayOf(PropTypes.object),
+   startDateErrors: PropTypes.arrayOf(PropTypes.string),
    endDate: PropTypes.string,
-   endDateErrors: PropTypes.arrayOf(PropTypes.object),
+   endDateErrors: PropTypes.arrayOf(PropTypes.string),
    content: PropTypes.string,
-   contentErrors: PropTypes.arrayOf(PropTypes.object),
+   contentErrors: PropTypes.arrayOf(PropTypes.string),
    onChange: PropTypes.func,
    onDelete: PropTypes.func
 }

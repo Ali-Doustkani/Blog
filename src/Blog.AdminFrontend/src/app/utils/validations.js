@@ -1,5 +1,3 @@
-import { compose } from './fn'
-
 const isWhitespace = input => input.match(/^\s*$/) !== null
 
 const isEmpty = input => !input || isWhitespace(input)
@@ -9,30 +7,45 @@ const isRichtextEmpty = input => {
    return result ? isEmpty(result.groups.inner) : isEmpty(input)
 }
 
-const message = msg => result => (result ? msg : undefined)
-
-const requiredMessage = field => message(`${field} is required`)
-
-const errorListGenerator = errors => message => {
-   const result = !errors || !errors.length ? [] : errors.filter(x => x.type === 2)
-   if (message) {
-      result.push({ type: 1, message })
+const getDuplicate = config => {
+   for (const item of config.values) {
+      return config.values.find(isDuplicate(item, config))
    }
-   return result
 }
 
-const emptyValidator = (field, errors) =>
-   compose(
-      errorListGenerator(errors),
-      requiredMessage(field),
-      isEmpty
-   )
+const isDuplicate = (item1, config) => item2 =>
+   propsNotEmpty(item1, item2, config) &&
+   compareProps(item1, item2, config) &&
+   item1.id !== item2.id
 
-const richtextEmptyValidator = (field, errors) =>
-   compose(
-      errorListGenerator(errors),
-      requiredMessage(field),
-      isRichtextEmpty
-   )
+const propsNotEmpty = (item1, item2, config) =>
+   Array.isArray(config.prop)
+      ? config.prop.every(p => !isEmpty(item1[p]) && !isEmpty(item2[p]))
+      : !isEmpty(item1[config.prop]) && !isEmpty(item2[config.prop])
 
-export { emptyValidator, richtextEmptyValidator }
+const compareProps = (item1, item2, config) =>
+   Array.isArray(config.prop)
+      ? config.prop.every(p => item1[p] === item2[p])
+      : item1[config.prop] === item2[config.prop]
+
+const hasOverlap = (obj1, obj2) => {
+   const startA = new Date(obj1.startDate)
+   const endA = new Date(obj1.endDate)
+   const startB = new Date(obj2.startDate)
+   const endB = new Date(obj2.endDate)
+
+   return startA < endB && endA > startB
+}
+
+const getOverlap = objs => {
+   for (const item1 of objs) {
+      for (const item2 of objs) {
+         if (item1.id !== item2.id && hasOverlap(item1, item2)) {
+            return [item2, item1]
+         }
+      }
+   }
+   return [undefined, undefined]
+}
+
+export { isEmpty, isRichtextEmpty, getDuplicate, hasOverlap, getOverlap }

@@ -1,96 +1,173 @@
-import { emptyValidator, richtextEmptyValidator } from './validations'
+import { isEmpty, isRichtextEmpty, getDuplicate, hasOverlap, getOverlap } from './validations'
 
-describe('returning of server errors', () => {
-   it('returns both validator errors & server errors', () => {
-      const currentErrors = [
-         { type: 1, message: 'client error' },
-         { type: 2, message: 'server error' }
-      ]
-      const check = emptyValidator('age', currentErrors)
-
-      expect(check('')).toEqual([
-         { type: 2, message: 'server error' },
-         { type: 1, message: 'age is required' }
-      ])
-   })
-
-   it('returns only server errors when there is no rule', () => {
-      const check = emptyValidator('', [
-         { type: 1, message: 'client error' },
-         { type: 2, message: 'server error' }
-      ])
-      expect(check('ali')).toEqual([{ type: 2, message: 'server error' }])
-   })
-})
-
-describe('not empty rule', () => {
+describe('isEmpty', () => {
    it('returns nothing for correct notEmpty rule', () => {
-      const check = emptyValidator('name')
-      expect(check('Ali')).toEqual([])
+      expect(isEmpty('Ali')).toBe(false)
    })
 
-   describe('failures', () => {
-      const check = emptyValidator('name')
-      let result
+   test('null', () => {
+      expect(isEmpty(null)).toBe(true)
+   })
 
-      test('null', () => {
-         result = check(null)
-      })
+   test('undefined', () => {
+      expect(isEmpty(undefined)).toBe(true)
+   })
 
-      test('undefined', () => {
-         result = check(undefined)
-      })
+   test('empty string', () => {
+      expect(isEmpty('')).toBe(true)
+   })
 
-      test('empty string', () => {
-         result = check('')
-      })
-
-      test('whitespace string', () => {
-         result = check('  ')
-      })
-
-      afterEach(() => {
-         expect(result).toEqual([{ type: 1, message: 'name is required' }])
-      })
+   test('whitespace string', () => {
+      expect(isEmpty('  ')).toBe(true)
    })
 })
 
-describe('not richtext empty rule', () => {
-   const check = richtextEmptyValidator('content')
-
-   describe('successes', () => {
-      let result
-
-      test('other tags', () => {
-         result = check('<a>TEXT</a>')
-      })
-
-      test('non-tag text', () => {
-         result = check('ali')
-      })
-
-      afterEach(() => {
-         expect(result).toEqual([])
-      })
+describe('isRichtextEmpty', () => {
+   test('other tags', () => {
+      expect(isRichtextEmpty('<a>TEXT</a>')).toBe(false)
    })
 
-   describe('failures', () => {
-      let result
+   test('non-tag text', () => {
+      expect(isRichtextEmpty('ali')).toBe(false)
+      expect(isRichtextEmpty('')).toBe(true)
+   })
 
-      test('empty tag without attribute', () => {
-         result = check('<p> </p>')
-      })
+   test('empty tag without attribute', () => {
+      expect(isRichtextEmpty('<p> </p>')).toBe(true)
+   })
 
-      test('tag with multiple attributes', () => {
-         result = check('<p contenteditable="" class="sth"> </p>')
-      })
+   test('tag with multiple attributes', () => {
+      expect(isRichtextEmpty('<p contenteditable="" class="sth"> </p>')).toBe(true)
+   })
+})
 
-      test('non-tag text', () => {
-         result = check('')
+describe('getDuplicate', () => {
+   it('checks for duplication', () => {
+      const dup = getDuplicate({
+         values: [{ id: 1, name: 'Ali' }, { id: 2, name: 'Hasan' }, { id: 3, name: 'Ali' }],
+         prop: 'name'
       })
+      expect(dup).toEqual({ id: 3, name: 'Ali' })
+   })
 
-      afterEach(() => {
-         expect(result).toEqual([{ type: 1, message: 'content is required' }])
+   it('returns undefined when there is no duplicate', () => {
+      const dup = getDuplicate({
+         values: [{ id: 1, name: 'Ali' }, { id: 2, name: 'Hasan' }],
+         prop: 'name'
       })
+      expect(dup).toBeUndefined()
+   })
+
+   it('does not compare objects with empty fields', () => {
+      const dup = getDuplicate({
+         values: [{ id: 1, name: 'Ali' }, { id: 2, name: '' }, { id: 3, name: '' }],
+         prop: 'name'
+      })
+      expect(dup).toBeUndefined()
+   })
+
+   it('compares multiple props', () => {
+      const dup = getDuplicate({
+         values: [
+            { id: 1, name: 'Ali', surname: 'Doustkani' },
+            { id: 2, name: 'Ali', surname: 'Moradi' },
+            { id: 3, name: 'Ali', surname: 'Doustkani' }
+         ],
+         prop: ['name', 'surname']
+      })
+      expect(dup).toEqual({ id: 3, name: 'Ali', surname: 'Doustkani' })
+   })
+})
+
+describe('overlaps', () => {
+   test.each([
+      [
+         'A',
+         { startDate: '2010-1-1', endDate: '2011-1-1' },
+         { startDate: '2010-6-1', endDate: '2011-6-1' },
+         true
+      ],
+      [
+         'B',
+         { startDate: '2010-6-1', endDate: '2011-6-1' },
+         { startDate: '2010-1-1', endDate: '2011-1-1' },
+         true
+      ],
+      [
+         'C',
+         { startDate: '2010-1-1', endDate: '2011-1-1' },
+         { startDate: '2010-1-1', endDate: '2011-1-1' },
+         true
+      ],
+      [
+         'D',
+         { startDate: '2010-1-1', endDate: '2011-1-1' },
+         { startDate: '2012-1-1', endDate: '2013-1-1' },
+         false
+      ],
+      [
+         'E',
+         { startDate: '2012-1-1', endDate: '2013-1-1' },
+         { startDate: '2010-1-1', endDate: '2011-1-1' },
+         false
+      ],
+      [
+         'F',
+         { startDate: '2011-1-1', endDate: '2012-1-1' },
+         { startDate: '2010-1-1', endDate: '2011-1-1' },
+         false
+      ],
+      [
+         'G',
+         { startDate: '2010-1-1', endDate: '2011-1-1' },
+         { startDate: '2011-1-1', endDate: '2012-1-1' },
+         false
+      ],
+      [
+         'H',
+         { startDate: '2010-1-1', endDate: '2011-1-1' },
+         { startDate: '2010-6-1', endDate: '2011-1-1' },
+         true
+      ],
+      [
+         'I',
+         { startDate: '2010-1-1', endDate: '2011-1-1' },
+         { startDate: '2010-1-1', endDate: '2010-6-1' },
+         true
+      ],
+      [
+         'J',
+         { startDate: '2010-6-1', endDate: '2011-1-1' },
+         { startDate: '2010-1-1', endDate: '2011-1-1' },
+         true
+      ],
+      [
+         'K',
+         { startDate: '2010-1-1', endDate: '2010-6-1' },
+         { startDate: '2010-1-1', endDate: '2011-1-1' },
+         true
+      ]
+   ])('Case %s', (tag, item1, item2, result) => {
+      expect(hasOverlap(item1, item2)).toBe(result)
+   })
+
+   it('gets overlaps in an array', () => {
+      const [overlapper, overlapped] = getOverlap([
+         { id: 1, startDate: '2010-1-1', endDate: '2011-1-1' },
+         { id: 2, startDate: '2011-1-1', endDate: '2012-1-1' },
+         { id: 3, startDate: '2010-8-1', endDate: '2011-1-1' }
+      ])
+      expect(overlapper.id).toBe(3)
+      expect(overlapped.id).toBe(1)
+   })
+
+   it('gets undefined when there is no overlap', () => {
+      const [overlapper, overlapped] = getOverlap([
+         { id: 1, startDate: '2010-1-1', endDate: '2011-1-1' },
+         { id: 2, startDate: '2011-1-1', endDate: '2012-1-1' },
+         { id: 3, startDate: '2012-1-1', endDate: '2013-1-1' }
+      ])
+      expect(overlapper).toBeUndefined()
+      expect(overlapped).toBeUndefined()
    })
 })

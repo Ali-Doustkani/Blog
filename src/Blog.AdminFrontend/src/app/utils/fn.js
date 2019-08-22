@@ -1,3 +1,7 @@
+Array.prototype.scalar = function() {
+   return this.length === 1 ? this[0] : this
+}
+
 const compose = (...functions) => args => functions.reduceRight((arg, fn) => fn(arg), args)
 
 const dict = (...pairs) => key => {

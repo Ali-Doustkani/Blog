@@ -1,5 +1,3 @@
-import { emptyValidator, richtextEmptyValidator } from '../../utils'
-
 const url_developer =
    process.env.NODE_ENV === 'production' ? '/api/developer' : 'http://localhost:3000/api/developer'
 
@@ -56,7 +54,7 @@ const saveDeveloper = async state => {
             headers: {
                'Content-Type': 'application/json'
             },
-            body: JSON.stringify(toDeveloper(state))
+            body: JSON.stringify(state)
          })
       )
    } catch (err) {
@@ -64,136 +62,4 @@ const saveDeveloper = async state => {
    }
 }
 
-const toDeveloper = state => {
-   const experiences = state.experiences.map(exp => ({
-      id: exp.id,
-      company: exp.company,
-      position: exp.position,
-      startDate: exp.startDate,
-      endDate: exp.endDate,
-      content: exp.content
-   }))
-   return {
-      summary: state.summary,
-      skills: state.skills,
-      experiences
-   }
-}
-
-const clientError = err => err.type === 1
-
-const anyError = state =>
-   Boolean(
-      state.summaryErrors.some(clientError) ||
-         state.skillsErrors.some(clientError) ||
-         state.experiencesErrors.some(clientError) ||
-         state.experiences.some(
-            exp =>
-               exp.companyErrors.some(clientError) ||
-               exp.positionErrors.some(clientError) ||
-               exp.startDateErrors.some(clientError) ||
-               exp.endDateErrors.some(clientError) ||
-               exp.contentErrors.some(clientError)
-         ) ||
-         state.sideProjectErrors.some(clientError) ||
-         state.sideProjects.some(
-            proj => proj.titleErrors.some(clientError) || proj.contentErrors.some(clientError)
-         )
-   )
-
-const validate = state => {
-   state.summaryErrors = richtextEmptyValidator('summary', state.summaryErrors)(state.summary)
-   state.skillsErrors = emptyValidator('skills', state.skillsErrors)(state.skills)
-   state.experiences.forEach(checkExperienceEmptiness)
-   state.sideProjects.forEach(checkSideProjectEmptiness)
-   checkDuplicateExperiences(state.experiences)
-   checkDateOverlaps(state.experiences)
-   checkDuplicateSideProject(state.sideProjects)
-}
-
-const checkExperienceEmptiness = experience => {
-   experience.companyErrors = emptyValidator('company', experience.companyErrors)(
-      experience.company
-   )
-   experience.positionErrors = emptyValidator('position', experience.positionErrors)(
-      experience.position
-   )
-   experience.startDateErrors = emptyValidator('start date', experience.startDateErrors)(
-      experience.startDate
-   )
-   experience.endDateErrors = emptyValidator('end date', experience.endDateErrors)(
-      experience.endDate
-   )
-   experience.contentErrors = richtextEmptyValidator('content', experience.contentErrors)(
-      experience.content
-   )
-   return experience
-}
-
-const checkSideProjectEmptiness = sideProject => {
-   sideProject.titleErrors = emptyValidator('title', sideProject.titleErrors)(sideProject.title)
-   sideProject.contentErrors = richtextEmptyValidator('content', sideProject.contentErrors)(
-      sideProject.content
-   )
-}
-
-const checkDuplicateExperiences = experiences => {
-   const reverse = experiences
-      .filter(exp => isNotEmpty(exp.company) && isNotEmpty(exp.position))
-      .reverse()
-   for (const experience of reverse) {
-      if (experiences.some(isDuplicate(experience))) {
-         experience.companyErrors.push(experienceDuplicateError(experience))
-      }
-      return
-   }
-}
-
-const isDuplicate = experience1 => experience2 =>
-   experience1 !== experience2 &&
-   experience2.company === experience1.company &&
-   experience2.position === experience1.position
-
-const experienceDuplicateError = experience => ({
-   type: 1,
-   message: `another experience as ${experience.position} at ${experience.company} already exists`
-})
-
-const checkDateOverlaps = experiences => {
-   const reversed = experiences
-      .filter(exp => isNotEmpty(exp.startDate) && isNotEmpty(exp.endDate))
-      .reverse()
-
-   for (const experience of reversed) {
-      const found = experiences.find(overlaps(experience))
-      if (found) {
-         experience.startDateErrors.push(experienceDateOverlapError(found))
-         return
-      }
-   }
-}
-
-const overlaps = experience1 => experience2 =>
-   (new Date(experience1.startDate) > new Date(experience2.startDate) &&
-      new Date(experience1.startDate) < new Date(experience2.endDate)) ||
-   (new Date(experience1.endDate) > new Date(experience2.startDate) &&
-      new Date(experience1.endDate) < new Date(experience2.endDate))
-
-const experienceDateOverlapError = experience => ({
-   type: 1,
-   message: `the date overlaps with ${experience.position} at ${experience.company}`
-})
-
-const isNotEmpty = text => !/^\s*$/.test(text)
-
-const checkDuplicateSideProject = sideProjects => {
-   const reverse = sideProjects.filter(x => isNotEmpty(x.title)).reverse()
-   for (const proj of reverse) {
-      if (sideProjects.some(x => x !== proj && x.title === proj.title)) {
-         proj.titleErrors.push({ type: 1, message: 'a project with this title already exists' })
-         return
-      }
-   }
-}
-
-export { getDeveloper, saveDeveloper, anyError, validate }
+export { getDeveloper, saveDeveloper }

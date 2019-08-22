@@ -1,6 +1,7 @@
 import React from 'react'
 import { render, shallow, mount } from 'enzyme'
 import { Richtext } from './Richtext'
+import { ErrorList } from './ErrorList'
 
 it('sets hasFocus class when focused', () => {
    const richtext = shallow(<Richtext name="content" />)
@@ -45,17 +46,6 @@ it('sets innerHtml with naming convention', () => {
    ).toBe('<p>TEXT</p>')
 })
 
-it('sets errors with naming convention', () => {
-   const errors = render(
-      <Richtext
-         name="content"
-         contentErrors={[{ type: 1, message: 'first' }, { type: 1, message: 'second' }]}
-      />
-   ).find('li')
-   expect(errors.first().text()).toBe('first')
-   expect(errors.last().text()).toBe('second')
-})
-
 it('fires the change event with id and new value', () => {
    mount(
       <Richtext
@@ -70,4 +60,13 @@ it('fires the change event with id and new value', () => {
    )
       .find('article')
       .simulate('blur')
+})
+
+it('does not show errors when showErrors is false', () => {
+   expect(
+      shallow(<Richtext name="sth" showErrors={false} errors="error1" />).find(ErrorList).length
+   ).toBe(0)
+   expect(
+      shallow(<Richtext name="sth" showErrors={true} errors="error1" />).find(ErrorList).length
+   ).toBe(1)
 })

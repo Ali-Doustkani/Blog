@@ -9,10 +9,8 @@ Object {
   "sideProjects": Array [
     Object {
       "content": "Desc",
-      "contentErrors": Array [],
       "id": 1,
       "title": "Richtext",
-      "titleErrors": Array [],
     },
   ],
   "skills": "",

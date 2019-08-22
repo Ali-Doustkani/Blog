@@ -1,24 +1,14 @@
 import uuid from 'uuid/v1'
 import { update } from '../../../utils/fn'
 
-const initialExperienceErrors = experience => ({
-   ...experience,
-   companyErrors: [],
-   positionErrors: [],
-   startDateErrors: [],
-   endDateErrors: [],
-   contentErrors: []
+const createExperience = () => ({
+   id: uuid(),
+   company: '',
+   position: '',
+   startDate: today(),
+   endDate: '',
+   content: ''
 })
-
-const createExperience = () =>
-   initialExperienceErrors({
-      id: uuid(),
-      company: '',
-      position: '',
-      startDate: today(),
-      endDate: '',
-      content: ''
-   })
 
 const addExperience = state => ({
    ...state,
@@ -37,9 +27,9 @@ const updateExperience = (state, action) => ({
 
 function today() {
    const now = new Date()
-   return `${now.getFullYear()}-${String(now.getMonth()).padStart(2, 0)}-${String(
-      now.getDay()
+   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, 0)}-${String(
+      now.getDate()
    ).padStart(2, 0)}`
 }
 
-export { addExperience, updateExperience, deleteExperience, initialExperienceErrors }
+export { addExperience, updateExperience, deleteExperience }

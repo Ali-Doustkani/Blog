@@ -4,7 +4,7 @@ import { dict } from '../../../utils/fn'
 import { load } from './_loading'
 import { addExperience, updateExperience, deleteExperience } from './_experiences'
 import { addSideProject, updateSideProject, deleteSideProject } from './_sideProjects'
-import { showErrors, updateIds, updateDeveloper, prepareForSave } from './_developer'
+import { showErrors, updateIds, updateDeveloper } from './_developer'
 
 const reducer = (state, action) => {
    const selectBy = dict(
@@ -18,7 +18,6 @@ const reducer = (state, action) => {
       ['UPDATE_DEVELOPER', updateDeveloper],
       ['UPDATE_IDS', updateIds],
       ['SHOW_ERRORS', showErrors],
-      ['REMOVE_SERVER_ERRORS', prepareForSave],
       ['TO_IDLE', state => ({ ...state, status: STATUS.IDLE })],
       ['TO_SAVING', state => ({ ...state, status: STATUS.SAVING })],
       ['TO_LOADING', state => ({ ...state, status: STATUS.LOADING })]
@@ -41,7 +40,6 @@ function useActions() {
       addSideProject: () => dispatch({ type: 'ADD_SIDEPROJECT' }),
       updateSideProject: change => dispatch({ type: 'UPDATE_SIDEPROJECT', change }),
       deleteSideProject: id => dispatch({ type: 'DELETE_SIDEPROJECT', id }),
-      removeServerErrors: () => dispatch({ type: 'REMOVE_SERVER_ERRORS' }),
       toSaving: () => dispatch({ type: 'TO_SAVING' }),
       toLoading: () => dispatch({ type: 'TO_LOADING' }),
       toIdle: () => dispatch({ type: 'TO_IDLE' })

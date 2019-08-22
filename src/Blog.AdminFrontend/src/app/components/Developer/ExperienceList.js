@@ -6,8 +6,14 @@ import { Button } from 'Controls'
 const ExperienceList = props => {
    return (
       <div className="container">
-         {props.experiences.map(e => (
-            <Experience key={e.id} {...e} onChange={props.onChange} onDelete={props.onDelete} />
+         {props.experiences.map((e, index) => (
+            <Experience
+               key={e.id}
+               {...e}
+               {...props.errors[index]}
+               onChange={props.onChange}
+               onDelete={props.onDelete}
+            />
          ))}
          <Button onClick={props.onAdd}>Add Work Experience</Button>
       </div>
@@ -16,6 +22,7 @@ const ExperienceList = props => {
 
 ExperienceList.propTypes = {
    experiences: PropTypes.arrayOf(PropTypes.object).isRequired,
+   errors: PropTypes.arrayOf(PropTypes.object),
    onDelete: PropTypes.func,
    onChange: PropTypes.func,
    onAdd: PropTypes.func
