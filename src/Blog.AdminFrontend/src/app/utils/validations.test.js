@@ -1,4 +1,11 @@
-import { isEmpty, isRichtextEmpty, getDuplicate, hasOverlap, getOverlap } from './validations'
+import {
+   isEmpty,
+   isRichtextEmpty,
+   isArrayEmpty,
+   getDuplicate,
+   hasOverlap,
+   getOverlap
+} from './validations'
 
 describe('isEmpty', () => {
    it('returns nothing for correct notEmpty rule', () => {
@@ -170,4 +177,13 @@ describe('overlaps', () => {
       expect(overlapper).toBeUndefined()
       expect(overlapped).toBeUndefined()
    })
+})
+
+describe('isArrayEmpty', () => {
+   test.each([['A', [], true], ['B', null, true], ['C', undefined, true], ['D', ['a'], false]])(
+      'Case %s',
+      (label, array, result) => {
+         expect(isArrayEmpty(array)).toBe(result)
+      }
+   )
 })

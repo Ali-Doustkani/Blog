@@ -13,6 +13,9 @@ const initialize = () => ({
 
 const requiredMessage = result => (result.isEmpty ? [`${result.field} is required`] : [])
 
+const emptyArrayMessage = result =>
+   result.isEmpty ? [`You need to at least one ${result.field}`] : []
+
 const isEmpty = compose(
    requiredMessage,
    input => ({ ...input, isEmpty: validators.isEmpty(input.value) })
@@ -23,60 +26,10 @@ const isRichtextEmpty = compose(
    input => ({ ...input, isEmpty: validators.isRichtextEmpty(input.value) })
 )
 
-const useValidation = () => {
-   const [errors, setErrors] = React.useState(initialize())
-
-   const validate = state => {
-      const result = initialize()
-      result.summaryErrors = isRichtextEmpty({ value: state.summary, field: 'summary' })
-      result.skillsErrors = isEmpty({ value: state.skills, field: 'skills' })
-
-      if (state.experiences && state.experiences.length) {
-         result.experiences = state.experiences.map(validateExperience)
-         const dup = validators.getDuplicate({
-            values: state.experiences,
-            prop: ['company', 'position']
-         })
-         if (dup) {
-            const index = state.experiences.findIndex(x => x.id === dup.id)
-            const experienceResult = result.experiences[index]
-            experienceResult.companyErrors.push(
-               `another experience as ${dup.position} at ${dup.company} already exists`
-            )
-         }
-
-         const [overlapper, overlapped] = validators.getOverlap(state.experiences)
-         if (overlapper) {
-            const index = state.experiences.findIndex(x => x.id == overlapper.id)
-            const experienceResult = result.experiences[index]
-            experienceResult.startDateErrors.push(
-               `the date overlaps with ${overlapped.position} at ${overlapped.company}`
-            )
-         }
-      } else {
-         result.experiencesErrors.push('you need at least one experience')
-      }
-
-      if (state.sideProjects) {
-         result.sideProjects = state.sideProjects.map(validateSideProject)
-
-         const dup = validators.getDuplicate({
-            values: state.sideProjects,
-            prop: 'title'
-         })
-         if (dup) {
-            const index = state.sideProjects.findIndex(x => x.id === dup.id)
-            const projResult = result.sideProjects[index]
-            projResult.titleErrors.push('a project with this title already exists')
-         }
-      }
-
-      result.hasError = hasError(result)
-      setErrors(result)
-      return result
-   }
-   return [errors, validate]
-}
+const isArrayEmpty = compose(
+   emptyArrayMessage,
+   input => ({ ...input, isEmpty: validators.isArrayEmpty(input.value) })
+)
 
 const validateExperience = experience => ({
    companyErrors: isEmpty({ value: experience.company, field: 'company' }),
@@ -86,10 +39,74 @@ const validateExperience = experience => ({
    contentErrors: isRichtextEmpty({ value: experience.content, field: 'content' })
 })
 
+const checkExperienceDup = (state, result) => {
+   const dup = validators.getDuplicate({
+      values: state.experiences,
+      prop: ['company', 'position']
+   })
+   if (dup) {
+      const index = state.experiences.findIndex(x => x.id === dup.id)
+      const experienceResult = result.experiences[index]
+      experienceResult.companyErrors.push(
+         `another experience as ${dup.position} at ${dup.company} already exists`
+      )
+   }
+}
+
+const checkDateOverlaps = (state, result) => {
+   const [overlapper, overlapped] = validators.getOverlap(state.experiences)
+   if (overlapper) {
+      const index = state.experiences.findIndex(x => x.id == overlapper.id)
+      const experienceResult = result.experiences[index]
+      experienceResult.startDateErrors.push(
+         `the date overlaps with ${overlapped.position} at ${overlapped.company}`
+      )
+   }
+}
+
 const validateSideProject = sideProject => ({
    titleErrors: isEmpty({ value: sideProject.title, field: 'title' }),
    contentErrors: isRichtextEmpty({ value: sideProject.content, field: 'content' })
 })
+
+const checkSideProjectDup = (state, result) => {
+   const dup = validators.getDuplicate({
+      values: state.sideProjects,
+      prop: 'title'
+   })
+   if (dup) {
+      const index = state.sideProjects.findIndex(x => x.id === dup.id)
+      const projResult = result.sideProjects[index]
+      projResult.titleErrors.push('a project with this title already exists')
+   }
+}
+
+const useValidation = () => {
+   const [errors, setErrors] = React.useState(initialize())
+
+   const validate = state => {
+      const result = initialize()
+      result.summaryErrors = isRichtextEmpty({ value: state.summary, field: 'summary' })
+      result.skillsErrors = isEmpty({ value: state.skills, field: 'skills' })
+      result.experiencesErrors = isArrayEmpty({ value: state.experiences, field: 'experience' })
+
+      if (state.experiences && state.experiences.length) {
+         result.experiences = state.experiences.map(validateExperience)
+         checkExperienceDup(state, result)
+         checkDateOverlaps(state, result)
+      }
+
+      if (state.sideProjects) {
+         result.sideProjects = state.sideProjects.map(validateSideProject)
+         checkSideProjectDup(state, result)
+      }
+
+      result.hasError = hasError(result)
+      setErrors(result)
+      return result
+   }
+   return [errors, validate]
+}
 
 const hasError = errors =>
    Boolean(

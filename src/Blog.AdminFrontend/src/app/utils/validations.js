@@ -48,4 +48,6 @@ const getOverlap = objs => {
    return [undefined, undefined]
 }
 
-export { isEmpty, isRichtextEmpty, getDuplicate, hasOverlap, getOverlap }
+const isArrayEmpty = array => !array && array.length
+
+export { isEmpty, isRichtextEmpty, isArrayEmpty, getDuplicate, hasOverlap, getOverlap }
