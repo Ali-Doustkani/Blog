@@ -47,3 +47,16 @@ it('calls for add when an experience needs to be added', () => {
 
    expect(fn).toHaveBeenCalled()
 })
+
+it('passes each experience errors to its <Experience/>', () => {
+   const list = shallow(
+      <ExperienceList
+         onAdd={jest.fn()}
+         experiences={[{ id: 1 }, { id: 2 }]}
+         errors={[{ errorId: 11 }, { errorId: 22 }]}
+      />
+   ).find(Experience)
+   expect(list.length).toBe(2)
+   expect(list.findWhere(x => x.prop('id') === 1).prop('errorId')).toBe(11)
+   expect(list.findWhere(x => x.prop('id') === 2).prop('errorId')).toBe(22)
+})

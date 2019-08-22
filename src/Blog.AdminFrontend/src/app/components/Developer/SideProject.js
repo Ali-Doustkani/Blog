@@ -11,7 +11,7 @@ const SideProject = props => (
          <ToolbarButton content="trash-alt" onClick={() => props.onDelete(props.id)} />
       </div>
       <Richtext name="content" showErrors={false} {...props} />
-      <ErrorList {...props} />
+      <ErrorList errors={[props.titleErrors, props.contentErrors]} />
    </div>
 )
 

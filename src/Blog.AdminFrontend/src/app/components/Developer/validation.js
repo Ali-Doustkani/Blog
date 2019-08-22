@@ -14,7 +14,7 @@ const initialize = () => ({
 const requiredMessage = result => (result.isEmpty ? [`${result.field} is required`] : [])
 
 const emptyArrayMessage = result =>
-   result.isEmpty ? [`You need to at least one ${result.field}`] : []
+   result.isEmpty ? [`You need at least one ${result.field}`] : []
 
 const isEmpty = compose(
    requiredMessage,

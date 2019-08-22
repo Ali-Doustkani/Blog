@@ -5,8 +5,14 @@ import SideProject from './SideProject'
 
 const SideProjectList = props => (
    <div className="container">
-      {props.sideProjects.map(e => (
-         <SideProject key={e.id} {...e} onChange={props.onChange} onDelete={props.onDelete} />
+      {props.sideProjects.map((e, index) => (
+         <SideProject
+            key={e.id}
+            {...e}
+            {...props.errors[index]}
+            onChange={props.onChange}
+            onDelete={props.onDelete}
+         />
       ))}
       <Button onClick={props.onAdd}>Add Side Project</Button>
    </div>
@@ -14,6 +20,7 @@ const SideProjectList = props => (
 
 SideProjectList.propTypes = {
    sideProjects: PropTypes.arrayOf(PropTypes.object).isRequired,
+   errors: PropTypes.arrayOf(PropTypes.object),
    onAdd: PropTypes.func,
    onChange: PropTypes.func,
    onDelete: PropTypes.func

@@ -82,6 +82,7 @@ const Developer = ({ notify }) => {
             />
             <SideProjectList
                sideProjects={state.sideProjects}
+               errors={errors.sideProjects}
                onAdd={actions.addSideProject}
                onChange={actions.updateSideProject}
                onDelete={ask(actions.deleteSideProject)}

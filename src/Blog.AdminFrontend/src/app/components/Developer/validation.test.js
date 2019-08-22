@@ -40,13 +40,13 @@ it('checks for empty skills', () => {
 describe('experiences', () => {
    it('checks for experience counts', () => {
       expect(run({ experiences: [] }).experiencesErrors).toContain(
-         'you need at least one experience'
+         'You need at least one experience'
       )
       expect(
          run({
             experiences: [{ id: 1 }]
          })
-      ).not.toContain('you need at least one experience')
+      ).not.toContain('You need at least one experience')
    })
 
    it('checks emptiness', () => {
