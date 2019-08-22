@@ -35,8 +35,12 @@ const Developer = ({ notify }) => {
          actions.updateIds(result.data)
          notify('The developer saved successfully!', 'success')
       } else if (result.status === 'error') {
-         actions.showErrors(result.data)
+         actions.toIdle()
          notify('Could not save the developer information. Checkout the errors.', 'error')
+         console.error('server validation failed', result.data)
+      } else if (result.status === 'fatal') {
+         actions.toIdle()
+         notify(result.data, 'error')
       }
    }
 

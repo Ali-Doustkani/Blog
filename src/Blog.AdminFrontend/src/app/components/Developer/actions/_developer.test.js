@@ -1,7 +1,5 @@
-import { updateDeveloper, showErrors, updateIds } from './_developer'
+import { updateDeveloper, updateIds } from './_developer'
 import { initialState, STATUS } from './initials'
-
-jest.mock('./_serverErrorWriter')
 
 describe('updating', () => {
    it('updates fields', () => {
@@ -40,16 +38,5 @@ describe('updating ids', () => {
       const newState = updateIds(state, { data: { experiences: [] } })
 
       expect(newState.status).toBe(STATUS.IDLE)
-   })
-})
-
-describe('showErrors', () => {
-   it('sets status to idle', () => {
-      const initial = {
-         status: STATUS.LOADING
-      }
-      const state = showErrors(initial, { data: null })
-
-      expect(state.status).toBe(STATUS.IDLE)
    })
 })

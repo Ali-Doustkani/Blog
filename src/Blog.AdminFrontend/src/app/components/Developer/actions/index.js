@@ -4,7 +4,7 @@ import { dict } from '../../../utils/fn'
 import { load } from './_loading'
 import { addExperience, updateExperience, deleteExperience } from './_experiences'
 import { addSideProject, updateSideProject, deleteSideProject } from './_sideProjects'
-import { showErrors, updateIds, updateDeveloper } from './_developer'
+import { updateIds, updateDeveloper } from './_developer'
 
 const reducer = (state, action) => {
    const selectBy = dict(
@@ -17,7 +17,6 @@ const reducer = (state, action) => {
       ['DELETE_SIDEPROJECT', deleteSideProject],
       ['UPDATE_DEVELOPER', updateDeveloper],
       ['UPDATE_IDS', updateIds],
-      ['SHOW_ERRORS', showErrors],
       ['TO_IDLE', state => ({ ...state, status: STATUS.IDLE })],
       ['TO_SAVING', state => ({ ...state, status: STATUS.SAVING })],
       ['TO_LOADING', state => ({ ...state, status: STATUS.LOADING })]
@@ -31,7 +30,6 @@ function useActions() {
    const actions = {
       load: result => dispatch({ type: 'LOAD', result }),
       updateIds: data => dispatch({ type: 'UPDATE_IDS', data }),
-      showErrors: data => dispatch({ type: 'SHOW_ERRORS', data }),
       restart: () => dispatch({ type: 'RESTART' }),
       updateDeveloper: change => dispatch({ type: 'UPDATE_DEVELOPER', change }),
       addExperience: () => dispatch({ type: 'ADD_EXPERIENCE' }),
