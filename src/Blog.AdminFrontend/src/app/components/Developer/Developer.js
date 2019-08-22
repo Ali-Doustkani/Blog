@@ -61,7 +61,7 @@ const Developer = ({ notify }) => {
             <Richtext
                label="Summary"
                name="summary"
-               autofocus
+               autoFocus
                {...state}
                summaryErrors={errors.summaryErrors}
                onChange={actions.updateDeveloper}

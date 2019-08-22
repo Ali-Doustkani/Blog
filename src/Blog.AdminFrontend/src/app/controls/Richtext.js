@@ -28,7 +28,7 @@ function Richtext(props) {
 
    useEffect(() => {
       setRich(create(editorRef.current, OPTIONS))
-      if (props.autofocus) {
+      if (props.autoFocus) {
          editorRef.current.firstChild.focus()
       }
    }, [])
@@ -104,7 +104,7 @@ function Richtext(props) {
 Richtext.propTypes = {
    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
    name: PropTypes.string.isRequired,
-   autofocus: PropTypes.bool,
+   autoFocus: PropTypes.bool,
    onChange: PropTypes.func,
    label: PropTypes.string,
    showErrors: PropTypes.bool
