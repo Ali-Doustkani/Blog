@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Richtext, ErrorList, Input, ToolbarButton } from 'Controls'
 
 const Experience = props => (
-   <div className="work-experience-group">
+   <div className="sub-form-group">
       <div className="text-group toolbar">
          <label>Work Experience:</label>
          <Input name="company" {...props} autoFocus />

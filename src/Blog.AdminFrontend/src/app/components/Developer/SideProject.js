@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Input, Richtext, ToolbarButton, ErrorList } from 'Controls'
 
 const SideProject = props => (
-   <div className="work-experience-group">
+   <div className="sub-form-group">
       <div className="text-group toolbar">
          <label>Side Project:</label>
          <Input name="title" autoFocus {...props} />
