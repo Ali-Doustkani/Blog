@@ -18,9 +18,9 @@ const SideProject = props => (
 SideProject.propTypes = {
    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
    title: PropTypes.string,
-   titleErrors: PropTypes.arrayOf(PropTypes.object),
+   titleErrors: PropTypes.arrayOf(PropTypes.string),
    content: PropTypes.string,
-   contentErrors: PropTypes.arrayOf(PropTypes.object),
+   contentErrors: PropTypes.arrayOf(PropTypes.string),
    onDelete: PropTypes.func
 }
 
