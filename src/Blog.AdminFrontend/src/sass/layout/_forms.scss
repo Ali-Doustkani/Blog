@@ -83,7 +83,8 @@
    }
 
    > textarea {
-      height: 70px;
+      min-height: 70px;
+      resize: vertical;
    }
 
    > input[type='radio'] {
