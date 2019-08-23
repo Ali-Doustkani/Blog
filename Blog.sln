@@ -1,11 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2016
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29215.179
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blog", "Blog\Blog.csproj", "{A5E39C1A-CCF4-41F0-A02B-7B91507CF979}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blog", "src\Blog\Blog.csproj", "{A5E39C1A-CCF4-41F0-A02B-7B91507CF979}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blog.Tests", "Blog.Tests\Blog.Tests.csproj", "{A8644816-6D0A-4B13-9CD8-273DE31AB708}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blog.Tests", "test\Blog.Tests\Blog.Tests.csproj", "{A8644816-6D0A-4B13-9CD8-273DE31AB708}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{FDEED0D7-E9C0-4A9A-B725-A58A1945ECB2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{8A3D6134-C7AC-4A60-85B6-62427E76D487}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,6 +28,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A5E39C1A-CCF4-41F0-A02B-7B91507CF979} = {FDEED0D7-E9C0-4A9A-B725-A58A1945ECB2}
+		{A8644816-6D0A-4B13-9CD8-273DE31AB708} = {8A3D6134-C7AC-4A60-85B6-62427E76D487}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {08A4AEC7-9052-4672-9AFE-D0F84B2C2F36}
