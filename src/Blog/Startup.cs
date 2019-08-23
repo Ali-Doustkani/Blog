@@ -47,6 +47,10 @@ namespace Blog
          services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<BlogContext>();
          services.AddAutoMapper(GetType().Assembly);
          services.AddBlogTypes();
+         services.AddSpaStaticFiles(options =>
+         {
+            options.RootPath = "ClientApp/dist";
+         });
       }
 
       public void Configure(IApplicationBuilder app)
@@ -71,7 +75,20 @@ namespace Blog
          }
 
          app.UseStaticFiles();
+         app.UseSpaStaticFiles();
          app.UseAuthentication();
+
+         app.Map("/admin/developer", clientApp =>
+         {
+            clientApp.UseSpa(spa =>
+            {
+               if (_env.IsDevelopment())
+               {
+                  spa.UseProxyToSpaDevelopmentServer("http://localhost:1234");
+               }
+            });
+         });
+
          app.UseMvc(cfg =>
          {
             cfg.MapRoute("root", "/", new { controller = "home", action = "index", language = "fa" })

@@ -5,6 +5,7 @@
    "description": "administrator react pages",
    "scripts": {
       "start": "parcel public/index.html",
+      "start:vs": "cross-env NODE_ENV=vsDev parcel public/index.html",
       "build": "parcel build public/index.html",
       "test": "jest --watchAll",
       "lint": "eslint ."
@@ -15,6 +16,7 @@
       "babel-eslint": "^10.0.2",
       "body-parser": "^1.19.0",
       "cors": "^2.8.5",
+      "cross-env": "^5.2.0",
       "enzyme": "^3.10.0",
       "enzyme-adapter-react-16": "^1.14.0",
       "eslint": "^6.1.0",
