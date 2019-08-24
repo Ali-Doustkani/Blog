@@ -12,6 +12,7 @@ namespace Blog.Services.Home
    {
       PostViewModel Get(string urlTitle);
       IEnumerable<PostRow> GetPosts(Language language);
+      DeveloperViewModel GetDeveloper();
    }
 
    public class HomeServices : IHomeServices
@@ -40,7 +41,11 @@ namespace Blog.Services.Home
           .Where(x => x.Info.Language == language)
           .Select(_mapper.Map<PostRow>);
 
+      public DeveloperViewModel GetDeveloper() =>
+         _mapper.Map<DeveloperViewModel>(_context.GetDeveloper());
+
       public void Dispose() =>
          _context.Dispose();
+
    }
 }

@@ -8,24 +8,25 @@ namespace Blog.Domain.DeveloperStory
    {
       public Developer(string summary, string skills)
       {
-         Summary = Its.NotEmpty(summary, nameof(Summary));
+         _summary = Its.NotEmpty(summary, nameof(summary));
          Skills = Its.NotEmpty(skills, nameof(Skills));
          _experiences = new List<Experience>();
          _sideProjects = new List<SideProject>();
       }
 
+      private string _summary;
       private readonly List<Experience> _experiences;
       private readonly List<SideProject> _sideProjects;
 
       public int Id { get; private set; }
-      public string Summary { get; private set; }
+      public HtmlText Summary => new HtmlText(_summary);
       public string Skills { get; private set; }
       public IReadOnlyCollection<Experience> Experiences => _experiences.OrderBy(x => x.StartDate).ToArray();
       public IReadOnlyCollection<SideProject> SideProjects => _sideProjects.ToArray();
 
       public void Update(string summary, string skills)
       {
-         Summary = Its.NotEmpty(summary, nameof(Summary));
+         _summary = Its.NotEmpty(summary, nameof(summary));
          Skills = Its.NotEmpty(skills, nameof(Skills));
       }
 
@@ -74,5 +75,7 @@ namespace Blog.Domain.DeveloperStory
             throw new DomainProblemException("Title", $"The '{title}' project already exists");
          _sideProjects.Add(new SideProject(id, title, content));
       }
+
+      public IEnumerable<string> GetSkillLines() => Skills.Split('\n');
    }
 }

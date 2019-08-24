@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
 using Blog.Domain.Blogging;
+using Blog.Domain.DeveloperStory;
 
 namespace Blog.Services.Home
 {
-   public class PostProfile : Profile
+   public class MappingProfile : Profile
    {
-      public PostProfile()
+      public MappingProfile()
       {
          CreateMap<PostInfo, PostRow>()
              .ForMember(
@@ -30,6 +31,24 @@ namespace Blog.Services.Home
              .ForMember(
                  dest => dest.Content, o => o.MapFrom(src => src.PostContent.Content))
              .IncludeMembers(x => x.Info);
+
+         CreateMap<Developer, DeveloperViewModel>()
+            .ForMember(
+               dest => dest.Skills,
+               o => o.MapFrom(src => src.GetSkillLines()))
+            .ForMember(
+               dest => dest.Summary,
+               o => o.MapFrom(src => src.Summary.Content));
+
+         CreateMap<Experience, ExperienceViewModel>()
+            .ForMember(
+               dest => dest.Content,
+               o => o.MapFrom(src => src.Content.Content));
+
+         CreateMap<SideProject, SideProjectViewModel>()
+            .ForMember(
+               dest => dest.Content,
+               o => o.MapFrom(src => src.Content.Content));
       }
 
       public class ShortDateResolver : IValueResolver<PostInfo, PostRow, string>
@@ -38,7 +57,6 @@ namespace Blog.Services.Home
               source.Language == Language.English ?
               source.PublishDate.ToString("MMM yyyy") :
               source.GetShortPersianDate();
-
       }
 
       public class LongDateResolver : IValueResolver<PostInfo, PostViewModel, string>

@@ -22,6 +22,12 @@ namespace Blog.Domain
       public DbSet<PostContent> PostContents { get; set; }
       public DbSet<Developer> Developers { get; set; }
 
+      public Developer GetDeveloper() =>
+         Developers
+         .Include(x => x.Experiences)
+         .Include(x => x.SideProjects)
+         .SingleOrDefault();
+
       public void AddOrUpdate<T>(T entity)
          where T : DomainEntity
       {
@@ -113,7 +119,8 @@ namespace Blog.Domain
          modelBuilder.Entity<Developer>(dev =>
          {
             dev
-            .Property(x => x.Summary)
+            .Property("_summary")
+            .HasColumnName("Summary")
             .IsRequired();
 
             dev
@@ -140,7 +147,8 @@ namespace Blog.Domain
             .IsRequired();
 
             ex
-            .Property(x => x.Content)
+            .Property("_content")
+            .HasColumnName("Content")
             .IsRequired();
 
             ex
@@ -157,7 +165,8 @@ namespace Blog.Domain
             .IsRequired();
 
             sp
-            .Property(x => x.Content)
+            .Property("_content")
+            .HasColumnName("Content")
             .IsRequired();
 
             sp

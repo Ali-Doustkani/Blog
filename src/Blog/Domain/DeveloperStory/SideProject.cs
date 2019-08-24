@@ -6,11 +6,13 @@
       {
          Id = id;
          Title = Its.NotEmpty(title, nameof(Title));
-         Content = Its.NotEmpty(content, nameof(Content));
+         _content = Its.NotEmpty(content, nameof(content));
       }
+
+      private string _content;
 
       public int Id { get; private set; }
       public string Title { get; private set; }
-      public string Content { get; private set; }
+      public HtmlText Content => new HtmlText(_content);
    }
 }

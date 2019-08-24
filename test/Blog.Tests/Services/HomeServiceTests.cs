@@ -1,4 +1,5 @@
 ﻿using Blog.Domain.Blogging;
+using Blog.Domain.DeveloperStory;
 using Blog.Services.Home;
 using FluentAssertions;
 using System;
@@ -13,7 +14,7 @@ namespace Blog.Tests.Services.Home
       public HomeServiceTests()
       {
          _context = new ServiceTestContext<HomeServices>();
-         _context.WithProfile<PostProfile>();
+         _context.WithProfile<MappingProfile>();
          _context.Seed(db =>
          {
             db.Drafts.Add(new Draft
@@ -155,6 +156,65 @@ namespace Blog.Tests.Services.Home
                    Tags = new[] { "C#", ".NET", "ASP.NET" },
                    Title = "سی شارپ در 24 سال"
                 });
+         }
+      }
+
+      [Fact]
+      public void GetDeveloper()
+      {
+         using (var db = _context.GetDatabase())
+         {
+            var developer = new Developer("<p contenteditable=\"true\">Hi I'm <strong>Ali</strong></p>", "C#\nJS");
+            developer.AddExperience("Lodgify",
+               "C# Developer",
+               new DateTime(2018, 1, 1),
+               new DateTime(2019, 1, 1),
+               "<p contenteditable>worked on web app</p>");
+            developer.AddExperience("Parmis",
+               "C# Programmer",
+               new DateTime(2017, 1, 1),
+               new DateTime(2018, 1, 1),
+               "<p contenteditable>worked on desktop app</p>");
+            developer.AddSideProject("Richtext", "<p contenteditable>HTML Richtext</p>");
+            db.Developers.Add(developer);
+            db.SaveChanges();
+         }
+
+         using (var svc = _context.GetService())
+         {
+            var vm = svc.GetDeveloper();
+            vm.Should().BeEquivalentTo(new
+            {
+               Summary = "<p>Hi I'm <strong>Ali</strong></p>",
+               Skills = new[] { "C#", "JS" },
+               Experiences = new[]
+               {
+                  new
+                  {
+                     Company = "Parmis",
+                     Position = "C# Programmer",
+                     StartDate = new DateTime(2017,1,1),
+                     EndDate = new  DateTime(2018,1,1),
+                     Content = "<p>worked on desktop app</p>"
+                  },
+                  new
+                  {
+                     Company = "Lodgify",
+                     Position = "C# Developer",
+                     StartDate = new DateTime(2018,1,1),
+                     EndDate = new DateTime(2019,1,1),
+                     Content = "<p>worked on web app</p>"
+                  }
+               },
+               SideProjects = new[]
+               {
+                  new
+                  {
+                     Title = "Richtext",
+                     Content = "<p>HTML Richtext</p>"
+                  }
+               }
+            });
          }
       }
    }

@@ -82,10 +82,10 @@ namespace Blog
          {
             clientApp.UseSpa(spa =>
             {
-               if (_env.IsDevelopment())
-               {
-                  spa.UseProxyToSpaDevelopmentServer("http://localhost:1234");
-               }
+               //if (_env.IsDevelopment())
+               //{
+               //   spa.UseProxyToSpaDevelopmentServer("http://localhost:1234");
+               //}
             });
          });
 

@@ -29,7 +29,10 @@ namespace Blog.Tests.Domain.DeveloperStory
                Position = "C# Developer",
                StartDate = new DateTime(2015, 1, 1),
                EndDate = new DateTime(2016, 1, 1),
-               Content = "done tasks"
+               Content = new
+               {
+                  RawContent = "done tasks"
+               }
             });
       }
 
@@ -138,7 +141,10 @@ namespace Blog.Tests.Domain.DeveloperStory
                Position = "JS Developer",
                StartDate = new DateTime(2017, 1, 1),
                EndDate = new DateTime(2018, 1, 1),
-               Content = "done tasks"
+               Content = new
+               {
+                  RawContent = "done tasks"
+               }
             });
       }
 
@@ -207,7 +213,10 @@ namespace Blog.Tests.Domain.DeveloperStory
             .ContainEquivalentOf(new
             {
                Title = "Richtext",
-               Content = "web editor"
+               Content = new
+               {
+                  RawContent = "web editor"
+               }
             });
       }
 
@@ -237,7 +246,10 @@ namespace Blog.Tests.Domain.DeveloperStory
             .ContainEquivalentOf(new
             {
                Title = "Richtext Editor",
-               Content = "HTML Editor"
+               Content = new
+               {
+                  RawContent = "HTML Editor"
+               }
             });
       }
 
@@ -252,6 +264,15 @@ namespace Blog.Tests.Domain.DeveloperStory
          developer.SideProjects
             .Should()
             .BeEmpty();
+      }
+
+      [Fact]
+      public void GetSkillLines()
+      {
+         var developer = new Developer("passionate developer", "C#\nJS");
+         developer.GetSkillLines()
+            .Should()
+            .ContainInOrder("C#", "JS");
       }
    }
 }

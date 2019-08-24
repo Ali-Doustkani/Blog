@@ -14,14 +14,16 @@ namespace Blog.Domain.DeveloperStory
          Position = Its.NotEmpty(position, nameof(Position));
          StartDate = startDate;
          EndDate = endDate;
-         Content = Its.NotEmpty(content, nameof(Content));
+         _content = Its.NotEmpty(content, nameof(content));
       }
+
+      private string _content;
 
       public int Id { get; private set; }
       public string Company { get; private set; }
       public string Position { get; private set; }
       public DateTime StartDate { get; private set; }
       public DateTime EndDate { get; private set; }
-      public string Content { get; private set; }
+      public HtmlText Content => new HtmlText(_content);
    }
 }

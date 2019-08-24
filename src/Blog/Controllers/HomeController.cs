@@ -38,11 +38,15 @@ namespace Blog.Controllers
          return View(post);
       }
 
-      [IgnoreMigration]
-      public ViewResult About()
+      public IActionResult About()
       {
+         var developer = _services.GetDeveloper();
+         if (developer == null)
+            return NotFound();
+
          ViewData["language"] = Language.English;
-         return View();
+
+         return View(developer);
       }
 
       [IgnoreMigration]

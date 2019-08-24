@@ -7,7 +7,10 @@ namespace Blog.Services.DeveloperStory
    {
       public MappingProfile()
       {
-         CreateMap<Developer, DeveloperEntry>();
+         CreateMap<Developer, DeveloperEntry>()
+            .ForMember(
+               dest => dest.Summary,
+               o => o.MapFrom(src => src.Summary.RawContent));
 
          CreateMap<Experience, ExperienceEntry>()
             .ForMember(
@@ -15,9 +18,15 @@ namespace Blog.Services.DeveloperStory
                o => o.MapFrom(src => src.StartDate.ToString("yyyy-MM-dd")))
             .ForMember(
                dest => dest.EndDate,
-               o => o.MapFrom(src => src.EndDate.ToString("yyyy-MM-dd")));
+               o => o.MapFrom(src => src.EndDate.ToString("yyyy-MM-dd")))
+             .ForMember(
+               dest => dest.Content,
+               o => o.MapFrom(src => src.Content.RawContent));
 
-         CreateMap<SideProject, SideProjectEntry>();
+         CreateMap<SideProject, SideProjectEntry>()
+            .ForMember(
+               dest => dest.Content,
+               o => o.MapFrom(src => src.Content.RawContent));
       }
    }
 }

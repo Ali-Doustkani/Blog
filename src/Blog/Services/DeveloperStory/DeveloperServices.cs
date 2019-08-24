@@ -25,7 +25,7 @@ namespace Blog.Services.DeveloperStory
       private readonly IMapper _mapper;
 
       public DeveloperEntry Get() =>
-         _mapper.Map<DeveloperEntry>(TheDeveloper());
+         _mapper.Map<DeveloperEntry>(_context.GetDeveloper());
 
       public SaveResult Save(DeveloperEntry developerEntry)
       {
@@ -38,7 +38,7 @@ namespace Blog.Services.DeveloperStory
          {
             if (_context.Developers.Any())
             {
-               var developer = TheDeveloper();
+               var developer = _context.GetDeveloper();
                developer.Update(developerEntry.Summary, developerEntry.Skills);
 
                // experiences
@@ -126,13 +126,6 @@ namespace Blog.Services.DeveloperStory
             return SaveResult.Problematic(ex);
          }
       }
-
-      private Developer TheDeveloper() =>
-         _context
-            .Developers
-            .Include(x => x.Experiences)
-            .Include(x => x.SideProjects)
-            .SingleOrDefault();
 
       public void Dispose() =>
          _context.Dispose();
