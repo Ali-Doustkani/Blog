@@ -54,7 +54,7 @@ const checkExperienceDup = (state, result) => {
    }
 }
 
-const checkDateOverlaps = (state, result) => {
+const checkExperienceOverlaps = (state, result) => {
    const [overlapper, overlapped] = validators.getOverlap(state.experiences)
    if (overlapper) {
       const index = state.experiences.findIndex(x => x.id == overlapper.id)
@@ -82,6 +82,36 @@ const checkSideProjectDup = (state, result) => {
    }
 }
 
+const validateEducation = education => ({
+   degreeErrors: isEmpty({ value: education.degree, field: 'degree' }),
+   universityErrors: isEmpty({ value: education.university, field: 'university' }),
+   startDateErrors: isEmpty({ value: education.startDate, field: 'start date' }),
+   endDateErrors: isEmpty({ value: education.endDate, field: 'end date' })
+})
+
+const checkEducationDup = (state, result) => {
+   const dup = validators.getDuplicate({
+      values: state.educations,
+      prop: ['degree', 'university']
+   })
+   if (dup) {
+      const index = state.educations.findIndex(x => x.id === dup.id)
+      const projResult = result.educations[index]
+      projResult.degreeErrors.push('an education with this degree & university already exists')
+   }
+}
+
+const checkEducationOverlaps = (state, result) => {
+   const [overlapper, overlapped] = validators.getOverlap(state.educations)
+   if (overlapper) {
+      const index = state.educations.findIndex(x => x.id == overlapper.id)
+      const educationResult = result.educations[index]
+      educationResult.startDateErrors.push(
+         `the date overlaps with ${overlapped.degree} at ${overlapped.university}`
+      )
+   }
+}
+
 const useValidation = () => {
    const [errors, setErrors] = React.useState(initialize())
 
@@ -91,15 +121,21 @@ const useValidation = () => {
       result.skillsErrors = isEmpty({ value: state.skills, field: 'skills' })
       result.experiencesErrors = isArrayEmpty({ value: state.experiences, field: 'experience' })
 
-      if (state.experiences && state.experiences.length) {
+      if (state.experiences) {
          result.experiences = state.experiences.map(validateExperience)
          checkExperienceDup(state, result)
-         checkDateOverlaps(state, result)
+         checkExperienceOverlaps(state, result)
       }
 
       if (state.sideProjects) {
          result.sideProjects = state.sideProjects.map(validateSideProject)
          checkSideProjectDup(state, result)
+      }
+
+      if (state.educations) {
+         result.educations = state.educations.map(validateEducation)
+         checkEducationDup(state, result)
+         checkEducationOverlaps(state, result)
       }
 
       result.hasError = hasError(result)
@@ -122,7 +158,14 @@ const hasError = errors =>
                x.endDateErrors.length ||
                x.contentErrors.length
          ) ||
-         errors.sideProjects.some(x => x.titleErrors.length || x.contentErrors.length)
+         errors.sideProjects.some(x => x.titleErrors.length || x.contentErrors.length) ||
+         errors.educations.some(
+            x =>
+               x.degreeErrors.length ||
+               x.universityErrors.length ||
+               x.startDateErrors.length ||
+               x.endDateErrors.length
+         )
    )
 
 export { useValidation }

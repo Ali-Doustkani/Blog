@@ -37,7 +37,7 @@ it('checks for empty skills', () => {
    expect(result.skillsErrors).toEqual([])
 })
 
-describe('experiences', () => {
+describe('experiences validations', () => {
    it('checks for experience counts', () => {
       expect(run({ experiences: [] }).experiencesErrors).toContain(
          'You need at least one experience'
@@ -235,6 +235,142 @@ describe('sideProject validations', () => {
          titleErrors: ['title is required'],
          contentErrors: []
       })
+   })
+})
+
+describe('education validations', () => {
+   it('checks emptiness', () => {
+      const state = {
+         educations: [
+            {
+               id: 1,
+               degree: '',
+               degreeErrors: [],
+               university: '',
+               universityErrors: [],
+               startDate: '',
+               startDateErrors: [],
+               endDate: '',
+               endDateErrors: []
+            }
+         ]
+      }
+      const errors = run(state)
+      expect(errors.hasError).toBe(true)
+      expect(errors.educations).toEqual([
+         {
+            degreeErrors: ['degree is required'],
+            universityErrors: ['university is required'],
+            startDateErrors: ['start date is required'],
+            endDateErrors: ['end date is required']
+         }
+      ])
+   })
+
+   it('prevents duplication', () => {
+      const state = {
+         educations: [
+            {
+               id: 1,
+               degree: 'BS',
+               university: 'S&C',
+               startDate: '2010-01-01',
+               endDate: '2011-01-01'
+            },
+            {
+               id: 2,
+               degree: 'BS',
+               university: 'S&C',
+               startDate: '2012-01-01',
+               endDate: '2013-01-01'
+            }
+         ]
+      }
+
+      const result = run(state)
+
+      expect(result.hasError).toBe(true)
+      expect(result.educations[0]).toEqual({
+         degreeErrors: [],
+         universityErrors: [],
+         startDateErrors: [],
+         endDateErrors: []
+      })
+      expect(result.educations[1]).toEqual({
+         degreeErrors: ['an education with this degree & university already exists'],
+         universityErrors: [],
+         startDateErrors: [],
+         endDateErrors: []
+      })
+   })
+
+   it('does not check education with empty degree or university for duplication', () => {
+      const state = {
+         educations: [
+            {
+               id: 1,
+               degree: '',
+               university: 'S&C',
+               startDate: '2010-01-01',
+               endDate: '2011-01-01'
+            },
+            {
+               id: 2,
+               degree: '',
+               university: 'S&C',
+               startDate: '2012-01-01',
+               endDate: '2013-01-01'
+            }
+         ]
+      }
+
+      const result = run(state)
+
+      expect(result.hasError).toBe(true)
+      expect(result.educations[0]).toEqual({
+         degreeErrors: ['degree is required'],
+         universityErrors: [],
+         startDateErrors: [],
+         endDateErrors: []
+      })
+      expect(result.educations[1]).toEqual({
+         degreeErrors: ['degree is required'],
+         universityErrors: [],
+         startDateErrors: [],
+         endDateErrors: []
+      })
+   })
+
+   it('checks date overlaps', () => {
+      const state = {
+         educations: [
+            {
+               id: 1,
+               degree: 'BS',
+               university: 'S&C',
+               startDate: '2010-1-1',
+               endDate: '2011-1-1'
+            },
+            {
+               id: 2,
+               degree: 'MS',
+               university: 'Coll',
+               startDate: '2011-1-2',
+               endDate: '2012-1-1'
+            },
+            {
+               id: 3,
+               startDate: '2010-6-1',
+               endDate: '2012-1-1'
+            }
+         ]
+      }
+
+      const errors = run(state)
+      expect(errors.hasError).toBe(true)
+      expect(errors.educations[0].startDateErrors).toEqual([])
+      expect(errors.educations[1].startDateErrors).toEqual([])
+      expect(errors.educations[2].startDateErrors).toEqual(['the date overlaps with BS at S&C'])
    })
 })
 

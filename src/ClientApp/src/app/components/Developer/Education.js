@@ -12,15 +12,15 @@ const Education = props => (
          <Input name="endDate" type="date" className="hide-arrow" {...props} />
          <div className="separator" />
          <ToolbarButton content="trash-alt" onClick={() => props.onDelete(props.id)} />
-         <ErrorList
-            errors={[
-               props.degreeErrors,
-               props.universityErrors,
-               props.startDateErrors,
-               props.endDateErrors
-            ]}
-         />
       </div>
+      <ErrorList
+         errors={[
+            props.degreeErrors,
+            props.universityErrors,
+            props.startDateErrors,
+            props.endDateErrors
+         ]}
+      />
    </div>
 )
 
