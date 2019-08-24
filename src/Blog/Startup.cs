@@ -49,7 +49,7 @@ namespace Blog
          services.AddBlogTypes();
          services.AddSpaStaticFiles(options =>
          {
-            options.RootPath = "ClientApp/dist";
+            options.RootPath = "../ClientApp/dist";
          });
       }
 
