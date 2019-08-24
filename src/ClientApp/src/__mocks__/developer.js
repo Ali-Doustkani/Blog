@@ -1,5 +1,5 @@
 module.exports = {
-   summary: '<p contenteditable="true">Summary</p><p contenteditable="true">Second</p>',
+   summary: '<h3 contenteditable="true">hire me</h3><p contenteditable="true">Hi Im <strong>Ali</strong></p>',
    skills: 'C#\nJS\n123',
    experiences: [
       {
