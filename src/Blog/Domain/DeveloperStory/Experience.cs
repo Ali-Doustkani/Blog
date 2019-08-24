@@ -1,19 +1,15 @@
-﻿using System;
-
-namespace Blog.Domain.DeveloperStory
+﻿namespace Blog.Domain.DeveloperStory
 {
    public class Experience
    {
-      public Experience(int id, string company, string position, DateTime startDate, DateTime endDate, string content)
-      {
-         if (startDate >= endDate)
-            throw new DomainProblemException(nameof(StartDate), "StartDate should be smaller than EndDate");
+      private Experience() { }
 
+      public Experience(int id, string company, string position, Period period, string content)
+      {
          Id = id;
          Company = Its.NotEmpty(company, nameof(Company));
          Position = Its.NotEmpty(position, nameof(Position));
-         StartDate = startDate;
-         EndDate = endDate;
+         Period = Its.NotEmpty(period, nameof(period));
          _content = Its.NotEmpty(content, nameof(content));
       }
 
@@ -22,8 +18,7 @@ namespace Blog.Domain.DeveloperStory
       public int Id { get; private set; }
       public string Company { get; private set; }
       public string Position { get; private set; }
-      public DateTime StartDate { get; private set; }
-      public DateTime EndDate { get; private set; }
+      public Period Period { get; private set; }
       public HtmlText Content => new HtmlText(_content);
    }
 }

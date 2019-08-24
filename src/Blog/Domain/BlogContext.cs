@@ -158,6 +158,12 @@ namespace Blog.Domain
             ex
             .Property("DeveloperId")
             .IsRequired();
+
+            ex.OwnsOne(x => x.Period, p =>
+            {
+               p.Property(y => y.StartDate).HasColumnName("StartDate");
+               p.Property(y => y.EndDate).HasColumnName("EndDate");
+            });
          });
 
          modelBuilder.Entity<SideProject>(sp =>

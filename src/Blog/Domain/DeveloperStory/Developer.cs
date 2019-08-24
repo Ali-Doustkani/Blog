@@ -23,7 +23,7 @@ namespace Blog.Domain.DeveloperStory
       public int Id { get; private set; }
       public HtmlText Summary => new HtmlText(_summary);
       public string Skills { get; private set; }
-      public IReadOnlyCollection<Experience> Experiences => _experiences.OrderBy(x => x.StartDate).ToArray();
+      public IReadOnlyCollection<Experience> Experiences => _experiences.OrderBy(x => x.Period.StartDate).ToArray();
       public IReadOnlyCollection<SideProject> SideProjects => _sideProjects.ToArray();
       public IReadOnlyCollection<Education> Educations => _educations.OrderBy(x => x.Period.StartDate).ToArray();
 
@@ -76,10 +76,11 @@ namespace Blog.Domain.DeveloperStory
          if (_experiences.Any(x => x.Company == company && x.Position == position))
             throw new DomainProblemException($"An experience of {position} at {company} already exists");
 
-         if (_experiences.Any(x => (startDate > x.StartDate && startDate < x.EndDate) || (endDate > x.StartDate && endDate < x.EndDate)))
+         var period = new Period(startDate, endDate);
+         if (_experiences.Any(x => x.Period.Overlaps(period)))
             throw new DomainProblemException("Experiences cannot have time overlaps with eachothers");
 
-         _experiences.Add(new Experience(id, company, position, startDate, endDate, content));
+         _experiences.Add(new Experience(id, company, position, period, content));
       }
 
       private void AddSideProject(int id, string title, string content)

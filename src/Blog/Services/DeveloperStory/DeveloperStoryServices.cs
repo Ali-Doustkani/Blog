@@ -57,6 +57,7 @@ namespace Blog.Services.DeveloperStory
                {
                   if (int.TryParse(experience.Id, out int id))
                   {
+                     _context.Entry(developer.Experiences.Single(x => x.Id.ToString() == experience.Id).Period).State = EntityState.Detached;
                      _context.Entry(developer.Experiences.Single(x => x.Id.ToString() == experience.Id)).State = EntityState.Detached;
                      developer.UpdateExperience(id,
                         experience.Company,
@@ -64,6 +65,7 @@ namespace Blog.Services.DeveloperStory
                         DateTime.Parse(experience.StartDate),
                         DateTime.Parse(experience.EndDate),
                         experience.Content);
+                     _context.Entry(developer.Experiences.Single(x => x.Id.ToString() == experience.Id).Period).State = EntityState.Modified;
                      _context.Entry(developer.Experiences.Single(x => x.Id.ToString() == experience.Id)).State = EntityState.Modified;
                   }
                   else

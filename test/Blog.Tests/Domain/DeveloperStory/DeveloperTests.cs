@@ -27,8 +27,11 @@ namespace Blog.Tests.Domain.DeveloperStory
             {
                Company = "Parmis",
                Position = "C# Developer",
-               StartDate = new DateTime(2015, 1, 1),
-               EndDate = new DateTime(2016, 1, 1),
+               Period = new
+               {
+                  StartDate = new DateTime(2015, 1, 1),
+                  EndDate = new DateTime(2016, 1, 1),
+               },
                Content = new
                {
                   RawContent = "done tasks"
@@ -139,8 +142,11 @@ namespace Blog.Tests.Domain.DeveloperStory
             {
                Company = "Parmis",
                Position = "JS Developer",
-               StartDate = new DateTime(2017, 1, 1),
-               EndDate = new DateTime(2018, 1, 1),
+               Period = new
+               {
+                  StartDate = new DateTime(2017, 1, 1),
+                  EndDate = new DateTime(2018, 1, 1),
+               },
                Content = new
                {
                   RawContent = "done tasks"
@@ -177,8 +183,11 @@ namespace Blog.Tests.Domain.DeveloperStory
             .Should()
             .BeEquivalentTo(new
             {
-               StartDate = new DateTime(2013, 1, 1),
-               EndDate = new DateTime(2014, 1, 1)
+               Period = new
+               {
+                  StartDate = new DateTime(2013, 1, 1),
+                  EndDate = new DateTime(2014, 1, 1)
+               }
             });
 
          developer.Experiences
@@ -186,8 +195,11 @@ namespace Blog.Tests.Domain.DeveloperStory
             .Should()
             .BeEquivalentTo(new
             {
-               StartDate = new DateTime(2016, 1, 1),
-               EndDate = new DateTime(2017, 1, 1)
+               Period = new
+               {
+                  StartDate = new DateTime(2016, 1, 1),
+                  EndDate = new DateTime(2017, 1, 1)
+               }
             });
       }
 

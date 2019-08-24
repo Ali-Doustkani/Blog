@@ -43,7 +43,13 @@ namespace Blog.Services.Home
          CreateMap<Experience, ExperienceViewModel>()
             .ForMember(
                dest => dest.Content,
-               o => o.MapFrom(src => src.Content.Content));
+               o => o.MapFrom(src => src.Content.Content))
+            .ForMember(
+               dest => dest.StartDate,
+               o => o.MapFrom(src => src.Period.StartDate))
+            .ForMember(
+               dest => dest.EndDate,
+               o => o.MapFrom(src => src.Period.EndDate));
 
          CreateMap<SideProject, SideProjectViewModel>()
             .ForMember(
