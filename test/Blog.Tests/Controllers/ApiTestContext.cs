@@ -15,7 +15,7 @@ namespace Blog.Tests.Controllers
    {
       public ApiTestContext()
       {
-         DeveloperService = new Mock<IDeveloperServices>();
+         DeveloperService = new Mock<IDeveloperStoryServices>();
 
          var connection = new SqliteConnection("DataSource=:memory:");
          connection.Open();
@@ -38,6 +38,6 @@ namespace Blog.Tests.Controllers
       }
 
       public HttpClient Client { get; }
-      public Mock<IDeveloperServices> DeveloperService { get; }
+      public Mock<IDeveloperStoryServices> DeveloperService { get; }
    }
 }

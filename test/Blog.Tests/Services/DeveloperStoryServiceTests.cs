@@ -12,10 +12,10 @@ namespace Blog.Tests.Services
    {
       public DeveloperStoryServiceTests()
       {
-         _context = new ServiceTestContext<DeveloperServices>();
+         _context = new ServiceTestContext<DeveloperStoryServices>();
       }
 
-      private readonly ServiceTestContext<DeveloperServices> _context;
+      private readonly ServiceTestContext<DeveloperStoryServices> _context;
 
       [Fact]
       public void Return_null_when_there_is_no_developer()
@@ -41,6 +41,7 @@ namespace Blog.Tests.Services
                new DateTime(2017, 1, 1),
                "System Architect");
             developer.AddSideProject("Richtext Editor", "A simple richtext for web");
+            developer.AddEducation("BS", "S&C", new DateTime(2010, 1, 1), new DateTime(2011, 1, 1));
             db.Developers.Add(developer);
             db.SaveChanges();
          }
@@ -70,6 +71,16 @@ namespace Blog.Tests.Services
                   {
                      Title="Richtext Editor",
                      Content="A simple richtext for web"
+                  }
+               },
+               Educations = new[]
+               {
+                  new
+                  {
+                     Degree = "BS",
+                     University = "S&C",
+                     StartDate = "2010-01-01",
+                     EndDate = "2011-01-01"
                   }
                }
             });
@@ -105,6 +116,17 @@ namespace Blog.Tests.Services
                      Title = "Richtext Editor",
                      Content = "A simple richtext for web"
                   }
+               },
+               Educations = new[]
+               {
+                  new EducationEntry
+                  {
+                     Id = "frg-234",
+                     Degree = "BS",
+                     University = "S&C",
+                     StartDate = "2010-1-1",
+                     EndDate = "2011-1-1"
+                  }
                }
             });
 
@@ -112,7 +134,8 @@ namespace Blog.Tests.Services
             {
                Status = Status.Created,
                Experiences = new[] { 1 },
-               SideProjects = new[] { 1 }
+               SideProjects = new[] { 1 },
+               Educations = new[] { 1 }
             });
          }
 
@@ -142,6 +165,16 @@ namespace Blog.Tests.Services
                         Title = "Richtext Editor",
                         Content = "A simple richtext for web"
                      }
+                  },
+                  Educations = new[]
+                  {
+                     new
+                     {
+                        Degree = "BS",
+                        University = "S&C",
+                        StartDate = "2010-01-01",
+                        EndDate = "2011-01-01"
+                     }
                   }
                });
          }
@@ -160,6 +193,7 @@ namespace Blog.Tests.Services
                new DateTime(2017, 1, 2),
                "as backend developer");
             developer.AddSideProject("Richtext Editor", "A simple richtext for web");
+            developer.AddEducation("BS", "S&C", new DateTime(2010, 1, 1), new DateTime(2011, 1, 1));
 
             db.Developers.Add(developer);
             db.SaveChanges();
@@ -191,6 +225,17 @@ namespace Blog.Tests.Services
                      Title = "Richtext Editor",
                      Content = "A simple richtext for web"
                   }
+               },
+               Educations = new[]
+               {
+                  new EducationEntry
+                  {
+                     Id = "1",
+                     Degree = "B.S.",
+                     University = "Science and Culture",
+                     StartDate = "2009-01-01",
+                     EndDate = "2010-01-01"
+                  }
                }
             });
 
@@ -200,7 +245,8 @@ namespace Blog.Tests.Services
                {
                   Status = Status.Updated,
                   Experiences = new[] { 1 },
-                  SideProjects = new[] { 1 }
+                  SideProjects = new[] { 1 },
+                  Educations = new[] { 1 }
                });
          }
 
@@ -229,6 +275,16 @@ namespace Blog.Tests.Services
                      {
                         Title = "Richtext Editor",
                         Content = "A simple richtext for web"
+                     }
+                  },
+                  Educations = new[]
+                  {
+                     new
+                     {
+                        Degree = "B.S.",
+                        University = "Science and Culture",
+                        StartDate = "2009-01-01",
+                        EndDate = "2010-01-01"
                      }
                   }
                });
@@ -290,7 +346,8 @@ namespace Blog.Tests.Services
                .BeEquivalentTo(new
                {
                   Experiences = new[] { 2, 3 },
-                  SideProjects = Enumerable.Empty<int>()
+                  SideProjects = Enumerable.Empty<int>(),
+                  Educations = Enumerable.Empty<int>()
                });
          }
 
@@ -323,7 +380,8 @@ namespace Blog.Tests.Services
                         Position = "Tester"
                      }
                   },
-                  SideProjects = Enumerable.Empty<SideProjectEntry>()
+                  SideProjects = Enumerable.Empty<SideProjectEntry>(),
+                  Educations = Enumerable.Empty<EducationEntry>()
                });
          }
       }
@@ -367,7 +425,8 @@ namespace Blog.Tests.Services
                .BeEquivalentTo(new
                {
                   Experiences = Enumerable.Empty<int>(),
-                  SideProjects = new[] { 2, 3 }
+                  SideProjects = new[] { 2, 3 },
+                  Educations = Enumerable.Empty<int>()
                });
          }
 
@@ -380,6 +439,7 @@ namespace Blog.Tests.Services
                   Summary = "Cool guy!",
                   Skills = "C#, SQL",
                   Experiences = Enumerable.Empty<ExperienceEntry>(),
+                  Educations = Enumerable.Empty<EducationEntry>(),
                   SideProjects = new[]
                   {
                      new SideProjectEntry
@@ -400,57 +460,81 @@ namespace Blog.Tests.Services
       }
 
       [Fact]
-      public void Return_problem_when_developer_required_fields_are_empty()
+      public void Update_Educations()
       {
-         using (var svc = _context.GetService())
+         using (var db = _context.GetDatabase())
          {
-            var result = svc.Save(new DeveloperEntry
-            {
-               Summary = "Skills is not set!"
-            });
-
-            result.Should()
-               .BeEquivalentTo(new
-               {
-                  Status = Status.Problem,
-                  Problem = new
-                  {
-                     Property = "Skills",
-                     Message = "Value is required"
-                  }
-               });
+            var developer = new Developer("Cool guy!", "C#, SQL");
+            developer.AddEducation("AS", "College1", new DateTime(2010, 1, 1), new DateTime(2011, 1, 1));
+            developer.AddEducation("BS", "S&C", new DateTime(2011, 1, 1), new DateTime(2012, 1, 1));
+            db.Developers.Add(developer);
+            db.SaveChanges();
          }
-      }
 
-      [Fact]
-      public void Return_problem_when_experience_required_fields_are_empty()
-      {
          using (var svc = _context.GetService())
          {
             var result = svc.Save(new DeveloperEntry
             {
-               Summary = "Cool Developer!",
-               Skills = "C#, JS",
-               Experiences = new[]
+               Summary = "Cool guy!",
+               Skills = "C#, SQL",
+               Educations = new[]
                {
-                  new ExperienceEntry
+                  new EducationEntry
                   {
-                     Position = "Senior Developer",
-                     StartDate = "2011-01-01",
-                     EndDate = "2012-01-01",
-                     Content = "an enterprise project"
+                     Id = "2",
+                     Degree = "B.S.",
+                     University = "Science & Culture",
+                     StartDate = "2015-01-01",
+                     EndDate = "2016-01-01"
+                  },
+                  new EducationEntry
+                  {
+                     Degree = "M.S.",
+                     University = "Tehran",
+                     StartDate = "2017-01-01",
+                     EndDate = "2018-01-01"
                   }
                }
             });
 
-            result.Should()
+            result
+               .Should()
                .BeEquivalentTo(new
                {
-                  Status = Status.Problem,
-                  Problem = new
+                  Experiences = Enumerable.Empty<int>(),
+                  SideProjects = Enumerable.Empty<int>(),
+                  Educations = new[] { 2, 3 }
+               });
+         }
+
+         using (var svc = _context.GetService())
+         {
+            svc.Get()
+               .Should()
+               .BeEquivalentTo(new DeveloperEntry
+               {
+                  Summary = "Cool guy!",
+                  Skills = "C#, SQL",
+                  Experiences = Enumerable.Empty<ExperienceEntry>(),
+                  SideProjects = Enumerable.Empty<SideProjectEntry>(),
+                  Educations = new[]
                   {
-                     Property = "Company",
-                     Message = "Value is required"
+                     new EducationEntry
+                     {
+                        Id = "2",
+                        Degree = "B.S.",
+                        University = "Science & Culture",
+                        StartDate = "2015-01-01",
+                        EndDate = "2016-01-01"
+                     },
+                     new EducationEntry
+                     {
+                        Id = "3",
+                        Degree = "M.S.",
+                        University = "Tehran",
+                        StartDate = "2017-01-01",
+                        EndDate = "2018-01-01"
+                     },
                   }
                });
          }

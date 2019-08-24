@@ -7,12 +7,12 @@ namespace Blog.Controllers
    [Route("/api/developer")]
    public class DeveloperController : ControllerBase
    {
-      public DeveloperController(IDeveloperServices service)
+      public DeveloperController(IDeveloperStoryServices service)
       {
          _service = service;
       }
 
-      private readonly IDeveloperServices _service;
+      private readonly IDeveloperStoryServices _service;
 
       [HttpGet]
       public ActionResult<DeveloperEntry> Get()
@@ -28,9 +28,9 @@ namespace Blog.Controllers
       {
          var result = _service.Save(developer);
          if (result.Status == Status.Created)
-            return CreatedAtAction(nameof(Get), new { result.Experiences });
+            return CreatedAtAction(nameof(Get), new { result.Experiences, result.SideProjects, result.Educations });
 
-         return Ok(new { result.Experiences });
+         return Ok(new { result.Experiences, result.SideProjects, result.Educations });
       }
    }
 }

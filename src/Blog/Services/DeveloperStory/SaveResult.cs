@@ -1,6 +1,5 @@
 ﻿using Blog.Domain;
 using Blog.Domain.DeveloperStory;
-using Blog.Utils;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,21 +14,26 @@ namespace Blog.Services.DeveloperStory
 
    public class SaveResult
    {
-      public SaveResult(Status status, IEnumerable<int> experiences, IEnumerable<int> sideProjects)
+      public SaveResult(Status status,
+         IEnumerable<int> experiences,
+         IEnumerable<int> sideProjects,
+         IEnumerable<int> educations)
       {
          Status = status;
          Experiences = experiences;
          SideProjects = sideProjects;
+         Educations = educations;
       }
 
       public SaveResult(Status status)
-         : this(status, Enumerable.Empty<int>(), Enumerable.Empty<int>())
+         : this(status, Enumerable.Empty<int>(), Enumerable.Empty<int>(), Enumerable.Empty<int>())
       { }
 
       public SaveResult(Problem problem)
       {
          Experiences = Enumerable.Empty<int>();
          SideProjects = Enumerable.Empty<int>();
+         Educations = Enumerable.Empty<int>();
          Status = Status.Problem;
          Problem = problem;
       }
@@ -38,6 +42,7 @@ namespace Blog.Services.DeveloperStory
       public Problem Problem { get; }
       public IEnumerable<int> Experiences { get; }
       public IEnumerable<int> SideProjects { get; }
+      public IEnumerable<int> Educations { get; }
 
       public static SaveResult Problematic(DomainProblemException exception) =>
          new SaveResult(exception.Problem);
@@ -49,6 +54,9 @@ namespace Blog.Services.DeveloperStory
          Create(Status.Updated, developer);
 
       private static SaveResult Create(Status operation, Developer developer) =>
-         new SaveResult(operation, developer.Experiences.Select(x => x.Id), developer.SideProjects.Select(x => x.Id));
+         new SaveResult(operation,
+            developer.Experiences.Select(x => x.Id),
+            developer.SideProjects.Select(x => x.Id),
+            developer.Educations.Select(x => x.Id));
    }
 }

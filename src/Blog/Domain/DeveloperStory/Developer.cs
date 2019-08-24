@@ -12,23 +12,28 @@ namespace Blog.Domain.DeveloperStory
          Skills = Its.NotEmpty(skills, nameof(Skills));
          _experiences = new List<Experience>();
          _sideProjects = new List<SideProject>();
+         _educations = new List<Education>();
       }
 
       private string _summary;
       private readonly List<Experience> _experiences;
       private readonly List<SideProject> _sideProjects;
+      private readonly List<Education> _educations;
 
       public int Id { get; private set; }
       public HtmlText Summary => new HtmlText(_summary);
       public string Skills { get; private set; }
       public IReadOnlyCollection<Experience> Experiences => _experiences.OrderBy(x => x.StartDate).ToArray();
       public IReadOnlyCollection<SideProject> SideProjects => _sideProjects.ToArray();
+      public IReadOnlyCollection<Education> Educations => _educations.OrderBy(x => x.Period.StartDate).ToArray();
 
       public void Update(string summary, string skills)
       {
          _summary = Its.NotEmpty(summary, nameof(summary));
          Skills = Its.NotEmpty(skills, nameof(Skills));
       }
+
+      public IEnumerable<string> GetSkillLines() => Skills.Split('\n');
 
       public void AddExperience(string company, string position, DateTime startDate, DateTime endDate, string content) =>
          AddExperience(0, company, position, startDate, endDate, content);
@@ -39,10 +44,8 @@ namespace Blog.Domain.DeveloperStory
          AddExperience(id, newCompany, newPosition, newStartDate, newEndDate, newContent);
       }
 
-      public void RemoveExperience(Experience experience)
-      {
+      public void RemoveExperience(Experience experience) =>
          _experiences.Remove(experience);
-      }
 
       public void AddSideProject(string title, string content) =>
          AddSideProject(0, title, content);
@@ -53,10 +56,20 @@ namespace Blog.Domain.DeveloperStory
          AddSideProject(id, newTitle, newContent);
       }
 
-      public void RemoveSideProject(SideProject sideProject)
-      {
+      public void RemoveSideProject(SideProject sideProject) =>
          _sideProjects.Remove(sideProject);
+
+      public void AddEducation(string degree, string university, DateTime startDate, DateTime endDate) =>
+         AddEducation(0, degree, university, startDate, endDate);
+
+      public void UpdateEducation(int id, string newDegree, string newUniversity, DateTime newStartDate, DateTime newEndDate)
+      {
+         RemoveEducation(_educations.Single(x => x.Id == id));
+         AddEducation(id, newDegree, newUniversity, newStartDate, newEndDate);
       }
+
+      public void RemoveEducation(Education education) =>
+         _educations.Remove(education);
 
       private void AddExperience(int id, string company, string position, DateTime startDate, DateTime endDate, string content)
       {
@@ -76,6 +89,16 @@ namespace Blog.Domain.DeveloperStory
          _sideProjects.Add(new SideProject(id, title, content));
       }
 
-      public IEnumerable<string> GetSkillLines() => Skills.Split('\n');
+      private void AddEducation(int id, string degree, string university, DateTime startDate, DateTime endDate)
+      {
+         if (_educations.Any(x => x.Degree == degree && x.University == university))
+            throw new DomainProblemException("Another education item with the same degree and university already exists");
+
+         var period = new Period(startDate, endDate);
+         if (_educations.Any(x => x.Period.Overlaps(period)))
+            throw new DomainProblemException("Education items should not have date overlaps with each other");
+
+         _educations.Add(new Education(id, degree, university, period));
+      }
    }
 }

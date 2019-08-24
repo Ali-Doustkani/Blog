@@ -27,6 +27,14 @@ namespace Blog.Services.DeveloperStory
             .ForMember(
                dest => dest.Content,
                o => o.MapFrom(src => src.Content.RawContent));
+
+         CreateMap<Education, EducationEntry>()
+            .ForMember(
+               dest => dest.StartDate,
+               o => o.MapFrom(src => src.Period.StartDate.ToString("yyyy-MM-dd")))
+            .ForMember(
+               dest => dest.EndDate,
+               o => o.MapFrom(src => src.Period.EndDate.ToString("yyyy-MM-dd")));
       }
    }
 }

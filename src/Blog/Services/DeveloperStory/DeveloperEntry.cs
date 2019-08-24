@@ -14,5 +14,7 @@ namespace Blog.Services.DeveloperStory
       public IEnumerable<ExperienceEntry> Experiences { get; set; }
 
       public IEnumerable<SideProjectEntry> SideProjects { get; set; }
+
+      public IEnumerable<EducationEntry> Educations { get; set; }
    }
 }

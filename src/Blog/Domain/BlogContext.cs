@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Blog.Domain
@@ -26,6 +24,7 @@ namespace Blog.Domain
          Developers
          .Include(x => x.Experiences)
          .Include(x => x.SideProjects)
+         .Include(x => x.Educations)
          .SingleOrDefault();
 
       public void AddOrUpdate<T>(T entity)
@@ -136,6 +135,11 @@ namespace Blog.Domain
             .Metadata
             .FindNavigation("SideProjects")
             .SetPropertyAccessMode(PropertyAccessMode.Field);
+
+            dev
+            .Metadata
+            .FindNavigation("Educations")
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
          });
 
          modelBuilder.Entity<Experience>(ex =>
@@ -170,6 +174,24 @@ namespace Blog.Domain
             .IsRequired();
 
             sp
+            .Property("DeveloperId")
+            .IsRequired();
+         });
+
+         modelBuilder.Entity<Education>(ed =>
+         {
+            ed
+            .Property(x => x.Degree)
+            .IsRequired();
+
+            ed
+            .Property(x => x.University)
+            .IsRequired();
+
+            ed
+            .OwnsOne(x => x.Period);
+
+            ed
             .Property("DeveloperId")
             .IsRequired();
          });

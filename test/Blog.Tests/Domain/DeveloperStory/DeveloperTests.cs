@@ -37,7 +37,7 @@ namespace Blog.Tests.Domain.DeveloperStory
       }
 
       [Fact]
-      public void Do_not_add_experience_with_duplicate_company_and_position()
+      public void Dont_add_experience_with_duplicate_company_and_position()
       {
          var developer = new Developer("passionate developer", "c#, js");
          developer.AddExperience("Parmis",
@@ -78,7 +78,7 @@ namespace Blog.Tests.Domain.DeveloperStory
       }
 
       [Fact]
-      public void Can_not_experiences_with_time_overlaps()
+      public void Dont_experiences_with_time_overlaps()
       {
          var developer = new Developer("passionate developer", "C#, JS");
 
@@ -99,7 +99,7 @@ namespace Blog.Tests.Domain.DeveloperStory
       }
 
       [Fact]
-      public void Can_not_add_experiences_with_startDates_that_are_greater_than_endDates()
+      public void Dont_add_experiences_with_startDates_that_are_greater_than_endDates()
       {
          var developer = new Developer("passionate developer", "C#");
          developer.Invoking(d => d.AddExperience("Lodgify",
@@ -114,7 +114,7 @@ namespace Blog.Tests.Domain.DeveloperStory
       }
 
       [Fact]
-      public void Can_update_an_experience()
+      public void Update_an_experience()
       {
          var developer = new Developer("passionate developer", "C#");
 
@@ -149,7 +149,7 @@ namespace Blog.Tests.Domain.DeveloperStory
       }
 
       [Fact]
-      public void Remove_experience()
+      public void Remove_an_experience()
       {
          var developer = new Developer("passionate developer", "C#");
          developer.AddExperience("Lodgify",
@@ -221,7 +221,7 @@ namespace Blog.Tests.Domain.DeveloperStory
       }
 
       [Fact]
-      public void Do_not_add_side_projects_with_duplicate_titles()
+      public void Dont_add_side_projects_with_duplicate_titles()
       {
          var developer = new Developer("passionate dev", "C#");
          developer.AddSideProject("Richtext", "web editor");
@@ -232,7 +232,7 @@ namespace Blog.Tests.Domain.DeveloperStory
       }
 
       [Fact]
-      public void Can_update_a_side_project()
+      public void Update_a_side_project()
       {
          var developer = new Developer("passionate dev", "C#");
          developer.AddSideProject("Richtext", "web editor");
@@ -254,7 +254,7 @@ namespace Blog.Tests.Domain.DeveloperStory
       }
 
       [Fact]
-      public void Can_remove_a_side_project()
+      public void Remove_a_side_project()
       {
          var developer = new Developer("passionate developer", "C#");
          developer.AddSideProject("Richtext", "HTML Editor");
@@ -273,6 +273,87 @@ namespace Blog.Tests.Domain.DeveloperStory
          developer.GetSkillLines()
             .Should()
             .ContainInOrder("C#", "JS");
+      }
+
+      [Fact]
+      public void Add_a_new_education()
+      {
+         var developer = new Developer("passionate developer", "C#");
+         developer.AddEducation("BS", "S&C", new DateTime(2010, 1, 1), new DateTime(2011, 1, 1));
+         developer.Educations
+            .Should()
+            .HaveCount(1)
+            .And
+            .ContainEquivalentOf(new
+            {
+               Degree = "BS",
+               University = "S&C",
+               Period = new
+               {
+                  StartDate = new DateTime(2010, 1, 1),
+                  EndDate = new DateTime(2011, 1, 1)
+               }
+            });
+      }
+
+      [Fact]
+      public void Dont_add_education_with_same_degree_and_university()
+      {
+         var developer = new Developer("passionate developer", "C#");
+         developer.AddEducation("BS", "S&C", new DateTime(2010, 1, 1), new DateTime(2011, 1, 1));
+         developer
+            .Invoking(d => d.AddEducation("BS", "S&C", new DateTime(2015, 1, 1), new DateTime(2016, 1, 1)))
+            .Should()
+            .Throw<DomainProblemException>().WithMessage("Another education item with the same degree and university already exists");
+      }
+
+      [Fact]
+      public void Dont_add_education_with_overlapping_dates()
+      {
+         var developer = new Developer("passionate developer", "C#");
+         developer.AddEducation("BS", "S&C", new DateTime(2010, 1, 1), new DateTime(2011, 1, 1));
+         developer
+            .Invoking(d => d.AddEducation("MS", "Other", new DateTime(2010, 6, 1), new DateTime(2012, 1, 1)))
+            .Should()
+            .Throw<DomainProblemException>()
+            .WithMessage("Education items should not have date overlaps with each other");
+      }
+
+      [Fact]
+      public void Update_an_education()
+      {
+         var developer = new Developer("passionate developer", "C#");
+         developer.AddEducation("BS", "S&C", new DateTime(2010, 1, 1), new DateTime(2011, 1, 1));
+
+         developer.UpdateEducation(0, "B.S.", "Science and Culture", new DateTime(2010, 1, 1), new DateTime(2011, 1, 1));
+
+         developer.Educations
+            .Should()
+            .HaveCount(1)
+            .And
+            .ContainEquivalentOf(new
+            {
+               Degree = "B.S.",
+               University = "Science and Culture",
+               Period = new
+               {
+                  StartDate = new DateTime(2010, 1, 1),
+                  EndDate = new DateTime(2011, 1, 1)
+               }
+            });
+      }
+
+      [Fact]
+      public void Remove_an_education()
+      {
+         var developer = new Developer("passionate developer", "C#");
+         developer.AddEducation("BS", "S&C", new DateTime(2010, 1, 1), new DateTime(2011, 1, 1));
+
+         developer.RemoveEducation(developer.Educations.First());
+
+         developer.Educations
+            .Should()
+            .BeEmpty();
       }
    }
 }

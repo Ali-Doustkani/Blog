@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ClientApp\**" />
+    <Content Remove="ClientApp\**" />
+    <EmbeddedResource Remove="ClientApp\**" />
+    <None Remove="ClientApp\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="appsettings.testing.json" />
   </ItemGroup>
 
@@ -36,7 +43,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Domain\DeveloperStory\" />
     <Folder Include="Domain\Blogging\" />
   </ItemGroup>
 

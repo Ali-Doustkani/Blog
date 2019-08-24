@@ -21,7 +21,7 @@ namespace Blog.Tests.Controllers
       }
 
       private readonly HttpClient _client;
-      private readonly Mock<IDeveloperServices> _service;
+      private readonly Mock<IDeveloperStoryServices> _service;
 
       [Fact]
       public async Task Return_204_when_no_developer_is_available()
@@ -58,7 +58,7 @@ namespace Blog.Tests.Controllers
       {
          _service
             .Setup(x => x.Save(It.IsAny<DeveloperEntry>()))
-            .Returns(new SaveResult(Status.Created, new[] { 1 }, new[] { 1 }));
+            .Returns(new SaveResult(Status.Created, new[] { 1 }, new[] { 1 }, new[] { 1 }));
 
          var developer = new
          {
@@ -75,7 +75,9 @@ namespace Blog.Tests.Controllers
             var result = JToken.Parse(await response.Content.ReadAsStringAsync());
             var expected = JsonConvert.SerializeObject(new
             {
-               experiences = new[] { 1 }
+               experiences = new[] { 1 },
+               sideProjects = new[] { 1 },
+               educations = new[] { 1 }
             });
 
             result.Should().BeEquivalentTo(expected);
@@ -87,7 +89,7 @@ namespace Blog.Tests.Controllers
       {
          _service
             .Setup(x => x.Save(It.IsAny<DeveloperEntry>()))
-            .Returns(new SaveResult(Status.Updated, new[] { 1 }, new[] { 1 }));
+            .Returns(new SaveResult(Status.Updated, new[] { 1 }, new[] { 1 }, new[] { 1 }));
 
          var developer = new
          {
@@ -104,7 +106,9 @@ namespace Blog.Tests.Controllers
             var result = JToken.Parse(await response.Content.ReadAsStringAsync());
             var expected = JsonConvert.SerializeObject(new
             {
-               experiences = new[] { 1 }
+               experiences = new[] { 1 },
+               sideProjects = new[] { 1 },
+               educations = new[] { 1 }
             });
             result.Should().BeEquivalentTo(expected);
          }

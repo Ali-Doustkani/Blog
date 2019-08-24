@@ -7,15 +7,15 @@ using System.Linq;
 
 namespace Blog.Services.DeveloperStory
 {
-   public interface IDeveloperServices : IDisposable
+   public interface IDeveloperStoryServices : IDisposable
    {
       DeveloperEntry Get();
       SaveResult Save(DeveloperEntry developer);
    }
 
-   public class DeveloperServices : IDeveloperServices
+   public class DeveloperStoryServices : IDeveloperStoryServices
    {
-      public DeveloperServices(BlogContext context, IMapper mapper)
+      public DeveloperStoryServices(BlogContext context, IMapper mapper)
       {
          _context = context;
          _mapper = mapper;
@@ -33,6 +33,8 @@ namespace Blog.Services.DeveloperStory
             developerEntry.Experiences = Enumerable.Empty<ExperienceEntry>();
          if (developerEntry.SideProjects == null)
             developerEntry.SideProjects = Enumerable.Empty<SideProjectEntry>();
+         if (developerEntry.Educations == null)
+            developerEntry.Educations = Enumerable.Empty<EducationEntry>();
 
          try
          {
@@ -98,6 +100,39 @@ namespace Blog.Services.DeveloperStory
                   }
                }
 
+               // educations
+
+               foreach (var education in developer.Educations)
+               {
+                  if (!developerEntry.Educations.Any(x => x.Id == education.Id.ToString()))
+                  {
+                     developer.RemoveEducation(education);
+                  }
+               }
+
+               foreach (var education in developerEntry.Educations)
+               {
+                  if (int.TryParse(education.Id, out int id))
+                  {
+                     _context.Entry(developer.Educations.Single(x => x.Id.ToString() == education.Id).Period).State = EntityState.Detached;
+                     _context.Entry(developer.Educations.Single(x => x.Id.ToString() == education.Id)).State = EntityState.Detached;
+                     developer.UpdateEducation(id,
+                        education.Degree,
+                        education.University,
+                        DateTime.Parse(education.StartDate),
+                        DateTime.Parse(education.EndDate));
+                     _context.Entry(developer.Educations.Single(x => x.Id.ToString() == education.Id).Period).State = EntityState.Modified;
+                     _context.Entry(developer.Educations.Single(x => x.Id.ToString() == education.Id)).State = EntityState.Modified;
+                  }
+                  else
+                  {
+                     developer.AddEducation(education.Degree,
+                        education.University,
+                        DateTime.Parse(education.StartDate),
+                        DateTime.Parse(education.EndDate));
+                  }
+               }
+
                _context.SaveChanges();
                return SaveResult.Updated(developer);
             }
@@ -115,6 +150,13 @@ namespace Blog.Services.DeveloperStory
                foreach (var side in developerEntry.SideProjects)
                {
                   developer.AddSideProject(side.Title, side.Content);
+               }
+               foreach (var education in developerEntry.Educations)
+               {
+                  developer.AddEducation(education.Degree,
+                     education.University,
+                     DateTime.Parse(education.StartDate),
+                     DateTime.Parse(education.EndDate));
                }
                _context.Developers.Add(developer);
                _context.SaveChanges();
