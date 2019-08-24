@@ -189,7 +189,11 @@ namespace Blog.Domain
             .IsRequired();
 
             ed
-            .OwnsOne(x => x.Period);
+            .OwnsOne(x => x.Period, p =>
+            {
+               p.Property(y => y.StartDate).HasColumnName("StartDate");
+               p.Property(y => y.EndDate).HasColumnName("EndDate");
+            });
 
             ed
             .Property("DeveloperId")
