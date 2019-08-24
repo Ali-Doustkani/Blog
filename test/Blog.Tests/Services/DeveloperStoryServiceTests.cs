@@ -13,7 +13,6 @@ namespace Blog.Tests.Services
       public DeveloperStoryServiceTests()
       {
          _context = new ServiceTestContext<DeveloperServices>();
-         _context.WithProfile<MappingProfile>();
       }
 
       private readonly ServiceTestContext<DeveloperServices> _context;

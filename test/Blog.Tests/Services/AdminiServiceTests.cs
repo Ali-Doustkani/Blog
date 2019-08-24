@@ -80,8 +80,6 @@ namespace Blog.Tests.Services
          _context.WithMock<ICodeFormatter>();
          _context.WithMock<IImageProcessor>();
          _context.WithMock<IImageContext>();
-         _context.WithProfile<MappingProfile>();
-         _context.WithProfile<Blog.Services.Home.MappingProfile>();
          _context.WithType<DraftSaveCommand>();
          _context.WithType<DraftValidator>();
       }

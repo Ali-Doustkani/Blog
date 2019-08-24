@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Blog.Domain;
-using Blog.Services;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Moq;
@@ -25,13 +24,11 @@ namespace Blog.Tests.Services
 
          _types = new List<Type>();
          _mocks = new Dictionary<Type, object>();
-         _profiles = new List<Type>();
       }
 
       private readonly DbContextOptions _options;
       private readonly List<Type> _types;
       private readonly Dictionary<Type, object> _mocks;
-      private readonly List<Type> _profiles;
 
       public void WithType<T>() =>
          _types.Add(typeof(T));
@@ -39,10 +36,6 @@ namespace Blog.Tests.Services
       public void WithMock<T>()
          where T : class =>
          _mocks.Add(typeof(T), new Mock<T>());
-
-      public void WithProfile<T>()
-         where T : Profile =>
-         _profiles.Add(typeof(T));
 
       public Mock<T> GetMock<T>()
          where T : class =>
@@ -95,7 +88,11 @@ namespace Blog.Tests.Services
       private IMapper CreateMapper() =>
          new MapperConfiguration(cfg =>
          {
-            foreach (var profile in _profiles)
+            var profiles = typeof(TService).Assembly
+            .GetExportedTypes()
+            .Where(x => x.IsSubclassOf(typeof(Profile)));
+
+            foreach (var profile in profiles)
                cfg.AddProfile(profile);
          })
          .CreateMapper();

@@ -14,7 +14,6 @@ namespace Blog.Tests.Services.Home
       public HomeServiceTests()
       {
          _context = new ServiceTestContext<HomeServices>();
-         _context.WithProfile<MappingProfile>();
          _context.Seed(db =>
          {
             db.Drafts.Add(new Draft
