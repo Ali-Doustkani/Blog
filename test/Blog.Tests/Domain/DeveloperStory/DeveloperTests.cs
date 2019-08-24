@@ -185,22 +185,22 @@ namespace Blog.Tests.Domain.DeveloperStory
             {
                Period = new
                {
-                  StartDate = new DateTime(2013, 1, 1),
-                  EndDate = new DateTime(2014, 1, 1)
-               }
-            });
-
-         developer.Experiences
-            .ElementAt(1)
-            .Should()
-            .BeEquivalentTo(new
-            {
-               Period = new
-               {
                   StartDate = new DateTime(2016, 1, 1),
                   EndDate = new DateTime(2017, 1, 1)
                }
             });
+
+         developer.Experiences
+           .ElementAt(1)
+           .Should()
+           .BeEquivalentTo(new
+           {
+              Period = new
+              {
+                 StartDate = new DateTime(2013, 1, 1),
+                 EndDate = new DateTime(2014, 1, 1)
+              }
+           });
       }
 
       [Fact]
@@ -366,6 +366,38 @@ namespace Blog.Tests.Domain.DeveloperStory
          developer.Educations
             .Should()
             .BeEmpty();
+      }
+
+      [Fact]
+      public void Sort_educations_by_date()
+      {
+         var developer = new Developer("passionate developer", "C#");
+         developer.AddEducation("BS", "S&C", new DateTime(2010, 1, 1), new DateTime(2011, 1, 1));
+         developer.AddEducation("MS", "S&C", new DateTime(2012, 1, 1), new DateTime(2013, 1, 1));
+
+         developer.Educations
+            .ElementAt(0)
+            .Should()
+            .BeEquivalentTo(new
+            {
+               Period = new
+               {
+                  StartDate = new DateTime(2012, 1, 1),
+                  EndDate = new DateTime(2013, 1, 1)
+               }
+            });
+
+         developer.Educations
+            .ElementAt(1)
+            .Should()
+            .BeEquivalentTo(new
+            {
+               Period = new
+               {
+                  StartDate = new DateTime(2010, 1, 1),
+                  EndDate = new DateTime(2011, 1, 1)
+               }
+            });
       }
    }
 }

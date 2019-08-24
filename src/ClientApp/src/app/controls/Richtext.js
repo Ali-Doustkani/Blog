@@ -74,6 +74,8 @@ function Richtext(props) {
             <div className="separator" />
             <ToolbarButton content="list-ul" onClick={() => rich.applyUnorderedList()} />
             <ToolbarButton content="list-ol" onClick={() => rich.applyOrderedList()} />
+            <div className="separator" />
+            <ToolbarButton content="link" onClick={() => rich.styleLink()} />
          </div>
          <div
             className={classes.join(' ')}

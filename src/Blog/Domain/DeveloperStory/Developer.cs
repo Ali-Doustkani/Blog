@@ -23,9 +23,9 @@ namespace Blog.Domain.DeveloperStory
       public int Id { get; private set; }
       public HtmlText Summary => new HtmlText(_summary);
       public string Skills { get; private set; }
-      public IReadOnlyCollection<Experience> Experiences => _experiences.OrderBy(x => x.Period.StartDate).ToArray();
+      public IReadOnlyCollection<Experience> Experiences => _experiences.OrderByDescending(x => x.Period.StartDate).ToArray();
       public IReadOnlyCollection<SideProject> SideProjects => _sideProjects.ToArray();
-      public IReadOnlyCollection<Education> Educations => _educations.OrderBy(x => x.Period.StartDate).ToArray();
+      public IReadOnlyCollection<Education> Educations => _educations.OrderByDescending(x => x.Period.StartDate).ToArray();
 
       public void Update(string summary, string skills)
       {

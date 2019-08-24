@@ -8,5 +8,6 @@ namespace Blog.Services.Home
       public IEnumerable<string> Skills { get; set; }
       public IEnumerable<ExperienceViewModel> Experiences { get; set; }
       public IEnumerable<SideProjectViewModel> SideProjects { get; set; }
+      public IEnumerable<EducationViewModel> Educations { get; set; }
    }
 }

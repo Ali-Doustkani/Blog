@@ -55,6 +55,14 @@ namespace Blog.Services.Home
             .ForMember(
                dest => dest.Content,
                o => o.MapFrom(src => src.Content.Content));
+
+         CreateMap<Education, EducationViewModel>()
+            .ForMember(
+               dest => dest.StartDate,
+               o => o.MapFrom(src => src.Period.StartDate))
+            .ForMember(
+               dest => dest.EndDate,
+               o => o.MapFrom(src => src.Period.EndDate));
       }
 
       public class ShortDateResolver : IValueResolver<PostInfo, PostRow, string>

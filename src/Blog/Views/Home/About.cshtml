@@ -25,22 +25,15 @@
 </article>
 <article class="resume-section">
    <h1>education</h1>
-   <section>
-      <header>
-         <h2 class="item-title">B.Sc. in Computer Software Engineering <span class="date">2010 - 2013</span></h2>
-      </header>
-      <p>
-         University of Science and Culture
-      </p>
-   </section>
-   <section>
-      <header>
-         <h2 class="item-title">A.Sc in Computer Software Engineering <span class="date">2008 - 2010</span></h2>
-      </header>
-      <p>
-         Shamsipour Technical College
-      </p>
-   </section>
+   @foreach (var edu in Model.Educations)
+   {
+      <section>
+         <header>
+            <h2 class="item-title">@edu.Degree <span class="date">@edu.StartDate.Year - @edu.EndDate.Year</span></h2>
+         </header>
+         <p>@edu.University</p>
+      </section>
+   }
 </article>
 <article class="resume-section">
    <h1>technical skills</h1>

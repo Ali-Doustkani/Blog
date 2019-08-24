@@ -175,6 +175,7 @@ namespace Blog.Tests.Services.Home
                new DateTime(2018, 1, 1),
                "<p contenteditable>worked on desktop app</p>");
             developer.AddSideProject("Richtext", "<p contenteditable>HTML Richtext</p>");
+            developer.AddEducation("BS", "S&C", new DateTime(2010, 1, 1), new DateTime(2011, 1, 1));
             db.Developers.Add(developer);
             db.SaveChanges();
          }
@@ -211,6 +212,16 @@ namespace Blog.Tests.Services.Home
                   {
                      Title = "Richtext",
                      Content = "<p>HTML Richtext</p>"
+                  }
+               },
+               Educations = new[]
+               {
+                  new
+                  {
+                     Degree = "BS",
+                     University = "S&C",
+                     StartDate = new DateTime(2010,1,1),
+                     EndDate = new DateTime(2011,1,1)
                   }
                }
             });
