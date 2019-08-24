@@ -15,6 +15,25 @@ const dict = (...pairs) => key => {
 const ifElse = (predicate, onTrue, onFalse) => (state, action) =>
    predicate(action) ? onTrue(state, action) : onFalse(state, action)
 
-const update = change => obj => (change.id === obj.id ? { ...obj, ...change } : obj)
+const addItem = (prop, getNew) => state => ({ ...state, [prop]: [...state[prop], getNew()] })
 
-export { compose, dict, ifElse, update }
+const updateItem = prop => (state, action) => ({
+   ...state,
+   [prop]: state[prop].map(obj =>
+      action.change.id === obj.id ? { ...obj, ...action.change } : obj
+   )
+})
+
+const deleteItem = prop => (state, action) => ({
+   ...state,
+   [prop]: state[prop].filter(x => x.id !== action.id)
+})
+
+function today() {
+   const now = new Date()
+   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, 0)}-${String(
+      now.getDate()
+   ).padStart(2, 0)}`
+}
+
+export { compose, dict, ifElse, addItem, updateItem, deleteItem, today }

@@ -2,15 +2,12 @@
 
 exports[`updating updates fields 1`] = `
 Object {
+  "educations": Array [],
   "errorMessage": "",
   "experiences": Array [],
-  "experiencesErrors": Array [],
-  "sideProjectErrors": Array [],
   "sideProjects": Array [],
   "skills": "C#",
-  "skillsErrors": Array [],
   "status": 1,
   "summary": "summary",
-  "summaryErrors": Array [],
 }
 `;

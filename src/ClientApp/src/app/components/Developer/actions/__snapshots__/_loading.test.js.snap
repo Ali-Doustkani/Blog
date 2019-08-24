@@ -2,36 +2,31 @@
 
 exports[`create default values when no developer exists 1`] = `
 Object {
+  "educations": Array [],
   "errorMessage": "",
   "experiences": Array [],
-  "experiencesErrors": Array [],
-  "sideProjectErrors": Array [],
   "sideProjects": Array [],
   "skills": "",
-  "skillsErrors": Array [],
   "status": 3,
   "summary": "",
-  "summaryErrors": Array [],
 }
 `;
 
 exports[`put form in STOPPED mode when fatal happens 1`] = `
 Object {
+  "educations": Array [],
   "errorMessage": "Error Happened",
   "experiences": Array [],
-  "experiencesErrors": Array [],
-  "sideProjectErrors": Array [],
   "sideProjects": Array [],
   "skills": "",
-  "skillsErrors": Array [],
   "status": 4,
   "summary": "",
-  "summaryErrors": Array [],
 }
 `;
 
 exports[`stores experience format 1`] = `
 Object {
+  "educations": Array [],
   "errorMessage": "",
   "experiences": Array [
     Object {
@@ -39,13 +34,9 @@ Object {
       "id": 1,
     },
   ],
-  "experiencesErrors": Array [],
-  "sideProjectErrors": Array [],
   "sideProjects": Array [],
   "skills": "",
-  "skillsErrors": Array [],
   "status": 3,
   "summary": "",
-  "summaryErrors": Array [],
 }
 `;

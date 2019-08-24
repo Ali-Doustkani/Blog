@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`state manipulation keeps the state intact 1`] = `
+Object {
+  "values": Array [
+    Object {
+      "id": 3,
+      "name": "",
+      "surname": "",
+    },
+  ],
+}
+`;

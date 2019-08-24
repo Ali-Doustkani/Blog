@@ -17,5 +17,14 @@ module.exports = {
          title: 'Richtext Editor',
          content: '<p contenteditable>A HTML richtext editor</p>'
       }
+   ],
+   educations: [
+      {
+         id: 1,
+         degree: 'B.S.',
+         university: 'S&C',
+         startDate: '2010-01-01',
+         endDate: '2011-01-01'
+      }
    ]
 }

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Loader, Message, Button, Richtext, Textarea, ErrorList, ask } from 'Controls'
 import ExperienceList from './ExperienceList'
 import SideProjectList from './SideProjectList'
+import EducationList from './EducationList'
 import { getDeveloper, saveDeveloper } from './services'
 import DisabledContext from 'DisabledContext'
 import { useActions, STATUS } from './actions'
@@ -86,6 +87,13 @@ const Developer = ({ notify }) => {
                onAdd={actions.addSideProject}
                onChange={actions.updateSideProject}
                onDelete={ask(actions.deleteSideProject)}
+            />
+            <EducationList
+               educations={state.educations}
+               errors={errors.educations}
+               onAdd={actions.addEducation}
+               onChange={actions.updateEducation}
+               onDelete={ask(actions.deleteEducation)}
             />
             <Button onClick={save}>Save</Button>
          </div>

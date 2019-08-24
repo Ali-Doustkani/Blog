@@ -8,7 +8,8 @@ const initialize = () => ({
    skillsErrors: '',
    experiencesErrors: [],
    experiences: [],
-   sideProjects: []
+   sideProjects: [],
+   educations: []
 })
 
 const requiredMessage = result => (result.isEmpty ? [`${result.field} is required`] : [])

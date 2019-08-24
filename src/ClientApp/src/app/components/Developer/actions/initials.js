@@ -9,13 +9,10 @@ const initialState = {
    status: STATUS.LOADING,
    errorMessage: '',
    summary: '',
-   summaryErrors: [],
    skills: '',
-   skillsErrors: [],
    experiences: [],
-   experiencesErrors: [],
    sideProjects: [],
-   sideProjectErrors: []
+   educations: []
 }
 
 export { initialState, STATUS }
