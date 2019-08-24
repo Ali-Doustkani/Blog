@@ -11,12 +11,7 @@ const OPTIONS = {
    decors: {
       important: 'strong',
       inlineCode: { tag: 'span', className: 'inline-code' },
-      h1: { parent: true, tag: 'h3' },
-      h2: { parent: true, tag: 'h4' },
-      code: { parent: true, tag: 'pre', className: 'code' },
-      terminal: { parent: true, tag: 'pre', className: 'terminal' },
-      note: { parent: true, tag: 'div', className: 'note' },
-      warning: { parent: true, tag: 'div', className: 'warning' }
+      h1: { parent: true, tag: 'h1' }
    }
 }
 
@@ -77,17 +72,8 @@ function Richtext(props) {
                <strong>H2</strong>
             </ToolbarButton>
             <div className="separator" />
-            <ToolbarButton content="code" onClick={() => rich.apply('code')} />
-            <ToolbarButton content="terminal" onClick={() => rich.apply('terminal')} />
-            <div className="separator" />
-            <ToolbarButton content="exclamation" onClick={() => rich.apply('note')} />
-            <ToolbarButton content="times" onClick={() => rich.apply('warning')} />
-            <div className="separator" />
             <ToolbarButton content="list-ul" onClick={() => rich.applyUnorderedList()} />
             <ToolbarButton content="list-ol" onClick={() => rich.applyOrderedList()} />
-            <div className="separator" />
-            <ToolbarButton content="camera" onClick={() => rich.selectImage()} />
-            <ToolbarButton content="link" onClick={() => rich.styleLink()} />
          </div>
          <div
             className={classes.join(' ')}
