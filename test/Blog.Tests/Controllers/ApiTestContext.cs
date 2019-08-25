@@ -1,43 +1,48 @@
-﻿//using Blog.Domain;
-//using Blog.Services.DeveloperStory;
-//using Blog.Utils;
-//using Microsoft.AspNetCore.Hosting;
-//using Microsoft.AspNetCore.TestHost;
-//using Microsoft.Data.Sqlite;
-//using Microsoft.EntityFrameworkCore;
-//using Microsoft.Extensions.DependencyInjection;
-//using Moq;
-//using System.Net.Http;
+﻿using Blog.Domain;
+using Blog.Utils;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using System.Net.Http;
 
-//namespace Blog.Tests.Controllers
-//{
-//   public class ApiTestContext
-//   {
-//      public ApiTestContext()
-//      {
-//         DeveloperService = new Mock<IDeveloperStoryServices>();
+namespace Blog.Tests.Controllers
+{
+   public class ApiTestContext
+   {
+      public ApiTestContext()
+      {
+         var builder = new WebHostBuilder()
+            .UseStartup<Startup>()
+            .UseEnvironment("Testing")
+            .UseSetting("ConnectionStrings:Blog", "FakeConnectionString")
+            .ConfigureTestServices(services =>
+            {
+               services.AddMvc(cfg => cfg.Filters.Add<IgnoreMigrationAttribute>());
+               services.AddScoped(s => Database());
+            });
+         var server = new TestServer(builder);
+         Client = server.CreateClient();
+      }
 
-//         var connection = new SqliteConnection("DataSource=:memory:");
-//         connection.Open();
-//         var optionBuilder = new DbContextOptionsBuilder();
-//         optionBuilder.UseSqlite(connection);
-//         using (var ctx = new BlogContext(optionBuilder.Options))
-//            ctx.Database.EnsureCreated();
+      private SqliteConnection _connection;
 
-//         var builder = new WebHostBuilder()
-//            .UseStartup<Startup>()
-//            .UseEnvironment("Testing")
-//            .UseSetting("ConnectionStrings:Blog", "FakeConnectionString")
-//            .ConfigureTestServices(services =>
-//            {
-//               services.AddTransient(s => DeveloperService.Object);
-//               services.AddMvc(cfg => cfg.Filters.Add<IgnoreMigrationAttribute>());
-//            });
-//         var server = new TestServer(builder);
-//         Client = server.CreateClient();
-//      }
+      public HttpClient Client { get; }
 
-//      public HttpClient Client { get; }
-//      public Mock<IDeveloperStoryServices> DeveloperService { get; }
-//   }
-//}
+      public void InitializeDatabase()
+      {
+         _connection = new SqliteConnection("DataSource=:memory:");
+         _connection.Open();
+         using (var ctx = Database())
+            ctx.Database.EnsureCreated();
+      }
+
+      private BlogContext Database()
+      {
+         var optionBuilder = new DbContextOptionsBuilder();
+         optionBuilder.UseSqlite(_connection);
+         return new BlogContext(optionBuilder.Options);
+      }
+   }
+}

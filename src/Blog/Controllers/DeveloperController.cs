@@ -43,9 +43,9 @@ namespace Blog.Controllers
          _context.SaveChanges();
 
          if (created)
-            return CreatedAtAction(nameof(Get), result);
+            return CreatedAtAction(nameof(Get), new { result.Experiences, result.SideProjects, result.Educations });
 
-         return Ok(result);
+         return Ok(new { result.Experiences, result.SideProjects, result.Educations });
       }
 
       private bool CreateOrGet(DeveloperUpdateCommand updateCommand, out Developer developer)
@@ -53,11 +53,11 @@ namespace Blog.Controllers
          if (_context.Developers.Any())
          {
             developer = _context.GetDeveloper();
-            return true;
+            return false;
          }
 
          developer = new Developer(updateCommand.Summary, updateCommand.Skills);
-         return false;
+         return true;
       }
    }
 }
