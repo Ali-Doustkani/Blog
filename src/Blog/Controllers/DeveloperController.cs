@@ -1,6 +1,8 @@
-﻿using Blog.Domain.DeveloperStory;
-using Blog.Services.DeveloperStory;
+﻿using AutoMapper;
+using Blog.Domain;
+using Blog.Domain.DeveloperStory;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace Blog.Controllers
 {
@@ -8,30 +10,54 @@ namespace Blog.Controllers
    [Route("/api/developer")]
    public class DeveloperController : ControllerBase
    {
-      public DeveloperController(IDeveloperStoryServices service)
+      public DeveloperController(IMapper mapper, BlogContext context, IStorageState storageState)
       {
-         _service = service;
+         _mapper = mapper;
+         _context = context;
+         _storageState = storageState;
       }
 
-      private readonly IDeveloperStoryServices _service;
+      private readonly IMapper _mapper;
+      private readonly BlogContext _context;
+      private readonly IStorageState _storageState;
 
       [HttpGet]
       public ActionResult<DeveloperUpdateCommand> Get()
       {
-         var result = _service.Get();
+         var result = _mapper.Map<DeveloperUpdateCommand>(_context.GetDeveloper());
          if (result == null)
             return NoContent();
          return result;
       }
 
       [HttpPut]
-      public IActionResult Put(DeveloperUpdateCommand developer)
+      public IActionResult Put(DeveloperUpdateCommand updateCommand)
       {
-         var result = _service.Save(developer);
-         if (result.Status == Status.Created)
-            return CreatedAtAction(nameof(Get), new { result.Experiences, result.SideProjects, result.Educations });
+         var created = CreateOrGet(updateCommand, out Developer developer);
 
-         return Ok(new { result.Experiences, result.SideProjects, result.Educations });
+         var result = developer.Update(updateCommand, _storageState);
+         if (result.Failed)
+            return BadRequest(result);
+
+         _context.Update(developer);
+         _context.SaveChanges();
+
+         if (created)
+            return CreatedAtAction(nameof(Get), result);
+
+         return Ok(result);
+      }
+
+      private bool CreateOrGet(DeveloperUpdateCommand updateCommand, out Developer developer)
+      {
+         if (_context.Developers.Any())
+         {
+            developer = _context.GetDeveloper();
+            return true;
+         }
+
+         developer = new Developer(updateCommand.Summary, updateCommand.Skills);
+         return false;
       }
    }
 }

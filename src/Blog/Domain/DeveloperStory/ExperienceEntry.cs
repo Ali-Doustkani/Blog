@@ -23,5 +23,7 @@ namespace Blog.Domain.DeveloperStory
       public DateTime GetStartDate() => DateTime.Parse(StartDate);
 
       public DateTime GetEndDate() => DateTime.Parse(EndDate);
+
+      public Period GetPeriod() => new Period(GetStartDate(), GetEndDate());
    }
 }

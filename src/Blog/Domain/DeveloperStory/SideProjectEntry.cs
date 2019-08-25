@@ -1,7 +1,7 @@
 ﻿using Blog.Domain;
 using System.ComponentModel.DataAnnotations;
 
-namespace Blog.Services.DeveloperStory
+namespace Blog.Domain.DeveloperStory
 {
    public class SideProjectEntry : DomainObjectEntry
    {

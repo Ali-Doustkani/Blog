@@ -7,7 +7,7 @@ namespace Blog.Domain.DeveloperStory
       public Period(DateTime startDate, DateTime endDate)
       {
          if (startDate >= endDate)
-            throw new DomainProblemException(nameof(StartDate), "StartDate should be smaller than EndDate");
+            throw new ArgumentException(nameof(StartDate), "StartDate should be smaller than EndDate");
 
          StartDate = startDate;
          EndDate = endDate;

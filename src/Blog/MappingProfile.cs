@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Blog.Domain.DeveloperStory;
 
-namespace Blog.Services.DeveloperStory
+namespace Blog
 {
    public class MappingProfile : Profile
    {
