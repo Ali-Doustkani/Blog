@@ -10,15 +10,15 @@ namespace Blog.Domain.DeveloperStory
       {
          _summary = Its.NotEmpty(summary, nameof(summary));
          Skills = Its.NotEmpty(skills, nameof(Skills));
-         _experiences = new List<Experience>();
-         _sideProjects = new List<SideProject>();
-         _educations = new List<Education>();
+         _experiences = new AggregateList<Experience>(exp => exp.Id);
+         _sideProjects = new AggregateList<SideProject>(proj => proj.Id);
+         _educations = new AggregateList<Education>(edu => edu.Id);
       }
 
       private string _summary;
-      private readonly List<Experience> _experiences;
-      private readonly List<SideProject> _sideProjects;
-      private readonly List<Education> _educations;
+      private readonly AggregateList<Experience> _experiences;
+      private readonly AggregateList<SideProject> _sideProjects;
+      private readonly AggregateList<Education> _educations;
 
       public int Id { get; private set; }
       public HtmlText Summary => new HtmlText(_summary);
@@ -27,49 +27,62 @@ namespace Blog.Domain.DeveloperStory
       public IReadOnlyCollection<SideProject> SideProjects => _sideProjects.ToArray();
       public IReadOnlyCollection<Education> Educations => _educations.OrderByDescending(x => x.Period.StartDate).ToArray();
 
-      public void Update(string summary, string skills)
-      {
-         _summary = Its.NotEmpty(summary, nameof(summary));
-         Skills = Its.NotEmpty(skills, nameof(Skills));
-      }
-
       public IEnumerable<string> GetSkillLines() => Skills.Split('\n');
+
+      public void Update(DeveloperUpdateCommand command, IStorageState storageState)
+      {
+         if (command == null)
+            throw new ArgumentNullException(nameof(command));
+
+         if (storageState == null)
+            throw new ArgumentNullException(nameof(storageState));
+
+         _summary = command.Summary;
+         Skills = command.Skills;
+
+         command.Update(_experiences, x => x.Experiences)
+            .OnUpdate((id, exp) =>
+            {
+               var oldExperience = _experiences.Single(exp.Id);
+               storageState.Detach(oldExperience.Period, oldExperience);
+               _experiences.Remove(oldExperience);
+               AddExperience(id, exp.Company, exp.Position, exp.GetStartDate(), exp.GetEndDate(), exp.Content);
+               storageState.Modify(_experiences.Single(exp.Id).Period, _experiences.Single(exp.Id));
+            })
+            .OnAdd(exp =>
+            {
+               AddExperience(exp.Company, exp.Position, exp.GetStartDate(), exp.GetEndDate(), exp.Content);
+            });
+
+         command.Update(_sideProjects, x => x.SideProjects)
+            .OnUpdate((id, proj) =>
+            {
+               storageState.Detach(_sideProjects.Single(proj.Id));
+               _sideProjects.Remove(_sideProjects.Single(x => x.Id == id));
+               AddSideProject(id, proj.Title, proj.Content);
+               storageState.Modify(_sideProjects.Single(proj.Id));
+            })
+            .OnAdd(proj =>
+            {
+               AddSideProject(proj.Title, proj.Content);
+            });
+
+         command.Update(_educations, x => x.Educations)
+             .OnUpdate((id, edu) =>
+             {
+                storageState.Detach(_educations.Single(edu.Id).Period, _educations.Single(edu.Id));
+                _educations.Remove(_educations.Single(x => x.Id == id));
+                AddEducation(id, edu.Degree, edu.University, edu.GetStartDate(), edu.GetEndDate());
+                storageState.Modify(_educations.Single(edu.Id).Period, _educations.Single(edu.Id));
+             })
+             .OnAdd(edu =>
+             {
+                AddEducation(edu.Degree, edu.University, edu.GetStartDate(), edu.GetEndDate());
+             });
+      }
 
       public void AddExperience(string company, string position, DateTime startDate, DateTime endDate, string content) =>
          AddExperience(0, company, position, startDate, endDate, content);
-
-      public void UpdateExperience(int id, string newCompany, string newPosition, DateTime newStartDate, DateTime newEndDate, string newContent)
-      {
-         RemoveExperience(_experiences.Single(x => x.Id == id));
-         AddExperience(id, newCompany, newPosition, newStartDate, newEndDate, newContent);
-      }
-
-      public void RemoveExperience(Experience experience) =>
-         _experiences.Remove(experience);
-
-      public void AddSideProject(string title, string content) =>
-         AddSideProject(0, title, content);
-
-      public void UpdateSideProject(int id, string newTitle, string newContent)
-      {
-         RemoveSideProject(_sideProjects.Single(x => x.Id == id));
-         AddSideProject(id, newTitle, newContent);
-      }
-
-      public void RemoveSideProject(SideProject sideProject) =>
-         _sideProjects.Remove(sideProject);
-
-      public void AddEducation(string degree, string university, DateTime startDate, DateTime endDate) =>
-         AddEducation(0, degree, university, startDate, endDate);
-
-      public void UpdateEducation(int id, string newDegree, string newUniversity, DateTime newStartDate, DateTime newEndDate)
-      {
-         RemoveEducation(_educations.Single(x => x.Id == id));
-         AddEducation(id, newDegree, newUniversity, newStartDate, newEndDate);
-      }
-
-      public void RemoveEducation(Education education) =>
-         _educations.Remove(education);
 
       private void AddExperience(int id, string company, string position, DateTime startDate, DateTime endDate, string content)
       {
@@ -83,12 +96,18 @@ namespace Blog.Domain.DeveloperStory
          _experiences.Add(new Experience(id, company, position, period, content));
       }
 
+      public void AddSideProject(string title, string content) =>
+         AddSideProject(0, title, content);
+
       private void AddSideProject(int id, string title, string content)
       {
          if (_sideProjects.Any(x => x.Title == title))
             throw new DomainProblemException("Title", $"The '{title}' project already exists");
          _sideProjects.Add(new SideProject(id, title, content));
       }
+
+      public void AddEducation(string degree, string university, DateTime startDate, DateTime endDate) =>
+         AddEducation(0, degree, university, startDate, endDate);
 
       private void AddEducation(int id, string degree, string university, DateTime startDate, DateTime endDate)
       {

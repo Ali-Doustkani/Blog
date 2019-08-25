@@ -29,6 +29,7 @@ namespace Blog.Tests.Services
       private readonly DbContextOptions _options;
       private readonly List<Type> _types;
       private readonly Dictionary<Type, object> _mocks;
+      private BlogContext _currentContext;
 
       public void WithType<T>() =>
          _types.Add(typeof(T));
@@ -41,8 +42,11 @@ namespace Blog.Tests.Services
          where T : class =>
          (Mock<T>)_mocks[typeof(T)];
 
-      public BlogContext GetDatabase() =>
-         new BlogContext(_options);
+      public BlogContext GetDatabase()
+      {
+         _currentContext = new BlogContext(_options);
+         return _currentContext;
+      }
 
       public void Seed(Action<BlogContext> seedAction)
       {
@@ -69,6 +73,9 @@ namespace Blog.Tests.Services
 
          if (type == typeof(IMapper))
             return CreateMapper();
+
+         if (type == typeof(IStorageState))
+            return new Storage.StorageState(_currentContext);
 
          if (_mocks.ContainsKey(type))
             return ((Mock)_mocks[type]).Object;

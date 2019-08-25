@@ -7,7 +7,7 @@ namespace Blog.Services.DeveloperStory
    {
       public MappingProfile()
       {
-         CreateMap<Developer, DeveloperEntry>()
+         CreateMap<Developer, DeveloperUpdateCommand>()
             .ForMember(
                dest => dest.Summary,
                o => o.MapFrom(src => src.Summary.RawContent));

@@ -1,12 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
-namespace Blog.Services.DeveloperStory
+namespace Blog.Domain.DeveloperStory
 {
-   public class ExperienceEntry
+   public class ExperienceEntry : DomainObjectEntry
    {
-      [Required]
-      public string Id { get; set; }
-
       [Required]
       public string Company { get; set; }
 
@@ -21,5 +19,9 @@ namespace Blog.Services.DeveloperStory
 
       [Required]
       public string Content { get; set; }
+
+      public DateTime GetStartDate() => DateTime.Parse(StartDate);
+
+      public DateTime GetEndDate() => DateTime.Parse(EndDate);
    }
 }

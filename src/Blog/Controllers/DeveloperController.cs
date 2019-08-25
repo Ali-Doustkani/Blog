@@ -1,4 +1,5 @@
-﻿using Blog.Services.DeveloperStory;
+﻿using Blog.Domain.DeveloperStory;
+using Blog.Services.DeveloperStory;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.Controllers
@@ -15,7 +16,7 @@ namespace Blog.Controllers
       private readonly IDeveloperStoryServices _service;
 
       [HttpGet]
-      public ActionResult<DeveloperEntry> Get()
+      public ActionResult<DeveloperUpdateCommand> Get()
       {
          var result = _service.Get();
          if (result == null)
@@ -24,7 +25,7 @@ namespace Blog.Controllers
       }
 
       [HttpPut]
-      public IActionResult Put(DeveloperEntry developer)
+      public IActionResult Put(DeveloperUpdateCommand developer)
       {
          var result = _service.Save(developer);
          if (result.Status == Status.Created)

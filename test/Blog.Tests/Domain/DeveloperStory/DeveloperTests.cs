@@ -117,61 +117,6 @@ namespace Blog.Tests.Domain.DeveloperStory
       }
 
       [Fact]
-      public void Update_an_experience()
-      {
-         var developer = new Developer("passionate developer", "C#");
-
-         developer.AddExperience("Lodgify",
-            "C# Developer",
-            new DateTime(2015, 1, 1),
-            new DateTime(2016, 1, 1),
-            "done tasks");
-
-         developer.UpdateExperience(0,
-            "Parmis",
-            "JS Developer",
-            new DateTime(2017, 1, 1),
-            new DateTime(2018, 1, 1),
-            "done tasks");
-
-         developer.Experiences
-            .Should()
-            .HaveCount(1)
-            .And
-            .ContainEquivalentOf(new
-            {
-               Company = "Parmis",
-               Position = "JS Developer",
-               Period = new
-               {
-                  StartDate = new DateTime(2017, 1, 1),
-                  EndDate = new DateTime(2018, 1, 1),
-               },
-               Content = new
-               {
-                  RawContent = "done tasks"
-               }
-            });
-      }
-
-      [Fact]
-      public void Remove_an_experience()
-      {
-         var developer = new Developer("passionate developer", "C#");
-         developer.AddExperience("Lodgify",
-            "C# Developer",
-            new DateTime(2015, 1, 1),
-            new DateTime(2016, 1, 1),
-            "done tasks");
-
-         developer.RemoveExperience(developer.Experiences.First());
-
-         developer.Experiences
-            .Should()
-            .BeEmpty();
-      }
-
-      [Fact]
       public void Sort_experiences_by_date()
       {
          var developer = new Developer("passionate dev", "C#");
@@ -203,14 +148,7 @@ namespace Blog.Tests.Domain.DeveloperStory
            });
       }
 
-      [Fact]
-      public void Can_not_set_summary_and_skills_to_empty_values()
-      {
-         var developer = new Developer("passionate developer", "C#");
-         developer.Invoking(d => d.Update("Depressed Developer", ""))
-            .Should()
-            .Throw<DomainProblemException>();
-      }
+
 
       [Fact]
       public void Add_a_new_sideProject()
@@ -241,41 +179,6 @@ namespace Blog.Tests.Domain.DeveloperStory
             .Should()
             .Throw<DomainProblemException>()
             .WithMessage("The 'Richtext' project already exists");
-      }
-
-      [Fact]
-      public void Update_a_side_project()
-      {
-         var developer = new Developer("passionate dev", "C#");
-         developer.AddSideProject("Richtext", "web editor");
-
-         developer.UpdateSideProject(0, "Richtext Editor", "HTML Editor");
-
-         developer.SideProjects
-            .Should()
-            .HaveCount(1)
-            .And
-            .ContainEquivalentOf(new
-            {
-               Title = "Richtext Editor",
-               Content = new
-               {
-                  RawContent = "HTML Editor"
-               }
-            });
-      }
-
-      [Fact]
-      public void Remove_a_side_project()
-      {
-         var developer = new Developer("passionate developer", "C#");
-         developer.AddSideProject("Richtext", "HTML Editor");
-
-         developer.RemoveSideProject(developer.SideProjects.First());
-
-         developer.SideProjects
-            .Should()
-            .BeEmpty();
       }
 
       [Fact]
@@ -329,43 +232,6 @@ namespace Blog.Tests.Domain.DeveloperStory
             .Should()
             .Throw<DomainProblemException>()
             .WithMessage("Education items should not have date overlaps with each other");
-      }
-
-      [Fact]
-      public void Update_an_education()
-      {
-         var developer = new Developer("passionate developer", "C#");
-         developer.AddEducation("BS", "S&C", new DateTime(2010, 1, 1), new DateTime(2011, 1, 1));
-
-         developer.UpdateEducation(0, "B.S.", "Science and Culture", new DateTime(2010, 1, 1), new DateTime(2011, 1, 1));
-
-         developer.Educations
-            .Should()
-            .HaveCount(1)
-            .And
-            .ContainEquivalentOf(new
-            {
-               Degree = "B.S.",
-               University = "Science and Culture",
-               Period = new
-               {
-                  StartDate = new DateTime(2010, 1, 1),
-                  EndDate = new DateTime(2011, 1, 1)
-               }
-            });
-      }
-
-      [Fact]
-      public void Remove_an_education()
-      {
-         var developer = new Developer("passionate developer", "C#");
-         developer.AddEducation("BS", "S&C", new DateTime(2010, 1, 1), new DateTime(2011, 1, 1));
-
-         developer.RemoveEducation(developer.Educations.First());
-
-         developer.Educations
-            .Should()
-            .BeEmpty();
       }
 
       [Fact]

@@ -1,12 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Blog.Domain;
+using System.ComponentModel.DataAnnotations;
 
 namespace Blog.Services.DeveloperStory
 {
-   public class SideProjectEntry
+   public class SideProjectEntry : DomainObjectEntry
    {
-      [Required]
-      public string Id { get; set; }
-
       [Required]
       public string Title { get; set; }
 

@@ -92,7 +92,7 @@ namespace Blog.Tests.Services
       {
          using (var svc = _context.GetService())
          {
-            var result = svc.Save(new DeveloperEntry
+            var result = svc.Save(new DeveloperUpdateCommand
             {
                Summary = "Cool guy!",
                Skills = "C#, Javascript, React",
@@ -201,7 +201,7 @@ namespace Blog.Tests.Services
 
          using (var svc = _context.GetService())
          {
-            var result = svc.Save(new DeveloperEntry
+            var result = svc.Save(new DeveloperUpdateCommand
             {
                Summary = "Not so cool",
                Skills = "ES7, Node.js",
@@ -315,7 +315,7 @@ namespace Blog.Tests.Services
 
          using (var svc = _context.GetService())
          {
-            var result = svc.Save(new DeveloperEntry
+            var result = svc.Save(new DeveloperUpdateCommand
             {
                Summary = "Not so cool",
                Skills = "ES7, Node.js",
@@ -355,7 +355,7 @@ namespace Blog.Tests.Services
          {
             svc.Get()
                .Should()
-               .BeEquivalentTo(new DeveloperEntry
+               .BeEquivalentTo(new DeveloperUpdateCommand
                {
                   Summary = "Not so cool",
                   Skills = "ES7, Node.js",
@@ -400,7 +400,7 @@ namespace Blog.Tests.Services
 
          using (var svc = _context.GetService())
          {
-            var result = svc.Save(new DeveloperEntry
+            var result = svc.Save(new DeveloperUpdateCommand
             {
                Summary = "Cool guy!",
                Skills = "C#, SQL",
@@ -434,7 +434,7 @@ namespace Blog.Tests.Services
          {
             svc.Get()
                .Should()
-               .BeEquivalentTo(new DeveloperEntry
+               .BeEquivalentTo(new DeveloperUpdateCommand
                {
                   Summary = "Cool guy!",
                   Skills = "C#, SQL",
@@ -473,7 +473,7 @@ namespace Blog.Tests.Services
 
          using (var svc = _context.GetService())
          {
-            var result = svc.Save(new DeveloperEntry
+            var result = svc.Save(new DeveloperUpdateCommand
             {
                Summary = "Cool guy!",
                Skills = "C#, SQL",
@@ -511,7 +511,7 @@ namespace Blog.Tests.Services
          {
             svc.Get()
                .Should()
-               .BeEquivalentTo(new DeveloperEntry
+               .BeEquivalentTo(new DeveloperUpdateCommand
                {
                   Summary = "Cool guy!",
                   Skills = "C#, SQL",

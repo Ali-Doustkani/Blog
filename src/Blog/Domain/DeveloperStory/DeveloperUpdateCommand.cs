@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Blog.Services.DeveloperStory;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Blog.Services.DeveloperStory
+namespace Blog.Domain.DeveloperStory
 {
-   public class DeveloperEntry
+   public class DeveloperUpdateCommand : Command<DeveloperUpdateCommand>
    {
       [Required]
       public string Summary { get; set; }

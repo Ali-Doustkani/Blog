@@ -1,4 +1,5 @@
-﻿using Blog.Services.DeveloperStory;
+﻿using Blog.Domain.DeveloperStory;
+using Blog.Services.DeveloperStory;
 using FluentAssertions;
 using FluentAssertions.Json;
 using Moq;
@@ -28,7 +29,7 @@ namespace Blog.Tests.Controllers
       {
          _service
             .Setup(x => x.Get())
-            .Returns((DeveloperEntry)null);
+            .Returns((DeveloperUpdateCommand)null);
 
          using (var response = await _client.GetAsync("/api/developer"))
          {
@@ -43,7 +44,7 @@ namespace Blog.Tests.Controllers
       {
          _service
             .Setup(x => x.Get())
-            .Returns(new DeveloperEntry());
+            .Returns(new DeveloperUpdateCommand());
 
          using (var response = await _client.GetAsync("/api/developer"))
          {
@@ -57,7 +58,7 @@ namespace Blog.Tests.Controllers
       public async Task Return_201_when_new_developer_is_added()
       {
          _service
-            .Setup(x => x.Save(It.IsAny<DeveloperEntry>()))
+            .Setup(x => x.Save(It.IsAny<DeveloperUpdateCommand>()))
             .Returns(new SaveResult(Status.Created, new[] { 1 }, new[] { 1 }, new[] { 1 }));
 
          var developer = new
@@ -88,7 +89,7 @@ namespace Blog.Tests.Controllers
       public async Task Return_200_when_developer_is_updated()
       {
          _service
-            .Setup(x => x.Save(It.IsAny<DeveloperEntry>()))
+            .Setup(x => x.Save(It.IsAny<DeveloperUpdateCommand>()))
             .Returns(new SaveResult(Status.Updated, new[] { 1 }, new[] { 1 }, new[] { 1 }));
 
          var developer = new
