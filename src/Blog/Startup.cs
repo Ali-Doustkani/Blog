@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Blog.Domain;
 using Blog.Utils;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -43,7 +44,12 @@ namespace Blog
          services.AddMvc(cfg =>
          {
             cfg.Filters.Add<MigrationFilter>();
-         });
+         })
+            .AddFluentValidation(cfg =>
+            {
+               cfg.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
+               cfg.ImplicitlyValidateChildProperties = true;
+            });
          services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<BlogContext>();
          services.AddAutoMapper(GetType().Assembly);
          services.AddBlogTypes();

@@ -5,8 +5,8 @@
       public SideProject(int id, string title, string content)
       {
          Id = id;
-         Title = Its.NotEmpty(title, nameof(Title));
-         _content = Its.NotEmpty(content, nameof(content));
+         Title = Assert.NotNull(title);
+         _content = Assert.NotNull(content);
       }
 
       private string _content;

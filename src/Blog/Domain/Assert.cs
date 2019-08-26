@@ -10,5 +10,12 @@ namespace Blog.Domain
             throw new ArgumentNullException();
          return input;
       }
+
+      public static string NotNull(string input)
+      {
+         if (string.IsNullOrEmpty(input))
+            throw new ArgumentNullException();
+         return input;
+      }
    }
 }

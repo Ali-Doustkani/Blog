@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
 
 namespace Blog.Domain.DeveloperStory
 {
@@ -8,36 +6,34 @@ namespace Blog.Domain.DeveloperStory
    {
       public DeveloperUpdateCommand()
       {
-         _experiences = Enumerable.Empty<ExperienceEntry>();
-         _sideProjects = Enumerable.Empty<SideProjectEntry>();
-         _educations = Enumerable.Empty<EducationEntry>();
+         _experiences = new List<ExperienceEntry>();
+         _sideProjects = new List<SideProjectEntry>();
+         _educations = new List<EducationEntry>();
       }
 
-      [Required]
       public string Summary { get; set; }
 
-      [Required]
       public string Skills { get; set; }
 
-      private IEnumerable<ExperienceEntry> _experiences;
-      public IEnumerable<ExperienceEntry> Experiences
+      private IList<ExperienceEntry> _experiences;
+      public IList<ExperienceEntry> Experiences
       {
          get => _experiences;
-         set => _experiences = value ?? Enumerable.Empty<ExperienceEntry>();
+         set => _experiences = value ?? new List<ExperienceEntry>();
       }
 
-      private IEnumerable<SideProjectEntry> _sideProjects;
-      public IEnumerable<SideProjectEntry> SideProjects
+      private IList<SideProjectEntry> _sideProjects;
+      public IList<SideProjectEntry> SideProjects
       {
          get => _sideProjects;
-         set => _sideProjects = value ?? Enumerable.Empty<SideProjectEntry>();
+         set => _sideProjects = value ?? new List<SideProjectEntry>();
       }
 
-      private IEnumerable<EducationEntry> _educations;
-      public IEnumerable<EducationEntry> Educations
+      private IList<EducationEntry> _educations;
+      public IList<EducationEntry> Educations
       {
          get => _educations;
-         set => _educations = value ?? Enumerable.Empty<EducationEntry>();
+         set => _educations = value ?? new List<EducationEntry>();
       }
    }
 }

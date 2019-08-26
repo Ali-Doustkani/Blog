@@ -15,11 +15,11 @@ namespace Blog.Domain.Blogging
 
       private readonly BlogContext _context;
       private readonly string[] _languages;
-      private List<Problem> _result;
+      private List<Error> _result;
 
-      public IEnumerable<Problem> Validate(Draft draft)
+      public IEnumerable<Error> Validate(Draft draft)
       {
-         _result = new List<Problem>();
+         _result = new List<Error>();
          ValidateEnglishUrl(draft);
          ValidateTitle(draft);
          ValidateCodeBlocks(draft);
@@ -29,13 +29,13 @@ namespace Blog.Domain.Blogging
       private void ValidateEnglishUrl(Draft draft)
       {
          if (draft.Info.Language == Language.Farsi && string.IsNullOrEmpty(draft.Info.EnglishUrl))
-            _result.Add(new Problem(nameof(draft.Info.EnglishUrl), "EnglishUrl is required for Farsi posts"));
+            _result.Add(new Error(nameof(draft.Info.EnglishUrl), "EnglishUrl is required for Farsi posts"));
       }
 
       private void ValidateTitle(Draft draft)
       {
          if (_context.Infos.Any(x => x.Id != draft.Id && string.Equals(x.Title, draft.Info.Title, StringComparison.OrdinalIgnoreCase)))
-            _result.Add(new Problem(nameof(draft.Info.Title), "This title already exists in the database"));
+            _result.Add(new Error(nameof(draft.Info.Title), "This title already exists in the database"));
       }
 
       private void ValidateCodeBlocks(Draft draft)
@@ -52,13 +52,13 @@ namespace Blog.Domain.Blogging
 
                if (!node.InnerHtml.Contains(Environment.NewLine))
                {
-                  _result.Add(new Problem(nameof(Draft.Content), $"Language is not specified for the code block #{num}"));
+                  _result.Add(new Error(nameof(Draft.Content), $"Language is not specified for the code block #{num}"));
                   return;
                }
 
                var lang = Draft.GetLanguage(plain);
                if (!_languages.Contains(lang))
-                  _result.Add(new Problem(nameof(Draft.Content), $"Specified language in code block #{num} is not valid ({lang}...)"));
+                  _result.Add(new Error(nameof(Draft.Content), $"Specified language in code block #{num} is not valid ({lang}...)"));
             }
          });
       }

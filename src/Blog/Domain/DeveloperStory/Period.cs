@@ -33,9 +33,10 @@ namespace Blog.Domain.DeveloperStory
          return other.StartDate == StartDate && other.EndDate == EndDate;
       }
 
-      public override int GetHashCode()
-      {
-         return StartDate.GetHashCode() ^ EndDate.GetHashCode();
-      }
+      public override int GetHashCode() =>
+           StartDate.GetHashCode() ^ EndDate.GetHashCode();
+
+      public static Period Parse(string startDate, string endDate) =>
+         new Period(DateTime.Parse(startDate), DateTime.Parse(endDate));
    }
 }

@@ -713,58 +713,16 @@ namespace Blog.Tests.Controllers
 
             var dic = new Dictionary<string, object>
             {
-               { "Skills", new[] {"The Skills field is required."}},
-               { "Summary", new[] {"The Summary field is required."}},
-               { "Experiences[0].Company", new[] {"The Company field is required."}},
-               { "Experiences[0].Content", new[] {"The Content field is required."}},
-               { "Experiences[0].EndDate", new[] {"The EndDate field is required."}},
-               { "Experiences[0].Position", new[] {"The Position field is required."}},
-               { "Experiences[0].StartDate", new[] {"The StartDate field is required."}},
+               { "Skills", new[] {"'Skills' must not be empty."}},
+               { "Summary", new[] {"'Summary' must not be empty."}},
+               { "Experiences[0].Company", new[] {"'Company' must not be empty."}},
+               { "Experiences[0].Content", new[] {"'Content' must not be empty."}},
+               { "Experiences[0].EndDate", new[] {"Date string is invalid"}},
+               { "Experiences[0].Position", new[] {"'Position' must not be empty."}},
+               { "Experiences[0].StartDate", new[] {"Date string is invalid"}},
             };
 
             result.Should().BeEquivalentTo(JsonConvert.SerializeObject(dic));
-         }
-      }
-
-      [Fact]
-      public async Task Return_domain_validations()
-      {
-         var add = new
-         {
-            summary = "passionate developer",
-            skills = "C#",
-            experiences = new[]
-            {
-               new
-               {
-                  id = "a",
-                  company = "parmis",
-                  position = "programmer",
-                  startDate = "2010-1-1",
-                  endDate = "2011-1-1",
-                  content = "web"
-               },
-               new
-               {
-                  id = "b",
-                  company = "parmis",
-                  position = "programmer",
-                  startDate = "2010-6-1",
-                  endDate = "2012-1-1",
-                  content = "web"
-               }
-            }
-         };
-
-         using (var response = await _client.PutAsJsonAsync("/api/developer", add))
-         {
-            var result = await response.Content.ReadAsStringAsync();
-            var expected = JsonConvert.SerializeObject(new Dictionary<string, object>
-            {
-               { "Experiences[0].Company" , new[]{ "An experience of programmer at parmis already exists" } },
-               { "Experiences[0].StartDate" , new[]{ "Experiences cannot have time overlaps with each other" } }
-            });
-            result.Should().BeEquivalentTo(expected);
          }
       }
    }

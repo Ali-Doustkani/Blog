@@ -7,9 +7,9 @@
       public Education(int id, string degree, string university, Period period)
       {
          Id = id;
-         Degree = Its.NotEmpty(degree, nameof(degree));
-         University = Its.NotEmpty(university, nameof(university));
-         Period = Its.NotEmpty(period, nameof(period));
+         Degree = Assert.NotNull(degree);
+         University = Assert.NotNull(university);
+         Period = Assert.NotNull(period);
       }
 
       public int Id { get; private set; }

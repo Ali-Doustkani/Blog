@@ -15,9 +15,9 @@ namespace Blog.Domain
       public DomainProblemException(string property, string message)
          : base(message)
       {
-         Problem = new Problem(property, message);
+         Problem = new Error(property, message);
       }
 
-      public Problem Problem { get; }
+      public Error Problem { get; }
    }
 }

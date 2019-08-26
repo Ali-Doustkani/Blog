@@ -60,7 +60,7 @@ namespace Blog.Tests.Domain.DeveloperStory
             {
                new ExperienceEntry
                {
-                  Id = "1",
+                  Id = "a",
                   Company = "Parmis",
                   Position = "C# Developer",
                   StartDate = "2015-1-1",
@@ -69,7 +69,7 @@ namespace Blog.Tests.Domain.DeveloperStory
                },
                new ExperienceEntry
                {
-                  Id = "new-id",
+                  Id = "b",
                   Company = "Parmis",
                   Position = "C# Developer",
                   StartDate = "2015-1-1",
@@ -79,9 +79,9 @@ namespace Blog.Tests.Domain.DeveloperStory
             }
          };
 
-         var result = developer.Update(command, Mock.Of<IStorageState>());
-
-         result.Errors.Should().Contain("An experience of C# Developer at Parmis already exists");
+         developer.Invoking(d => d.Update(command, Mock.Of<IStorageState>()))
+            .Should()
+            .Throw<ArgumentException>();
       }
 
       [Fact]
@@ -143,17 +143,16 @@ namespace Blog.Tests.Domain.DeveloperStory
             }
          };
 
-         var result = developer.Update(command, Mock.Of<IStorageState>());
-
-         result.Errors.Should().Contain("Experiences cannot have time overlaps with each other");
+         developer.Invoking(d => d.Update(command, Mock.Of<IStorageState>()))
+            .Should()
+            .Throw<ArgumentException>();
       }
 
       [Fact]
       public void Dont_add_experiences_with_startDates_that_are_greater_than_endDates()
       {
          var developer = new Developer("passionate developer", "C#");
-
-         var result = developer.Update(new DeveloperUpdateCommand
+         var add = new DeveloperUpdateCommand
          {
             Experiences = new[]
             {
@@ -166,9 +165,11 @@ namespace Blog.Tests.Domain.DeveloperStory
                   Content = "done tasks"
                }
             }
-         }, Mock.Of<IStorageState>());
+         };
 
-         result.Errors.Should().Contain("Start Date is greater than End Date for C# Developer at Lodgify");
+         developer.Invoking(d => d.Update(add, Mock.Of<IStorageState>()))
+            .Should()
+            .Throw<ArgumentException>();
       }
 
       [Fact]
@@ -257,7 +258,7 @@ namespace Blog.Tests.Domain.DeveloperStory
       public void Dont_add_side_projects_with_duplicate_titles()
       {
          var developer = new Developer("passionate dev", "C#");
-         var result = developer.Update(new DeveloperUpdateCommand
+         var add = new DeveloperUpdateCommand
          {
             SideProjects = new[]
             {
@@ -274,9 +275,10 @@ namespace Blog.Tests.Domain.DeveloperStory
                   Content = "web editor"
                }
             }
-         }, Mock.Of<IStorageState>());
-
-         result.Errors.Should().Contain("The 'Richtext' project already exists");
+         };
+         developer.Invoking(d => d.Update(add, Mock.Of<IStorageState>()))
+            .Should()
+            .Throw<ArgumentException>();
       }
 
       [Fact]
@@ -326,7 +328,7 @@ namespace Blog.Tests.Domain.DeveloperStory
       public void Dont_add_education_with_same_degree_and_university()
       {
          var developer = new Developer("passionate developer", "C#");
-         var result = developer.Update(new DeveloperUpdateCommand
+         var add = new DeveloperUpdateCommand
          {
             Educations = new[]
             {
@@ -347,16 +349,17 @@ namespace Blog.Tests.Domain.DeveloperStory
                   EndDate = "2016-1-1"
                }
             }
-         }, Mock.Of<IStorageState>());
-
-         result.Errors.Should().Contain("Another education item with the same degree and university already exists");
+         };
+         developer.Invoking(d => d.Update(add, Mock.Of<IStorageState>()))
+            .Should()
+            .Throw<ArgumentException>();
       }
 
       [Fact]
       public void Dont_add_education_with_overlapping_dates()
       {
          var developer = new Developer("passionate developer", "C#");
-         var result = developer.Update(new DeveloperUpdateCommand
+         var add = new DeveloperUpdateCommand
          {
             Educations = new[]
             {
@@ -377,9 +380,10 @@ namespace Blog.Tests.Domain.DeveloperStory
                   EndDate ="2012-1-1"
                }
             }
-         }, Mock.Of<IStorageState>());
-
-         result.Errors.Should().Contain("Education items should not have date overlaps with each other");
+         };
+         developer.Invoking(d => d.Update(add, Mock.Of<IStorageState>()))
+            .Should()
+            .Throw<ArgumentException>();
       }
 
       [Fact]

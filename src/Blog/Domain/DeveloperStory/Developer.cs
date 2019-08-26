@@ -31,47 +31,12 @@ namespace Blog.Domain.DeveloperStory
 
       public DeveloperUpdateCommandResult Update(DeveloperUpdateCommand command, IStorageState storageState)
       {
-         if (command == null)
-            throw new ArgumentNullException(nameof(command));
-
-         if (storageState == null)
-            throw new ArgumentNullException(nameof(storageState));
-
-         var result = new DeveloperUpdateCommandResult();
-
-         foreach (var exp in command.Experiences)
-         {
-            if (exp.GetStartDate() >= exp.GetEndDate())
-               result.AddError($"Start Date is greater than End Date for {exp.Position} at {exp.Company}");
-
-            if (command.Experiences.Any(x => x.Id != exp.Id && x.Company == exp.Company && x.Position == exp.Position))
-               result.AddError($"An experience of {exp.Position} at {exp.Company} already exists");
-
-            if (command.Experiences.Any(x => x.Id != exp.Id && x.GetPeriod().Overlaps(exp.GetPeriod())))
-               result.AddError("Experiences cannot have time overlaps with each other");
-         }
-
-         foreach (var proj in command.SideProjects)
-         {
-            if (command.SideProjects.Any(x => x.Id != proj.Id && x.Title == proj.Title))
-               result.AddError($"The '{proj.Title}' project already exists");
-         }
-
-         foreach (var edu in command.Educations)
-         {
-            if (command.Educations.Any(x => x.Id != edu.Id && x.Degree == edu.Degree && x.University == edu.University))
-               result.AddError("Another education item with the same degree and university already exists");
-
-            if (command.Educations.Any(x => x.Id != edu.Id && x.GetPeriod().Overlaps(edu.GetPeriod())))
-               result.AddError("Education items should not have date overlaps with each other");
-         }
-
-         if (result.Failed)
-            return result;
+         Assert.NotNull(command);
+         Assert.NotNull(storageState);
 
          UpdateAggregates(command, storageState);
 
-         return DeveloperUpdateCommandResult.Succeed(_experiences, _sideProjects, _educations);
+         return DeveloperUpdateCommandResult.Create(_experiences, _sideProjects, _educations);
       }
 
       private void UpdateAggregates(DeveloperUpdateCommand command, IStorageState storageState)
@@ -85,12 +50,12 @@ namespace Blog.Domain.DeveloperStory
                var oldExperience = _experiences.Single(exp.Id);
                storageState.Detach(oldExperience.Period, oldExperience);
                _experiences.Remove(oldExperience);
-               _experiences.Add(new Experience(id, exp.Company, exp.Position, exp.GetPeriod(), exp.Content));
+               AddExperience(id, exp);
                storageState.Modify(_experiences.Single(exp.Id).Period, _experiences.Single(exp.Id));
             })
             .OnAdd(exp =>
             {
-               _experiences.Add(new Experience(0, exp.Company, exp.Position, exp.GetPeriod(), exp.Content));
+               AddExperience(0, exp);
             });
 
          command.Update(_sideProjects, x => x.SideProjects)
@@ -98,12 +63,12 @@ namespace Blog.Domain.DeveloperStory
             {
                storageState.Detach(_sideProjects.Single(proj.Id));
                _sideProjects.Remove(_sideProjects.Single(x => x.Id == id));
-               _sideProjects.Add(new SideProject(id, proj.Title, proj.Content));
+               AddSideProject(id, proj);
                storageState.Modify(_sideProjects.Single(proj.Id));
             })
             .OnAdd(proj =>
             {
-               _sideProjects.Add(new SideProject(0, proj.Title, proj.Content));
+               AddSideProject(0, proj);
             });
 
          command.Update(_educations, x => x.Educations)
@@ -111,13 +76,45 @@ namespace Blog.Domain.DeveloperStory
              {
                 storageState.Detach(_educations.Single(edu.Id).Period, _educations.Single(edu.Id));
                 _educations.Remove(_educations.Single(x => x.Id == id));
-                _educations.Add(new Education(id, edu.Degree, edu.University, edu.GetPeriod()));
+                AddEducation(id, edu);
                 storageState.Modify(_educations.Single(edu.Id).Period, _educations.Single(edu.Id));
              })
              .OnAdd(edu =>
              {
-                _educations.Add(new Education(0, edu.Degree, edu.University, edu.GetPeriod()));
+                AddEducation(0, edu);
              });
+      }
+
+      private void AddExperience(int id, ExperienceEntry exp)
+      {
+         if (_experiences.Any(x => x.Company == exp.Company && x.Position == exp.Position))
+            throw new ArgumentException("Duplicate experience", $"{exp.Company}, {exp.Position}");
+
+         var period = Period.Parse(exp.StartDate, exp.EndDate);
+         if (_experiences.Any(x => x.Period.Overlaps(period)))
+            throw new ArgumentException("Time overlaps in experience", $"{exp.Company}, {exp.Position}");
+
+         _experiences.Add(new Experience(id, exp.Company, exp.Position, period, exp.Content));
+      }
+
+      private void AddSideProject(int id, SideProjectEntry proj)
+      {
+         if (_sideProjects.Any(x => x.Title == proj.Title))
+            throw new ArgumentException("Duplicate side project", proj.Title);
+
+         _sideProjects.Add(new SideProject(id, proj.Title, proj.Content));
+      }
+
+      private void AddEducation(int id, EducationEntry edu)
+      {
+         if (_educations.Any(x => x.Degree == edu.Degree && x.University == edu.University))
+            throw new ArgumentException("Duplicate education", $"{edu.Degree}, {edu.University}");
+
+         var period = Period.Parse(edu.StartDate, edu.EndDate);
+         if (_educations.Any(x => x.Period.Overlaps(period)))
+            throw new ArgumentException("Time overlaps in education", $"{edu.Degree}, {edu.University}");
+
+         _educations.Add(new Education(id, edu.Degree, edu.University, period));
       }
    }
 }

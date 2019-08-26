@@ -7,17 +7,20 @@ namespace Blog.Domain
    {
       public CommandResult()
       {
-         _messages = new List<string>();
+         _problems = new List<Error>();
       }
 
-      public bool Failed => _messages.Any();
+      public bool Failed => _problems.Any();
 
-      private List<string> _messages;
+      private List<Error> _problems;
 
       public void AddError(string message) =>
-         _messages.Add(message);
+         _problems.Add(new Error(message));
 
-      public IEnumerable<string> Errors => _messages.ToArray();
+      public void AddError(string message, string property) =>
+         _problems.Add(new Error(property, message));
+
+      public IEnumerable<Error> Errors => _problems.ToArray();
 
       public static CommandResult Succeed => new CommandResult();
    }

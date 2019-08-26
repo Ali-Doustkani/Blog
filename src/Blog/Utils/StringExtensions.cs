@@ -36,7 +36,7 @@ namespace Blog.Utils
          return value;
       }
 
-      public static void AddModelErrors(this ModelStateDictionary dic, IEnumerable<Problem> problems)
+      public static void AddModelErrors(this ModelStateDictionary dic, IEnumerable<Error> problems)
       {
          foreach (var prob in problems)
             dic.AddModelError(prob.Property, prob.Message);

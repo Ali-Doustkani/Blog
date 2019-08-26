@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Blog.Domain.DeveloperStory
 {
-   public class DeveloperUpdateCommandResult : CommandResult
+   public class DeveloperUpdateCommandResult
    {
       public DeveloperUpdateCommandResult() { }
 
@@ -20,7 +20,7 @@ namespace Blog.Domain.DeveloperStory
       public IEnumerable<int> SideProjects { get; }
       public IEnumerable<int> Educations { get; }
 
-      public static new DeveloperUpdateCommandResult Succeed(IEnumerable<Experience> experiences,
+      public static DeveloperUpdateCommandResult Create(IEnumerable<Experience> experiences,
          IEnumerable<SideProject> sideProjects,
          IEnumerable<Education> educations) =>
          new DeveloperUpdateCommandResult(experiences.Select(x => x.Id),

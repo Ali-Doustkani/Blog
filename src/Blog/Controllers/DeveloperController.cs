@@ -36,8 +36,6 @@ namespace Blog.Controllers
          var created = CreateOrGet(updateCommand, out Developer developer);
 
          var result = developer.Update(updateCommand, _storageState);
-         if (result.Failed)
-            return BadRequest(result);
 
          _context.Update(developer);
          _context.SaveChanges();
