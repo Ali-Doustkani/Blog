@@ -11,6 +11,12 @@ namespace Blog.Domain
          _getId = getId;
       }
 
+      public AggregateList(Func<T, int> getId, IEnumerable<T> collection)
+         : base(collection)
+      {
+         _getId = getId;
+      }
+
       private Func<T, int> _getId;
 
       public void RemoveNotIn(IEnumerable<DomainObjectEntry> entries)

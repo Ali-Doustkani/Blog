@@ -6,11 +6,21 @@ namespace Blog.Domain.DeveloperStory
 {
    public class Developer
    {
-      public Developer(string summary, string skills)
+      private Developer()
       {
-         _summary = Its.NotEmpty(summary, nameof(summary));
-         Skills = Its.NotEmpty(skills, nameof(Skills));
          _experiences = new AggregateList<Experience>(exp => exp.Id);
+         _sideProjects = new AggregateList<SideProject>(proj => proj.Id);
+         _educations = new AggregateList<Education>(edu => edu.Id);
+      }
+
+      public Developer(string summary, string skills, IEnumerable<Experience> experiences)
+      {
+         if (!experiences.Any())
+            throw new ArgumentException("at least one experience is required");
+
+         _summary = Assert.NotNull(summary);
+         Skills = Assert.NotNull(skills);
+         _experiences = new AggregateList<Experience>(exp => exp.Id, experiences);
          _sideProjects = new AggregateList<SideProject>(proj => proj.Id);
          _educations = new AggregateList<Education>(edu => edu.Id);
       }

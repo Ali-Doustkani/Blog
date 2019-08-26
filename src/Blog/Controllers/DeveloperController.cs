@@ -54,7 +54,10 @@ namespace Blog.Controllers
             return false;
          }
 
-         developer = new Developer(updateCommand.Summary, updateCommand.Skills);
+         var experiences = updateCommand
+            .Experiences
+            .Select(x => new Experience(0, x.Company, x.Position, Period.Parse(x.StartDate, x.EndDate), x.Content));
+         developer = new Developer(updateCommand.Summary, updateCommand.Skills, experiences);
          return true;
       }
    }

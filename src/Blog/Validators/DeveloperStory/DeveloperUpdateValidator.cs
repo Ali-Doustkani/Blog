@@ -10,7 +10,7 @@ namespace Blog.Validators.DeveloperStory
       {
          RuleFor(x => x.Summary).NotEmpty();
          RuleFor(x => x.Skills).NotEmpty();
-         // RuleFor(x => x.Experiences).Must(x => x.Any()).WithMessage("Please provide at least one experience");
+         RuleFor(x => x.Experiences).Must(x => x.Any()).WithMessage("At least one experience must be provided.");
       }
    }
 }

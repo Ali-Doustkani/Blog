@@ -1,7 +1,6 @@
 ﻿using Blog.Domain.DeveloperStory;
 using FluentAssertions;
 using FluentAssertions.Json;
-using Moq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
@@ -40,7 +39,19 @@ namespace Blog.Tests.Controllers
          var developer = new
          {
             summary = "a web programmer",
-            skills = "C#, HTML"
+            skills = "C#, HTML",
+            experiences = new[]
+            {
+               new
+               {
+                  id = "a",
+                  company = "parmis",
+                  position = "C# Developer",
+                  startDate = "2010-1-1",
+                  endDate = "2011-1-1",
+                  content = "web development"
+               }
+            }
          };
 
          using (var response = await _client.PutAsJsonAsync("/api/developer", developer))
@@ -57,13 +68,37 @@ namespace Blog.Tests.Controllers
          await _client.PutAsJsonAsync("/api/developer", new
          {
             summary = "a web programmer",
-            skills = "C#, HTML"
+            skills = "C#, HTML",
+            experiences = new[]
+            {
+               new
+               {
+                  id = "a",
+                  company = "parmis",
+                  position = "C# Developer",
+                  startDate = "2010-1-1",
+                  endDate = "2011-1-1",
+                  content = "web development"
+               }
+            }
          });
 
          var update = new
          {
             summary = "a passionate web developer",
-            skills = "C#"
+            skills = "C#",
+            experiences = new[]
+            {
+               new
+               {
+                  id = "1",
+                  company = "parmis",
+                  position = "C# Developer",
+                  startDate = "2010-1-1",
+                  endDate = "2011-1-1",
+                  content = "web development"
+               }
+            }
          };
 
          using (var response = await _client.PutAsJsonAsync("/api/developer", update))
@@ -515,6 +550,18 @@ namespace Blog.Tests.Controllers
          {
             summary = "Cool guy!",
             skills = "C#, SQL",
+            experiences = new[]
+            {
+               new
+               {
+                  id = "a",
+                  company = "parmis",
+                  position = "C# Developer",
+                  startDate = "2010-1-1",
+                  endDate = "2011-1-1",
+                  content = "web development"
+               }
+            },
             sideProjects = new[]
             {
                new
@@ -538,6 +585,18 @@ namespace Blog.Tests.Controllers
          {
             summary = "Cool guy!",
             skills = "C#, SQL",
+            experiences = new[]
+            {
+               new
+               {
+                  id = "1",
+                  company = "parmis",
+                  position = "C# Developer",
+                  startDate = "2010-1-1",
+                  endDate = "2011-1-1",
+                  content = "web development"
+               }
+            },
             sideProjects = new[]
             {
                new
@@ -573,7 +632,18 @@ namespace Blog.Tests.Controllers
             {
                summary = "Cool guy!",
                skills = "C#, SQL",
-               experiences = Enumerable.Empty<ExperienceEntry>(),
+               experiences = new[]
+               {
+                  new
+                  {
+                     id = "1",
+                     company = "parmis",
+                     position = "C# Developer",
+                     startDate = "2010-01-01",
+                     endDate = "2011-01-01",
+                     content = "web development"
+                  }
+               },
                educations = Enumerable.Empty<EducationEntry>(),
                sideProjects = new[]
                {
@@ -602,6 +672,18 @@ namespace Blog.Tests.Controllers
          {
             summary = "Cool guy!",
             skills = "C#, SQL",
+            experiences = new[]
+            {
+               new
+               {
+                  id = "a",
+                  company = "parmis",
+                  position = "C# Developer",
+                  startDate = "2010-1-1",
+                  endDate = "2011-1-1",
+                  content = "web development"
+               }
+            },
             educations = new[]
             {
                new
@@ -629,6 +711,18 @@ namespace Blog.Tests.Controllers
          {
             summary = "Cool guy!",
             skills = "C#, SQL",
+            experiences = new[]
+            {
+               new
+               {
+                  id = "1",
+                  company = "parmis",
+                  position = "C# Developer",
+                  startDate = "2010-1-1",
+                  endDate = "2011-1-1",
+                  content = "web development"
+               }
+            },
             educations = new[]
             {
                new
@@ -655,7 +749,7 @@ namespace Blog.Tests.Controllers
             var result = JToken.Parse(await response.Content.ReadAsStringAsync());
             var expected = JsonConvert.SerializeObject(new
             {
-               experiences = Enumerable.Empty<int>(),
+               experiences = new[] { 1 },
                sideProjects = Enumerable.Empty<int>(),
                educations = new[] { 2, 3 }
             });
@@ -669,7 +763,18 @@ namespace Blog.Tests.Controllers
             {
                summary = "Cool guy!",
                skills = "C#, SQL",
-               experiences = Enumerable.Empty<ExperienceEntry>(),
+               experiences = new[]
+               {
+                  new
+                  {
+                     id = "1",
+                     company = "parmis",
+                     position = "C# Developer",
+                     startDate = "2010-01-01",
+                     endDate = "2011-01-01",
+                     content = "web development"
+                  }
+               },
                sideProjects = Enumerable.Empty<SideProjectEntry>(),
                educations = new[]
                {

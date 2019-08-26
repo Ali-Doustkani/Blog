@@ -10,10 +10,23 @@ namespace Blog.Tests.Domain.DeveloperStory
 {
    public class DeveloperTests
    {
+      private Developer NewDeveloper()
+      {
+         var experiences = new[]
+         {
+            new Experience(100,
+               "Microsoft",
+               "Software Engineer",
+               new Period (new DateTime (1990,1,1), new DateTime (2000,1,1)),
+               "worked for ten years")
+         };
+         return new Developer("a passionate developer", "C#\nJS", experiences);
+      }
+
       [Fact]
       public void Add_a_new_experience()
       {
-         var developer = new Developer("summary", "skills");
+         var developer = NewDeveloper();
          developer.Update(new DeveloperUpdateCommand
          {
             Experiences = new[]
@@ -53,7 +66,7 @@ namespace Blog.Tests.Domain.DeveloperStory
       [Fact]
       public void Dont_add_experience_with_duplicate_company_and_position()
       {
-         var developer = new Developer("passionate developer", "c#, js");
+         var developer = NewDeveloper();
          var command = new DeveloperUpdateCommand
          {
             Experiences = new[]
@@ -87,7 +100,7 @@ namespace Blog.Tests.Domain.DeveloperStory
       [Fact]
       public void Add_multiple_experiences_for_the_same_company_with_different_positions()
       {
-         var developer = new Developer("passionate developer", "C#, js");
+         var developer = NewDeveloper();
          developer.Update(new DeveloperUpdateCommand
          {
             Experiences = new[]
@@ -117,7 +130,7 @@ namespace Blog.Tests.Domain.DeveloperStory
       [Fact]
       public void Dont_update_experiences_with_time_overlaps()
       {
-         var developer = new Developer("passionate developer", "C#, JS");
+         var developer = NewDeveloper();
          var command = new DeveloperUpdateCommand
          {
             Experiences = new[]
@@ -151,7 +164,7 @@ namespace Blog.Tests.Domain.DeveloperStory
       [Fact]
       public void Dont_add_experiences_with_startDates_that_are_greater_than_endDates()
       {
-         var developer = new Developer("passionate developer", "C#");
+         var developer = NewDeveloper();
          var add = new DeveloperUpdateCommand
          {
             Experiences = new[]
@@ -175,7 +188,7 @@ namespace Blog.Tests.Domain.DeveloperStory
       [Fact]
       public void Sort_experiences_by_date()
       {
-         var developer = new Developer("passionate dev", "C#");
+         var developer = NewDeveloper();
          developer.Update(new DeveloperUpdateCommand
          {
             Experiences = new[]
@@ -227,7 +240,7 @@ namespace Blog.Tests.Domain.DeveloperStory
       [Fact]
       public void Add_a_new_sideProject()
       {
-         var developer = new Developer("passionate dev", "C#");
+         var developer = NewDeveloper();
          developer.Update(new DeveloperUpdateCommand
          {
             SideProjects = new[]
@@ -257,7 +270,7 @@ namespace Blog.Tests.Domain.DeveloperStory
       [Fact]
       public void Dont_add_side_projects_with_duplicate_titles()
       {
-         var developer = new Developer("passionate dev", "C#");
+         var developer = NewDeveloper();
          var add = new DeveloperUpdateCommand
          {
             SideProjects = new[]
@@ -284,7 +297,7 @@ namespace Blog.Tests.Domain.DeveloperStory
       [Fact]
       public void GetSkillLines()
       {
-         var developer = new Developer("passionate developer", "C#\nJS");
+         var developer = NewDeveloper();
          developer.GetSkillLines()
             .Should()
             .ContainInOrder("C#", "JS");
@@ -293,7 +306,7 @@ namespace Blog.Tests.Domain.DeveloperStory
       [Fact]
       public void Add_a_new_education()
       {
-         var developer = new Developer("passionate developer", "C#");
+         var developer = NewDeveloper();
          developer.Update(new DeveloperUpdateCommand
          {
             Educations = new[]
@@ -327,7 +340,7 @@ namespace Blog.Tests.Domain.DeveloperStory
       [Fact]
       public void Dont_add_education_with_same_degree_and_university()
       {
-         var developer = new Developer("passionate developer", "C#");
+         var developer = NewDeveloper();
          var add = new DeveloperUpdateCommand
          {
             Educations = new[]
@@ -358,7 +371,7 @@ namespace Blog.Tests.Domain.DeveloperStory
       [Fact]
       public void Dont_add_education_with_overlapping_dates()
       {
-         var developer = new Developer("passionate developer", "C#");
+         var developer = NewDeveloper();
          var add = new DeveloperUpdateCommand
          {
             Educations = new[]
@@ -389,7 +402,7 @@ namespace Blog.Tests.Domain.DeveloperStory
       [Fact]
       public void Sort_educations_by_date()
       {
-         var developer = new Developer("passionate developer", "C#");
+         var developer = NewDeveloper();
          developer.Update(new DeveloperUpdateCommand
          {
             Educations = new[]
