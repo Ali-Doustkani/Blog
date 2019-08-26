@@ -1,4 +1,5 @@
-﻿using Blog.Domain.Blogging;
+﻿using Blog.Domain;
+using Blog.Domain.Blogging;
 using Blog.Domain.DeveloperStory;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -6,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System.Linq;
 
-namespace Blog.Domain
+namespace Blog.Storage
 {
    public class BlogContext : IdentityDbContext<IdentityUser>
    {

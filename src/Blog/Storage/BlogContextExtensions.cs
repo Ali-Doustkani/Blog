@@ -1,7 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Blog.Domain;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
-namespace Blog.Domain
+namespace Blog.Storage
 {
    public static class ContextExtensions
    {
