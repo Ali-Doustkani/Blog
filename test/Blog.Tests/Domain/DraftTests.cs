@@ -26,9 +26,12 @@ namespace Blog.Tests.Domain
 
          var draft = new Draft();
          draft.Info = new PostInfo("the post");
+         draft.Info.Summary = "summary";
+         draft.Info.Tags = "tags";
+         draft.Info.Language = Language.English;
          draft.Content = html;
          draft.RenderImages();
-         return draft.Publish(DateTime.Now, _codeFormatter.Object, _imageProcessor.Object).PostContent.Content;
+         return draft.Publish(DateTime.Now, _codeFormatter.Object, _imageProcessor.Object).Content;
       }
 
       private string Publish(params string[] htmlLines) =>

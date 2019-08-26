@@ -45,17 +45,14 @@ namespace Blog.Domain.Blogging
               display.Append(node.El());
         });
 
-         return new Post(publishDate)
-         {
-            Id = Id,
-            EnglishUrl = Info.EnglishUrl,
-            Language = Info.Language,
-            Summary = Info.Summary,
-            Tags = Info.Tags,
-            Title = Info.Title,
-            PostContent = new PostContent { Id = Id, Content = display.ToString() },
-            Url = Info.Slugify()
-         };
+         return new Post(Id,
+            Info.Title,
+            publishDate,
+            Info.Language,
+            Info.Summary,
+            Info.Tags,
+            Info.Slugify(),
+            display.ToString());
       }
 
       private string Code(HtmlNode node, ICodeFormatter codeFormatter)

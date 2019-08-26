@@ -18,7 +18,6 @@ namespace Blog.Storage
       public DbSet<PostInfo> Infos { get; set; }
       public DbSet<Draft> Drafts { get; set; }
       public DbSet<Post> Posts { get; set; }
-      public DbSet<PostContent> PostContents { get; set; }
       public DbSet<Developer> Developers { get; set; }
 
       public Developer GetDeveloper() =>
@@ -86,7 +85,6 @@ namespace Blog.Storage
 
          modelBuilder.Entity<Post>(post =>
          {
-            post.Property(x => x.EnglishUrl);
             post.Property(x => x.Language).IsRequired();
             post.Property(x => x.PublishDate).IsRequired();
             post.Property(x => x.Summary).IsRequired();
@@ -94,23 +92,9 @@ namespace Blog.Storage
             post.Property(x => x.Title).IsRequired();
 
             post
-            .HasOne(x => x.PostContent)
-            .WithOne()
-            .HasForeignKey<PostContent>(x => x.Id);
-
-            post
             .Property(x => x.Url)
             .IsRequired()
             .HasMaxLength(200);
-         });
-
-         modelBuilder.Entity<PostContent>(pc =>
-         {
-            pc.ToTable("Posts");
-
-            pc
-               .Property(x => x.Content)
-               .IsRequired();
          });
 
          modelBuilder.Entity<Developer>(dev =>

@@ -57,26 +57,22 @@ namespace Blog.Tests.Services
                Id = 3,
                Content = "<p>جاوا و ویندوز</p>"
             });
-            db.Posts.Add(new Post(new DateTime(2019, 1, 1))
-            {
-               Id = 1,
-               Title = "Javascript FP",
-               Language = Language.English,
-               Summary = "Learning FP in Javascript",
-               Tags = "JS, FP, Node.js",
-               Url = "Javascript-FP",
-               PostContent = new PostContent { Id = 1, Content = "<p>JS Functional Programming</p>" }
-            });
-            db.Posts.Add(new Post(new DateTime(2019, 7, 16))
-            {
-               Id = 2,
-               Title = "Object Oriented C#",
-               Language = Language.English,
-               Summary = "Learning OOP in C#",
-               Tags = "OOP, C#",
-               Url = "Object-Oriented-Csharp",
-               PostContent = new PostContent { Id = 2, Content = "<p>Object Oriented C#</p>" }
-            });
+            db.Posts.Add(new Post(1,
+               "Javascript FP",
+               new DateTime(2019, 1, 1),
+               Language.English,
+               "Learning FP in Javascript",
+              "JS, FP, Node.js",
+              "Javascript-FP",
+              "<p>JS Functional Programming</p>"));
+            db.Posts.Add(new Post(2,
+               "Object Oriented C#",
+               new DateTime(2019, 7, 16),
+               Language.English,
+               "Learning OOP in C#",
+               "OOP, C#",
+               "Object-Oriented-Csharp",
+                "<p>Object Oriented C#</p>"));
 
          });
          _context.WithMock<ICodeFormatter>();
@@ -309,13 +305,12 @@ namespace Blog.Tests.Services
          using (var db = _context.GetDatabase())
          {
             db.Posts
-               .Include(x => x.PostContent)
                .Single(x => x.Id == 1)
                .Should()
                .BeEquivalentTo(new
                {
                   Url = "new-title",
-                  PostContent = new { Content = "<p>New Content</p>" },
+                  Content = "<p>New Content</p>"
                });
          }
       }

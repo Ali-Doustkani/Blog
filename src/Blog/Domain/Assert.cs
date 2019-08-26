@@ -13,7 +13,7 @@ namespace Blog.Domain
 
       public static string NotNull(string input)
       {
-         if (string.IsNullOrEmpty(input))
+         if (string.IsNullOrWhiteSpace(input))
             throw new ArgumentNullException();
          return input;
       }

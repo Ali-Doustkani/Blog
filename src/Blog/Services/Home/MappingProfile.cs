@@ -18,8 +18,6 @@ namespace Blog.Services.Home
 
          CreateMap<Post, PostViewModel>()
              .ForMember(
-                 dest => dest.Content, o => o.MapFrom(src => src.PostContent.Content))
-             .ForMember(
                  dest => dest.Date,
                  o => o.MapFrom<LongDateResolver>())
                .ForMember(

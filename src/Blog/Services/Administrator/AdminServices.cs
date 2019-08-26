@@ -86,11 +86,10 @@ namespace Blog.Services.Administrator
          var draft = _context.Drafts.Find(id);
          _context.Drafts.Remove(draft);
 
-         var post = _context.Posts.Include(x => x.PostContent).SingleOrDefault(x => x.Id == id);
+         var post = _context.Posts.SingleOrDefault(x => x.Id == id);
          if (post != null)
          {
             _context.Posts.Remove(post);
-            _context.PostContents.Remove(post.PostContent);
          }
 
          _context.SaveChanges();

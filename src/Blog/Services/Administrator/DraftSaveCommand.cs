@@ -78,9 +78,8 @@ namespace Blog.Services.Administrator
 
       private void DeletePost()
       {
-         var post = _context.Posts.Include(x => x.PostContent).Single(x => x.Id == _draft.Id);
+         var post = _context.Posts.Single(x => x.Id == _draft.Id);
          _context.Posts.Remove(post);
-         _context.PostContents.Remove(post.PostContent);
       }
 
       private SaveResult PublishPost(DateTime publishDate)

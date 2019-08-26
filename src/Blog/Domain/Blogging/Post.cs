@@ -9,27 +9,38 @@ namespace Blog.Domain.Blogging
    {
       private Post() { }
 
-      public Post(DateTime publishDate)
+      public Post(int id,
+         string title,
+         DateTime publishDate,
+         Language language,
+         string summary,
+         string tags,
+         string url,
+         string content)
       {
-         //Title = Assert.NotNull(title);
+         Id = id;
+         Title = Assert.NotNull(title);
          PublishDate = publishDate;
+         Language = language;
+         Summary = Assert.NotNull(summary);
+         Tags = Assert.NotNull(tags);
+         Url = Assert.NotNull(url);
+         Content = Assert.NotNull(content);
       }
 
-      public string Title { get; set; }
+      public string Title { get; private set; }
 
       public DateTime PublishDate { get; private set; }
 
-      public string EnglishUrl { get; set; }
+      public Language Language { get; private set; }
 
-      public Language Language { get; set; }
+      public string Summary { get; private set; }
 
-      public string Summary { get; set; }
+      public string Tags { get; private set; }
 
-      public string Tags { get; set; }
+      public string Content { get; private set; }
 
-      public PostContent PostContent { get; set; }
-
-      public string Url { get; set; }
+      public string Url { get; private set; }
 
       public IEnumerable<string> GetTags()
       {
