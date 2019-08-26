@@ -59,7 +59,7 @@ namespace Blog.Services.Administrator
            join post in _context.Posts on draft.Id equals post.Id into posts
            from post in posts.DefaultIfEmpty()
            where draft.Id == id
-           select _mapper.Map<DraftEntry>(Tuple.Create(draft, post == null ? -1 : post.Id))
+           select _mapper.Map<DraftEntry>(Tuple.Create(draft, post == null ? -1 : post.Id, post == null ? DateTime.MinValue : post.PublishDate))
            ).Single();
 
       public Home.PostViewModel GetView(int id)
@@ -69,7 +69,10 @@ namespace Blog.Services.Administrator
             .Include(x => x.Info)
             .SingleOrDefault(x => x.Id == id);
          if (draft == null) return null;
-         return _mapper.Map<Home.PostViewModel>(draft.Publish(_codeFormatter, _imageProcessor));
+
+         var post = _context.Posts.SingleOrDefault(x => x.Id == id);
+         var date = post == null ? DateTime.Now : post.PublishDate;
+         return _mapper.Map<Home.PostViewModel>(draft.Publish(date, _codeFormatter, _imageProcessor));
       }
 
       public SaveResult Save(DraftEntry viewModel) =>

@@ -22,7 +22,7 @@ namespace Blog.Domain.Blogging
       }
 
       /// <exception cref="ServiceDependencyException"/>
-      public Post Publish(ICodeFormatter codeFormatter, IImageProcessor imageProcessor)
+      public Post Publish(DateTime publishDate, ICodeFormatter codeFormatter, IImageProcessor imageProcessor)
       {
          var display = new StringBuilder(1000);
          var doc = new HtmlDocument();
@@ -45,7 +45,7 @@ namespace Blog.Domain.Blogging
               display.Append(node.El());
         });
 
-         return new Post
+         return new Post(publishDate)
          {
             Id = Id,
             PostContent = new PostContent { Id = Id, Content = display.ToString() },

@@ -13,7 +13,7 @@ namespace Blog.Domain.Blogging
       public ImageRenderer(string postDirectory)
       {
          _imageUrls = new List<string>();
-         _postDirectory = Its.NotEmpty(postDirectory, nameof(postDirectory));
+         _postDirectory = Assert.NotNull(postDirectory);
       }
 
       private readonly List<string> _imageUrls;

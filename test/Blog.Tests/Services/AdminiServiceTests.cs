@@ -24,7 +24,6 @@ namespace Blog.Tests.Services
             {
                Id = 1,
                Language = Language.English,
-               PublishDate = new DateTime(2019, 1, 1),
                Summary = "Learning FP in Javascript",
                Tags = "JS, FP, Node.js",
                Title = "Javascript FP"
@@ -33,7 +32,7 @@ namespace Blog.Tests.Services
             {
                Id = 2,
                Language = Language.English,
-               PublishDate = new DateTime(2019, 7, 16),
+
                Summary = "Learning OOP in C#",
                Tags = "OOP, C#",
                Title = "Object Oriented C#"
@@ -42,7 +41,6 @@ namespace Blog.Tests.Services
             {
                Id = 3,
                Language = Language.Farsi,
-               PublishDate = new DateTime(2019, 7, 16),
                Summary = "استفاده از جاوا در ویندوز",
                Tags = "Java",
                Title = "جاوا و ویندوز",
@@ -63,13 +61,13 @@ namespace Blog.Tests.Services
                Id = 3,
                Content = "<p>جاوا و ویندوز</p>"
             });
-            db.Posts.Add(new Post
+            db.Posts.Add(new Post(new DateTime(2019, 1, 1))
             {
                Id = 1,
                Url = "Javascript-FP",
                PostContent = new PostContent { Id = 1, Content = "<p>JS Functional Programming</p>" }
             });
-            db.Posts.Add(new Post
+            db.Posts.Add(new Post(new DateTime(2019, 7, 16))
             {
                Id = 2,
                Url = "Object-Oriented-Csharp",
@@ -148,14 +146,14 @@ namespace Blog.Tests.Services
       {
          using (var svc = _context.GetService())
          {
-            var draft = svc.Get(1);
-            draft.Content.Should().Be("<p>JS Functional Programming</p>");
-            draft.Id.Should().Be(1);
-            draft.Language.Should().Be(Language.English);
-            draft.PublishDate.Should().Be(new DateTime(2019, 1, 1));
-            draft.Summary.Should().Be("Learning FP in Javascript");
-            draft.Tags.Should().Be("JS, FP, Node.js");
-            draft.Title.Should().Be("Javascript FP");
+            var post = svc.Get(1);
+            post.Content.Should().Be("<p>JS Functional Programming</p>");
+            post.Id.Should().Be(1);
+            post.Language.Should().Be(Language.English);
+            post.PublishDate.Should().Be(new DateTime(2019, 1, 1));
+            post.Summary.Should().Be("Learning FP in Javascript");
+            post.Tags.Should().Be("JS, FP, Node.js");
+            post.Title.Should().Be("Javascript FP");
          }
       }
 
@@ -166,7 +164,6 @@ namespace Blog.Tests.Services
          {
             Content = "<h1>Content</h1>",
             Language = Language.English,
-            PublishDate = new DateTime(2019, 1, 1),
             Summary = "Summary",
             Tags = "tagA, tagB",
             Title = "Title"
@@ -196,8 +193,7 @@ namespace Blog.Tests.Services
                Title = "Javascript FP",
                Summary = "Summary",
                Tags = "Tags",
-               Language = Language.English,
-               PublishDate = new DateTime(2018, 8, 8)
+               Language = Language.English
             });
          }
 
@@ -212,8 +208,7 @@ namespace Blog.Tests.Services
                   Title = "Javascript FP",
                   Summary = "Summary",
                   Tags = "Tags",
-                  Language = Language.English,
-                  PublishDate = new DateTime(2018, 8, 8)
+                  Language = Language.English
                });
          }
       }
@@ -418,6 +413,7 @@ namespace Blog.Tests.Services
       [Fact]
       public void GetView()
       {
+         var date = Post.ToLongPersianDate(DateTime.Now);
          using (var svc = _context.GetService())
          {
             svc.GetView(3)
@@ -425,7 +421,7 @@ namespace Blog.Tests.Services
                .BeEquivalentTo(new
                {
                   Title = "جاوا و ویندوز",
-                  Date = "سه شنبه، 25 تیر 1398",
+                  Date = date,
                   Content = "<p>جاوا و ویندوز</p>",
                   Tags = new[] { "Java" },
                   Language = Language.Farsi
@@ -488,7 +484,7 @@ namespace Blog.Tests.Services
          };
 
          using (var svc = _context.GetService())
-            toAdd.Id = svc.Save(toAdd).Id;
+            svc.Save(toAdd);
 
          using (var svc = _context.GetService())
             svc.Save(toAdd);

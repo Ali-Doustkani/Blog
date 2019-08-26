@@ -28,7 +28,7 @@ namespace Blog.Tests.Domain
          draft.Info = new PostInfo { Title = "the post" };
          draft.Content = html;
          draft.RenderImages();
-         return draft.Publish(_codeFormatter.Object, _imageProcessor.Object).PostContent.Content;
+         return draft.Publish(DateTime.Now, _codeFormatter.Object, _imageProcessor.Object).PostContent.Content;
       }
 
       private string Publish(params string[] htmlLines) =>

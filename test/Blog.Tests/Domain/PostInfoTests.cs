@@ -24,16 +24,6 @@ namespace Blog.Tests.Domain
          .GetTags().Should().HaveCount(2);
 
       [Fact]
-      public void GetShortPersianDate() =>
-         new PostInfo { PublishDate = new DateTime(2018, 12, 25) }
-         .GetShortPersianDate().Should().Be("دی 1397");
-
-      [Fact]
-      public void GetLongPersianDate() =>
-         new PostInfo { PublishDate = new DateTime(2018, 12, 25) }
-         .GetLongPersianDate().Should().Be("سه شنبه، 4 دی 1397");
-
-      [Fact]
       public void Farsi_posts_should_be_slugified_to_english_url() =>
          new PostInfo { Language = Language.Farsi, EnglishUrl = "the-url" }
          .Slugify()
