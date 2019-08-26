@@ -30,7 +30,6 @@ namespace Blog.Services.Home
       public PostViewModel Get(string urlTitle) =>
           _mapper.Map<PostViewModel>(_context
               .Posts
-              .Include(x => x.Info)
               .Include(x => x.PostContent)
               .SingleOrDefault(x => x.Url == urlTitle)
               );
@@ -38,8 +37,7 @@ namespace Blog.Services.Home
       public IEnumerable<PostRow> GetPosts(Language language) =>
           _context
           .Posts
-          .Include(x => x.Info)
-          .Where(x => x.Info.Language == language)
+          .Where(x => x.Language == language)
           .Select(_mapper.Map<PostRow>);
 
       public DeveloperViewModel GetDeveloper() =>

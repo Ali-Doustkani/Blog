@@ -81,7 +81,18 @@ namespace Blog.Services.Administrator
       public void Delete(int id)
       {
          var info = _context.Infos.Find(id);
-         _context.Drafts.Delete(id);
+         _context.Infos.Remove(info);
+
+         var draft = _context.Drafts.Find(id);
+         _context.Drafts.Remove(draft);
+
+         var post = _context.Posts.Include(x => x.PostContent).SingleOrDefault(x => x.Id == id);
+         if (post != null)
+         {
+            _context.Posts.Remove(post);
+            _context.PostContents.Remove(post.PostContent);
+         }
+
          _context.SaveChanges();
          _imageContext.Delete(info.Slugify());
       }

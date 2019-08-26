@@ -20,30 +20,26 @@ namespace Blog.Tests.Services
          _context = new ServiceTestContext<AdminServices>();
          _context.Seed(db =>
          {
-            db.Infos.Add(new PostInfo
+            db.Infos.Add(new PostInfo("Javascript FP")
             {
                Id = 1,
                Language = Language.English,
                Summary = "Learning FP in Javascript",
-               Tags = "JS, FP, Node.js",
-               Title = "Javascript FP"
+               Tags = "JS, FP, Node.js"
             });
-            db.Infos.Add(new PostInfo
+            db.Infos.Add(new PostInfo("Object Oriented C#")
             {
                Id = 2,
                Language = Language.English,
-
                Summary = "Learning OOP in C#",
                Tags = "OOP, C#",
-               Title = "Object Oriented C#"
             });
-            db.Infos.Add(new PostInfo
+            db.Infos.Add(new PostInfo("جاوا و ویندوز")
             {
                Id = 3,
                Language = Language.Farsi,
                Summary = "استفاده از جاوا در ویندوز",
                Tags = "Java",
-               Title = "جاوا و ویندوز",
                EnglishUrl = "java-windows"
             });
             db.Drafts.Add(new Draft
@@ -64,12 +60,20 @@ namespace Blog.Tests.Services
             db.Posts.Add(new Post(new DateTime(2019, 1, 1))
             {
                Id = 1,
+               Title = "Javascript FP",
+               Language = Language.English,
+               Summary = "Learning FP in Javascript",
+               Tags = "JS, FP, Node.js",
                Url = "Javascript-FP",
                PostContent = new PostContent { Id = 1, Content = "<p>JS Functional Programming</p>" }
             });
             db.Posts.Add(new Post(new DateTime(2019, 7, 16))
             {
                Id = 2,
+               Title = "Object Oriented C#",
+               Language = Language.English,
+               Summary = "Learning OOP in C#",
+               Tags = "OOP, C#",
                Url = "Object-Oriented-Csharp",
                PostContent = new PostContent { Id = 2, Content = "<p>Object Oriented C#</p>" }
             });
@@ -461,11 +465,10 @@ namespace Blog.Tests.Services
                .Should()
                .ContainEquivalentOf(new { Property = "", Message = "Draft saved but couldn't publish. Error Happened." });
          }
-
       }
 
       [Fact]
-      public void Save_again_after_service_dependency_problem_fixed()
+      public void Save_the_draft_alone_if_saving_post_is_not_possible()
       {
          _context.GetMock<ICodeFormatter>()
             .SetupSequence(x => x.Format(It.IsAny<string>(), It.IsAny<string>()))
@@ -484,7 +487,7 @@ namespace Blog.Tests.Services
          };
 
          using (var svc = _context.GetService())
-            svc.Save(toAdd);
+            toAdd.Id = svc.Save(toAdd).Id;
 
          using (var svc = _context.GetService())
             svc.Save(toAdd);

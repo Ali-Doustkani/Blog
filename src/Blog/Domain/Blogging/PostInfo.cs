@@ -7,13 +7,16 @@ namespace Blog.Domain.Blogging
 {
    public class PostInfo : DomainEntity
    {
-      public PostInfo()
+      private PostInfo() { }
+
+      public PostInfo(string title)
       {
+         Title = Assert.NotNull(title);
          Tags = string.Empty;
          Language = Language.English;
       }
 
-      public string Title { get; set; }
+      public string Title { get; private set; }
 
       public string EnglishUrl { get; set; }
 
@@ -23,20 +26,7 @@ namespace Blog.Domain.Blogging
 
       public string Tags { get; set; }
 
-      public IEnumerable<string> GetTags()
-      {
-         if (string.IsNullOrEmpty(Tags))
-            return Enumerable.Empty<string>();
 
-         var result = new List<string>();
-         foreach (var str in Tags.Split(","))
-         {
-            var trimmed = str.Trim();
-            if (!string.IsNullOrEmpty(trimmed))
-               result.Add(trimmed);
-         }
-         return result;
-      }
 
       public string Slugify()
       {

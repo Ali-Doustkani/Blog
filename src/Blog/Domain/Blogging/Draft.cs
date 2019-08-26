@@ -48,8 +48,12 @@ namespace Blog.Domain.Blogging
          return new Post(publishDate)
          {
             Id = Id,
+            EnglishUrl = Info.EnglishUrl,
+            Language = Info.Language,
+            Summary = Info.Summary,
+            Tags = Info.Tags,
+            Title = Info.Title,
             PostContent = new PostContent { Id = Id, Content = display.ToString() },
-            Info = Info,
             Url = Info.Slugify()
          };
       }

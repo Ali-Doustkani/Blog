@@ -1,27 +1,50 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 namespace Blog.Domain.Blogging
 {
    public class Post : DomainEntity
    {
-      public Post()
-      {
-
-      }
+      private Post() { }
 
       public Post(DateTime publishDate)
       {
+         //Title = Assert.NotNull(title);
          PublishDate = publishDate;
       }
 
-      public DateTime PublishDate { get; set; }
+      public string Title { get; set; }
 
-      public PostInfo Info { get; set; }
+      public DateTime PublishDate { get; private set; }
+
+      public string EnglishUrl { get; set; }
+
+      public Language Language { get; set; }
+
+      public string Summary { get; set; }
+
+      public string Tags { get; set; }
 
       public PostContent PostContent { get; set; }
 
       public string Url { get; set; }
+
+      public IEnumerable<string> GetTags()
+      {
+         if (string.IsNullOrEmpty(Tags))
+            return Enumerable.Empty<string>();
+
+         var result = new List<string>();
+         foreach (var str in Tags.Split(","))
+         {
+            var trimmed = str.Trim();
+            if (!string.IsNullOrEmpty(trimmed))
+               result.Add(trimmed);
+         }
+         return result;
+      }
 
       public static string ToLongPersianDate(DateTime date)
       {

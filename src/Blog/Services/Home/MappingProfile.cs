@@ -8,19 +8,11 @@ namespace Blog.Services.Home
    {
       public MappingProfile()
       {
-         CreateMap<PostInfo, PostRow>()
-             .ForMember(
-                 dest => dest.Tags,
-                 o => o.MapFrom(src => src.GetTags()));
-
          CreateMap<Post, PostRow>()
             .ForMember(
                  dest => dest.Date,
                  o => o.MapFrom<ShortDateResolver>())
-            .IncludeMembers(x => x.Info);
-
-         CreateMap<PostInfo, PostViewModel>()
-             .ForMember(
+              .ForMember(
                  dest => dest.Tags,
                  o => o.MapFrom(src => src.GetTags()));
 
@@ -30,7 +22,9 @@ namespace Blog.Services.Home
              .ForMember(
                  dest => dest.Date,
                  o => o.MapFrom<LongDateResolver>())
-             .IncludeMembers(x => x.Info);
+               .ForMember(
+                 dest => dest.Tags,
+                 o => o.MapFrom(src => src.GetTags()));
 
          CreateMap<Developer, DeveloperViewModel>()
             .ForMember(
@@ -68,7 +62,7 @@ namespace Blog.Services.Home
       public class ShortDateResolver : IValueResolver<Post, PostRow, string>
       {
          public string Resolve(Post source, PostRow destination, string destMember, ResolutionContext context) =>
-              source.Info.Language == Language.English ?
+              source.Language == Language.English ?
               source.PublishDate.ToString("MMM yyyy") :
               source.GetShortPersianDate();
       }
@@ -76,7 +70,7 @@ namespace Blog.Services.Home
       public class LongDateResolver : IValueResolver<Post, PostViewModel, string>
       {
          public string Resolve(Post source, PostViewModel destination, string destMember, ResolutionContext context) =>
-             source.Info.Language == Language.English ?
+             source.Language == Language.English ?
              source.PublishDate.ToString("D") :
              source.GetLongPersianDate();
       }

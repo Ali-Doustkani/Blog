@@ -49,11 +49,6 @@ namespace Blog.Storage
                .HasForeignKey<Draft>(x => x.Id);
 
             info
-               .HasOne<Post>()
-              .WithOne(x => x.Info)
-              .HasForeignKey<Post>(x => x.Id);
-
-            info
                .HasIndex(x => x.Title)
                .IsUnique();
 
@@ -91,20 +86,22 @@ namespace Blog.Storage
 
          modelBuilder.Entity<Post>(post =>
          {
-            post
-               .HasOne(x => x.Info)
-              .WithOne()
-              .HasForeignKey<Post>(x => x.Id);
+            post.Property(x => x.EnglishUrl);
+            post.Property(x => x.Language).IsRequired();
+            post.Property(x => x.PublishDate).IsRequired();
+            post.Property(x => x.Summary).IsRequired();
+            post.Property(x => x.Tags).IsRequired();
+            post.Property(x => x.Title).IsRequired();
 
             post
-               .HasOne(x => x.PostContent)
-              .WithOne()
-              .HasForeignKey<PostContent>(x => x.Id);
+            .HasOne(x => x.PostContent)
+            .WithOne()
+            .HasForeignKey<PostContent>(x => x.Id);
 
             post
-               .Property(x => x.Url)
-               .IsRequired()
-               .HasMaxLength(200);
+            .Property(x => x.Url)
+            .IsRequired()
+            .HasMaxLength(200);
          });
 
          modelBuilder.Entity<PostContent>(pc =>

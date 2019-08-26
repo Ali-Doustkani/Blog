@@ -50,7 +50,9 @@ namespace Blog.Services.Administrator
          AddDraft();
 
          if (viewModel.Publish)
+         {
             return PublishPost(viewModel.PublishDate);
+         }
 
          if (_context.Posts.Any(_draft.Id))
             DeletePost();
@@ -76,8 +78,9 @@ namespace Blog.Services.Administrator
 
       private void DeletePost()
       {
-         _context.Posts.Delete(_draft.Id);
-         _context.PostContents.Delete(_draft.Id);
+         var post = _context.Posts.Include(x => x.PostContent).Single(x => x.Id == _draft.Id);
+         _context.Posts.Remove(post);
+         _context.PostContents.Remove(post.PostContent);
       }
 
       private SaveResult PublishPost(DateTime publishDate)
@@ -91,6 +94,7 @@ namespace Blog.Services.Administrator
          }
          catch (ServiceDependencyException ex)
          {
+            SaveChanges();
             return SaveResult.Failure(_draft.Id, $"Draft saved but couldn't publish. {ex.Message}.");
          }
       }

@@ -25,7 +25,7 @@ namespace Blog.Tests.Domain
             .Returns("minImage");
 
          var draft = new Draft();
-         draft.Info = new PostInfo { Title = "the post" };
+         draft.Info = new PostInfo("the post");
          draft.Content = html;
          draft.RenderImages();
          return draft.Publish(DateTime.Now, _codeFormatter.Object, _imageProcessor.Object).PostContent.Content;
