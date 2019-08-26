@@ -11,6 +11,7 @@ namespace Blog.Domain
    /// <typeparam name="TDomainEntity">Domain Entity Object</typeparam>
    public class AggregateUpdater<TEntry, TDomainEntity>
       where TEntry : DomainObjectEntry
+      where TDomainEntity : DomainEntity
    {
       public AggregateUpdater(AggregateList<TDomainEntity> aggregates, IEnumerable<TEntry> list)
       {

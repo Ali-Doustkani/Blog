@@ -1,6 +1,6 @@
 ﻿namespace Blog.Domain.DeveloperStory
 {
-   public class Education
+   public class Education : DomainEntity
    {
       private Education() { }
 
@@ -12,7 +12,6 @@
          Period = Assert.NotNull(period);
       }
 
-      public int Id { get; private set; }
       public string Degree { get; private set; }
       public string University { get; private set; }
       public Period Period { get; private set; }

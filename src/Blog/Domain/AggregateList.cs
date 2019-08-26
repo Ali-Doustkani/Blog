@@ -5,28 +5,23 @@ using System.Linq;
 namespace Blog.Domain
 {
    public class AggregateList<T> : List<T>
+      where T : DomainEntity
    {
-      public AggregateList(Func<T, int> getId)
-      {
-         _getId = getId;
-      }
+      public AggregateList()
+      { }
 
-      public AggregateList(Func<T, int> getId, IEnumerable<T> collection)
+      public AggregateList(IEnumerable<T> collection)
          : base(collection)
-      {
-         _getId = getId;
-      }
-
-      private Func<T, int> _getId;
+      { }
 
       public void RemoveNotIn(IEnumerable<DomainObjectEntry> entries)
       {
-         RemoveAll(x => !entries.Select(y => y.Id).Contains(_getId(x).ToString()));
+         RemoveAll(x => !entries.Select(y => y.Id).Contains(x.Id.ToString()));
       }
 
       public T Single(string id)
       {
-         return Enumerable.Single(this, x => _getId(x).ToString() == id);
+         return Enumerable.Single(this, x => x.Id.ToString() == id);
       }
    }
 }

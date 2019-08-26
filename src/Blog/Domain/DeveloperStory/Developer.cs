@@ -4,25 +4,26 @@ using System.Linq;
 
 namespace Blog.Domain.DeveloperStory
 {
-   public class Developer
+   public class Developer : DomainEntity
    {
       private Developer()
       {
-         _experiences = new AggregateList<Experience>(exp => exp.Id);
-         _sideProjects = new AggregateList<SideProject>(proj => proj.Id);
-         _educations = new AggregateList<Education>(edu => edu.Id);
+         _experiences = new AggregateList<Experience>();
+         _sideProjects = new AggregateList<SideProject>();
+         _educations = new AggregateList<Education>();
       }
 
       public Developer(string summary, string skills, IEnumerable<Experience> experiences)
+      // :this()
       {
          if (!experiences.Any())
             throw new ArgumentException("at least one experience is required");
 
          _summary = Assert.NotNull(summary);
          Skills = Assert.NotNull(skills);
-         _experiences = new AggregateList<Experience>(exp => exp.Id, experiences);
-         _sideProjects = new AggregateList<SideProject>(proj => proj.Id);
-         _educations = new AggregateList<Education>(edu => edu.Id);
+         _experiences = new AggregateList<Experience>(experiences);
+         _sideProjects = new AggregateList<SideProject>();
+         _educations = new AggregateList<Education>();
       }
 
       private string _summary;
@@ -30,7 +31,6 @@ namespace Blog.Domain.DeveloperStory
       private readonly AggregateList<SideProject> _sideProjects;
       private readonly AggregateList<Education> _educations;
 
-      public int Id { get; private set; }
       public HtmlText Summary => new HtmlText(_summary);
       public string Skills { get; private set; }
       public IReadOnlyCollection<Experience> Experiences => _experiences.OrderByDescending(x => x.Period.StartDate).ToArray();

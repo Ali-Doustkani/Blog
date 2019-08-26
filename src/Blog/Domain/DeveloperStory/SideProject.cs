@@ -1,6 +1,6 @@
 ﻿namespace Blog.Domain.DeveloperStory
 {
-   public class SideProject
+   public class SideProject : DomainEntity
    {
       public SideProject(int id, string title, string content)
       {
@@ -11,7 +11,6 @@
 
       private string _content;
 
-      public int Id { get; private set; }
       public string Title { get; private set; }
       public HtmlText Content => new HtmlText(_content);
    }

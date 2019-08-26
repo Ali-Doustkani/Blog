@@ -1,6 +1,6 @@
 ﻿namespace Blog.Domain.DeveloperStory
 {
-   public class Experience
+   public class Experience : DomainEntity
    {
       private Experience() { }
 
@@ -15,7 +15,6 @@
 
       private string _content;
 
-      public int Id { get; private set; }
       public string Company { get; private set; }
       public string Position { get; private set; }
       public Period Period { get; private set; }
