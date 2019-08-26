@@ -25,10 +25,10 @@ namespace Blog.Tests.Domain
             .Returns("minImage");
 
          var draft = new Draft();
-         draft.Info = new PostInfo("the post");
-         draft.Info.Summary = "summary";
-         draft.Info.Tags = "tags";
-         draft.Info.Language = Language.English;
+         draft.Title = "the post";
+         draft.Summary = "summary";
+         draft.Tags = "tags";
+         draft.Language = Language.English;
          draft.Content = html;
          draft.RenderImages();
          return draft.Publish(DateTime.Now, _codeFormatter.Object, _imageProcessor.Object).Content;
@@ -171,5 +171,46 @@ namespace Blog.Tests.Domain
           .Should()
           .BePath("<figure><img class=\"lazyload lazyloading\" src=\"minImage\" data-src=\"/images/posts/the-post/pic.jpeg\"></figure>");
 
+      [Fact]
+      public void Farsi_posts_should_be_slugified_to_english_url() =>
+        new Draft() { Title = "the post", Language = Language.Farsi, EnglishUrl = "the-url" }
+        .Slugify()
+        .Should()
+        .Be("the-url");
+
+      [Fact]
+      public void Throw_if_english_url_is_not_available_for_farsi_posts() =>
+         new Draft() { Title = "the post", Language = Language.Farsi }
+         .Invoking(x => x.Slugify())
+         .Should()
+         .Throw<InvalidOperationException>();
+
+      [Fact]
+      public void Use_english_url_for_english_posts_if_available() =>
+         new Draft() { Title = "the post", Language = Language.English, EnglishUrl = "the-url" }
+         .Slugify()
+         .Should()
+         .Be("the-url");
+
+      [Theory]
+      [InlineData("js intro", "js-intro")]
+      [InlineData("js      intro", "js-intro")]
+      [InlineData("learn: ASP.NET Core", "learn-aspnet-core")]
+      [InlineData("LEARN JS", "learn-js")]
+      public void Slugify(string title, string result) =>
+         new Draft() { Title = title }
+         .Slugify()
+         .Should()
+         .Be(result);
+
+      [Theory]
+      [InlineData("c# in depth", "csharp-in-depth")]
+      [InlineData("Webpack/node.js////react", "webpack-nodejs-react")]
+      [InlineData(@"webpack\node.js\\\\\react", "webpack-nodejs-react")]
+      public void Slugify_change_some_characters(string title, string result) =>
+         new Draft() { Title = title }
+         .Slugify()
+         .Should()
+         .Be(result);
    }
 }

@@ -20,41 +20,32 @@ namespace Blog.Tests.Services
          _context = new ServiceTestContext<AdminServices>();
          _context.Seed(db =>
          {
-            db.Infos.Add(new PostInfo("Javascript FP")
-            {
-               Id = 1,
-               Language = Language.English,
-               Summary = "Learning FP in Javascript",
-               Tags = "JS, FP, Node.js"
-            });
-            db.Infos.Add(new PostInfo("Object Oriented C#")
-            {
-               Id = 2,
-               Language = Language.English,
-               Summary = "Learning OOP in C#",
-               Tags = "OOP, C#",
-            });
-            db.Infos.Add(new PostInfo("جاوا و ویندوز")
-            {
-               Id = 3,
-               Language = Language.Farsi,
-               Summary = "استفاده از جاوا در ویندوز",
-               Tags = "Java",
-               EnglishUrl = "java-windows"
-            });
             db.Drafts.Add(new Draft
             {
                Id = 1,
+               Title = "Javascript FP",
+               Language = Language.English,
+               Summary = "Learning FP in Javascript",
+               Tags = "JS, FP, Node.js",
                Content = "<p>JS Functional Programming</p>"
             });
             db.Drafts.Add(new Draft
             {
                Id = 2,
+               Title = "Object Oriented C#",
+               Language = Language.English,
+               Summary = "Learning OOP in C#",
+               Tags = "OOP, C#",
                Content = "<p>Object Oriented C#</p>"
             });
             db.Drafts.Add(new Draft
             {
                Id = 3,
+               Title = "جاوا و ویندوز",
+               Language = Language.Farsi,
+               Summary = "استفاده از جاوا در ویندوز",
+               Tags = "Java",
+               EnglishUrl = "java-windows",
                Content = "<p>جاوا و ویندوز</p>"
             });
             db.Posts.Add(new Post(1,
@@ -371,10 +362,6 @@ namespace Blog.Tests.Services
 
          using (var db = _context.GetDatabase())
          {
-            db.Infos
-                .Should()
-                .HaveCount(2);
-
             db.Drafts
                 .Should()
                 .HaveCount(2);
@@ -395,10 +382,6 @@ namespace Blog.Tests.Services
 
          using (var db = _context.GetDatabase())
          {
-            db.Infos
-                .Should()
-                .HaveCount(2);
-
             db.Drafts
               .Should()
               .HaveCount(2);

@@ -29,14 +29,14 @@ namespace Blog.Domain.Blogging
 
       private void ValidateEnglishUrl(Draft draft)
       {
-         if (draft.Info.Language == Language.Farsi && string.IsNullOrEmpty(draft.Info.EnglishUrl))
-            _result.Add(new Error(nameof(draft.Info.EnglishUrl), "EnglishUrl is required for Farsi posts"));
+         if (draft.Language == Language.Farsi && string.IsNullOrEmpty(draft.EnglishUrl))
+            _result.Add(new Error(nameof(draft.EnglishUrl), "EnglishUrl is required for Farsi posts"));
       }
 
       private void ValidateTitle(Draft draft)
       {
-         if (_context.Infos.Any(x => x.Id != draft.Id && string.Equals(x.Title, draft.Info.Title, StringComparison.OrdinalIgnoreCase)))
-            _result.Add(new Error(nameof(draft.Info.Title), "This title already exists in the database"));
+         if (_context.Drafts.Any(x => x.Id != draft.Id && string.Equals(x.Title, draft.Title, StringComparison.OrdinalIgnoreCase)))
+            _result.Add(new Error(nameof(draft.Title), "This title already exists in the database"));
       }
 
       private void ValidateCodeBlocks(Draft draft)

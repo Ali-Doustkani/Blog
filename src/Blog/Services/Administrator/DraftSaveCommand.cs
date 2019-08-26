@@ -63,8 +63,8 @@ namespace Blog.Services.Administrator
 
       private void AddDraft()
       {
-         var oldDraft = _context.Drafts.Include(x => x.Info).SingleOrDefault(x => x.Id == _draft.Id);
-         _oldPostDirectory = oldDraft?.Info?.Slugify();
+         var oldDraft = _context.Drafts.SingleOrDefault(x => x.Id == _draft.Id);
+         _oldPostDirectory = oldDraft?.Slugify();
          if (oldDraft == null)
          {
             _context.Drafts.Add(_draft);
@@ -72,7 +72,6 @@ namespace Blog.Services.Administrator
          else
          {
             _context.Entry(oldDraft).CurrentValues.SetValues(_draft);
-            _context.Entry(oldDraft.Info).CurrentValues.SetValues(_draft.Info);
          }
       }
 
@@ -101,7 +100,7 @@ namespace Blog.Services.Administrator
       private void SaveChanges()
       {
          _context.SaveChanges();
-         _imageContext.SaveChanges(_oldPostDirectory, _draft.Info.Slugify(), _images);
+         _imageContext.SaveChanges(_oldPostDirectory, _draft.Slugify(), _images);
       }
 
       public void Dispose() =>

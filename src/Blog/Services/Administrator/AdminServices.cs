@@ -48,14 +48,14 @@ namespace Blog.Services.Administrator
           new DraftEntry { PublishDate = DateTime.Now };
 
       public IEnumerable<DraftRow> GetDrafts() =>
-          (from info in _context.Infos
+          (from info in _context.Drafts
            join post in _context.Posts on info.Id equals post.Id into posts
            from post in posts.DefaultIfEmpty()
            select _mapper.Map<DraftRow>(Tuple.Create(info, post == null ? -1 : post.Id))
            ).ToArray();
 
       public DraftEntry Get(int id) =>
-          (from draft in _context.Drafts.Include(x => x.Info)
+          (from draft in _context.Drafts
            join post in _context.Posts on draft.Id equals post.Id into posts
            from post in posts.DefaultIfEmpty()
            where draft.Id == id
@@ -66,7 +66,6 @@ namespace Blog.Services.Administrator
       {
          var draft = _context
             .Drafts
-            .Include(x => x.Info)
             .SingleOrDefault(x => x.Id == id);
          if (draft == null) return null;
 
@@ -80,9 +79,6 @@ namespace Blog.Services.Administrator
 
       public void Delete(int id)
       {
-         var info = _context.Infos.Find(id);
-         _context.Infos.Remove(info);
-
          var draft = _context.Drafts.Find(id);
          _context.Drafts.Remove(draft);
 
@@ -93,7 +89,7 @@ namespace Blog.Services.Administrator
          }
 
          _context.SaveChanges();
-         _imageContext.Delete(info.Slugify());
+         _imageContext.Delete(draft.Slugify());
       }
 
       public void Dispose()

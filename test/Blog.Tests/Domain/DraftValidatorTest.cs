@@ -23,7 +23,8 @@ namespace Blog.Tests.Domain
       {
          var draft = new Draft
          {
-            Info = new PostInfo("the post") { Language = Language.Farsi },
+            Title = "the post",
+            Language = Language.Farsi,
             Content = "content"
          };
 
@@ -43,13 +44,15 @@ namespace Blog.Tests.Domain
          _context.Drafts.Add(new Draft
          {
             Id = 22,
-            Info = new PostInfo("T1") { Id = 22, Summary = "summary", Tags = "tags" },
+            Title = "T1",
+            Summary = "summary",
+            Tags = "tags",
             Content = "content"
          });
          _context.SaveChanges();
          var draft = new Draft
          {
-            Info = new PostInfo("T1"),
+            Title = "T1",
             Content = "content"
          };
 
@@ -66,7 +69,7 @@ namespace Blog.Tests.Domain
       [Fact]
       public void Error_when_language_of_code_block_is_not_specified()
       {
-         var draft = new Draft { Info = new PostInfo("the post") };
+         var draft = new Draft { Title = "the post" };
          draft.Content = "<pre class=\"code\">some code</pre>";
 
          _validator
@@ -82,7 +85,7 @@ namespace Blog.Tests.Domain
       [Fact]
       public void Dont_error_for_empty_code_blocks()
       {
-         var draft = new Draft { Info = new PostInfo("the post") };
+         var draft = new Draft { Title = "the post" };
          draft.Content = "<pre class=\"code\"> </pre>";
 
          _validator
@@ -94,7 +97,7 @@ namespace Blog.Tests.Domain
       [Fact]
       public void Error_when_invalid_language_is_set()
       {
-         var draft = new Draft { Info = new PostInfo("the post") };
+         var draft = new Draft { Title = "the post" };
          draft.Content = string.Join(Environment.NewLine, "<pre class=\"code\">", "clojure", "some code</pre>");
 
          _validator
