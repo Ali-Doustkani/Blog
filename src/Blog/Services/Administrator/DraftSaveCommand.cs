@@ -3,7 +3,6 @@ using Blog.Domain;
 using Blog.Domain.Blogging;
 using Blog.Storage;
 using Blog.Utils;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,23 +15,20 @@ namespace Blog.Services.Administrator
          IMapper mapper,
          DraftValidator validator,
          IImageContext imageContext,
-         ICodeFormatter codeFormatter,
-         IImageProcessor imageProcessor)
+         IHtmlProcessor processor)
       {
          _context = context;
          _mapper = mapper;
          _validator = validator;
          _imageContext = imageContext;
-         _codeFormatter = codeFormatter;
-         _imageProcessor = imageProcessor;
+         _processor = processor;
       }
 
       private readonly BlogContext _context;
       private readonly IMapper _mapper;
       private readonly DraftValidator _validator;
       private readonly IImageContext _imageContext;
-      private readonly ICodeFormatter _codeFormatter;
-      private readonly IImageProcessor _imageProcessor;
+      private readonly IHtmlProcessor _processor;
       private Draft _draft;
       private IEnumerable<Image> _images;
       private string _oldPostDirectory;
@@ -85,7 +81,7 @@ namespace Blog.Services.Administrator
       {
          try
          {
-            var post = _draft.Publish(publishDate, _codeFormatter, _imageProcessor);
+            var post = _draft.Publish(publishDate, _processor);
             _context.AddOrUpdate(post);
             SaveChanges();
             return SaveResult.Success(post.Id, post.Url);

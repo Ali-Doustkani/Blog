@@ -57,7 +57,7 @@ namespace Blog.Domain.Blogging
                   return;
                }
 
-               var lang = Draft.GetLanguage(plain);
+               var lang = HtmlProcessor.GetLanguage(plain);
                if (!_languages.Contains(lang))
                   _result.Add(new Error(nameof(Draft.Content), $"Specified language in code block #{num} is not valid ({lang}...)"));
             }

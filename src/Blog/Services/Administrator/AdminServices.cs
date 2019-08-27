@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
-using Blog.Domain;
 using Blog.Domain.Blogging;
 using Blog.Storage;
 using Blog.Utils;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,24 +22,21 @@ namespace Blog.Services.Administrator
    {
       public AdminServices(BlogContext context,
          IMapper mapper,
+         IHtmlProcessor processor,
          IImageContext imageContext,
-         ICodeFormatter codeFormatter,
-         IImageProcessor imageProcessor,
          DraftSaveCommand saveCommand)
       {
          _context = context;
          _mapper = mapper;
+         _processor = processor;
          _imageContext = imageContext;
-         _codeFormatter = codeFormatter;
-         _imageProcessor = imageProcessor;
          _saveCommand = saveCommand;
       }
 
       private readonly BlogContext _context;
       private readonly IMapper _mapper;
+      private readonly IHtmlProcessor _processor;
       private readonly IImageContext _imageContext;
-      private readonly ICodeFormatter _codeFormatter;
-      private readonly IImageProcessor _imageProcessor;
       private readonly DraftSaveCommand _saveCommand;
 
       public DraftEntry Create() =>
@@ -71,7 +66,7 @@ namespace Blog.Services.Administrator
 
          var post = _context.Posts.SingleOrDefault(x => x.Id == id);
          var date = post == null ? DateTime.Now : post.PublishDate;
-         return _mapper.Map<Home.PostViewModel>(draft.Publish(date, _codeFormatter, _imageProcessor));
+         return _mapper.Map<Home.PostViewModel>(draft.Publish(date, _processor));
       }
 
       public SaveResult Save(DraftEntry viewModel) =>
