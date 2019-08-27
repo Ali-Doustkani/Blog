@@ -46,7 +46,7 @@ namespace Blog.Storage
             post.Property(x => x.Summary).IsRequired();
             post.Property(x => x.Tags).IsRequired();
             post.Property(x => x.Title).IsRequired();
-
+            post.Property(x => x.Content).IsRequired();
             post
             .Property(x => x.Url)
             .IsRequired()
