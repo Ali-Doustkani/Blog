@@ -39,6 +39,11 @@ namespace Blog.Storage
       {
          base.OnModelCreating(modelBuilder);
 
+         modelBuilder.Entity<Draft>(draft =>
+         {
+            draft.Property("_publishDate").HasColumnName("PublishDate");
+         });
+
          modelBuilder.Entity<Post>(post =>
          {
             post.Property(x => x.Language).IsRequired();

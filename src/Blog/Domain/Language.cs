@@ -1,4 +1,4 @@
-﻿namespace Blog.Domain.Blogging
+﻿namespace Blog.Domain
 {
    public enum Language
    {

@@ -15,13 +15,15 @@ namespace Blog.Services.Administrator
          IMapper mapper,
          DraftValidator validator,
          IImageContext imageContext,
-         IHtmlProcessor processor)
+         IHtmlProcessor processor,
+         IDateProvider dateProvider)
       {
          _context = context;
          _mapper = mapper;
          _validator = validator;
          _imageContext = imageContext;
          _processor = processor;
+         _dateProvider = dateProvider;
       }
 
       private readonly BlogContext _context;
@@ -29,13 +31,30 @@ namespace Blog.Services.Administrator
       private readonly DraftValidator _validator;
       private readonly IImageContext _imageContext;
       private readonly IHtmlProcessor _processor;
+      private readonly IDateProvider _dateProvider;
       private Draft _draft;
       private IEnumerable<Image> _images;
       private string _oldPostDirectory;
 
       public SaveResult Run(DraftEntry viewModel)
       {
-         _draft = _mapper.Map<Draft>(viewModel);
+         if (viewModel.Id == 0)
+         {
+            _draft = new Draft();
+            _context.Drafts.Add(_draft);
+         }
+         else
+         {
+            _draft = _context.Drafts.Find(viewModel.Id);
+            _oldPostDirectory = _draft?.Slugify();
+         }
+
+         _draft.Content = viewModel.Content;
+         _draft.EnglishUrl = viewModel.EnglishUrl;
+         _draft.Language = viewModel.Language;
+         _draft.Summary = viewModel.Summary;
+         _draft.Tags = viewModel.Tags;
+         _draft.Title = viewModel.Title;
 
          var validationResult = _validator.Validate(_draft);
          if (validationResult.Any())
@@ -43,11 +62,9 @@ namespace Blog.Services.Administrator
 
          _images = _draft.RenderImages();
 
-         AddDraft();
-
          if (viewModel.Publish)
          {
-            return PublishPost(viewModel.PublishDate);
+            return PublishPost();
          }
 
          if (_context.Posts.Any(_draft.Id))
@@ -57,19 +74,6 @@ namespace Blog.Services.Administrator
          return SaveResult.Success(_draft.Id, string.Empty);
       }
 
-      private void AddDraft()
-      {
-         var oldDraft = _context.Drafts.SingleOrDefault(x => x.Id == _draft.Id);
-         _oldPostDirectory = oldDraft?.Slugify();
-         if (oldDraft == null)
-         {
-            _context.Drafts.Add(_draft);
-         }
-         else
-         {
-            _context.Entry(oldDraft).CurrentValues.SetValues(_draft);
-         }
-      }
 
       private void DeletePost()
       {
@@ -77,11 +81,11 @@ namespace Blog.Services.Administrator
          _context.Posts.Remove(post);
       }
 
-      private SaveResult PublishPost(DateTime publishDate)
+      private SaveResult PublishPost()
       {
          try
          {
-            var post = _draft.Publish(publishDate, _processor);
+            var post = _draft.ToPost(_dateProvider, _processor);
             _context.AddOrUpdate(post);
             SaveChanges();
             return SaveResult.Success(post.Id, post.Url);

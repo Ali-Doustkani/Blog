@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Blog.Domain;
 using Blog.Domain.Blogging;
 using Blog.Storage;
 using Blog.Utils;
@@ -24,23 +25,26 @@ namespace Blog.Services.Administrator
          IMapper mapper,
          IHtmlProcessor processor,
          IImageContext imageContext,
-         DraftSaveCommand saveCommand)
+         DraftSaveCommand saveCommand,
+         IDateProvider dateProvider)
       {
          _context = context;
          _mapper = mapper;
          _processor = processor;
          _imageContext = imageContext;
          _saveCommand = saveCommand;
+         _dateProvider = dateProvider;
       }
 
       private readonly BlogContext _context;
       private readonly IMapper _mapper;
       private readonly IHtmlProcessor _processor;
       private readonly IImageContext _imageContext;
+      private readonly IDateProvider _dateProvider;
       private readonly DraftSaveCommand _saveCommand;
 
       public DraftEntry Create() =>
-          new DraftEntry { PublishDate = DateTime.Now };
+          new DraftEntry();
 
       public IEnumerable<DraftRow> GetDrafts() =>
           (from info in _context.Drafts
@@ -54,7 +58,7 @@ namespace Blog.Services.Administrator
            join post in _context.Posts on draft.Id equals post.Id into posts
            from post in posts.DefaultIfEmpty()
            where draft.Id == id
-           select _mapper.Map<DraftEntry>(Tuple.Create(draft, post == null ? -1 : post.Id, post == null ? DateTime.MinValue : post.PublishDate))
+           select _mapper.Map<DraftEntry>(Tuple.Create(draft, post == null ? -1 : post.Id))
            ).Single();
 
       public Home.PostViewModel GetView(int id)
@@ -64,9 +68,7 @@ namespace Blog.Services.Administrator
             .SingleOrDefault(x => x.Id == id);
          if (draft == null) return null;
 
-         var post = _context.Posts.SingleOrDefault(x => x.Id == id);
-         var date = post == null ? DateTime.Now : post.PublishDate;
-         return _mapper.Map<Home.PostViewModel>(draft.Publish(date, _processor));
+         return _mapper.Map<Home.PostViewModel>(draft.ToPost(_dateProvider, _processor));
       }
 
       public SaveResult Save(DraftEntry viewModel) =>

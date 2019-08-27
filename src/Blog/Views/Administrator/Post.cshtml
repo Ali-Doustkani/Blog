@@ -20,11 +20,6 @@
          <input id="farsi" blog-testid="farsiLanguage-radio" type="radio" asp-for="Language" value="@Language.Farsi" /><label for="farsi">Farsi</label>
       </div>
       <div class="text-group">
-         <label asp-for="PublishDate"></label>
-         <input blog-testid="publishDate-input" asp-for="PublishDate" value="@Model.PublishDate.ToString("yyyy-MM-dd")" type="date" autocomplete="off" />
-         <span asp-validation-for="PublishDate" class="error"></span>
-      </div>
-      <div class="text-group">
          <label asp-for="Title"></label>
          <input blog-testid="title-input" asp-for="Title" autofocus autocomplete="off" />
          <span asp-validation-for="Title" class="error"></span>

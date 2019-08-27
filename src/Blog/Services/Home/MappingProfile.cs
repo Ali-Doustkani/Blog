@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Blog.Domain;
 using Blog.Domain.Blogging;
 using Blog.Domain.DeveloperStory;
 

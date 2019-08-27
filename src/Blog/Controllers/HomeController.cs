@@ -1,4 +1,4 @@
-﻿using Blog.Domain.Blogging;
+﻿using Blog.Domain;
 using Blog.Services.Home;
 using Blog.Utils;
 using Microsoft.AspNetCore.Mvc;

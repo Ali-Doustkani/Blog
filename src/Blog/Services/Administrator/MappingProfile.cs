@@ -19,13 +19,10 @@ namespace Blog.Services.Administrator
          CreateMap<Draft, DraftEntry>()
              .ReverseMap();
 
-         CreateMap<Tuple<Draft, int, DateTime>, DraftEntry>()
+         CreateMap<Tuple<Draft, int>, DraftEntry>()
              .ForMember(
                  dest => dest.Publish,
                  o => o.MapFrom(src => src.Item2 != -1))
-             .ForMember(
-                  dest => dest.PublishDate,
-                  o => o.MapFrom(src => src.Item3))
              .IncludeMembers(x => x.Item1);
       }
    }

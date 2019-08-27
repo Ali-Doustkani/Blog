@@ -1,4 +1,5 @@
-﻿using Blog.Domain.Blogging;
+﻿using Blog.Domain;
+using Blog.Domain.Blogging;
 using FluentAssertions;
 using Moq;
 using System;
@@ -61,7 +62,7 @@ namespace Blog.Tests.Domain
             Language = Language.English,
             Content = "Learning JS"
          };
-         draft.Invoking(d => d.Publish(DateTime.Now, Mock.Of<IHtmlProcessor>()))
+         draft.Invoking(d => d.ToPost(Mock.Of<IDateProvider>(), Mock.Of<IHtmlProcessor>()))
             .Should()
             .Throw<InvalidOperationException>();
       }
@@ -77,7 +78,7 @@ namespace Blog.Tests.Domain
             Language = Language.English,
             Content = "Learning JS"
          };
-         draft.Invoking(d => d.Publish(DateTime.Now, Mock.Of<IHtmlProcessor>()))
+         draft.Invoking(d => d.ToPost(Mock.Of<IDateProvider>(), Mock.Of<IHtmlProcessor>()))
             .Should()
             .Throw<InvalidOperationException>();
       }
@@ -92,7 +93,7 @@ namespace Blog.Tests.Domain
             Summary = "",
             Language = Language.English,
             Content = "Learning JS"
-         }.Invoking(d => d.Publish(DateTime.Now, Mock.Of<IHtmlProcessor>()))
+         }.Invoking(d => d.ToPost(Mock.Of<IDateProvider>(), Mock.Of<IHtmlProcessor>()))
          .Should()
          .Throw<InvalidOperationException>();
       }
@@ -107,9 +108,46 @@ namespace Blog.Tests.Domain
             Summary = "learn js",
             Language = Language.English,
             Content = ""
-         }.Invoking(d => d.Publish(DateTime.Now, Mock.Of<IHtmlProcessor>()))
+         }.Invoking(d => d.ToPost(Mock.Of<IDateProvider>(), Mock.Of<IHtmlProcessor>()))
          .Should()
          .Throw<InvalidOperationException>();
+      }
+
+      [Fact]
+      public void Set_now_as_post_date_when_publishing_for_the_first_time()
+      {
+         var dateProvider = new Mock<IDateProvider>();
+         dateProvider.Setup(x => x.Now).Returns(new DateTime(2019, 8, 27));
+         var htmlProcessor = new Mock<IHtmlProcessor>();
+         htmlProcessor.Setup(x => x.Process(It.IsAny<string>())).Returns("<p>TEXT</p>");
+
+         var draft = new Draft
+         {
+            Language = Language.English,
+            Title = "title",
+            Summary = "summary",
+            Tags = "tags",
+            Content = "<p>TEXT</p>"
+         };
+
+         draft.ToPost(dateProvider.Object, htmlProcessor.Object)
+            .PublishDate
+            .Should()
+            .HaveDay(27)
+            .And
+            .HaveMonth(8)
+            .And
+            .HaveYear(2019);
+
+         dateProvider.Setup(x => x.Now).Returns(new DateTime(2001, 1, 1));
+         draft.ToPost(dateProvider.Object, htmlProcessor.Object)
+            .PublishDate
+            .Should()
+            .HaveDay(27)
+            .And
+            .HaveMonth(8)
+            .And
+            .HaveYear(2019);
       }
    }
 }

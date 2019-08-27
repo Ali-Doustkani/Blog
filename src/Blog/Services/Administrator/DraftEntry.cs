@@ -1,4 +1,5 @@
-﻿using Blog.Domain.Blogging;
+﻿using Blog.Domain;
+using Blog.Domain.Blogging;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -12,8 +13,6 @@ namespace Blog.Services.Administrator
       public string Title { get; set; }
 
       public string EnglishUrl { get; set; }
-
-      public DateTime PublishDate { get; set; }
 
       public Language Language { get; set; }
 

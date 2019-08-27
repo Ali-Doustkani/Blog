@@ -75,22 +75,6 @@ namespace Blog.Tests.Services
       private readonly ServiceTestContext<AdminServices> _context;
 
       [Fact]
-      public void New_post_date_is_set_to_today()
-      {
-         using (var svc = _context.GetService())
-         {
-            svc.Create()
-               .PublishDate
-               .Should()
-               .HaveDay(DateTime.Now.Day)
-               .And
-               .HaveMonth(DateTime.Now.Month)
-               .And
-               .HaveYear(DateTime.Now.Year);
-         }
-      }
-
-      [Fact]
       public void GetDrafts_get_all_of_them()
       {
          using (var svc = _context.GetService())
@@ -140,7 +124,6 @@ namespace Blog.Tests.Services
             post.Content.Should().Be("<p>JS Functional Programming</p>");
             post.Id.Should().Be(1);
             post.Language.Should().Be(Language.English);
-            post.PublishDate.Should().Be(new DateTime(2019, 1, 1));
             post.Summary.Should().Be("Learning FP in Javascript");
             post.Tags.Should().Be("JS, FP, Node.js");
             post.Title.Should().Be("Javascript FP");
@@ -210,13 +193,11 @@ namespace Blog.Tests.Services
          {
             svc.Save(new DraftEntry
             {
-               Id = 12,
                Content = "<figure><img src=\"/images/posts/learn-js/a.png\"></figure>".Local(),
                Title = "learn js",
                Summary = "Summary",
                Tags = "Tags",
-               Language = Language.English,
-               PublishDate = new DateTime(2018, 8, 8)
+               Language = Language.English
             });
          }
 
@@ -224,19 +205,18 @@ namespace Blog.Tests.Services
          {
             svc.Save(new DraftEntry
             {
-               Id = 12,
+               Id = 4,
                Content = "<figure><img src=\"/images/posts/Learn-js/a.png\"></figure>".Local(),
                Title = "learn c",
                Summary = "Summary",
                Tags = "Tags",
                Language = Language.English,
-               PublishDate = new DateTime(2018, 8, 8)
             });
          }
 
          using (var svc = _context.GetService())
          {
-            svc.Get(12)
+            svc.Get(4)
                .Should()
                .BeEquivalentTo(new
                {
@@ -255,7 +235,6 @@ namespace Blog.Tests.Services
             {
                Content = "<h1>Content</h1>",
                Language = Language.English,
-               PublishDate = new DateTime(2019, 1, 1),
                Publish = true,
                Summary = "Summary",
                Tags = "Tags",
@@ -288,7 +267,6 @@ namespace Blog.Tests.Services
                Summary = "new summary",
                Tags = "new tag",
                Language = Language.English,
-               PublishDate = new DateTime(2017, 7, 7)
             });
          }
 
@@ -455,7 +433,6 @@ namespace Blog.Tests.Services
          var toAdd = new DraftEntry
          {
             Language = Language.English,
-            PublishDate = new DateTime(2019, 7, 24),
             Title = "title",
             Summary = "summary",
             Tags = "tags",
@@ -476,7 +453,6 @@ namespace Blog.Tests.Services
                .BeEquivalentTo(new
                {
                   Language = Language.English,
-                  PublishDate = new DateTime(2019, 7, 24),
                   Title = "title",
                   Summary = "summary",
                   Tags = "tags",

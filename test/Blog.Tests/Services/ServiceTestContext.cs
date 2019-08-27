@@ -82,6 +82,9 @@ namespace Blog.Tests.Services
          if (type == typeof(IHtmlProcessor))
             return new HtmlProcessor(GetMock<ICodeFormatter>().Object, GetMock<IImageProcessor>().Object);
 
+         if (type == typeof(IDateProvider))
+            return new DefaultDateProvider();
+
          if (_mocks.ContainsKey(type))
             return ((Mock)_mocks[type]).Object;
 

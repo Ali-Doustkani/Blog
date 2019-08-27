@@ -8,10 +8,10 @@ namespace Blog.Domain.Blogging
    {
       public Draft()
       {
-         //Title = Assert.NotNull(title);
-         Tags = string.Empty;
          Language = Language.English;
       }
+
+      private DateTime? _publishDate;
 
       public string Title { get; set; }
 
@@ -57,16 +57,19 @@ namespace Blog.Domain.Blogging
       }
 
       /// <exception cref="ServiceDependencyException"/>
-      public Post Publish(DateTime publishDate, IHtmlProcessor processor)
+      public Post ToPost(IDateProvider dateProvider, IHtmlProcessor processor)
       {
          Assert.Op.NotNull(Title);
          Assert.Op.NotNull(Tags);
          Assert.Op.NotNull(Summary);
          Assert.Op.NotNull(Content);
 
+         if (!_publishDate.HasValue)
+            _publishDate = dateProvider.Now;
+
          return new Post(Id,
               Title,
-              publishDate,
+              _publishDate.Value,
               Language,
               Summary,
               Tags,
