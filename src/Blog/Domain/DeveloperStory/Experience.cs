@@ -7,10 +7,10 @@
       public Experience(int id, string company, string position, Period period, string content)
       {
          Id = id;
-         Company = Assert.NotNull(company);
-         Position = Assert.NotNull(position);
-         Period = Assert.NotNull(period);
-         _content = Assert.NotNull(content);
+         Company = Assert.Arg.NotNull(company);
+         Position = Assert.Arg.NotNull(position);
+         Period = Assert.Arg.NotNull(period);
+         _content = Assert.Arg.NotNull(content);
       }
 
       private string _content;

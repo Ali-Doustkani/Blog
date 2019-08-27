@@ -14,16 +14,14 @@ namespace Blog.Domain.DeveloperStory
       }
 
       public Developer(string summary, string skills, IEnumerable<Experience> experiences)
-      // :this()
+        : this()
       {
          if (!experiences.Any())
             throw new ArgumentException("at least one experience is required");
 
-         _summary = Assert.NotNull(summary);
-         Skills = Assert.NotNull(skills);
+         _summary = Assert.Arg.NotNull(summary);
+         Skills = Assert.Arg.NotNull(skills);
          _experiences = new AggregateList<Experience>(experiences);
-         _sideProjects = new AggregateList<SideProject>();
-         _educations = new AggregateList<Education>();
       }
 
       private string _summary;
@@ -41,8 +39,8 @@ namespace Blog.Domain.DeveloperStory
 
       public DeveloperUpdateCommandResult Update(DeveloperUpdateCommand command, IStorageState storageState)
       {
-         Assert.NotNull(command);
-         Assert.NotNull(storageState);
+         Assert.Arg.NotNull(command);
+         Assert.Arg.NotNull(storageState);
 
          UpdateAggregates(command, storageState);
 

@@ -3,7 +3,6 @@ using Blog.Domain.Blogging;
 using Blog.Services.Administrator;
 using Blog.Utils;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
 using Moq;
 using System;
 using System.Collections.Generic;

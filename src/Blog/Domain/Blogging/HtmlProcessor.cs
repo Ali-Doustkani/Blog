@@ -31,7 +31,7 @@ namespace Blog.Domain.Blogging
          doc.DocumentNode.ForEachChild(node =>
          {
             if (node.Is("pre.code"))
-               display.Append(Code(node, _codeFormatter));
+               display.Append(Code(node));
             else if (node.Is("pre.terminal"))
                display.Append(node.El("div.cmd>pre"));
             else if (node.Is("div.note"))
@@ -41,7 +41,7 @@ namespace Blog.Domain.Blogging
             else if (node.Is("ul") || node.Is("ol"))
                display.Append(node.ElChildren());
             else if (node.Is("figure"))
-               display.Append(Figure(node, _imageProcessor));
+               display.Append(Figure(node));
             else
                display.Append(node.El());
          });
@@ -49,11 +49,11 @@ namespace Blog.Domain.Blogging
          return display.ToString();
       }
 
-      private string Code(HtmlNode node, ICodeFormatter codeFormatter)
+      private string Code(HtmlNode node)
       {
          var plain = node.InnerHtml.Trim();
          var highlightedLines = GetHighlightedLines(GetCode(plain));
-         var formattedCode = codeFormatter.Format(
+         var formattedCode = _codeFormatter.Format(
             GetLanguage(plain),
             GetCode(plain).ReplaceWithPattern(@"\s*#hl", string.Empty));
 
@@ -102,7 +102,7 @@ namespace Blog.Domain.Blogging
       private string GetCode(string plain) =>
           HtmlEntity.DeEntitize(plain.Substring(plain.IndexOf(Environment.NewLine)).Trim());
 
-      private string Figure(HtmlNode node, IImageProcessor imageProcessor)
+      private string Figure(HtmlNode node)
       {
          var img = node.Child("img");
          if (Image.IsDataUrl(img.Attr("src")))
@@ -111,7 +111,7 @@ namespace Blog.Domain.Blogging
          var src = img.Attr("src");
          img.Attributes.RemoveAll();
          img.SetAttributeValue("class", "lazyload lazyloading");
-         img.SetAttributeValue("src", imageProcessor.Minimize(src));
+         img.SetAttributeValue("src", _imageProcessor.Minimize(src));
          img.SetAttributeValue("data-src", src);
 
          var caption = node.Child("figcaption");

@@ -15,7 +15,7 @@ namespace Blog.Domain
    {
       public AggregateUpdater(AggregateList<TDomainEntity> aggregates, IEnumerable<TEntry> list)
       {
-         _aggregates = Assert.NotNull(aggregates);
+         _aggregates = Assert.Arg.NotNull(aggregates);
          _list = list;
       }
 

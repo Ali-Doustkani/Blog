@@ -57,14 +57,21 @@ namespace Blog.Domain.Blogging
       }
 
       /// <exception cref="ServiceDependencyException"/>
-      public Post Publish(DateTime publishDate, IHtmlProcessor processor) =>
-          new Post(Id,
-             Title,
-             publishDate,
-             Language,
-             Summary,
-             Tags,
-             Slugify(),
-             processor.Process(Content));
+      public Post Publish(DateTime publishDate, IHtmlProcessor processor)
+      {
+         Assert.Op.NotNull(Title);
+         Assert.Op.NotNull(Tags);
+         Assert.Op.NotNull(Summary);
+         Assert.Op.NotNull(Content);
+
+         return new Post(Id,
+              Title,
+              publishDate,
+              Language,
+              Summary,
+              Tags,
+              Slugify(),
+              processor.Process(Content));
+      }
    }
 }

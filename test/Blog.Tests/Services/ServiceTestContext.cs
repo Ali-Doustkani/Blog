@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Blog.Domain;
+using Blog.Domain.Blogging;
 using Blog.Storage;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -77,6 +78,9 @@ namespace Blog.Tests.Services
 
          if (type == typeof(IStorageState))
             return new Storage.StorageState(_currentContext);
+
+         if (type == typeof(IHtmlProcessor))
+            return new HtmlProcessor(GetMock<ICodeFormatter>().Object, GetMock<IImageProcessor>().Object);
 
          if (_mocks.ContainsKey(type))
             return ((Mock)_mocks[type]).Object;

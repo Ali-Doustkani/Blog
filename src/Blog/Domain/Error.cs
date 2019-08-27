@@ -4,13 +4,13 @@
    {
       public Error(string message)
       {
-         Message = Assert.NotNull(message);
+         Message = Assert.Arg.NotNull(message);
       }
 
       public Error(string property, string message)
       {
          Property = property;
-         Message = Assert.NotNull(message);
+         Message = Assert.Arg.NotNull(message);
       }
 
       /// <summary>
