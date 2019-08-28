@@ -26,6 +26,9 @@ namespace Blog.Storage
          .Include(x => x.Educations)
          .SingleOrDefault();
 
+      public Draft GetDraft(int id) =>
+         Drafts.Include(x => x.Post).SingleOrDefault(x => x.Id == id);
+
       public void AddOrUpdate<T>(T entity)
          where T : DomainEntity
       {
@@ -42,6 +45,7 @@ namespace Blog.Storage
          modelBuilder.Entity<Draft>(draft =>
          {
             draft.Property("_publishDate").HasColumnName("PublishDate");
+            draft.HasOne(x => x.Post).WithOne().HasForeignKey<Post>(x => x.Id);
          });
 
          modelBuilder.Entity<Post>(post =>

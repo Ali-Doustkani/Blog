@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
+using Blog.Domain.Blogging;
 using Blog.Domain.DeveloperStory;
+using Blog.Services.Administrator;
+using System;
 
 namespace Blog
 {
@@ -35,6 +38,22 @@ namespace Blog
             .ForMember(
                dest => dest.EndDate,
                o => o.MapFrom(src => src.Period.EndDate.ToString("yyyy-MM-dd")));
+
+         CreateMap<Draft, DraftRow>();
+
+         CreateMap<Tuple<Draft, int>, DraftRow>()
+             .ForMember(
+                 dest => dest.Published,
+                 o => o.MapFrom(src => src.Item2 != -1))
+             .IncludeMembers(x => x.Item1);
+
+         CreateMap<Draft, DraftEntry>();
+
+         CreateMap<Tuple<Draft, int>, DraftEntry>()
+             .ForMember(
+                 dest => dest.Publish,
+                 o => o.MapFrom(src => src.Item2 != -1))
+             .IncludeMembers(x => x.Item1);
       }
    }
 }

@@ -56,7 +56,6 @@ namespace Blog
          services.AddAutoMapper(GetType().Assembly);
          services.AddBlogTypes();
          services.AddScoped<ImageContext>();
-         services.AddTransient<DraftService>();
          services.AddSpaStaticFiles(options =>
          {
             options.RootPath = "../ClientApp/dist";

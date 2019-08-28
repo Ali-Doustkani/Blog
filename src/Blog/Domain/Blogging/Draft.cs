@@ -6,20 +6,6 @@ using System.Linq;
 
 namespace Blog.Domain.Blogging
 {
-   public class DraftImages
-   {
-      public DraftImages(IEnumerable<Image> images, string oldDirectory, string newDirectory)
-      {
-         Images = images;
-         OldDirectory = oldDirectory;
-         NewDirectory = newDirectory;
-      }
-
-      public IEnumerable<Image> Images { get; }
-      public string OldDirectory { get; }
-      public string NewDirectory { get; }
-   }
-
    public class DraftUpdateCommand
    {
       public int Id { get; set; }
@@ -29,21 +15,6 @@ namespace Blog.Domain.Blogging
       public string Content { get; set; }
       public string Summary { get; set; }
       public string Tags { get; set; }
-   }
-
-   public class PublishResult
-   {
-      public PublishResult(IEnumerable<Error> errors, Post post)
-      {
-         Errors = errors;
-         Post = post;
-      }
-
-      public IEnumerable<Error> Errors { get; }
-
-      public bool Failed => Errors.Any();
-
-      public Post Post { get; }
    }
 
    public class Draft : DomainEntity
@@ -77,7 +48,9 @@ namespace Blog.Domain.Blogging
 
       public string Content { get; private set; }
 
-      public string Slugify()
+      public Post Post { get; private set; }
+
+      private string Slugify()
       {
          if (!string.IsNullOrEmpty(EnglishUrl))
             return EnglishUrl;
@@ -101,7 +74,7 @@ namespace Blog.Domain.Blogging
       }
 
       /// <exception cref="ServiceDependencyException"/>
-      public PublishResult Publish(IDateProvider dateProvider, IHtmlProcessor processor, IStorageState storageState)
+      public void Publish(IDateProvider dateProvider, IHtmlProcessor processor)
       {
          Assert.Op.NotNull(Title);
          Assert.Op.NotNull(Tags);
@@ -109,27 +82,11 @@ namespace Blog.Domain.Blogging
          Assert.Op.NotNull(Content);
 
          if (Language == Language.Farsi && string.IsNullOrEmpty(EnglishUrl))
-            return new PublishResult(new[] { new Error(nameof(EnglishUrl), "EnglishUrl is required for Farsi posts") }, null);
+            throw new InvalidOperationException("EnglishUrl is required for Farsi posts");
 
-         Post post;
          if (!_publishDate.HasValue)
-         {
             _publishDate = dateProvider.Now;
-            post = ToPost(processor);
-            storageState.Add(post);
-         }
-         else
-         {
-            post = ToPost(processor);
-            storageState.Modify(post);
-         }
-
-         return new PublishResult(Enumerable.Empty<Error>(), post);
-      }
-
-      private Post ToPost(IHtmlProcessor processor)
-      {
-         return new Post(Id,
+         Post = new Post(Id,
                 Title,
                 _publishDate.Value,
                 Language,
@@ -137,6 +94,12 @@ namespace Blog.Domain.Blogging
                 Tags,
                 Slugify(),
                 processor.Process(Content));
+      }
+
+      public void Unpublish()
+      {
+         _publishDate = null;
+         Post = null;
       }
 
       public void Update(DraftUpdateCommand command, IStorageState storageState)
@@ -157,7 +120,12 @@ namespace Blog.Domain.Blogging
          Summary = command.Summary;
          Tags = command.Tags;
 
-         storageState.Modify(new DraftImages(RenderImages(), oldDirectory, Slugify()));
+         storageState.Modify(new ImageCollection(RenderImages(), oldDirectory, Slugify()));
+      }
+
+      public void RemoveImages(IStorageState storageState)
+      {
+         storageState.Delete(new ImageCollection(RenderImages(), null, Slugify()));
       }
 
       public static IEnumerable<Error> ValidateCodeBlocks(string content)

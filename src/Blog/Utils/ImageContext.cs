@@ -14,22 +14,35 @@ namespace Blog.Utils
       }
 
       private readonly IFileSystem _fs;
-      private DraftImages _images;
+      private ImageCollection _images;
+      private string _deleteDirectory;
 
-      public void SetState(DraftImages images)
-      {
+      public void AddOrUpdate(ImageCollection images) =>
          _images = Assert.Arg.NotNull(images);
-      }
+
+      public void Delete(string deleteDirectory) =>
+         _deleteDirectory = deleteDirectory;
 
       public void SaveChanges()
       {
          Assert.Op.NotNull(_images);
 
-         RenameDirectory(_images.OldDirectory, _images.NewDirectory);
-         var dir = GetDirectory(_images.NewDirectory);
-         CreteDirectory(dir, _images.Images);
-         WriteImages(dir, _images.Images);
-         DeleteOrphanFiles(dir, _images.Images);
+         if (_images != null)
+         {
+            RenameDirectory(_images.OldDirectory, _images.NewDirectory);
+            var dir = GetDirectory(_images.NewDirectory);
+            CreteDirectory(dir, _images.Images);
+            WriteImages(dir, _images.Images);
+            DeleteOrphanFiles(dir, _images.Images);
+            _images = null;
+         }
+         else if (_deleteDirectory != null)
+         {
+            var directory = GetDirectory(_deleteDirectory);
+            if (_fs.DirectoryExists(directory))
+               _fs.DeleteDirectory(directory);
+            _deleteDirectory = null;
+         }
       }
 
       private void CreteDirectory(string dir, IEnumerable<Image> images)
@@ -70,13 +83,6 @@ namespace Blog.Utils
             return;
 
          _fs.RenameDirectory(GetDirectory(oldPostDirectory), GetDirectory(postDirectory));
-      }
-
-      public void Delete(string postSlug)
-      {
-         var directory = GetDirectory(postSlug);
-         if (_fs.DirectoryExists(directory))
-            _fs.DeleteDirectory(directory);
       }
 
       private string GetDirectory(string postDirectory) =>

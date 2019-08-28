@@ -9,8 +9,8 @@ namespace Blog.Domain.Blogging
    {
       public Image(string filename, string postDirectory, byte[] data)
       {
-         Filename = Its.NotEmpty(filename, nameof(Filename));
-         PostDirectory = Its.NotEmpty(postDirectory, nameof(PostDirectory));
+         Filename = Assert.Arg.NotNull(filename);
+         PostDirectory = Assert.Arg.NotNull(postDirectory);
          Data = data;
       }
 

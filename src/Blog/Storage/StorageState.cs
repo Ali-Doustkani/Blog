@@ -30,15 +30,21 @@ namespace Blog.Storage
 
       public void Modify(params object[] entities)
       {
-         if (entities[0] is DraftImages images)
+         if (entities[0] is ImageCollection images)
          {
-            _imageContext.SetState(images);
+            _imageContext.AddOrUpdate(images);
          }
          else
          {
             foreach (var entry in entities)
                _context.Entry(entry).State = EntityState.Modified;
          }
+      }
+
+      public void Delete(params object[] entities)
+      {
+         if (entities[0] is ImageCollection images)
+            _imageContext.Delete(images.NewDirectory);
       }
    }
 }
