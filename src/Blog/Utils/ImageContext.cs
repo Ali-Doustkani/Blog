@@ -25,8 +25,6 @@ namespace Blog.Utils
 
       public void SaveChanges()
       {
-         Assert.Op.NotNull(_images);
-
          if (_images != null)
          {
             RenameDirectory(_images.OldDirectory, _images.NewDirectory);

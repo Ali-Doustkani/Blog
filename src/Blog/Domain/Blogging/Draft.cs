@@ -8,7 +8,6 @@ namespace Blog.Domain.Blogging
 {
    public class DraftUpdateCommand
    {
-      public int Id { get; set; }
       public Language Language { get; set; }
       public string Title { get; set; }
       public string EnglishUrl { get; set; }

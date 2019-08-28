@@ -1,149 +1,68 @@
-﻿using AutoMapper;
+﻿using Blog.CQ.DraftDeleteCommand;
+using Blog.CQ.DraftSaveCommand;
+using Blog.CQ.DraftListQuery;
+using Blog.CQ.PostQuery;
+using Blog.CQ.PreviewQuery;
 using Blog.Domain;
 using Blog.Domain.Blogging;
-using Blog.Services.Administrator;
-using Blog.Services.Home;
-using Blog.Storage;
 using Blog.Utils;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace Blog.Controllers
 {
    [Authorize]
    public class AdministratorController : Controller
    {
-      public AdministratorController(
-         BlogContext blogContext,
-         ImageContext imageContext,
-         IDateProvider dateProvider,
-         IHtmlProcessor htmlProcessor,
-         IStorageState storageState,
-         IMapper mapper)
+      public AdministratorController(IMediator mediator)
       {
-         _context = blogContext;
-         _imageContext = imageContext;
-         _dateProvider = dateProvider;
-         _htmlProcessor = htmlProcessor;
-         _storageState = storageState;
-         _mapper = mapper;
+         _mediator = mediator;
       }
 
-      private readonly BlogContext _context;
-      private readonly ImageContext _imageContext;
-      private readonly IDateProvider _dateProvider;
-      private readonly IHtmlProcessor _htmlProcessor;
-      private readonly IStorageState _storageState;
-      private readonly IMapper _mapper;
+      private readonly IMediator _mediator;
 
-      public ViewResult Index()
+      public async Task<ViewResult> Index() =>
+         View(await _mediator.Send(new DraftListQuery()));
+
+      public ViewResult Post() =>
+         View(new DraftSaveCommand());
+
+      public async Task<IActionResult> ViewPost(int id)
       {
-         var drafts = (from info in _context.Drafts
-                       join post in _context.Posts on info.Id equals post.Id into posts
-                       from post in posts.DefaultIfEmpty()
-                       select _mapper.Map<DraftRow>(Tuple.Create(info, post == null ? -1 : post.Id))
-          ).ToArray();
-
-         return View(drafts);
-      }
-
-      public ViewResult Post() => View(new DraftEntry());
-
-      public IActionResult ViewPost(int id)
-      {
-         var re = (from draft in _context.Drafts
-                   join post in _context.Posts on draft.Id equals post.Id into posts
-                   from post in posts.DefaultIfEmpty()
-                   where draft.Id == id
-                   select _mapper.Map<DraftEntry>(Tuple.Create(draft, post == null ? -1 : post.Id))
-           ).Single();
-
-         if (re == null)
+         var result = await _mediator.Send(new PostQuery { Id = id });
+         if (result == null)
             return NotFound();
-         return View(nameof(Post), re);
+         return View(nameof(Post), result);
       }
 
       [ValidateAntiForgeryToken]
-      public IActionResult SavePost(DraftEntry draftEntry)
+      public async Task<IActionResult> SavePost(DraftSaveCommand command)
       {
          if (!ModelState.IsValid)
-            return View(nameof(Post), draftEntry);
+            return View(nameof(Post), command);
 
-         var command = new DraftUpdateCommand
+         var result = await _mediator.Send(command);
+         if (result.Published)
          {
-            Content = draftEntry.Content,
-            EnglishUrl = draftEntry.EnglishUrl,
-            Language = draftEntry.Language,
-            Summary = draftEntry.Summary,
-            Tags = draftEntry.Tags,
-            Title = draftEntry.Title,
-            Id = draftEntry.Id
-         };
-
-         Draft draft;
-         if (command.Id == 0)
-         {
-            draft = new Draft();
-            _context.Drafts.Add(draft);
-         }
-         else
-         {
-            draft = _context.GetDraft(command.Id);
-         }
-
-         draft.Update(command, _storageState);
-
-         _context.SaveChanges();
-         _imageContext.SaveChanges();
-
-         if (draftEntry.Publish)
-         {
-            draft.Publish(_dateProvider, _htmlProcessor);
-            _context.SaveChanges();
-            var lang = draft.Language == Language.English ? "en" : "fa";
-            return RedirectToAction("Post", "Home", new { language = lang, urlTitle = draft.Post.Url });
-         }
-
-         if (!draftEntry.Publish && draft.Post != null)
-         {
-            draft.Unpublish();
-            _context.SaveChanges();
+            var lang = command.Language == Language.English ? "en" : "fa";
+            return RedirectToAction("Post", "Home", new { language = lang, urlTitle = result.PostUrl });
          }
 
          return RedirectToAction(nameof(Index));
       }
 
       [ValidateAntiForgeryToken]
-      public IActionResult DeletePost(int id)
+      public async Task<IActionResult> DeletePost(int id)
       {
-         var draft = _context.Drafts.Find(id);
-         _context.Drafts.Remove(draft);
-
-         var post = _context.Posts.SingleOrDefault(x => x.Id == id);
-         if (post != null)
-         {
-            _context.Posts.Remove(post);
-         }
-
-         _context.SaveChanges();
-         _imageContext.SaveChanges();
-
+         await _mediator.Send(new DraftDeleteCommand { Id = id });
          return RedirectToAction(nameof(Index));
       }
 
-      public IActionResult Preview(int id)
+      public async Task<IActionResult> Preview(int id)
       {
-         var draft = _context
-            .Drafts
-            .SingleOrDefault(x => x.Id == id);
-         if (draft == null) return null;
-
-         draft.Publish(_dateProvider, _htmlProcessor);
-
-         var post = _mapper.Map<PostViewModel>(draft.Post);
-
+         var post = await _mediator.Send(new DraftPreviewQuery { DraftId = id });
          if (post == null)
             return NotFound();
 

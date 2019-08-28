@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
-using Blog.Domain;
-using Blog.Domain.Blogging;
 using Blog.Storage;
 using Blog.Utils;
 using FluentValidation.AspNetCore;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -56,6 +55,7 @@ namespace Blog
          services.AddAutoMapper(GetType().Assembly);
          services.AddBlogTypes();
          services.AddScoped<ImageContext>();
+         services.AddMediatR(GetType().Assembly);
          services.AddSpaStaticFiles(options =>
          {
             options.RootPath = "../ClientApp/dist";

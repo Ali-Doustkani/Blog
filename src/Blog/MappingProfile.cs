@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
+using Blog.CQ.DraftListQuery;
+using Blog.CQ.DraftSaveCommand;
 using Blog.Domain.Blogging;
 using Blog.Domain.DeveloperStory;
-using Blog.Services.Administrator;
 using System;
 
 namespace Blog
@@ -39,17 +40,21 @@ namespace Blog
                dest => dest.EndDate,
                o => o.MapFrom(src => src.Period.EndDate.ToString("yyyy-MM-dd")));
 
-         CreateMap<Draft, DraftRow>();
+         CreateMap<Draft, DraftItem>();
 
-         CreateMap<Tuple<Draft, int>, DraftRow>()
+         CreateMap<DraftSaveCommand, DraftUpdateCommand>();
+
+         CreateMap<Tuple<Draft, int>, DraftItem>()
              .ForMember(
                  dest => dest.Published,
                  o => o.MapFrom(src => src.Item2 != -1))
              .IncludeMembers(x => x.Item1);
 
-         CreateMap<Draft, DraftEntry>();
+         CreateMap<Draft, DraftSaveCommand>()
+            .ForMember(x => x.Publish,
+            o => o.MapFrom(src => src.Post != null));
 
-         CreateMap<Tuple<Draft, int>, DraftEntry>()
+         CreateMap<Tuple<Draft, int>, DraftSaveCommand>()
              .ForMember(
                  dest => dest.Publish,
                  o => o.MapFrom(src => src.Item2 != -1))
