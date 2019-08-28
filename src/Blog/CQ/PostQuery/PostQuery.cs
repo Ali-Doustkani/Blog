@@ -2,8 +2,8 @@
 
 namespace Blog.CQ.PostQuery
 {
-   public class PostQuery : IRequest<DraftSaveCommand.DraftSaveCommand>
+   public class PostQuery : IRequest<PostViewModel>
    {
-      public int Id { get; set; }
+      public string PostUrl { get; set; }
    }
 }

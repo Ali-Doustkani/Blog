@@ -1,7 +1,7 @@
 ﻿using Blog.Domain;
 using System.Collections.Generic;
 
-namespace Blog.Services.Home
+namespace Blog.CQ.PostQuery
 {
    public class PostViewModel
    {

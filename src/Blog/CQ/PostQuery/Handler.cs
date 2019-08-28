@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 using Blog.Storage;
 using MediatR;
+using System.Linq;
 
 namespace Blog.CQ.PostQuery
 {
-   public class Handler : RequestHandler<PostQuery, DraftSaveCommand.DraftSaveCommand>
+   public class Handler : RequestHandler<PostQuery, PostViewModel>
    {
       public Handler(BlogContext context, IMapper mapper)
       {
@@ -15,9 +16,9 @@ namespace Blog.CQ.PostQuery
       private readonly BlogContext _context;
       private readonly IMapper _mapper;
 
-      protected override DraftSaveCommand.DraftSaveCommand Handle(PostQuery request)
-      {
-         return _mapper.Map<DraftSaveCommand.DraftSaveCommand>(_context.GetDraft(request.Id));
-      }
+      protected override PostViewModel Handle(PostQuery request) =>
+         _mapper.Map<PostViewModel>(_context
+                .Posts
+                .SingleOrDefault(x => x.Url == request.PostUrl));
    }
 }

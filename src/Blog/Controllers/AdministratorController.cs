@@ -1,10 +1,9 @@
 ﻿using Blog.CQ.DraftDeleteCommand;
-using Blog.CQ.DraftSaveCommand;
 using Blog.CQ.DraftListQuery;
-using Blog.CQ.PostQuery;
+using Blog.CQ.DraftQuery;
+using Blog.CQ.DraftSaveCommand;
 using Blog.CQ.PreviewQuery;
 using Blog.Domain;
-using Blog.Domain.Blogging;
 using Blog.Utils;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -31,7 +30,7 @@ namespace Blog.Controllers
 
       public async Task<IActionResult> ViewPost(int id)
       {
-         var result = await _mediator.Send(new PostQuery { Id = id });
+         var result = await _mediator.Send(new DraftQuery { Id = id });
          if (result == null)
             return NotFound();
          return View(nameof(Post), result);

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
+using Blog.CQ.PostQuery;
 using Blog.Domain;
 using Blog.Domain.Blogging;
-using Blog.Services.Home;
 using Blog.Storage;
 using MediatR;
 

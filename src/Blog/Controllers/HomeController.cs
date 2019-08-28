@@ -1,32 +1,36 @@
-﻿using Blog.Domain;
-using Blog.Services.Home;
+﻿using Blog.CQ.DeveloperQuery;
+using Blog.CQ.PostListQuery;
+using Blog.CQ.PostQuery;
+using Blog.Domain;
 using Blog.Utils;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Threading.Tasks;
 
 namespace Blog.Controllers
 {
    public class HomeController : Controller
    {
-      public HomeController(IHomeServices services)
+      public HomeController(IMediator mediator)
       {
-         _services = services;
+         _mediator = mediator;
       }
 
-      private readonly IHomeServices _services;
+      private readonly IMediator _mediator;
 
-      public ViewResult Index(string language)
+      public async Task<ViewResult> Index(string language)
       {
          var lang = Language.English;
          if (string.Equals(language, "fa", StringComparison.OrdinalIgnoreCase))
             lang = Language.Farsi;
          ViewData["language"] = lang;
-         return View(_services.GetPosts(lang));
+         return View(await _mediator.Send(new PostListQuery { Language = lang }));
       }
 
-      public IActionResult Post(string language, string urlTitle)
+      public async Task<IActionResult> Post(string language, string urlTitle)
       {
-         var post = _services.Get(urlTitle);
+         var post = await _mediator.Send(new PostQuery { PostUrl = urlTitle });
          if (post == null)
             return NotFound();
 
@@ -38,9 +42,9 @@ namespace Blog.Controllers
          return View(post);
       }
 
-      public IActionResult About()
+      public async Task<IActionResult> About()
       {
-         var developer = _services.GetDeveloper();
+         var developer = await _mediator.Send(new DeveloperQuery());
          if (developer == null)
             return NotFound();
 

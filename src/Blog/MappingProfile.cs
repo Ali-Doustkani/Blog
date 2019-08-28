@@ -1,6 +1,10 @@
 ﻿using AutoMapper;
+using Blog.CQ.DeveloperQuery;
 using Blog.CQ.DraftListQuery;
 using Blog.CQ.DraftSaveCommand;
+using Blog.CQ.PostListQuery;
+using Blog.CQ.PostQuery;
+using Blog.Domain;
 using Blog.Domain.Blogging;
 using Blog.Domain.DeveloperStory;
 using System;
@@ -59,6 +63,70 @@ namespace Blog
                  dest => dest.Publish,
                  o => o.MapFrom(src => src.Item2 != -1))
              .IncludeMembers(x => x.Item1);
+
+         CreateMap<Post, PostItem>()
+           .ForMember(
+                dest => dest.Date,
+                o => o.MapFrom<ShortDateResolver>())
+             .ForMember(
+                dest => dest.Tags,
+                o => o.MapFrom(src => src.GetTags()));
+
+         CreateMap<Post, PostViewModel>()
+         .ForMember(
+             dest => dest.Date,
+             o => o.MapFrom<LongDateResolver>())
+           .ForMember(
+             dest => dest.Tags,
+             o => o.MapFrom(src => src.GetTags()));
+
+         CreateMap<Developer, DeveloperViewModel>()
+            .ForMember(
+               dest => dest.Skills,
+               o => o.MapFrom(src => src.GetSkillLines()))
+            .ForMember(
+               dest => dest.Summary,
+               o => o.MapFrom(src => src.Summary.Content));
+
+         CreateMap<Experience, ExperienceViewModel>()
+            .ForMember(
+               dest => dest.Content,
+               o => o.MapFrom(src => src.Content.Content))
+            .ForMember(
+               dest => dest.StartDate,
+               o => o.MapFrom(src => src.Period.StartDate))
+            .ForMember(
+               dest => dest.EndDate,
+               o => o.MapFrom(src => src.Period.EndDate));
+
+         CreateMap<SideProject, SideProjectViewModel>()
+            .ForMember(
+               dest => dest.Content,
+               o => o.MapFrom(src => src.Content.Content));
+
+         CreateMap<Education, EducationViewModel>()
+            .ForMember(
+               dest => dest.StartDate,
+               o => o.MapFrom(src => src.Period.StartDate))
+            .ForMember(
+               dest => dest.EndDate,
+               o => o.MapFrom(src => src.Period.EndDate));
       }
+   }
+
+   public class ShortDateResolver : IValueResolver<Post, PostItem, string>
+   {
+      public string Resolve(Post source, PostItem destination, string destMember, ResolutionContext context) =>
+           source.Language == Language.English ?
+           source.PublishDate.ToString("MMM yyyy") :
+           source.GetShortPersianDate();
+   }
+
+   public class LongDateResolver : IValueResolver<Post, PostViewModel, string>
+   {
+      public string Resolve(Post source, PostViewModel destination, string destMember, ResolutionContext context) =>
+          source.Language == Language.English ?
+          source.PublishDate.ToString("D") :
+          source.GetLongPersianDate();
    }
 }

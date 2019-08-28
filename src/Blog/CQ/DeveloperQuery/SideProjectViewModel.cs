@@ -1,4 +1,4 @@
-﻿namespace Blog.Services.Home
+﻿namespace Blog.CQ.DeveloperQuery
 {
    public class SideProjectViewModel
    {

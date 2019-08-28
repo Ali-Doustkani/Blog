@@ -1,13 +1,22 @@
 ﻿using Blog.Utils;
-using Blog.ViewModels.Account;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace Blog.Controllers
 {
+   public class LoginEntry
+   {
+      [Required]
+      public string Username { get; set; }
+
+      [Required]
+      public string Password { get; set; }
+   }
+
    public class AccountController : Controller
    {
       public AccountController(SignInManager<IdentityUser> signInManager, ILogger<AccountController> logger)

@@ -1,4 +1,4 @@
-﻿using Blog.Services.Home;
+﻿using Blog.CQ.PostQuery;
 using MediatR;
 
 namespace Blog.CQ.PreviewQuery
