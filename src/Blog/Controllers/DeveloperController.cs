@@ -1,9 +1,8 @@
-﻿using AutoMapper;
-using Blog.Domain;
-using Blog.Domain.DeveloperStory;
-using Blog.Storage;
+﻿using Blog.CQ.DeveloperSaveCommand;
+using Blog.CQ.DeveloperSaveQuery;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace Blog.Controllers
 {
@@ -11,55 +10,31 @@ namespace Blog.Controllers
    [Route("/api/developer")]
    public class DeveloperController : ControllerBase
    {
-      public DeveloperController(IMapper mapper, BlogContext context, IStorageState storageState)
+      public DeveloperController(IMediator mediator)
       {
-         _mapper = mapper;
-         _context = context;
-         _storageState = storageState;
+         _mediator = mediator;
       }
 
-      private readonly IMapper _mapper;
-      private readonly BlogContext _context;
-      private readonly IStorageState _storageState;
+      private readonly IMediator _mediator;
 
       [HttpGet]
-      public ActionResult<DeveloperUpdateCommand> Get()
+      public async Task<ActionResult<DeveloperSaveCommand>> Get()
       {
-         var result = _mapper.Map<DeveloperUpdateCommand>(_context.GetDeveloper());
+         var result = await _mediator.Send(new DeveloperSaveQuery());
          if (result == null)
             return NoContent();
          return result;
       }
 
       [HttpPut]
-      public IActionResult Put(DeveloperUpdateCommand updateCommand)
+      public async Task<IActionResult> Put(DeveloperSaveCommand command)
       {
-         var created = CreateOrGet(updateCommand, out Developer developer);
+         var result = await _mediator.Send(command);
 
-         var result = developer.Update(updateCommand, _storageState);
+         if (result.Created)
+            return CreatedAtAction(nameof(Get), new { result.UpdateResult.Experiences, result.UpdateResult.SideProjects, result.UpdateResult.Educations });
 
-         _context.Update(developer);
-         _context.SaveChanges();
-
-         if (created)
-            return CreatedAtAction(nameof(Get), new { result.Experiences, result.SideProjects, result.Educations });
-
-         return Ok(new { result.Experiences, result.SideProjects, result.Educations });
-      }
-
-      private bool CreateOrGet(DeveloperUpdateCommand updateCommand, out Developer developer)
-      {
-         if (_context.Developers.Any())
-         {
-            developer = _context.GetDeveloper();
-            return false;
-         }
-
-         var experiences = updateCommand
-            .Experiences
-            .Select(x => new Experience(0, x.Company, x.Position, Period.Parse(x.StartDate, x.EndDate), x.Content));
-         developer = new Developer(updateCommand.Summary, updateCommand.Skills, experiences);
-         return true;
+         return Ok(new { result.UpdateResult.Experiences, result.UpdateResult.SideProjects, result.UpdateResult.Educations });
       }
    }
 }
