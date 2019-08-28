@@ -19,34 +19,9 @@ namespace Blog.Tests.Services
          _context = new ServiceTestContext<AdminServices>();
          _context.Seed(db =>
          {
-            db.Drafts.Add(new Draft
-            {
-               Id = 1,
-               Title = "Javascript FP",
-               Language = Language.English,
-               Summary = "Learning FP in Javascript",
-               Tags = "JS, FP, Node.js",
-               Content = "<p>JS Functional Programming</p>"
-            });
-            db.Drafts.Add(new Draft
-            {
-               Id = 2,
-               Title = "Object Oriented C#",
-               Language = Language.English,
-               Summary = "Learning OOP in C#",
-               Tags = "OOP, C#",
-               Content = "<p>Object Oriented C#</p>"
-            });
-            db.Drafts.Add(new Draft
-            {
-               Id = 3,
-               Title = "جاوا و ویندوز",
-               Language = Language.Farsi,
-               Summary = "استفاده از جاوا در ویندوز",
-               Tags = "Java",
-               EnglishUrl = "java-windows",
-               Content = "<p>جاوا و ویندوز</p>"
-            });
+            db.Drafts.Add(new Draft(1, "Javascript FP", "", Language.English, "Learning FP in Javascript", "JS, FP, Node.js", "<p>JS Functional Programming</p>"));
+            db.Drafts.Add(new Draft(2, "Object Oriented C#", "", Language.English, "Learning OOP in C#", "OOP, C#", "<p>Object Oriented C#</p>"));
+            db.Drafts.Add(new Draft(3, "جاوا و ویندوز", "java-windows", Language.Farsi, "استفاده از جاوا در ویندوز", "Java", "<p>جاوا و ویندوز</p>"));
             db.Posts.Add(new Post(1,
                "Javascript FP",
                new DateTime(2019, 1, 1),
@@ -67,8 +42,8 @@ namespace Blog.Tests.Services
          });
          _context.WithMock<ICodeFormatter>();
          _context.WithMock<IImageProcessor>();
-         _context.WithMock<IImageContext>();
-         _context.WithType<DraftSaveCommand>();
+         //_context.WithMock<IImageContext>();
+         //_context.WithType<DraftSaveCommand>();
          _context.WithType<DraftValidator>();
       }
 
@@ -324,8 +299,8 @@ namespace Blog.Tests.Services
                Tags = "tags"
             });
 
-            _context.GetMock<IImageContext>()
-               .Verify(x => x.SaveChanges(null, "the-post", It.IsAny<IEnumerable<Image>>()));
+            //_context.GetMock<IImageContext>()
+            //   .Verify(x => x.SaveChanges(null, "the-post", It.IsAny<IEnumerable<Image>>()));
          }
       }
 

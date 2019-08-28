@@ -11,11 +11,10 @@ namespace Blog.Domain.Blogging
       public DraftValidator(BlogContext context)
       {
          _context = context;
-         _languages = new[] { "csharp", "cs", "javascript", "js", "css", "sass", "less", "html", "sql" };
+
       }
 
       private readonly BlogContext _context;
-      private readonly string[] _languages;
       private List<Error> _result;
 
       public IEnumerable<Error> Validate(Draft draft)
@@ -23,10 +22,11 @@ namespace Blog.Domain.Blogging
          _result = new List<Error>();
          ValidateEnglishUrl(draft);
          ValidateTitle(draft);
-         ValidateCodeBlocks(draft);
+         _result.AddRange(Draft.ValidateCodeBlocks(draft.Content));
          return _result;
       }
 
+      // publish
       private void ValidateEnglishUrl(Draft draft)
       {
          if (draft.Language == Language.Farsi && string.IsNullOrEmpty(draft.EnglishUrl))
@@ -37,31 +37,6 @@ namespace Blog.Domain.Blogging
       {
          if (_context.Drafts.Any(x => x.Id != draft.Id && string.Equals(x.Title, draft.Title, StringComparison.OrdinalIgnoreCase)))
             _result.Add(new Error(nameof(draft.Title), "This title already exists in the database"));
-      }
-
-      private void ValidateCodeBlocks(Draft draft)
-      {
-         var doc = new HtmlDocument();
-         doc.LoadHtml(draft.Content);
-         var num = 0;
-         doc.DocumentNode.ForEachChild(node =>
-         {
-            var plain = node.InnerHtml.Trim();
-            if (node.Is("pre.code") && !string.IsNullOrWhiteSpace(plain))
-            {
-               num++;
-
-               if (!node.InnerHtml.Contains(Environment.NewLine))
-               {
-                  _result.Add(new Error(nameof(Draft.Content), $"Language is not specified for the code block #{num}"));
-                  return;
-               }
-
-               var lang = HtmlProcessor.GetLanguage(plain);
-               if (!_languages.Contains(lang))
-                  _result.Add(new Error(nameof(Draft.Content), $"Specified language in code block #{num} is not valid ({lang}...)"));
-            }
-         });
       }
    }
 }

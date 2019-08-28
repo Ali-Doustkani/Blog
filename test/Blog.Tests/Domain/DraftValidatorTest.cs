@@ -21,12 +21,7 @@ namespace Blog.Tests.Domain
       [Fact]
       public void When_post_is_farsi_englishUrl_must_be_set()
       {
-         var draft = new Draft
-         {
-            Title = "the post",
-            Language = Language.Farsi,
-            Content = "content"
-         };
+         var draft = new Draft(0, "the post", null, Language.Farsi, null, null, "content");
 
          _validator
             .Validate(draft)
@@ -41,20 +36,9 @@ namespace Blog.Tests.Domain
       [Fact]
       public void Title_must_be_unique()
       {
-         _context.Drafts.Add(new Draft
-         {
-            Id = 22,
-            Title = "T1",
-            Summary = "summary",
-            Tags = "tags",
-            Content = "content"
-         });
+         _context.Drafts.Add(new Draft(22, "T1", "", Language.English, "summary", "tags", "content"));
          _context.SaveChanges();
-         var draft = new Draft
-         {
-            Title = "T1",
-            Content = "content"
-         };
+         var draft = new Draft(0, "T1", null, Language.English, null, null, "content");
 
          _validator
             .Validate(draft)
@@ -69,8 +53,7 @@ namespace Blog.Tests.Domain
       [Fact]
       public void Error_when_language_of_code_block_is_not_specified()
       {
-         var draft = new Draft { Title = "the post" };
-         draft.Content = "<pre class=\"code\">some code</pre>";
+         var draft = new Draft(0, "the post", null, Language.English, null, null, "<pre class=\"code\">some code</pre>");
 
          _validator
             .Validate(draft)
@@ -85,8 +68,7 @@ namespace Blog.Tests.Domain
       [Fact]
       public void Dont_error_for_empty_code_blocks()
       {
-         var draft = new Draft { Title = "the post" };
-         draft.Content = "<pre class=\"code\"> </pre>";
+         var draft = new Draft(0, "the post", null, Language.English, null, null, "<pre class=\"code\"> </pre>");
 
          _validator
             .Validate(draft)
@@ -97,8 +79,7 @@ namespace Blog.Tests.Domain
       [Fact]
       public void Error_when_invalid_language_is_set()
       {
-         var draft = new Draft { Title = "the post" };
-         draft.Content = string.Join(Environment.NewLine, "<pre class=\"code\">", "clojure", "some code</pre>");
+         var draft = new Draft(0, "the post", null, Language.English, null, null, string.Join(Environment.NewLine, "<pre class=\"code\">", "clojure", "some code</pre>"));
 
          _validator
             .Validate(draft)

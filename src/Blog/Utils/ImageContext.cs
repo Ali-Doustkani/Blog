@@ -6,13 +6,7 @@ using System.Linq;
 
 namespace Blog.Utils
 {
-   public interface IImageContext
-   {
-      void SaveChanges(string oldPostDirectory, string postDirectory, IEnumerable<Image> images);
-      void Delete(string urlTitle);
-   }
-
-   public class ImageContext : IImageContext
+   public class ImageContext
    {
       public ImageContext(IFileSystem fs)
       {
@@ -20,14 +14,22 @@ namespace Blog.Utils
       }
 
       private readonly IFileSystem _fs;
+      private DraftImages _images;
 
-      public void SaveChanges(string oldPostDirectory, string postDirectory, IEnumerable<Image> images)
+      public void SetState(DraftImages images)
       {
-         RenameDirectory(oldPostDirectory, postDirectory);
-         var dir = GetDirectory(postDirectory);
-         CreteDirectory(dir, images);
-         WriteImages(dir, images);
-         DeleteOrphanFiles(dir, images);
+         _images = Assert.Arg.NotNull(images);
+      }
+
+      public void SaveChanges()
+      {
+         Assert.Op.NotNull(_images);
+
+         RenameDirectory(_images.OldDirectory, _images.NewDirectory);
+         var dir = GetDirectory(_images.NewDirectory);
+         CreteDirectory(dir, _images.Images);
+         WriteImages(dir, _images.Images);
+         DeleteOrphanFiles(dir, _images.Images);
       }
 
       private void CreteDirectory(string dir, IEnumerable<Image> images)

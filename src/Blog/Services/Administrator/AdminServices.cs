@@ -24,24 +24,22 @@ namespace Blog.Services.Administrator
       public AdminServices(BlogContext context,
          IMapper mapper,
          IHtmlProcessor processor,
-         IImageContext imageContext,
-         DraftSaveCommand saveCommand,
+         ImageContext imageContext,
          IDateProvider dateProvider)
       {
          _context = context;
          _mapper = mapper;
          _processor = processor;
          _imageContext = imageContext;
-         _saveCommand = saveCommand;
          _dateProvider = dateProvider;
       }
 
       private readonly BlogContext _context;
       private readonly IMapper _mapper;
       private readonly IHtmlProcessor _processor;
-      private readonly IImageContext _imageContext;
+      private readonly ImageContext _imageContext;
       private readonly IDateProvider _dateProvider;
-      private readonly DraftSaveCommand _saveCommand;
+      private readonly IStorageState _storageState;
 
       public DraftEntry Create() =>
           new DraftEntry();
@@ -68,11 +66,14 @@ namespace Blog.Services.Administrator
             .SingleOrDefault(x => x.Id == id);
          if (draft == null) return null;
 
-         return _mapper.Map<Home.PostViewModel>(draft.ToPost(_dateProvider, _processor));
+         return _mapper.Map<Home.PostViewModel>(draft.Publish(_dateProvider, _processor, _storageState));
       }
 
-      public SaveResult Save(DraftEntry viewModel) =>
-         _saveCommand.Run(viewModel);
+      public SaveResult Save(DraftEntry viewModel)
+      {
+         return null;
+         //_saveCommand.Run(viewModel);
+      }
 
       public void Delete(int id)
       {
@@ -92,7 +93,7 @@ namespace Blog.Services.Administrator
       public void Dispose()
       {
          _context.Dispose();
-         _saveCommand.Dispose();
+         //_saveCommand.Dispose();
       }
    }
 }

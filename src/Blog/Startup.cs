@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Blog.Domain;
+using Blog.Domain.Blogging;
 using Blog.Storage;
 using Blog.Utils;
 using FluentValidation.AspNetCore;
@@ -54,6 +55,8 @@ namespace Blog
          services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<BlogContext>();
          services.AddAutoMapper(GetType().Assembly);
          services.AddBlogTypes();
+         services.AddScoped<ImageContext>();
+         services.AddTransient<DraftService>();
          services.AddSpaStaticFiles(options =>
          {
             options.RootPath = "../ClientApp/dist";

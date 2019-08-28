@@ -56,7 +56,7 @@ namespace Blog.Tests.Utils
 
          var images = new[] { new Image("a.png", "the-post", new byte[] { 1, 2 }) };
 
-         _ctx.SaveChanges(null, "the-post", images);
+         // _ctx.SaveChanges(null, "the-post", images);
 
          _log.Should()
             .BeEquivalentTo(new[]
@@ -79,7 +79,7 @@ namespace Blog.Tests.Utils
                 new Image("b.png", "the-post", new byte[] {4,5})
             };
 
-         _ctx.SaveChanges(null, "the-post", images);
+         //  _ctx.SaveChanges(null, "the-post", images);
 
          _log.Should()
              .BeEquivalentTo(new[]
@@ -104,7 +104,7 @@ namespace Blog.Tests.Utils
                 new Image("b.png", "the-post", new byte[] { 1, 2 })
             };
 
-         _ctx.SaveChanges(string.Empty, "the-post", images);
+         //  _ctx.SaveChanges(string.Empty, "the-post", images);
 
          _log.Should()
              .BeEquivalentTo(new[]
@@ -133,7 +133,7 @@ namespace Blog.Tests.Utils
                 new Image("c.png", "the-post", new byte[]{1,2})
             };
 
-         _ctx.SaveChanges("the-post", "the-post", images);
+         // _ctx.SaveChanges("the-post", "the-post", images);
 
          _log.Should()
              .BeEquivalentTo(new[]
@@ -152,7 +152,7 @@ namespace Blog.Tests.Utils
          _fs.Setup(x => x.DirectoryExists(It.IsAny<string>()))
             .Returns(false);
 
-         _ctx.SaveChanges("the-post", "the-post", Enumerable.Empty<Image>());
+         // _ctx.SaveChanges("the-post", "the-post", Enumerable.Empty<Image>());
 
          _log.Should()
             .BeEquivalentTo(Enumerable.Empty<string>(), cfg => cfg.WithStrictOrdering());
@@ -172,7 +172,7 @@ namespace Blog.Tests.Utils
 
          var images = Enumerable.Empty<Image>();
 
-         _ctx.SaveChanges("the-post", "the-post", images);
+         //  _ctx.SaveChanges("the-post", "the-post", images);
 
          _log.Should()
              .BeEquivalentTo(new[]
@@ -207,7 +207,7 @@ namespace Blog.Tests.Utils
          var images = new List<Image>();
          images.Add(new Image("a.png", "the-post"));
 
-         _ctx.SaveChanges("the-post", "new-title", images);
+         // _ctx.SaveChanges("the-post", "new-title", images);
 
          _log.Should().BeEquivalentTo(new[]
          {
@@ -226,7 +226,7 @@ namespace Blog.Tests.Utils
          var images = new List<Image>();
          images.Add(new Image("a.png", "the-post", new byte[] { 3, 4 }));
 
-         _ctx.SaveChanges("the-post", "the-post", images);
+         // _ctx.SaveChanges("the-post", "the-post", images);
 
          _log.Should().BeEquivalentTo(new[]
          {
@@ -245,7 +245,7 @@ namespace Blog.Tests.Utils
             .Returns(false);
          var images = Enumerable.Empty<Image>();
 
-         _ctx.SaveChanges("the-post", "new-title", images);
+         // _ctx.SaveChanges("the-post", "new-title", images);
 
          _log.Should().BeEquivalentTo(new string[] { });
       }

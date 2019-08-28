@@ -77,7 +77,7 @@ namespace Blog.Tests.Services
             return CreateMapper();
 
          if (type == typeof(IStorageState))
-            return new Storage.StorageState(_currentContext);
+            return new Storage.StorageState(_currentContext, null);
 
          if (type == typeof(IHtmlProcessor))
             return new HtmlProcessor(GetMock<ICodeFormatter>().Object, GetMock<IImageProcessor>().Object);

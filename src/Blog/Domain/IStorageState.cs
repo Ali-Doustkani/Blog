@@ -2,7 +2,8 @@
 {
    public interface IStorageState
    {
-      void Modify(params object[] entity);
-      void Detach(params object[] entity);
+      void Add(params object[] entities);
+      void Modify(params object[] entities);
+      void Detach(params object[] entities);
    }
 }
