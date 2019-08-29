@@ -9,14 +9,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Blog.Tests.CQ
 {
    public class DraftListQueryTests
    {
-      public DraftListQueryTests()
+      public DraftListQueryTests(ITestOutputHelper output)
       {
-         _context = new TestContext();
+         _context = new TestContext(output);
          var mapper = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>()).CreateMapper();
          _handler = new Handler(_context.GetDb(), mapper);
       }

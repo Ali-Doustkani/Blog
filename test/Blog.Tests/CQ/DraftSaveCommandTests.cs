@@ -10,30 +10,30 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Blog.Tests.CQ
 {
    public class DraftSaveCommandTests
    {
-      public DraftSaveCommandTests()
+      public DraftSaveCommandTests(ITestOutputHelper output)
       {
-         _context = new TestContext();
+         _context = new TestContext(output);
          var context = _context.GetDb();
          _fs = new MockFileSystem();
          _imageContext = new ImageContext(_fs);
-         _mapper = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>()).CreateMapper();
+         var mapper = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>()).CreateMapper();
          _dateProvider = new Mock<IDateProvider>();
          _dateProvider.Setup(x => x.Now).Returns(DateTime.Now);
          _imageProcessor = new Mock<IImageProcessor>();
          _htmlProcessor = new HtmlProcessor(Mock.Of<ICodeFormatter>(), _imageProcessor.Object);
-         _handler = new Handler(context, _imageContext, _mapper, _dateProvider.Object, _htmlProcessor);
+         _handler = new Handler(context, _imageContext, mapper, _dateProvider.Object, _htmlProcessor);
       }
 
       private readonly IRequestHandler<DraftSaveCommand, Result> _handler;
       private readonly TestContext _context;
       private readonly MockFileSystem _fs;
       private readonly ImageContext _imageContext;
-      private readonly IMapper _mapper;
       private readonly Mock<IDateProvider> _dateProvider;
       private readonly Mock<IImageProcessor> _imageProcessor;
       private readonly IHtmlProcessor _htmlProcessor;

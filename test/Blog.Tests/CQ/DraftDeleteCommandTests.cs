@@ -7,14 +7,15 @@ using MediatR;
 using System;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Blog.Tests.CQ
 {
    public class DraftDeleteCommandTests
    {
-      public DraftDeleteCommandTests()
+      public DraftDeleteCommandTests(ITestOutputHelper output)
       {
-         _context = new TestContext();
+         _context = new TestContext(output);
          _fs = new MockFileSystem();
          _imageContext = new ImageContext(_fs);
          _handler = new Handler(_context.GetDb(), _imageContext);
