@@ -27,6 +27,24 @@ namespace Blog.Tests.CQ
       private readonly ImageContext _imageContext;
 
       [Fact]
+      public async Task Delete_a_draft()
+      {
+         using (var db = _context.GetDb())
+         {
+            var draft = new Draft(0, "JS", null, Language.English, "learn js", "js, es", "<p>text</p>");
+            db.Drafts.Add(draft);
+            db.SaveChanges();
+         }
+
+         await _handler.Handle(new DraftDeleteCommand { Id = 1 }, default);
+
+         using (var db = _context.GetDb())
+         {
+            db.Drafts.Should().BeEmpty();
+         }
+      }
+
+      [Fact]
       public async Task Delete_a_draft_with_its_post_and_images()
       {
          _fs.CreateDirectory("wwwroot/images/posts/js");

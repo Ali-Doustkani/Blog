@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Blog.CQ.DraftListQuery;
+﻿using Blog.CQ.DraftListQuery;
 using Blog.Domain;
 using Blog.Domain.Blogging;
 using FluentAssertions;
@@ -18,15 +17,14 @@ namespace Blog.Tests.CQ
       public DraftListQueryTests(ITestOutputHelper output)
       {
          _context = new TestContext(output);
-         var mapper = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>()).CreateMapper();
-         _handler = new Handler(_context.GetDb(), mapper);
+         _handler = new Handler(_context.GetDb());
       }
 
       private readonly TestContext _context;
       private readonly IRequestHandler<DraftListQuery, IEnumerable<DraftItem>> _handler;
 
       [Fact]
-      public async Task GetDraftItems()
+      public async Task Get_draft_items()
       {
          using (var db = _context.GetDb())
          {

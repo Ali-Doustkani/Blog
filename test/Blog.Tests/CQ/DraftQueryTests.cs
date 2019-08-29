@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Blog.CQ.DraftQuery;
+﻿using Blog.CQ.DraftQuery;
 using Blog.CQ.DraftSaveCommand;
 using Blog.Domain;
 using Blog.Domain.Blogging;
@@ -17,8 +16,7 @@ namespace Blog.Tests.CQ
       public DraftQueryTests(ITestOutputHelper helper)
       {
          _context = new TestContext(helper);
-         var mapper = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>()).CreateMapper();
-         _handler = new Blog.CQ.DraftQuery.Handler(_context.GetDb(), mapper);
+         _handler = new Blog.CQ.DraftQuery.Handler(_context.GetDb());
       }
 
       private readonly TestContext _context;
