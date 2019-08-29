@@ -42,20 +42,14 @@ namespace Blog.Domain.Blogging
 
       public string Url { get; private set; }
 
-      public IEnumerable<string> GetTags()
-      {
-         if (string.IsNullOrEmpty(Tags))
-            return Enumerable.Empty<string>();
+      public IEnumerable<string> GetTags() =>
+         ToTags(Tags);
 
-         var result = new List<string>();
-         foreach (var str in Tags.Split(","))
-         {
-            var trimmed = str.Trim();
-            if (!string.IsNullOrEmpty(trimmed))
-               result.Add(trimmed);
-         }
-         return result;
-      }
+      public string GetLongPersianDate() =>
+         ToLongPersianDate(PublishDate);
+
+      public string GetShortPersianDate() =>
+         ToShortPersianDate(PublishDate);
 
       public static string ToLongPersianDate(DateTime date)
       {
@@ -65,15 +59,10 @@ namespace Blog.Domain.Blogging
          return $"{dayName}، {cal.GetDayOfMonth(date)} {MonthName(date)} {cal.GetYear(date)}";
       }
 
-      public string GetLongPersianDate()
-      {
-         return ToLongPersianDate(PublishDate);
-      }
-
-      public string GetShortPersianDate()
+      public static string ToShortPersianDate(DateTime date)
       {
          var cal = new PersianCalendar();
-         return $"{MonthName(PublishDate)} {cal.GetYear(PublishDate)}";
+         return $"{MonthName(date)} {cal.GetYear(date)}";
       }
 
       private static string MonthName(DateTime date)
@@ -81,6 +70,21 @@ namespace Blog.Domain.Blogging
          var cal = new PersianCalendar();
          var months = new[] { "فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند" };
          return months[cal.GetMonth(date) - 1];
+      }
+
+      public static IEnumerable<string> ToTags(string tags)
+      {
+         if (string.IsNullOrEmpty(tags))
+            return Enumerable.Empty<string>();
+
+         var result = new List<string>();
+         foreach (var str in tags.Split(","))
+         {
+            var trimmed = str.Trim();
+            if (!string.IsNullOrEmpty(trimmed))
+               result.Add(trimmed);
+         }
+         return result;
       }
    }
 }

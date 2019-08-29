@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Blog.CQ.DeveloperQuery;
 using Blog.CQ.DraftSaveCommand;
-using Blog.CQ.PostListQuery;
 using Blog.CQ.PostQuery;
 using Blog.Domain;
 using Blog.Domain.Blogging;
@@ -76,14 +75,6 @@ namespace Blog
 
          CreateMap<DraftSaveCommand, DraftUpdateCommand>();
 
-         CreateMap<Post, PostItem>()
-           .ForMember(
-                dest => dest.Date,
-                o => o.MapFrom<ShortDateResolver>())
-             .ForMember(
-                dest => dest.Tags,
-                o => o.MapFrom(src => src.GetTags()));
-
          CreateMap<Post, PostViewModel>()
             .ForMember(
                dest => dest.Date,
@@ -92,14 +83,6 @@ namespace Blog
                dest => dest.Tags,
                o => o.MapFrom(src => src.GetTags()));
       }
-   }
-
-   public class ShortDateResolver : IValueResolver<Post, PostItem, string>
-   {
-      public string Resolve(Post source, PostItem destination, string destMember, ResolutionContext context) =>
-           source.Language == Language.English ?
-           source.PublishDate.ToString("MMM yyyy") :
-           source.GetShortPersianDate();
    }
 
    public class LongDateResolver : IValueResolver<Post, PostViewModel, string>
