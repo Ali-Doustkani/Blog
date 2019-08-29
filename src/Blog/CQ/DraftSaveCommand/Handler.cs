@@ -12,14 +12,12 @@ namespace Blog.CQ.DraftSaveCommand
       public Handler(BlogContext context,
          ImageContext imageContext,
          IMapper mapper,
-         IStorageState storageState,
          IDateProvider dateProvider,
          IHtmlProcessor htmlProcessor)
       {
          _context = context;
          _imageContext = imageContext;
          _mapper = mapper;
-         _storageState = storageState;
          _dateProvider = dateProvider;
          _htmlProcessor = htmlProcessor;
       }
@@ -27,7 +25,6 @@ namespace Blog.CQ.DraftSaveCommand
       private readonly BlogContext _context;
       private readonly ImageContext _imageContext;
       private readonly IMapper _mapper;
-      private readonly IStorageState _storageState;
       private readonly IDateProvider _dateProvider;
       private readonly IHtmlProcessor _htmlProcessor;
 
@@ -46,9 +43,10 @@ namespace Blog.CQ.DraftSaveCommand
 
          var command = _mapper.Map<DraftUpdateCommand>(request);
 
-         draft.Update(command, _storageState);
+         var images = draft.Update(command);
 
          _context.SaveChanges();
+         _imageContext.AddOrUpdate(images);
          _imageContext.SaveChanges();
 
          if (request.Publish)

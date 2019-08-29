@@ -64,14 +64,6 @@ namespace Blog.Domain.Blogging
          .ReplaceWithPattern(@"[\s:/\\]+", "-")
          .ReplaceWithPattern(@"\.", "");
 
-      private IEnumerable<Image> RenderImages()
-      {
-         var renderer = new ImageRenderer(Slugify());
-         var result = renderer.Render(Content);
-         Content = result.Html;
-         return result.Images;
-      }
-
       /// <exception cref="ServiceDependencyException"/>
       /// <exception cref="InvalidOperationException" />
       public void Publish(IDateProvider dateProvider, IHtmlProcessor processor)
@@ -103,10 +95,9 @@ namespace Blog.Domain.Blogging
          Post = null;
       }
 
-      public void Update(DraftUpdateCommand command, IStorageState storageState)
+      public ImageCollection Update(DraftUpdateCommand command)
       {
          Assert.Arg.NotNull(command);
-         Assert.Arg.NotNull(storageState);
          Assert.Op.NoError(ValidateCodeBlocks(command.Content));
 
          var oldDirectory = Title == null ? null : Slugify();
@@ -118,13 +109,11 @@ namespace Blog.Domain.Blogging
          Summary = command.Summary;
          Tags = command.Tags;
 
-         storageState.Modify(new ImageCollection(RenderImages(), oldDirectory, Slugify()));
+         return RenderImages(oldDirectory);
       }
 
-      public void RemoveImages(IStorageState storageState)
-      {
-         storageState.Delete(new ImageCollection(RenderImages(), null, Slugify()));
-      }
+      public ImageCollection GetImages() =>
+         RenderImages(null);
 
       public static IEnumerable<Error> ValidateCodeBlocks(string content)
       {
@@ -154,6 +143,14 @@ namespace Blog.Domain.Blogging
             }
          });
          return result;
+      }
+
+      private ImageCollection RenderImages(string oldDirectory)
+      {
+         var renderer = new ImageRenderer(Slugify());
+         var result = renderer.Render(Content);
+         Content = result.Html;
+         return new ImageCollection(result.Images, oldDirectory, Slugify());
       }
    }
 }

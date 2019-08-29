@@ -14,12 +14,10 @@ namespace Blog.Tests.Domain
          _htmlProcesssor = new Mock<IHtmlProcessor>();
          _htmlProcesssor.Setup(x => x.Process(It.IsAny<string>())).Returns((string html) => html);
          _dateProvider = new Mock<IDateProvider>();
-         _storageState = new Mock<IStorageState>();
       }
 
       private Mock<IHtmlProcessor> _htmlProcesssor;
       private Mock<IDateProvider> _dateProvider;
-      private Mock<IStorageState> _storageState;
 
       [Fact]
       public void Farsi_posts_should_be_slugified_to_english_url()
@@ -163,7 +161,7 @@ namespace Blog.Tests.Domain
             Language = Language.English,
             Content = "<pre class=\"code\">var a;\nvar b;</code>"
          };
-         draft.Invoking(d => d.Update(command, _storageState.Object))
+         draft.Invoking(d => d.Update(command))
             .Should()
             .Throw<InvalidOperationException>()
             .Where(x => x.Message.Contains("Language is not specified for the code block"));
@@ -181,51 +179,13 @@ namespace Blog.Tests.Domain
             Language = Language.English,
             Content = "<p>text</p>"
          };
-         draft.Update(command, _storageState.Object);
+         draft.Update(command);
 
          draft.Title.Should().Be("JS");
          draft.Summary.Should().Be("Learn JS");
          draft.Tags.Should().Be("ts, js");
          draft.Language.Should().Be(Language.English);
          draft.Content.Should().Be("<p>text</p>");
-      }
-
-      [Fact]
-      public void Update_image_directory_name()
-      {
-         var oldDirectory = string.Empty;
-         var newDirectory = string.Empty;
-         _storageState.Setup(x => x.Modify(It.IsAny<object>())).Callback((object[] objs) =>
-         {
-            var images = (ImageCollection)objs[0];
-            oldDirectory = images.OldDirectory;
-            newDirectory = images.NewDirectory;
-         });
-
-         var draft = new Draft();
-         var command = new DraftUpdateCommand
-         {
-            Title = "JS",
-            Language = Language.English,
-            Summary = "learn js",
-            Tags = "js",
-            Content = "<p>text</p>"
-         };
-         draft.Update(command, _storageState.Object);
-         oldDirectory.Should().BeNull();
-         newDirectory.Should().Be("js");
-
-         command = new DraftUpdateCommand
-         {
-            Title = "ES 7",
-            Language = Language.English,
-            Summary = "learn es7",
-            Tags = "es",
-            Content = "<p>text</p>"
-         };
-         draft.Update(command, _storageState.Object);
-         oldDirectory.Should().Be("js");
-         newDirectory.Should().Be("es-7");
       }
    }
 }

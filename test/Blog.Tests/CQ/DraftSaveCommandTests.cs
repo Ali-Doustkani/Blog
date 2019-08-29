@@ -11,7 +11,6 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -46,12 +45,11 @@ namespace Blog.Tests.CQ
          _fs = new MockFileSystem();
          _imageContext = new ImageContext(_fs);
          _mapper = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>()).CreateMapper();
-         _storageState = new StorageState(context, _imageContext);
          _dateProvider = new Mock<IDateProvider>();
          _dateProvider.Setup(x => x.Now).Returns(DateTime.Now);
          _imageProcessor = new Mock<IImageProcessor>();
          _htmlProcessor = new HtmlProcessor(Mock.Of<ICodeFormatter>(), _imageProcessor.Object);
-         _handler = new Handler(context, _imageContext, _mapper, _storageState, _dateProvider.Object, _htmlProcessor);
+         _handler = new Handler(context, _imageContext, _mapper, _dateProvider.Object, _htmlProcessor);
       }
 
       private readonly IRequestHandler<DraftSaveCommand, Result> _handler;
@@ -59,7 +57,6 @@ namespace Blog.Tests.CQ
       private readonly MockFileSystem _fs;
       private readonly ImageContext _imageContext;
       private readonly IMapper _mapper;
-      private readonly IStorageState _storageState;
       private readonly Mock<IDateProvider> _dateProvider;
       private readonly Mock<IImageProcessor> _imageProcessor;
       private readonly IHtmlProcessor _htmlProcessor;

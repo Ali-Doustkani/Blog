@@ -21,7 +21,7 @@ namespace Blog.CQ.DraftDeleteCommand
       protected override void Handle(DraftDeleteCommand request)
       {
          var draft = _context.GetDraft(request.Id);
-         draft.RemoveImages(_storageState);
+         _imageContext.Delete(draft.GetImages().NewDirectory);
          _context.Drafts.Remove(draft);
          _context.SaveChanges();
          _imageContext.SaveChanges();
