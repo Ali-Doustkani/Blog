@@ -64,7 +64,7 @@ namespace Blog.Domain.Blogging
          .ReplaceWithPattern(@"[\s:/\\]+", "-")
          .ReplaceWithPattern(@"\.", "");
 
-      public IEnumerable<Image> RenderImages()
+      private IEnumerable<Image> RenderImages()
       {
          var renderer = new ImageRenderer(Slugify());
          var result = renderer.Render(Content);
@@ -73,18 +73,20 @@ namespace Blog.Domain.Blogging
       }
 
       /// <exception cref="ServiceDependencyException"/>
+      /// <exception cref="InvalidOperationException" />
       public void Publish(IDateProvider dateProvider, IHtmlProcessor processor)
       {
-         Assert.Op.NotNull(Title);
-         Assert.Op.NotNull(Tags);
-         Assert.Op.NotNull(Summary);
-         Assert.Op.NotNull(Content);
+         Assert.Op.NotNull(Title, "Title");
+         Assert.Op.NotNull(Tags, "Tags");
+         Assert.Op.NotNull(Summary, "Summary");
+         Assert.Op.NotNull(Content, "Content");
 
          if (Language == Language.Farsi && string.IsNullOrEmpty(EnglishUrl))
             throw new InvalidOperationException("EnglishUrl is required for Farsi posts");
 
          if (!_publishDate.HasValue)
             _publishDate = dateProvider.Now;
+
          Post = new Post(Id,
                 Title,
                 _publishDate.Value,
@@ -105,17 +107,14 @@ namespace Blog.Domain.Blogging
       {
          Assert.Arg.NotNull(command);
          Assert.Arg.NotNull(storageState);
-
-         var errors = ValidateCodeBlocks(command.Content);
-         if (errors.Any())
-            throw new InvalidOperationException("Content is not valid");
+         Assert.Op.NoError(ValidateCodeBlocks(command.Content));
 
          var oldDirectory = Title == null ? null : Slugify();
 
          Title = Assert.Arg.NotNull(command.Title);
          Language = command.Language;
          EnglishUrl = command.EnglishUrl;
-         Content = command.Content;
+         Content = command.Content ?? string.Empty;
          Summary = command.Summary;
          Tags = command.Tags;
 

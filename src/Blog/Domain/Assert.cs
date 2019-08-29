@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
 
 namespace Blog.Domain
 {
@@ -6,29 +10,57 @@ namespace Blog.Domain
    {
       static Assert()
       {
-         Op = new Assertions<InvalidOperationException>();
-         Arg = new Assertions<ArgumentException>();
+         Op = new OperationAssertions();
+         Arg = new ArgumentAssertions();
       }
 
-      public static Assertions<InvalidOperationException> Op { get; }
-      public static Assertions<ArgumentException> Arg { get; }
+      public static OperationAssertions Op { get; }
+      public static ArgumentAssertions Arg { get; }
    }
 
-   public class Assertions<TException>
-        where TException : Exception, new()
+   public abstract class Assertions
    {
-      public T NotNull<T>(T input)
+      public T NotNull<T>(T input, string name = null)
       {
          if (input == null)
-            throw new TException();
+            throw Exc(name);
          return input;
       }
 
-      public string NotNull(string input)
+      public string NotNull(string input, string name = null)
       {
          if (string.IsNullOrWhiteSpace(input))
-            throw new TException();
+            throw Exc(name);
          return input;
       }
+
+      protected abstract Exception Exc(string name);
+   }
+
+   public class OperationAssertions : Assertions
+   {
+      protected override Exception Exc(string name) =>
+         name == null
+              ? new InvalidOperationException()
+              : new InvalidOperationException($"{name} is required for this operation.");
+
+      public void NoError(IEnumerable<Error> errors)
+      {
+         if (errors.Any())
+         {
+            var sb = new StringBuilder();
+            foreach (var err in errors)
+               sb.AppendLine($"{err.Message} {err.Property}");
+            throw new InvalidOperationException(sb.ToString());
+         }
+      }
+   }
+
+   public class ArgumentAssertions : Assertions
+   {
+      protected override Exception Exc(string name) =>
+         name == null
+              ? new InvalidOperationException()
+              : new InvalidOperationException($"{name} is required for this operation.");
    }
 }

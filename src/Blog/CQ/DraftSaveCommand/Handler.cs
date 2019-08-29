@@ -53,7 +53,15 @@ namespace Blog.CQ.DraftSaveCommand
 
          if (request.Publish)
          {
-            draft.Publish(_dateProvider, _htmlProcessor);
+            try
+            {
+               draft.Publish(_dateProvider, _htmlProcessor);
+            }
+            catch (ServiceDependencyException exc)
+            {
+               // return reason
+               return new Result(null);
+            }
             _context.SaveChanges();
             return new Result(draft.Post.Url);
          }
