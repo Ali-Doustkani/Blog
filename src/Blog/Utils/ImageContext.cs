@@ -14,33 +14,22 @@ namespace Blog.Utils
       }
 
       private readonly IFileSystem _fs;
-      private ImageCollection _images;
-      private string _deleteDirectory;
 
-      public void AddOrUpdate(ImageCollection images) =>
-         _images = Assert.Arg.NotNull(images);
-
-      public void Delete(string deleteDirectory) =>
-         _deleteDirectory = deleteDirectory;
-
-      public void SaveChanges()
+      public void AddOrUpdate(ImageCollection images)
       {
-         if (_images != null)
-         {
-            RenameDirectory(_images.OldDirectory, _images.NewDirectory);
-            var dir = GetDirectory(_images.NewDirectory);
-            CreteDirectory(dir, _images.Images);
-            WriteImages(dir, _images.Images);
-            DeleteOrphanFiles(dir, _images.Images);
-            _images = null;
-         }
-         else if (_deleteDirectory != null)
-         {
-            var directory = GetDirectory(_deleteDirectory);
-            if (_fs.DirectoryExists(directory))
-               _fs.DeleteDirectory(directory);
-            _deleteDirectory = null;
-         }
+         Assert.Arg.NotNull(images);
+         RenameDirectory(images.OldDirectory, images.NewDirectory);
+         var dir = GetDirectory(images.NewDirectory);
+         CreteDirectory(dir, images.Images);
+         WriteImages(dir, images.Images);
+         DeleteOrphanFiles(dir, images.Images);
+      }
+
+      public void Delete(string deleteDirectory)
+      {
+         var directory = GetDirectory(deleteDirectory);
+         if (_fs.DirectoryExists(directory))
+            _fs.DeleteDirectory(directory);
       }
 
       private void CreteDirectory(string dir, IEnumerable<Image> images)

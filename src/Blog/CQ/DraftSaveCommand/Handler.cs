@@ -47,7 +47,6 @@ namespace Blog.CQ.DraftSaveCommand
 
          _context.SaveChanges();
          _imageContext.AddOrUpdate(images);
-         _imageContext.SaveChanges();
 
          if (request.Publish)
          {

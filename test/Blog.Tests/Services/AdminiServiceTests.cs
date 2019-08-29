@@ -110,46 +110,6 @@
 
 
 //      [Fact]
-//      public void Delete_draft()
-//      {
-//         using (var svc = _context.GetService())
-//         {
-//            svc.Delete(3);
-//         }
-
-//         using (var db = _context.GetDatabase())
-//         {
-//            db.Drafts
-//                .Should()
-//                .HaveCount(2);
-
-//            db.Posts
-//                .Should()
-//                .HaveCount(2);
-//         }
-//      }
-
-//      [Fact]
-//      public void Delete_post()
-//      {
-//         using (var svc = _context.GetService())
-//         {
-//            svc.Delete(1);
-//         }
-
-//         using (var db = _context.GetDatabase())
-//         {
-//            db.Drafts
-//              .Should()
-//              .HaveCount(2);
-
-//            db.Posts
-//              .Should()
-//              .HaveCount(1);
-//         }
-//      }
-
-//      [Fact]
 //      public void GetView()
 //      {
 //         var date = Post.ToLongPersianDate(DateTime.Now);

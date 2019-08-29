@@ -2,12 +2,9 @@
 using Blog.CQ.DraftSaveCommand;
 using Blog.Domain;
 using Blog.Domain.Blogging;
-using Blog.Storage;
 using Blog.Utils;
 using FluentAssertions;
 using MediatR;
-using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
 using Moq;
 using System;
 using System.Linq;
@@ -16,26 +13,6 @@ using Xunit;
 
 namespace Blog.Tests.CQ
 {
-   public class TestContext
-   {
-      public TestContext()
-      {
-         _connection = new SqliteConnection("DataSource=:memory:");
-         _connection.Open();
-         using (var ctx = GetDb())
-            ctx.Database.EnsureCreated();
-      }
-
-      private readonly SqliteConnection _connection;
-
-      public BlogContext GetDb()
-      {
-         var optionBuilder = new DbContextOptionsBuilder();
-         optionBuilder.UseSqlite(_connection);
-         return new BlogContext(optionBuilder.Options);
-      }
-   }
-
    public class DraftSaveCommandTests
    {
       public DraftSaveCommandTests()

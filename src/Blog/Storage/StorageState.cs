@@ -40,11 +40,5 @@ namespace Blog.Storage
                _context.Entry(entry).State = EntityState.Modified;
          }
       }
-
-      public void Delete(params object[] entities)
-      {
-         if (entities[0] is ImageCollection images)
-            _imageContext.Delete(images.NewDirectory);
-      }
    }
 }

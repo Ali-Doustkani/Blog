@@ -23,7 +23,6 @@ namespace Blog.Tests.Utils
       {
          var images = new ImageCollection(new[] { new Image("a.png", "the-post", new byte[] { 1, 2 }) }, null, "the-post");
          _ctx.AddOrUpdate(images);
-         _ctx.SaveChanges();
 
          _fs.log.Should()
             .BeEquivalentTo(new[]
@@ -49,8 +48,6 @@ namespace Blog.Tests.Utils
          var imageCollection = new ImageCollection(images, null, "the-post");
          _ctx.AddOrUpdate(imageCollection);
 
-         _ctx.SaveChanges();
-
          _fs.log.Should()
              .BeEquivalentTo(new[]
              {
@@ -74,8 +71,8 @@ namespace Blog.Tests.Utils
                 new Image("b.png", "the-post", new byte[] { 1, 2 })
          };
          var imageCollection = new ImageCollection(images, string.Empty, "the-post");
+
          _ctx.AddOrUpdate(imageCollection);
-         _ctx.SaveChanges();
 
          _fs.log.Should()
              .BeEquivalentTo(new[]
@@ -100,9 +97,8 @@ namespace Blog.Tests.Utils
                 new Image("c.png", "the-post", new byte[]{1,2})
          };
          var imageCollection = new ImageCollection(images, "the-post", "the-post");
-         _ctx.AddOrUpdate(imageCollection);
 
-         _ctx.SaveChanges();
+         _ctx.AddOrUpdate(imageCollection);
 
          _fs.log.Should()
              .BeEquivalentTo(new[]
@@ -117,8 +113,6 @@ namespace Blog.Tests.Utils
       public void Delete_orphan_files_when_no_directory_exists()
       {
          _ctx.Delete("the-post");
-         _ctx.SaveChanges();
-
          _fs.log.Should()
             .BeEquivalentTo(Enumerable.Empty<string>(), cfg => cfg.WithStrictOrdering());
       }
@@ -132,8 +126,8 @@ namespace Blog.Tests.Utils
          _fs.log.Clear();
 
          var images = new ImageCollection(Enumerable.Empty<Image>(), "the-post", "the-post");
+
          _ctx.AddOrUpdate(images);
-         _ctx.SaveChanges();
 
          _fs.log.Should()
              .BeEquivalentTo(new[]
@@ -155,8 +149,8 @@ namespace Blog.Tests.Utils
          var images = new List<Image>();
          images.Add(new Image("a.png", "the-post"));
          var imageCollection = new ImageCollection(images, "the-post", "new-title");
+
          _ctx.AddOrUpdate(imageCollection);
-         _ctx.SaveChanges();
 
          _fs.log.Should().BeEquivalentTo(new[]
          {
@@ -175,8 +169,8 @@ namespace Blog.Tests.Utils
          var images = new List<Image>();
          images.Add(new Image("a.png", "the-post", new byte[] { 3, 4 }));
          var imageCollection = new ImageCollection(images, "the-post", "the-post");
+
          _ctx.AddOrUpdate(imageCollection);
-         _ctx.SaveChanges();
 
          _fs.log.Should().BeEquivalentTo(new[]
          {
@@ -190,7 +184,6 @@ namespace Blog.Tests.Utils
          var images = new ImageCollection(Enumerable.Empty<Image>(), "the-post", "new-title");
 
          _ctx.AddOrUpdate(images);
-         _ctx.SaveChanges();
 
          _fs.log.Should().BeEquivalentTo(new string[] { });
       }

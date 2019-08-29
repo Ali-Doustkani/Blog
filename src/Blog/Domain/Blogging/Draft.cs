@@ -49,20 +49,12 @@ namespace Blog.Domain.Blogging
 
       public Post Post { get; private set; }
 
-      private string Slugify()
+      public string GetImageDirectoryName()
       {
          if (!string.IsNullOrEmpty(EnglishUrl))
             return EnglishUrl;
          return SlugifyTitle();
       }
-
-      private string SlugifyTitle() =>
-         Title
-         .ThrowIfNullOrEmpty<InvalidOperationException>("Publishing needs Title to be set.")
-         .ToLower()
-         .Replace("#", "sharp")
-         .ReplaceWithPattern(@"[\s:/\\]+", "-")
-         .ReplaceWithPattern(@"\.", "");
 
       /// <exception cref="ServiceDependencyException"/>
       /// <exception cref="InvalidOperationException" />
@@ -85,7 +77,7 @@ namespace Blog.Domain.Blogging
                 Language,
                 Summary,
                 Tags,
-                Slugify(),
+                GetImageDirectoryName(),
                 processor.Process(Content));
       }
 
@@ -100,7 +92,7 @@ namespace Blog.Domain.Blogging
          Assert.Arg.NotNull(command);
          Assert.Op.NoError(ValidateCodeBlocks(command.Content));
 
-         var oldDirectory = Title == null ? null : Slugify();
+         var oldDirectory = Title == null ? null : GetImageDirectoryName();
 
          Title = Assert.Arg.NotNull(command.Title);
          Language = command.Language;
@@ -111,9 +103,6 @@ namespace Blog.Domain.Blogging
 
          return RenderImages(oldDirectory);
       }
-
-      public ImageCollection GetImages() =>
-         RenderImages(null);
 
       public static IEnumerable<Error> ValidateCodeBlocks(string content)
       {
@@ -145,12 +134,20 @@ namespace Blog.Domain.Blogging
          return result;
       }
 
+      private string SlugifyTitle() =>
+        Title
+        .ThrowIfNullOrEmpty<InvalidOperationException>("Publishing needs Title to be set.")
+        .ToLower()
+        .Replace("#", "sharp")
+        .ReplaceWithPattern(@"[\s:/\\]+", "-")
+        .ReplaceWithPattern(@"\.", "");
+
       private ImageCollection RenderImages(string oldDirectory)
       {
-         var renderer = new ImageRenderer(Slugify());
+         var renderer = new ImageRenderer(GetImageDirectoryName());
          var result = renderer.Render(Content);
          Content = result.Html;
-         return new ImageCollection(result.Images, oldDirectory, Slugify());
+         return new ImageCollection(result.Images, oldDirectory, GetImageDirectoryName());
       }
    }
 }
