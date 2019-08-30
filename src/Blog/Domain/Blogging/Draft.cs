@@ -16,6 +16,27 @@ namespace Blog.Domain.Blogging
       public string Tags { get; set; }
    }
 
+   public class DraftUpdateCommandResult : CommandResult
+   {
+      public DraftUpdateCommandResult(IEnumerable<Error> errors)
+         : base(errors)
+      { }
+
+      public DraftUpdateCommandResult(ImageCollection images)
+          : base(Enumerable.Empty<Error>())
+      {
+         Images = images;
+      }
+
+      public ImageCollection Images { get; }
+
+      public static DraftUpdateCommandResult MakeFailure(IEnumerable<Error> errors) =>
+         new DraftUpdateCommandResult(errors);
+
+      public static DraftUpdateCommandResult MakeSuccess(ImageCollection images) =>
+         new DraftUpdateCommandResult(images);
+   }
+
    public class Draft : DomainEntity
    {
       public Draft() { }
@@ -56,29 +77,39 @@ namespace Blog.Domain.Blogging
          return SlugifyTitle();
       }
 
-      /// <exception cref="ServiceDependencyException"/>
-      /// <exception cref="InvalidOperationException" />
-      public void Publish(IDateProvider dateProvider, IHtmlProcessor processor)
+      public CommandResult Publish(IDateProvider dateProvider, IHtmlProcessor processor)
       {
-         Assert.Op.NotNull(Title, "Title");
-         Assert.Op.NotNull(Tags, "Tags");
-         Assert.Op.NotNull(Summary, "Summary");
-         Assert.Op.NotNull(Content, "Content");
+         var errors = new ErrorManager()
+            .Required(Title, "Title")
+            .Required(Tags, "Tags")
+            .Required(Summary, "Summary")
+            .Required(Content, "Content")
+            .IfTrue(Language == Language.Farsi && string.IsNullOrEmpty(EnglishUrl),
+            "EnglishUrl is required for Farsi posts");
 
-         if (Language == Language.Farsi && string.IsNullOrEmpty(EnglishUrl))
-            throw new InvalidOperationException("EnglishUrl is required for Farsi posts");
+         if (errors.Dirty)
+            return errors.ToResult();
 
          if (!_publishDate.HasValue)
             _publishDate = dateProvider.Now;
 
-         Post = new Post(Id,
-                Title,
-                _publishDate.Value,
-                Language,
-                Summary,
-                Tags,
-                GetImageDirectoryName(),
-                processor.Process(Content));
+         try
+         {
+            Post = new Post(Id,
+                   Title,
+                   _publishDate.Value,
+                   Language,
+                   Summary,
+                   Tags,
+                   GetImageDirectoryName(),
+                   processor.Process(Content));
+         }
+         catch (ServiceDependencyException exc)
+         {
+            errors.Add(exc.Message);
+         }
+
+         return errors.ToResult();
       }
 
       public void Unpublish()
@@ -87,21 +118,25 @@ namespace Blog.Domain.Blogging
          Post = null;
       }
 
-      public ImageCollection Update(DraftUpdateCommand command)
+      public DraftUpdateCommandResult Update(DraftUpdateCommand command)
       {
-         Assert.Arg.NotNull(command);
-         Assert.Op.NoError(ValidateCodeBlocks(command.Content));
+         var errorManager = new ErrorManager();
+         errorManager.Add(ValidateCodeBlocks(command.Content));
+         errorManager.Required(command.Title, "Title");
+
+         if (errorManager.Dirty)
+            return DraftUpdateCommandResult.MakeFailure(errorManager.Errors);
 
          var oldDirectory = Title == null ? null : GetImageDirectoryName();
 
-         Title = Assert.Arg.NotNull(command.Title);
+         Title = command.Title;
          Language = command.Language;
          EnglishUrl = command.EnglishUrl;
          Content = command.Content ?? string.Empty;
          Summary = command.Summary;
          Tags = command.Tags;
 
-         return RenderImages(oldDirectory);
+         return DraftUpdateCommandResult.MakeSuccess(RenderImages(oldDirectory));
       }
 
       public static IEnumerable<Error> ValidateCodeBlocks(string content)

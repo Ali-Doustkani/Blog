@@ -9,6 +9,7 @@ namespace Blog.Domain.Blogging
 {
    public interface IHtmlProcessor
    {
+      /// <exception cref="ServiceDependencyException"/>
       string Process(string rawContent);
    }
 

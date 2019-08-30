@@ -30,10 +30,14 @@ namespace Blog.Tests.Domain
       [Fact]
       public void Throw_if_english_url_is_not_available_for_farsi_posts()
       {
-         var draft = new Draft(0, "the post", null, Language.Farsi, "learn js", "js", "<p>text</p>");
-         draft.Invoking(d => d.Publish(_dateProvider.Object, _htmlProcesssor.Object))
-         .Should()
-         .Throw<InvalidOperationException>();
+         new Draft(0, "the post", null, Language.Farsi, "learn js", "js", "<p>text</p>")
+            .Publish(_dateProvider.Object, _htmlProcesssor.Object)
+            .Errors
+            .Should()
+            .ContainEquivalentOf(new
+            {
+               Message = "EnglishUrl is required for Farsi posts"
+            });
       }
 
       [Fact]
@@ -70,41 +74,53 @@ namespace Blog.Tests.Domain
       [Fact]
       public void Dont_publish_when_there_is_no_title()
       {
-         var draft = new Draft(0, "", "", Language.English, "read about js", "js", "Learning JS");
-         draft.Invoking(d => d.Publish(Mock.Of<IDateProvider>(), Mock.Of<IHtmlProcessor>()))
+         new Draft(0, "", "", Language.English, "read about js", "js", "Learning JS")
+            .Publish(Mock.Of<IDateProvider>(), Mock.Of<IHtmlProcessor>())
+            .Errors
             .Should()
-            .Throw<InvalidOperationException>()
-            .Where(x => x.Message.Contains("Title"));
+            .ContainEquivalentOf(new
+            {
+               Message = "'Title' is required"
+            });
       }
 
       [Fact]
       public void Dont_publish_when_there_is_no_tag()
       {
-         var draft = new Draft(0, "JS", null, Language.English, "read about js", "", "Learning JS");
-         draft.Invoking(d => d.Publish(Mock.Of<IDateProvider>(), Mock.Of<IHtmlProcessor>()))
+         new Draft(0, "JS", null, Language.English, "read about js", "", "Learning JS")
+            .Publish(Mock.Of<IDateProvider>(), Mock.Of<IHtmlProcessor>())
+            .Errors
             .Should()
-            .Throw<InvalidOperationException>()
-            .Where(x => x.Message.Contains("Tags"));
+            .ContainEquivalentOf(new
+            {
+               Message = "'Tags' is required"
+            });
       }
 
       [Fact]
       public void Dont_publish_when_there_is_no_summary()
       {
          new Draft(0, "JS", null, Language.English, "", "js", "Learning JS")
-         .Invoking(d => d.Publish(Mock.Of<IDateProvider>(), Mock.Of<IHtmlProcessor>()))
-         .Should()
-         .Throw<InvalidOperationException>()
-         .Where(x => x.Message.Contains("Summary"));
+            .Publish(Mock.Of<IDateProvider>(), Mock.Of<IHtmlProcessor>())
+            .Errors
+            .Should()
+            .ContainEquivalentOf(new
+            {
+               Message = "'Summary' is required"
+            });
       }
 
       [Fact]
       public void Dont_publish_when_there_is_no_content()
       {
          new Draft(0, "JS", null, Language.English, "learn js", "js", "")
-         .Invoking(d => d.Publish(Mock.Of<IDateProvider>(), Mock.Of<IHtmlProcessor>()))
-         .Should()
-         .Throw<InvalidOperationException>()
-         .Where(x => x.Message.Contains("Content"));
+            .Publish(Mock.Of<IDateProvider>(), Mock.Of<IHtmlProcessor>())
+            .Errors
+            .Should()
+            .ContainEquivalentOf(new
+            {
+               Message = "'Content' is required"
+            });
       }
 
       [Fact]
@@ -161,10 +177,12 @@ namespace Blog.Tests.Domain
             Language = Language.English,
             Content = "<pre class=\"code\">var a;\nvar b;</code>"
          };
-         draft.Invoking(d => d.Update(command))
-            .Should()
-            .Throw<InvalidOperationException>()
-            .Where(x => x.Message.Contains("Language is not specified for the code block"));
+         var result = draft.Update(command);
+         result.Failed.Should().BeTrue();
+         result.Errors.Should().ContainEquivalentOf(new
+         {
+            Message = "Language is not specified for the code block #1"
+         });
       }
 
       [Fact]

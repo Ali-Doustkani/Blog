@@ -2,7 +2,6 @@
 using Blog.Domain;
 using Blog.Domain.Blogging;
 using Blog.Infrastructure;
-using Blog.Utils;
 using MediatR;
 
 namespace Blog.Services.DraftSaveCommand
@@ -30,46 +29,33 @@ namespace Blog.Services.DraftSaveCommand
 
       protected override Result Handle(DraftSaveCommand request)
       {
-         Draft draft;
-         if (request.Id == 0)
-         {
-            draft = new Draft();
-            _context.Drafts.Add(draft);
-         }
-         else
-         {
-            draft = _context.GetDraft(request.Id);
-         }
+         var draft = request.Id == 0
+            ? new Draft()
+            : _context.GetDraft(request.Id);
+
+         _context.Update(draft);
 
          var command = _mapper.Map<DraftUpdateCommand>(request);
+         var updateResult = draft.Update(command);
+         if (updateResult.Failed)
+            return Result.Failed(updateResult);
 
-         var images = draft.Update(command);
+         _imageContext.AddOrUpdate(updateResult.Images);
 
-         _context.SaveChanges();
-         _imageContext.AddOrUpdate(images);
-
+         Result ret = Result.Succeed();
          if (request.Publish)
          {
-            try
-            {
-               draft.Publish(_dateProvider, _htmlProcessor);
-            }
-            catch (ServiceDependencyException exc)
-            {
-               // return reason
-               return new Result(null);
-            }
-            _context.SaveChanges();
-            return new Result(draft.Post.Url);
+            var result = draft.Publish(_dateProvider, _htmlProcessor);
+            ret = result.Failed
+               ? Result.Failed(result)
+               : Result.Succeed(draft.Post.Url);
          }
 
          if (!request.Publish && draft.Post != null)
-         {
             draft.Unpublish();
-            _context.SaveChanges();
-         }
 
-         return new Result(null);
+         _context.SaveChanges();
+         return ret;
       }
    }
 }
