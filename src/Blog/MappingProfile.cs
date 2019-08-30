@@ -22,7 +22,7 @@ namespace Blog
       {
          CreateMap<DeveloperSaveCommand, DeveloperUpdateCommand>();
 
-         CreateMap<Developer, DeveloperUpdateCommand>()
+         CreateMap<Developer, DeveloperSaveCommand>()
            .ForMember(
               dest => dest.Summary,
               o => o.MapFrom(src => src.Summary.RawContent));

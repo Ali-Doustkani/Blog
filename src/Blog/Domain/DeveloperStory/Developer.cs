@@ -47,6 +47,18 @@ namespace Blog.Domain.DeveloperStory
          return DeveloperUpdateCommandResult.Create(_experiences, _sideProjects, _educations);
       }
 
+      public void AddSideProject(string title, string content) =>
+         AddSideProject(0, new SideProjectEntry { Title = title, Content = content });
+
+      public void AddEducation(string degree, string university, DateTime startDate, DateTime endDate) =>
+         AddEducation(0, new EducationEntry
+         {
+            Degree = degree,
+            University = university,
+            StartDate = startDate.ToString(),
+            EndDate = endDate.ToString()
+         });
+
       private void UpdateAggregates(DeveloperUpdateCommand command, IStorageState storageState)
       {
          _summary = command.Summary;
