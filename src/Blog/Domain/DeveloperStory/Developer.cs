@@ -35,15 +35,14 @@ namespace Blog.Domain.DeveloperStory
       public IReadOnlyCollection<SideProject> SideProjects => _sideProjects.ToArray();
       public IReadOnlyCollection<Education> Educations => _educations.OrderByDescending(x => x.Period.StartDate).ToArray();
 
+      public event OnUpdating Updating = delegate { };
+
       public IEnumerable<string> GetSkillLines() => Skills.Split('\n');
 
-      public DeveloperUpdateCommandResult Update(DeveloperUpdateCommand command, IStorageState storageState)
+      public DeveloperUpdateCommandResult Update(DeveloperUpdateCommand command)
       {
          Assert.Arg.NotNull(command);
-         Assert.Arg.NotNull(storageState);
-
-         UpdateAggregates(command, storageState);
-
+         UpdateAggregates(command);
          return DeveloperUpdateCommandResult.Create(_experiences, _sideProjects, _educations);
       }
 
@@ -59,7 +58,7 @@ namespace Blog.Domain.DeveloperStory
             EndDate = endDate.ToString()
          });
 
-      private void UpdateAggregates(DeveloperUpdateCommand command, IStorageState storageState)
+      private void UpdateAggregates(DeveloperUpdateCommand command)
       {
          _summary = command.Summary;
          Skills = command.Skills;
@@ -68,10 +67,10 @@ namespace Blog.Domain.DeveloperStory
             .OnUpdate((id, exp) =>
             {
                var oldExperience = _experiences.Single(exp.Id);
-               storageState.Detach(oldExperience.Period, oldExperience);
+               Updating(UpdatingType.Removing, oldExperience);
                _experiences.Remove(oldExperience);
                AddExperience(id, exp);
-               storageState.Modify(_experiences.Single(exp.Id).Period, _experiences.Single(exp.Id));
+               Updating(UpdatingType.Added, _experiences.Single(exp.Id));
             })
             .OnAdd(exp =>
             {
@@ -81,10 +80,11 @@ namespace Blog.Domain.DeveloperStory
          command.Update(_sideProjects, x => x.SideProjects)
             .OnUpdate((id, proj) =>
             {
-               storageState.Detach(_sideProjects.Single(proj.Id));
-               _sideProjects.Remove(_sideProjects.Single(x => x.Id == id));
+               var toRemove = _sideProjects.Single(x => x.Id == id);
+               Updating(UpdatingType.Removing, toRemove);
+               _sideProjects.Remove(toRemove);
                AddSideProject(id, proj);
-               storageState.Modify(_sideProjects.Single(proj.Id));
+               Updating(UpdatingType.Added, _sideProjects.Single(proj.Id));
             })
             .OnAdd(proj =>
             {
@@ -94,10 +94,11 @@ namespace Blog.Domain.DeveloperStory
          command.Update(_educations, x => x.Educations)
              .OnUpdate((id, edu) =>
              {
-                storageState.Detach(_educations.Single(edu.Id).Period, _educations.Single(edu.Id));
-                _educations.Remove(_educations.Single(x => x.Id == id));
+                var toRemove = _educations.Single(edu.Id);
+                Updating(UpdatingType.Removing, toRemove);
+                _educations.Remove(toRemove);
                 AddEducation(id, edu);
-                storageState.Modify(_educations.Single(edu.Id).Period, _educations.Single(edu.Id));
+                Updating(UpdatingType.Added, _educations.Single(edu.Id));
              })
              .OnAdd(edu =>
              {

@@ -1,7 +1,5 @@
-﻿using Blog.Domain;
-using Blog.Domain.DeveloperStory;
+﻿using Blog.Domain.DeveloperStory;
 using FluentAssertions;
-using Moq;
 using System;
 using System.Linq;
 using Xunit;
@@ -40,7 +38,7 @@ namespace Blog.Tests.Domain.DeveloperStory
                   Content = "done tasks"
                }
             }
-         }, Mock.Of<IStorageState>());
+         });
 
 
          developer.Experiences
@@ -92,7 +90,7 @@ namespace Blog.Tests.Domain.DeveloperStory
             }
          };
 
-         developer.Invoking(d => d.Update(command, Mock.Of<IStorageState>()))
+         developer.Invoking(d => d.Update(command))
             .Should()
             .Throw<ArgumentException>();
       }
@@ -122,7 +120,7 @@ namespace Blog.Tests.Domain.DeveloperStory
                   Content ="done tasks"
                }
             }
-         }, Mock.Of<IStorageState>());
+         });
 
          developer.Experiences.Should().HaveCount(2);
       }
@@ -156,7 +154,7 @@ namespace Blog.Tests.Domain.DeveloperStory
             }
          };
 
-         developer.Invoking(d => d.Update(command, Mock.Of<IStorageState>()))
+         developer.Invoking(d => d.Update(command))
             .Should()
             .Throw<ArgumentException>();
       }
@@ -180,7 +178,7 @@ namespace Blog.Tests.Domain.DeveloperStory
             }
          };
 
-         developer.Invoking(d => d.Update(add, Mock.Of<IStorageState>()))
+         developer.Invoking(d => d.Update(add))
             .Should()
             .Throw<ArgumentException>();
       }
@@ -210,7 +208,7 @@ namespace Blog.Tests.Domain.DeveloperStory
                   Content = "desc"
                }
             }
-         }, Mock.Of<IStorageState>());
+         });
 
          developer.Experiences
             .ElementAt(0)
@@ -251,7 +249,7 @@ namespace Blog.Tests.Domain.DeveloperStory
                   Content = "web editor"
                }
             }
-         }, Mock.Of<IStorageState>());
+         });
 
          developer.SideProjects
             .Should()
@@ -289,7 +287,7 @@ namespace Blog.Tests.Domain.DeveloperStory
                }
             }
          };
-         developer.Invoking(d => d.Update(add, Mock.Of<IStorageState>()))
+         developer.Invoking(d => d.Update(add))
             .Should()
             .Throw<ArgumentException>();
       }
@@ -319,7 +317,7 @@ namespace Blog.Tests.Domain.DeveloperStory
                   EndDate = "2011-1-1"
                }
             }
-         }, Mock.Of<IStorageState>());
+         });
 
          developer.Educations
             .Should()
@@ -363,7 +361,7 @@ namespace Blog.Tests.Domain.DeveloperStory
                }
             }
          };
-         developer.Invoking(d => d.Update(add, Mock.Of<IStorageState>()))
+         developer.Invoking(d => d.Update(add))
             .Should()
             .Throw<ArgumentException>();
       }
@@ -394,7 +392,7 @@ namespace Blog.Tests.Domain.DeveloperStory
                }
             }
          };
-         developer.Invoking(d => d.Update(add, Mock.Of<IStorageState>()))
+         developer.Invoking(d => d.Update(add))
             .Should()
             .Throw<ArgumentException>();
       }
@@ -422,7 +420,7 @@ namespace Blog.Tests.Domain.DeveloperStory
                   EndDate = "2013-1-1"
                }
             }
-         }, Mock.Of<IStorageState>());
+         });
 
          developer.Educations
             .ElementAt(0)

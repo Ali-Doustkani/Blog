@@ -1,10 +1,10 @@
-﻿using Blog.Domain.DeveloperStory;
+﻿using Blog.Services.DeveloperSaveCommand;
 using FluentValidation;
 using System.Linq;
 
 namespace Blog.Validators.DeveloperStory
 {
-   public class DeveloperUpdateValidator : AbstractValidator<DeveloperUpdateCommand>
+   public class DeveloperUpdateValidator : AbstractValidator<DeveloperSaveCommand>
    {
       public DeveloperUpdateValidator()
       {

@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
-using Blog.Services.DeveloperSaveCommand;
-using Blog.Domain;
 using Blog.Domain.DeveloperStory;
-using Blog.Storage;
+using Blog.Services.DeveloperSaveCommand;
 using FluentAssertions;
 using MediatR;
 using System;
@@ -18,15 +16,12 @@ namespace Blog.Tests.CQ
       public DeveloperSaveCommandTests(ITestOutputHelper output)
       {
          _context = new TestContext(output);
-         var db = _context.GetDb();
-         _storageState = new StorageState(db, null);
          var mapper = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>()).CreateMapper();
-         _handler = new Handler(db, _storageState, mapper);
+         _handler = new Handler(_context.GetDb(), mapper);
       }
 
       private readonly TestContext _context;
       private readonly IRequestHandler<DeveloperSaveCommand, DeveloperSaveResult> _handler;
-      private readonly IStorageState _storageState;
 
       [Fact]
       public async Task Add_when_there_is_no_developer_available()
