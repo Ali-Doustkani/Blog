@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 
-namespace Blog.Utils
+namespace Blog.Storage
 {
    public class CloudImageProcessor : IImageProcessor
    {

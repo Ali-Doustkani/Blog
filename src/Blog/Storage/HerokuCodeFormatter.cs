@@ -6,7 +6,7 @@ using System;
 using System.Net.Http;
 using System.Text;
 
-namespace Blog.Utils
+namespace Blog.Storage
 {
    public class HerokuCodeFormatter : ICodeFormatter
    {

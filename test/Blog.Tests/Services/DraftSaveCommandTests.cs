@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using Blog.Services.DraftSaveCommand;
 using Blog.Domain;
 using Blog.Domain.Blogging;
-using Blog.Utils;
+using Blog.Services.DraftSaveCommand;
+using Blog.Storage;
 using FluentAssertions;
 using MediatR;
 using Moq;
