@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Blog.Storage;
+using Blog.Infrastructure;
 using MediatR;
 using System.Linq;
 

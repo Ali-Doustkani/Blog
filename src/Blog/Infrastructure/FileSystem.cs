@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 
-namespace Blog.Storage
+namespace Blog.Infrastructure
 {
    public interface IFileSystem
    {

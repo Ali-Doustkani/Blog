@@ -1,5 +1,5 @@
 ﻿using Blog.Domain;
-using Blog.Storage;
+using Blog.Infrastructure;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 

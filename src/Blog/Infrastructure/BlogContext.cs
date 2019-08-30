@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
-namespace Blog.Storage
+namespace Blog.Infrastructure
 {
    public class BlogContext : IdentityDbContext<IdentityUser>
    {

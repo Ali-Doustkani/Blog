@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Blog.Domain;
 using Blog.Domain.Blogging;
-using Blog.Storage;
+using Blog.Infrastructure;
 using Blog.Utils;
 using MediatR;
 

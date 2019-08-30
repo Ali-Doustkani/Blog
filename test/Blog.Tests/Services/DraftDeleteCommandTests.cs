@@ -1,7 +1,7 @@
 ﻿using Blog.Domain;
 using Blog.Domain.Blogging;
 using Blog.Services.DraftDeleteCommand;
-using Blog.Storage;
+using Blog.Infrastructure;
 using FluentAssertions;
 using MediatR;
 using System;

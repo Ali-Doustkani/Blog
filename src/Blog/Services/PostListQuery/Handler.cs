@@ -1,6 +1,6 @@
 ﻿using Blog.Domain;
 using Blog.Domain.Blogging;
-using Blog.Storage;
+using Blog.Infrastructure;
 using MediatR;
 using System;
 using System.Collections.Generic;

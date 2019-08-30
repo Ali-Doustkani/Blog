@@ -1,5 +1,5 @@
 ﻿using Blog.Domain;
-using Blog.Storage;
+using Blog.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;

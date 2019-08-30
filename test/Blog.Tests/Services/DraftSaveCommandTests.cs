@@ -2,7 +2,7 @@
 using Blog.Domain;
 using Blog.Domain.Blogging;
 using Blog.Services.DraftSaveCommand;
-using Blog.Storage;
+using Blog.Infrastructure;
 using FluentAssertions;
 using MediatR;
 using Moq;

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Blog.Domain;
 using Blog.Domain.DeveloperStory;
-using Blog.Storage;
+using Blog.Infrastructure;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
