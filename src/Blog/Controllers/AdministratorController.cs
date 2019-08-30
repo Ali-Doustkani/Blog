@@ -59,12 +59,9 @@ namespace Blog.Controllers
          return RedirectToAction(nameof(Index));
       }
 
-      public async Task<IActionResult> Preview(int id)
+      public async Task<IActionResult> Preview(DraftPreviewQuery draft)
       {
-         var post = await _mediator.Send(new DraftPreviewQuery { DraftId = id });
-         if (post == null)
-            return NotFound();
-
+         var post = await _mediator.Send(draft);
          ViewData["language"] = post.Language;
          return View("Views/Home/Post.cshtml", post);
       }

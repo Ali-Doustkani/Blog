@@ -11,7 +11,7 @@
 
 <div class="form post-form">
    <h1>Write a post</h1>
-   <form id="save-post" class="english" asp-action="SavePost">
+   <form id="save-post" class="english" method="post">
       <div asp-validation-summary="ModelOnly" class="error"></div>
       <input name="Id" value="@Model.Id" type="hidden" />
       <div id="language" class="text-group">
@@ -67,8 +67,8 @@
       <div class="check-group">
          <input blog-testid="publish-checkbox" asp-for="Publish" /><label asp-for="Publish">Publish the Post</label>
       </div>
-      <button blog-testid="save-button" class="form-button" type="submit">Save</button>
-      <a blog-testid="preview-button" class="form-button" asp-action="Preview" asp-route-id="@Model.Id" target="_blank">Preview</a>
+      <button blog-testid="save-button" class="form-button" type="submit" formaction="SavePost">Save</button>
+      <button blog-testid="preview-button" class="form-button" type="submit" formaction="Preview" formtarget="_blank">Preview</button>
       <button blog-testid="clear-button" class="form-button" type="reset">Clear</button>
    </form>
 </div>

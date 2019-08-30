@@ -2,6 +2,7 @@
 using Blog.CQ.DeveloperQuery;
 using Blog.CQ.DraftSaveCommand;
 using Blog.CQ.PostQuery;
+using Blog.CQ.PreviewQuery;
 using Blog.Domain;
 using Blog.Domain.Blogging;
 using Blog.Domain.DeveloperStory;
@@ -74,6 +75,8 @@ namespace Blog
                o => o.MapFrom(src => src.Period.EndDate));
 
          CreateMap<DraftSaveCommand, DraftUpdateCommand>();
+
+         CreateMap<DraftPreviewQuery, DraftUpdateCommand>();
 
          CreateMap<Post, PostViewModel>()
             .ForMember(
