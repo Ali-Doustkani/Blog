@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using Blog.CQ.DeveloperQuery;
-using Blog.CQ.DeveloperSaveCommand;
-using Blog.CQ.DraftSaveCommand;
-using Blog.CQ.PostQuery;
-using Blog.CQ.PreviewQuery;
+using Blog.Services.DeveloperQuery;
+using Blog.Services.DeveloperSaveCommand;
+using Blog.Services.DraftSaveCommand;
+using Blog.Services.PostQuery;
+using Blog.Services.PreviewQuery;
 using Blog.Domain;
 using Blog.Domain.Blogging;
 using Blog.Domain.DeveloperStory;

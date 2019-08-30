@@ -1,8 +1,8 @@
-﻿using Blog.CQ.DraftDeleteCommand;
-using Blog.CQ.DraftListQuery;
-using Blog.CQ.DraftQuery;
-using Blog.CQ.DraftSaveCommand;
-using Blog.CQ.PreviewQuery;
+﻿using Blog.Services.DraftDeleteCommand;
+using Blog.Services.DraftListQuery;
+using Blog.Services.DraftQuery;
+using Blog.Services.DraftSaveCommand;
+using Blog.Services.PreviewQuery;
 using Blog.Domain;
 using Blog.Utils;
 using MediatR;

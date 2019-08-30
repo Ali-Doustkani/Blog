@@ -1,7 +1,7 @@
-﻿using Blog.CQ.DeveloperQuery;
-using Blog.CQ.PostListQuery;
-using Blog.CQ.PostQuery;
+﻿using Blog.Services.PostListQuery;
+using Blog.Services.PostQuery;
 using Blog.Domain;
+using Blog.Services.DeveloperQuery;
 using Blog.Utils;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

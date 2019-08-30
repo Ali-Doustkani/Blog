@@ -1,5 +1,5 @@
-﻿using Blog.CQ.DeveloperSaveCommand;
-using Blog.CQ.DeveloperSaveQuery;
+﻿using Blog.Services.DeveloperSaveCommand;
+using Blog.Services.DeveloperSaveQuery;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
