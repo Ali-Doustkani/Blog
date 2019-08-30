@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Blog.CQ.DeveloperQuery;
+using Blog.CQ.DeveloperSaveCommand;
 using Blog.CQ.DraftSaveCommand;
 using Blog.CQ.PostQuery;
 using Blog.CQ.PreviewQuery;
@@ -13,10 +14,18 @@ namespace Blog
    {
       public MappingProfile()
       {
+         ConfigureBlogging();
+         ConfigureDeveloper();
+      }
+
+      private void ConfigureDeveloper()
+      {
+         CreateMap<DeveloperSaveCommand, DeveloperUpdateCommand>();
+
          CreateMap<Developer, DeveloperUpdateCommand>()
-            .ForMember(
-               dest => dest.Summary,
-               o => o.MapFrom(src => src.Summary.RawContent));
+           .ForMember(
+              dest => dest.Summary,
+              o => o.MapFrom(src => src.Summary.RawContent));
 
          CreateMap<Experience, ExperienceEntry>()
             .ForMember(
@@ -73,7 +82,10 @@ namespace Blog
             .ForMember(
                dest => dest.EndDate,
                o => o.MapFrom(src => src.Period.EndDate));
+      }
 
+      private void ConfigureBlogging()
+      {
          CreateMap<DraftSaveCommand, DraftUpdateCommand>();
 
          CreateMap<DraftPreviewQuery, DraftUpdateCommand>();
