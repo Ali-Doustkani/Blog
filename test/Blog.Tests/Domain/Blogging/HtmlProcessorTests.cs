@@ -1,7 +1,7 @@
 ﻿using Blog.Domain.Blogging;
 using Blog.Utils;
 using FluentAssertions;
-using Moq;
+using NSubstitute;
 using System;
 using Xunit;
 
@@ -10,22 +10,18 @@ namespace Blog.Tests.Domain.Blogging
    public class HtmlProcessorTests
    {
       private HtmlProcessor _processor;
-      private Mock<ICodeFormatter> _codeFormatter;
-      private Mock<IImageProcessor> _imageProcessor;
+      private ICodeFormatter _codeFormatter;
+      private IImageProcessor _imageProcessor;
 
       private string Publish(string html)
       {
-         _codeFormatter = new Mock<ICodeFormatter>();
-         _codeFormatter
-          .Setup(x => x.Format(It.IsAny<string>(), It.IsAny<string>()))
-          .Returns((string language, string code) => code);
+         _codeFormatter = Substitute.For<ICodeFormatter>();
+         _codeFormatter.Format(Arg.Any<string>(), Arg.Any<string>()).Returns(x => x[1]);
 
-         _imageProcessor = new Mock<IImageProcessor>();
-         _imageProcessor
-            .Setup(x => x.Minimize(It.IsAny<string>()))
-            .Returns("minImage");
+         _imageProcessor = Substitute.For<IImageProcessor>();
+         _imageProcessor.Minimize(Arg.Any<string>()).Returns("minImage");
 
-         _processor = new HtmlProcessor(_codeFormatter.Object, _imageProcessor.Object);
+         _processor = new HtmlProcessor(_codeFormatter, _imageProcessor);
          var renderer = new ImageRenderer("the-post");
          var result = renderer.Render(html);
          return _processor.Process(result.Html);
@@ -70,7 +66,9 @@ namespace Blog.Tests.Domain.Blogging
             "<div class=\"code\"><pre>var a = 1;",
             "var b = 2;</pre></div>");
 
-         _codeFormatter.Verify(x => x.Format("js", string.Join(Environment.NewLine, "var a = 1;", "var b = 2;")));
+         _codeFormatter
+            .Received()
+            .Format("js", string.Join(Environment.NewLine, "var a = 1;", "var b = 2;"));
       }
 
       [Fact]
@@ -167,6 +165,5 @@ namespace Blog.Tests.Domain.Blogging
           Publish("<figure><img data-filename=\"pic.jpeg\" src=\"data:image/jpeg;base64,DATA\"><figcaption></figcaption></figure>")
           .Should()
           .BePath("<figure><img class=\"lazyload lazyloading\" src=\"minImage\" data-src=\"/images/posts/the-post/pic.jpeg\"></figure>");
-
    }
 }

@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
+using NSubstitute;
 using Blog.Domain;
 using Blog.Domain.Blogging;
 using Blog.Services.DraftSaveCommand;
 using Blog.Infrastructure;
 using FluentAssertions;
 using MediatR;
-using Moq;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,19 +23,19 @@ namespace Blog.Tests.CQ
          _fs = new MockFileSystem();
          _imageContext = new ImageContext(_fs);
          var mapper = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>()).CreateMapper();
-         _dateProvider = new Mock<IDateProvider>();
-         _dateProvider.Setup(x => x.Now).Returns(DateTime.Now);
-         _imageProcessor = new Mock<IImageProcessor>();
-         _htmlProcessor = new HtmlProcessor(Mock.Of<ICodeFormatter>(), _imageProcessor.Object);
-         _handler = new Handler(context, _imageContext, mapper, _dateProvider.Object, _htmlProcessor);
+         _dateProvider = Substitute.For<IDateProvider>();
+         _dateProvider.Now.Returns(DateTime.Now);
+         _imageProcessor = Substitute.For<IImageProcessor>();
+         _htmlProcessor = new HtmlProcessor(Substitute.For<ICodeFormatter>(), _imageProcessor);
+         _handler = new Handler(context, _imageContext, mapper, _dateProvider, _htmlProcessor);
       }
 
       private readonly IRequestHandler<DraftSaveCommand, Result> _handler;
       private readonly TestContext _context;
       private readonly MockFileSystem _fs;
       private readonly ImageContext _imageContext;
-      private readonly Mock<IDateProvider> _dateProvider;
-      private readonly Mock<IImageProcessor> _imageProcessor;
+      private readonly IDateProvider _dateProvider;
+      private readonly IImageProcessor _imageProcessor;
       private readonly IHtmlProcessor _htmlProcessor;
 
       [Fact]
@@ -172,7 +172,7 @@ namespace Blog.Tests.CQ
       [Fact]
       public async Task Publish_a_new_draft()
       {
-         _dateProvider.Setup(x => x.Now).Returns(new DateTime(2010, 1, 1));
+         _dateProvider.Now.Returns(new DateTime(2010, 1, 1));
 
          var result = await _handler.Handle(new DraftSaveCommand
          {
@@ -219,7 +219,7 @@ namespace Blog.Tests.CQ
       [Fact]
       public async Task Publish_an_old_draft()
       {
-         _dateProvider.Setup(x => x.Now).Returns(new DateTime(2010, 1, 1));
+         _dateProvider.Now.Returns(new DateTime(2010, 1, 1));
 
          using (var db = _context.GetDb())
          {
@@ -228,7 +228,7 @@ namespace Blog.Tests.CQ
             db.SaveChanges();
          }
 
-         var result = await _handler.Handle(new DraftSaveCommand
+         await _handler.Handle(new DraftSaveCommand
          {
             Id = 1,
             Title = "JS",
@@ -377,8 +377,8 @@ namespace Blog.Tests.CQ
       [Fact]
       public async Task If_publishing_failed_save_the_draft_anyway()
       {
-         _imageProcessor.Setup(x => x.Minimize(It.IsAny<string>()))
-            .Throws(new ServiceDependencyException("reason", new Exception()));
+         _imageProcessor.Minimize(Arg.Any<string>())
+            .Returns(x => throw new ServiceDependencyException("reason", new Exception()));
 
          var result = await _handler.Handle(new DraftSaveCommand
          {
