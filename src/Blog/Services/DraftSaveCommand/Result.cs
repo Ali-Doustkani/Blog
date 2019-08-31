@@ -4,30 +4,27 @@ using System.Linq;
 
 namespace Blog.Services.DraftSaveCommand
 {
-   public class Result
+   public class Result : CommandResult
    {
-      public Result(IEnumerable<Error> errors)
-      {
-         Errors = errors;
-      }
-
-      public Result(string postUrl)
+      public Result(IEnumerable<Error> errors, string postUrl)
+         : base(errors)
       {
          PostUrl = postUrl;
-         Errors = Enumerable.Empty<Error>();
       }
 
       public bool Published => PostUrl != null;
       public string PostUrl { get; }
-      public IEnumerable<Error> Errors { get; }
 
-      public static Result Failed(CommandResult commandResult) =>
-         new Result(commandResult.Errors);
+      public static Result MakeFailure(CommandResult commandResult) =>
+         new Result(commandResult.Errors, null);
 
-      public static Result Succeed() =>
-         new Result(Enumerable.Empty<Error>());
+      public static Result MakeFailure(string error) =>
+         new Result(new[] { new Error(error) }, null);
 
-      public static Result Succeed(string postUrl) =>
-         new Result(postUrl);
+      public static Result MakeSuccess() =>
+         new Result(Enumerable.Empty<Error>(), null);
+
+      public static Result MakeSuccess(string postUrl) =>
+         new Result(Enumerable.Empty<Error>(), postUrl);
    }
 }

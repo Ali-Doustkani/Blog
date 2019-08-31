@@ -348,7 +348,7 @@ namespace Blog.Tests.CQ
          }
       }
 
-      [Fact(Skip = "not implemented yet")]
+      [Fact]
       public async Task When_draft_content_format_is_not_correct_just_save_the_draft()
       {
          var result = await _handler.Handle(new DraftSaveCommand
@@ -356,16 +356,15 @@ namespace Blog.Tests.CQ
             Title = "JS",
             Summary = "learn js",
             Tags = "js, es",
-            Content = "<pre class=\"code\">var a;</p>",
+            Content = "<pre class=\"code\">var a;</pre>",
             Language = Language.English,
             Publish = true
          }, default);
 
-         result.Should().BeEquivalentTo(new
+         result.Published.Should().BeFalse();
+         result.Errors.Should().ContainEquivalentOf(new
          {
-            PostUrl = (string)null,
-            Published = false,
-            Errors = "code block has problem"
+            Message = "Language is not specified for the code block #1"
          });
 
          using (var db = _context.GetDb())
@@ -394,11 +393,11 @@ namespace Blog.Tests.CQ
             Publish = true
          }, default);
 
-         result.Should().BeEquivalentTo(new
+         result.PostUrl.Should().BeNull();
+         result.Published.Should().BeFalse();
+         result.Errors.Should().ContainEquivalentOf(new
          {
-            PostUrl = (string)null,
-            Published = false,
-            // Errors = "reason"
+            Message = "reason"
          });
 
          using (var db = _context.GetDb())
@@ -409,6 +408,34 @@ namespace Blog.Tests.CQ
             });
             db.Posts.Should().BeEmpty();
          }
+      }
+
+      [Fact]
+      public async Task Dont_add_drafts_with_duplicate_titles()
+      {
+         await _handler.Handle(new DraftSaveCommand
+         {
+            Title = "JS",
+            Summary = "learn js",
+            Tags = "js, es",
+            Content = "<p>text</p>",
+            Language = Language.English
+         }, default);
+
+         var result = await _handler.Handle(new DraftSaveCommand
+         {
+            Title = "JS",
+            Summary = "learn js",
+            Tags = "js, es",
+            Content = "<p>text</p>",
+            Language = Language.English
+         }, default);
+
+         result.Errors.Should().ContainEquivalentOf(new
+         {
+            Message = "A draft or post with title 'JS' already exists"
+         });
+
       }
    }
 }
