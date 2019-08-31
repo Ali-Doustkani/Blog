@@ -3,6 +3,7 @@ using Blog.Domain.Blogging;
 using FluentAssertions;
 using Moq;
 using System;
+using System.Linq;
 using Xunit;
 
 namespace Blog.Tests.Domain
@@ -166,7 +167,7 @@ namespace Blog.Tests.Domain
       }
 
       [Fact]
-      public void Dont_update_if_code_blocks_are_invalid()
+      public void Dont_publish_if_language_of_code_block_is_not_specified()
       {
          var draft = new Draft();
          var command = new DraftUpdateCommand
@@ -175,14 +176,55 @@ namespace Blog.Tests.Domain
             Summary = "Learn JS",
             Tags = "js",
             Language = Language.English,
-            Content = "<pre class=\"code\">var a;\nvar b;</code>"
+            Content = "<pre class=\"code\">some code</code>"
          };
-         var result = draft.Update(command);
+         draft.Update(command);
+         var result = draft.Publish(Mock.Of<IDateProvider>(), Mock.Of<IHtmlProcessor>());
          result.Failed.Should().BeTrue();
          result.Errors.Should().ContainEquivalentOf(new
          {
             Message = "Language is not specified for the code block #1"
          });
+      }
+
+      [Fact]
+      public void Publish_if_code_block_is_empty()
+      {
+         var draft = new Draft();
+         var command = new DraftUpdateCommand
+         {
+            Title = "JS",
+            Summary = "Learn JS",
+            Tags = "js",
+            Language = Language.English,
+            Content = "<p>text</p><pre class=\"code\"> </code>"
+         };
+         draft.Update(command);
+         var result = draft.Publish(_dateProvider.Object, _htmlProcesssor.Object);
+         result.Failed.Should().BeFalse();
+      }
+
+      [Fact]
+      public void Dont_publish_if_code_block_language_is_invalid()
+      {
+         var draft = new Draft();
+         var command = new DraftUpdateCommand
+         {
+            Title = "JS",
+            Summary = "Learn JS",
+            Tags = "js",
+            Language = Language.English,
+            Content = "<pre class=\"code\">\nclojure\nsome code</code>"
+         };
+         draft.Update(command);
+         var result = draft.Publish(Mock.Of<IDateProvider>(), Mock.Of<IHtmlProcessor>());
+         result.Failed.Should().BeTrue();
+
+         result.Errors
+            .First()
+            .Message
+            .Should()
+            .StartWith("Specified language in code block #1 is not valid");
       }
 
       [Fact]

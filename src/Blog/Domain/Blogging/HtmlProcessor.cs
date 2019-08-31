@@ -95,7 +95,7 @@ namespace Blog.Domain.Blogging
          lineNumbers = string.Concat(lineNumbers, Environment.NewLine, value);
 
       private static string GetDefinitionLine(string plain) =>
-         plain.Substring(0, plain.IndexOf('\n'));
+         plain.Contains('\n') ? plain.Substring(0, plain.IndexOf('\n')) : plain;
 
       public static string GetLanguage(string plain) =>
          GetDefinitionLine(plain).Split(',').First();

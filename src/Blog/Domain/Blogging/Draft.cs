@@ -84,8 +84,8 @@ namespace Blog.Domain.Blogging
             .Required(Tags, "Tags")
             .Required(Summary, "Summary")
             .Required(Content, "Content")
-            .IfTrue(Language == Language.Farsi && string.IsNullOrEmpty(EnglishUrl),
-            "EnglishUrl is required for Farsi posts");
+            .IfTrue(Language == Language.Farsi && string.IsNullOrEmpty(EnglishUrl), "EnglishUrl is required for Farsi posts")
+            .Add(ValidateCodeBlocks());
 
          if (errors.Dirty)
             return errors.ToResult();
@@ -121,7 +121,6 @@ namespace Blog.Domain.Blogging
       public DraftUpdateCommandResult Update(DraftUpdateCommand command)
       {
          var errorManager = new ErrorManager();
-         errorManager.Add(ValidateCodeBlocks(command.Content));
          errorManager.Required(command.Title, "Title");
 
          if (errorManager.Dirty)
@@ -139,15 +138,15 @@ namespace Blog.Domain.Blogging
          return DraftUpdateCommandResult.MakeSuccess(RenderImages(oldDirectory));
       }
 
-      public static IEnumerable<Error> ValidateCodeBlocks(string content)
+      private IEnumerable<Error> ValidateCodeBlocks()
       {
          var result = new List<Error>();
 
-         if (string.IsNullOrEmpty(content))
+         if (string.IsNullOrEmpty(Content))
             return result;
 
          var doc = new HtmlDocument();
-         doc.LoadHtml(content);
+         doc.LoadHtml(Content);
          var num = 0;
          doc.DocumentNode.ForEachChild(node =>
          {
@@ -156,14 +155,14 @@ namespace Blog.Domain.Blogging
             {
                num++;
 
-               if (!node.InnerHtml.Contains(Environment.NewLine))
+               if (!node.InnerHtml.Contains('\n'))
                {
-                  result.Add(new Error(nameof(content), $"Language is not specified for the code block #{num}"));
+                  result.Add(new Error($"Language is not specified for the code block #{num}"));
                }
 
                var lang = HtmlProcessor.GetLanguage(plain);
                if (!languages.Contains(lang))
-                  result.Add(new Error(nameof(content), $"Specified language in code block #{num} is not valid ({lang}...)"));
+                  result.Add(new Error($"Specified language in code block #{num} is not valid ({lang}...)"));
             }
          });
          return result;
