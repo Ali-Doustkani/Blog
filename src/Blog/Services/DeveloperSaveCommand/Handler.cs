@@ -22,16 +22,33 @@ namespace Blog.Services.DeveloperSaveCommand
       protected override DeveloperSaveResult Handle(DeveloperSaveCommand request)
       {
          var command = _mapper.Map<DeveloperUpdateCommand>(request);
-         var created = CreateOrGet(command, out Developer developer);
-
-         developer.Updating += Developer_Updating;
-         var result = developer.Update(command);
-         developer.Updating -= Developer_Updating;
-
-         _context.Update(developer);
-         _context.SaveChanges();
-
-         return new DeveloperSaveResult(created, result);
+         if (_context.Developers.Any())
+         {
+            var developer = _context.GetDeveloper();
+            developer.Updating += Developer_Updating;
+            var result = developer.Update(command);
+            developer.Updating -= Developer_Updating;
+            if (result.Failed)
+               return DeveloperSaveResult.MakeFailure(result.Errors);
+            _context.Update(developer);
+            _context.SaveChanges();
+            return DeveloperSaveResult.MakeSuccess(false,
+               developer.Experiences.Select(x => x.Id),
+               developer.SideProjects.Select(x => x.Id),
+               developer.Educations.Select(x => x.Id));
+         }
+         else
+         {
+            var result = Developer.Create(command);
+            if (result.Failed)
+               return DeveloperSaveResult.MakeFailure(result.Errors);
+            _context.Update(result.Developer);
+            _context.SaveChanges();
+            return DeveloperSaveResult.MakeSuccess(true,
+               result.Developer.Experiences.Select(x => x.Id),
+               result.Developer.SideProjects.Select(x => x.Id),
+               result.Developer.Educations.Select(x => x.Id));
+         }
       }
 
       private void Developer_Updating(UpdatingType type, DomainEntity entity)
@@ -42,21 +59,6 @@ namespace Blog.Services.DeveloperSaveCommand
          else if (entity is Education edu)
             _context.Entry(edu.Period).State = state;
          _context.Entry(entity).State = state;
-      }
-
-      private bool CreateOrGet(DeveloperUpdateCommand updateCommand, out Developer developer)
-      {
-         if (_context.Developers.Any())
-         {
-            developer = _context.GetDeveloper();
-            return false;
-         }
-
-         var experiences = updateCommand
-            .Experiences
-            .Select(x => new Experience(0, x.Company, x.Position, Period.Parse(x.StartDate, x.EndDate), x.Content));
-         developer = new Developer(updateCommand.Summary, updateCommand.Skills, experiences);
-         return true;
       }
    }
 }

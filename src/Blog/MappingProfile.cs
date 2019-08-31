@@ -7,6 +7,7 @@ using Blog.Services.DeveloperSaveCommand;
 using Blog.Services.DraftPreviewQuery;
 using Blog.Services.DraftSaveCommand;
 using Blog.Services.PostQuery;
+using System.Linq;
 
 namespace Blog
 {
@@ -25,7 +26,13 @@ namespace Blog
          CreateMap<Developer, DeveloperSaveCommand>()
            .ForMember(
               dest => dest.Summary,
-              o => o.MapFrom(src => src.Summary.RawContent));
+              o => o.MapFrom(src => src.Summary.RawContent))
+           .ForMember(
+               dest => dest.Experiences,
+               o => o.MapFrom(src => src.Experiences.OrderByDescending(x => x.Period.StartDate)))
+           .ForMember(
+               dest => dest.Educations,
+               o => o.MapFrom(src => src.Educations.OrderByDescending(x => x.Period.StartDate)));
 
          CreateMap<Experience, ExperienceEntry>()
             .ForMember(

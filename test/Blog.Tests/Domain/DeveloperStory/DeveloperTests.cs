@@ -10,15 +10,23 @@ namespace Blog.Tests.Domain.DeveloperStory
    {
       private Developer NewDeveloper()
       {
-         var experiences = new[]
+         var command = new DeveloperUpdateCommand
          {
-            new Experience(100,
-               "Microsoft",
-               "Software Engineer",
-               new Period (new DateTime (1990,1,1), new DateTime (2000,1,1)),
-               "worked for ten years")
+            Summary = "a passionate developer",
+            Skills = "C#\nJS",
+            Experiences = new[]
+            {
+               new ExperienceEntry
+               {
+                  Company = "Microsoft",
+                  Position = "Software Engineer",
+                  StartDate = "1990-1-1",
+                  EndDate = "2000-1-1",
+                  Content = "worked for ten years"
+               }
+            }
          };
-         return new Developer("a passionate developer", "C#\nJS", experiences);
+         return Developer.Create(command).Developer;
       }
 
       [Fact]
@@ -90,9 +98,10 @@ namespace Blog.Tests.Domain.DeveloperStory
             }
          };
 
-         developer.Invoking(d => d.Update(command))
+         developer.Update(command)
+            .Errors
             .Should()
-            .Throw<ArgumentException>();
+            .Contain("The experience of 'C# Developer' at 'Parmis' is duplicated");
       }
 
       [Fact]
@@ -154,9 +163,10 @@ namespace Blog.Tests.Domain.DeveloperStory
             }
          };
 
-         developer.Invoking(d => d.Update(command))
-            .Should()
-            .Throw<ArgumentException>();
+         developer.Update(command)
+         .Errors
+         .Should()
+         .Contain("The experiences of 'Parmis' overlaps with 'Lodgify'");
       }
 
       [Fact]
@@ -178,9 +188,10 @@ namespace Blog.Tests.Domain.DeveloperStory
             }
          };
 
-         developer.Invoking(d => d.Update(add))
+         developer.Update(add)
+            .Errors
             .Should()
-            .Throw<ArgumentException>();
+            .Contain("StartDate of 'Lodgify' is greater than it's EndDate");
       }
 
       [Fact]
@@ -287,9 +298,10 @@ namespace Blog.Tests.Domain.DeveloperStory
                }
             }
          };
-         developer.Invoking(d => d.Update(add))
+         developer.Update(add)
+            .Errors
             .Should()
-            .Throw<ArgumentException>();
+            .Contain("The side project of 'Richtext' is duplicated");
       }
 
       [Fact]
@@ -361,9 +373,10 @@ namespace Blog.Tests.Domain.DeveloperStory
                }
             }
          };
-         developer.Invoking(d => d.Update(add))
+         developer.Update(add)
+            .Errors
             .Should()
-            .Throw<ArgumentException>();
+            .Contain("The education of 'BS' in 'S&C' is duplicated");
       }
 
       [Fact]
@@ -387,64 +400,15 @@ namespace Blog.Tests.Domain.DeveloperStory
                   Id = "b",
                   Degree = "MS",
                   University = "Other",
-                  StartDate = "2010-6-1"                  ,
+                  StartDate = "2010-6-1",
                   EndDate ="2012-1-1"
                }
             }
          };
-         developer.Invoking(d => d.Update(add))
+         developer.Update(add)
+            .Errors
             .Should()
-            .Throw<ArgumentException>();
-      }
-
-      [Fact]
-      public void Sort_educations_by_date()
-      {
-         var developer = NewDeveloper();
-         developer.Update(new DeveloperUpdateCommand
-         {
-            Educations = new[]
-            {
-               new EducationEntry
-               {
-                  Degree = "BS",
-                  University = "S&C",
-                  StartDate = "2010-1-1",
-                  EndDate = "2011-1-1"
-               },
-               new EducationEntry
-               {
-                  Degree = "MS",
-                  University = "S&C",
-                  StartDate = "2012-1-1",
-                  EndDate = "2013-1-1"
-               }
-            }
-         });
-
-         developer.Educations
-            .ElementAt(0)
-            .Should()
-            .BeEquivalentTo(new
-            {
-               Period = new
-               {
-                  StartDate = new DateTime(2012, 1, 1),
-                  EndDate = new DateTime(2013, 1, 1)
-               }
-            });
-
-         developer.Educations
-            .ElementAt(1)
-            .Should()
-            .BeEquivalentTo(new
-            {
-               Period = new
-               {
-                  StartDate = new DateTime(2010, 1, 1),
-                  EndDate = new DateTime(2011, 1, 1)
-               }
-            });
+            .Contain("The education of 'S&C' overlaps with 'Other'");
       }
    }
 }

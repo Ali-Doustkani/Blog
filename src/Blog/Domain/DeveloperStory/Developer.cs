@@ -13,15 +13,17 @@ namespace Blog.Domain.DeveloperStory
          _educations = new AggregateList<Education>();
       }
 
-      public Developer(string summary, string skills, IEnumerable<Experience> experiences)
-        : this()
+      public static DeveloperFactoryResult Create(DeveloperUpdateCommand command)
       {
-         if (!experiences.Any())
-            throw new ArgumentException("at least one experience is required");
+         var dev = new Developer();
+         var errorManager = new ErrorManager()
+         .Add(dev.Update(command).Errors)
+         .NotEmpty(command.Experiences, "Experiences");
 
-         _summary = Assert.Arg.NotNull(summary);
-         Skills = Assert.Arg.NotNull(skills);
-         _experiences = new AggregateList<Experience>(experiences);
+         if (errorManager.Dirty)
+            return DeveloperFactoryResult.MakeFailure(errorManager);
+
+         return DeveloperFactoryResult.MakeSuccess(dev);
       }
 
       private string _summary;
@@ -31,32 +33,59 @@ namespace Blog.Domain.DeveloperStory
 
       public HtmlText Summary => new HtmlText(_summary);
       public string Skills { get; private set; }
-      public IReadOnlyCollection<Experience> Experiences => _experiences.OrderByDescending(x => x.Period.StartDate).ToArray();
+      public IReadOnlyCollection<Experience> Experiences => _experiences.ToArray();
       public IReadOnlyCollection<SideProject> SideProjects => _sideProjects.ToArray();
-      public IReadOnlyCollection<Education> Educations => _educations.OrderByDescending(x => x.Period.StartDate).ToArray();
+      public IReadOnlyCollection<Education> Educations => _educations.ToArray();
 
       public event OnUpdating Updating = delegate { };
 
       public IEnumerable<string> GetSkillLines() => Skills.Split('\n');
 
-      public DeveloperUpdateCommandResult Update(DeveloperUpdateCommand command)
+      public CommandResult Update(DeveloperUpdateCommand command)
       {
-         Assert.Arg.NotNull(command);
+         if (command == null)
+            throw new ArgumentNullException("command");
+
+         var errorManager = Validate(command);
+         if (errorManager.Dirty)
+            return new CommandResult(errorManager.Errors);
+
          UpdateAggregates(command);
-         return DeveloperUpdateCommandResult.Create(_experiences, _sideProjects, _educations);
+         return new CommandResult(Enumerable.Empty<string>());
       }
 
-      public void AddSideProject(string title, string content) =>
-         AddSideProject(0, new SideProjectEntry { Title = title, Content = content });
+      private ErrorManager Validate(DeveloperUpdateCommand command)
+      {
+         return new ErrorManager()
+         .NoDuplicate(command.Experiences,
+            x => new { x.Position, x.Company },
+            exp => $"The experience of '{exp.Position}' at '{exp.Company}' is duplicated")
+         .Conditional(
+            cond => cond.CheckPeriods(command.Experiences,
+               x => x.StartDate,
+               x => x.EndDate,
+               exp => $"StartDate of '{exp.Company}' is greater than it's EndDate"),
+            then => then.NoOverlaps(command.Experiences,
+               x => x.StartDate,
+               x => x.EndDate,
+               (exp, others) => $"The experiences of '{exp.Company}' overlaps with '{string.Join(", ", others.Select(x => x.Company))}'"))
+         .NoDuplicate(command.SideProjects,
+            x => x.Title,
+            proj => $"The side project of '{proj.Title}' is duplicated")
+         .NoDuplicate(command.Educations,
+            x => new { x.Degree, x.University },
+            edu => $"The education of '{edu.Degree}' in '{edu.University}' is duplicated")
+         .Conditional(
+            cond => cond.CheckPeriods(command.Educations,
+               x => x.StartDate,
+               x => x.EndDate,
+               edu => ""),
+            then => then.NoOverlaps(command.Educations,
+               x => x.StartDate,
+               x => x.EndDate,
+               (edu, others) => $"The education of '{edu.University}' overlaps with '{string.Join(", ", others.Select(x => x.University))}'"));
 
-      public void AddEducation(string degree, string university, DateTime startDate, DateTime endDate) =>
-         AddEducation(0, new EducationEntry
-         {
-            Degree = degree,
-            University = university,
-            StartDate = startDate.ToString(),
-            EndDate = endDate.ToString()
-         });
+      }
 
       private void UpdateAggregates(DeveloperUpdateCommand command)
       {
@@ -106,36 +135,13 @@ namespace Blog.Domain.DeveloperStory
              });
       }
 
-      private void AddExperience(int id, ExperienceEntry exp)
-      {
-         if (_experiences.Any(x => x.Company == exp.Company && x.Position == exp.Position))
-            throw new ArgumentException("Duplicate experience", $"{exp.Company}, {exp.Position}");
+      private void AddExperience(int id, ExperienceEntry exp) =>
+         _experiences.Add(new Experience(id, exp.Company, exp.Position, Period.Parse(exp.StartDate, exp.EndDate), exp.Content));
 
-         var period = Period.Parse(exp.StartDate, exp.EndDate);
-         if (_experiences.Any(x => x.Period.Overlaps(period)))
-            throw new ArgumentException("Time overlaps in experience", $"{exp.Company}, {exp.Position}");
-
-         _experiences.Add(new Experience(id, exp.Company, exp.Position, period, exp.Content));
-      }
-
-      private void AddSideProject(int id, SideProjectEntry proj)
-      {
-         if (_sideProjects.Any(x => x.Title == proj.Title))
-            throw new ArgumentException("Duplicate side project", proj.Title);
-
+      private void AddSideProject(int id, SideProjectEntry proj) =>
          _sideProjects.Add(new SideProject(id, proj.Title, proj.Content));
-      }
 
-      private void AddEducation(int id, EducationEntry edu)
-      {
-         if (_educations.Any(x => x.Degree == edu.Degree && x.University == edu.University))
-            throw new ArgumentException("Duplicate education", $"{edu.Degree}, {edu.University}");
-
-         var period = Period.Parse(edu.StartDate, edu.EndDate);
-         if (_educations.Any(x => x.Period.Overlaps(period)))
-            throw new ArgumentException("Time overlaps in education", $"{edu.Degree}, {edu.University}");
-
-         _educations.Add(new Education(id, edu.Degree, edu.University, period));
-      }
+      private void AddEducation(int id, EducationEntry edu) =>
+         _educations.Add(new Education(id, edu.Degree, edu.University, Period.Parse(edu.StartDate, edu.EndDate)));
    }
 }

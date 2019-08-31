@@ -66,7 +66,7 @@ namespace Blog.Tests.CQ
 
          var result = await _handler.Handle(add1, default);
          result.Created.Should().BeTrue();
-         result.UpdateResult.Should().BeEquivalentTo(new
+         result.Should().BeEquivalentTo(new
          {
             Experiences = new[] { 1 },
             SideProjects = new[] { 1 },
@@ -113,7 +113,7 @@ namespace Blog.Tests.CQ
 
          result = await _handler.Handle(add2, default);
          result.Created.Should().BeFalse();
-         result.UpdateResult.Should().BeEquivalentTo(new
+         result.Should().BeEquivalentTo(new
          {
             Experiences = new[] { 2 },
             SideProjects = new[] { 2 },
@@ -203,7 +203,7 @@ namespace Blog.Tests.CQ
          };
 
          var result = await _handler.Handle(update, default);
-         result.UpdateResult.Should().BeEquivalentTo(new
+         result.Should().BeEquivalentTo(new
          {
             Experiences = new[] { 1 },
             SideProjects = new[] { 1 },
@@ -326,7 +326,7 @@ namespace Blog.Tests.CQ
          };
 
          var result = await _handler.Handle(update, default);
-         result.UpdateResult.Should().BeEquivalentTo(new
+         result.Should().BeEquivalentTo(new
          {
             Experiences = new[] { 2, 3 },
             SideProjects = Enumerable.Empty<int>(),
@@ -453,7 +453,7 @@ namespace Blog.Tests.CQ
          };
 
          var result = await _handler.Handle(update, default);
-         result.UpdateResult.Should().BeEquivalentTo(new
+         result.Should().BeEquivalentTo(new
          {
             Experiences = new[] { 1 },
             SideProjects = new[] { 2, 3 },
@@ -593,7 +593,7 @@ namespace Blog.Tests.CQ
          };
 
          var result = await _handler.Handle(update, default);
-         result.UpdateResult.Should().BeEquivalentTo(new
+         result.Should().BeEquivalentTo(new
          {
             Experiences = new[] { 1 },
             SideProjects = Enumerable.Empty<int>(),

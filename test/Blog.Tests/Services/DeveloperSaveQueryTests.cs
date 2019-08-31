@@ -1,16 +1,16 @@
 ﻿using AutoMapper;
+using Blog.Domain.DeveloperStory;
 using Blog.Services.DeveloperSaveCommand;
 using Blog.Services.DeveloperSaveQuery;
-using Blog.Domain.DeveloperStory;
 using FluentAssertions;
 using MediatR;
-using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 using Handler = Blog.Services.DeveloperSaveQuery.Handler;
 
-namespace Blog.Tests.CQ
+namespace Blog.Tests.Services
 {
    public class DeveloperSaveQueryTests
    {
@@ -28,17 +28,25 @@ namespace Blog.Tests.CQ
       [Fact]
       public async Task Return_developer_when_its_available()
       {
-         var experiences = new[]
+         var command = new DeveloperUpdateCommand
          {
-            new Experience(0,
-            "Parmis",
-            "C# Developer",
-            new Period(new DateTime (2016,1,1), new DateTime (2017,1,1)),
-            "System Architect"   )
+            Summary = "The best developer ever!",
+            Skills = "C#, Javascript, React",
+            Experiences = new[]
+            {
+               new ExperienceEntry{ Company="Parmis", Position="C# Developer", StartDate="2016-1-1", EndDate="2017-1-1", Content=  "System Architect" }
+            },
+            SideProjects = new[]
+            {
+               new SideProjectEntry{Title="Richtext Editor", Content="A simple richtext for web"}
+            },
+            Educations = new[]
+            {
+               new EducationEntry{Degree="BS",University="S&C", StartDate= "2010-1-1", EndDate="2011-1-1" }
+            }
          };
-         var developer = new Developer("The best developer ever!", "C#, Javascript, React", experiences);
-         developer.AddSideProject("Richtext Editor", "A simple richtext for web");
-         developer.AddEducation("BS", "S&C", new DateTime(2010, 1, 1), new DateTime(2011, 1, 1));
+         var developer = Developer.Create(command).Developer;
+
          using (var db = _context.GetDb())
          {
             db.Developers.Add(developer);
@@ -80,6 +88,45 @@ namespace Blog.Tests.CQ
                }
             }
          });
+      }
+
+      [Fact]
+      public async Task Sort_educations_by_date()
+      {
+         var command = new DeveloperUpdateCommand
+         {
+            Summary = "The best developer ever!",
+            Skills = "C#, Javascript, React",
+            Experiences = new[]
+            {
+               new ExperienceEntry{ Company="Lodgify", Position="C# Developer", StartDate="2010-1-1", EndDate="2011-1-1", Content=  "System Architect" },
+               new ExperienceEntry{ Company="Parmis", Position="C# Developer", StartDate="2016-1-1", EndDate="2017-1-1", Content=  "System Architect" },
+            },
+            Educations = new[]
+            {
+               new EducationEntry{Degree="MS",University="S&C", StartDate= "2005-1-1", EndDate="2006-1-1" },
+               new EducationEntry{Degree="BS",University="S&C", StartDate= "2010-1-1", EndDate="2011-1-1" },
+            }
+         };
+         var developer = Developer.Create(command).Developer;
+
+         using (var db = _context.GetDb())
+         {
+            db.Developers.Add(developer);
+            db.SaveChanges();
+         }
+
+         var result = await _handler.Handle(new DeveloperSaveQuery(), default);
+
+         result.Experiences
+            .Select(x => x.StartDate)
+            .Should()
+            .ContainInOrder("2016-01-01", "2010-01-01");
+
+         result.Educations
+            .Select(x => x.StartDate)
+            .Should()
+            .ContainInOrder("2010-01-01", "2005-01-01");
       }
    }
 }

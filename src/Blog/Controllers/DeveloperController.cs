@@ -32,9 +32,9 @@ namespace Blog.Controllers
          var result = await _mediator.Send(command);
 
          if (result.Created)
-            return CreatedAtAction(nameof(Get), new { result.UpdateResult.Experiences, result.UpdateResult.SideProjects, result.UpdateResult.Educations });
+            return CreatedAtAction(nameof(Get), new { result.Experiences, result.SideProjects, result.Educations });
 
-         return Ok(new { result.UpdateResult.Experiences, result.UpdateResult.SideProjects, result.UpdateResult.Educations });
+         return Ok(new { result.Experiences, result.SideProjects, result.Educations });
       }
    }
 }
