@@ -1,15 +1,15 @@
 ﻿using AutoMapper;
-using Blog.Services.PostQuery;
-using Blog.Services.PreviewQuery;
 using Blog.Domain;
 using Blog.Domain.Blogging;
+using Blog.Services.DraftPreviewQuery;
+using Blog.Services.PostQuery;
 using FluentAssertions;
 using MediatR;
 using Moq;
 using System;
 using System.Threading.Tasks;
 using Xunit;
-using Handler = Blog.Services.PreviewQuery.Handler;
+using Handler = Blog.Services.DraftPreviewQuery.Handler;
 
 namespace Blog.Tests.CQ
 {
@@ -23,7 +23,7 @@ namespace Blog.Tests.CQ
          _handler = new Handler(_dateProvider.Object, _htmlProcessor, mapper);
       }
 
-      private readonly IRequestHandler<DraftPreviewQuery, PostViewModel> _handler;
+      private readonly IRequestHandler<DraftPreviewQuery, Result> _handler;
       private readonly Mock<IDateProvider> _dateProvider;
       private readonly IHtmlProcessor _htmlProcessor;
 
@@ -40,7 +40,8 @@ namespace Blog.Tests.CQ
             Tags = "js, es"
          }, default);
 
-         result.Should().BeEquivalentTo(new PostViewModel
+         result.Failed.Should().BeFalse();
+         result.Post.Should().BeEquivalentTo(new PostViewModel
          {
             Id = 0,
             Title = "JS",

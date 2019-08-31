@@ -1,9 +1,9 @@
-﻿using Blog.Services.DraftDeleteCommand;
+﻿using Blog.Domain;
+using Blog.Services.DraftDeleteCommand;
 using Blog.Services.DraftListQuery;
+using Blog.Services.DraftPreviewQuery;
 using Blog.Services.DraftQuery;
 using Blog.Services.DraftSaveCommand;
-using Blog.Services.PreviewQuery;
-using Blog.Domain;
 using Blog.Utils;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -61,9 +61,15 @@ namespace Blog.Controllers
 
       public async Task<IActionResult> Preview(DraftPreviewQuery draft)
       {
-         var post = await _mediator.Send(draft);
-         ViewData["language"] = post.Language;
-         return View("Views/Home/Post.cshtml", post);
+         var result = await _mediator.Send(draft);
+         if (result.Failed)
+         {
+            ModelState.AddModelErrors(result.Errors);
+            return View();
+         }
+
+         ViewData["language"] = result.Post.Language;
+         return View("Views/Home/Post.cshtml", result.Post);
       }
 
       [IgnoreMigration]

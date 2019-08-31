@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
-using Blog.Services.DeveloperQuery;
-using Blog.Services.DeveloperSaveCommand;
-using Blog.Services.DraftSaveCommand;
-using Blog.Services.PostQuery;
-using Blog.Services.PreviewQuery;
 using Blog.Domain;
 using Blog.Domain.Blogging;
 using Blog.Domain.DeveloperStory;
+using Blog.Services.DeveloperQuery;
+using Blog.Services.DeveloperSaveCommand;
+using Blog.Services.DraftPreviewQuery;
+using Blog.Services.DraftSaveCommand;
+using Blog.Services.PostQuery;
 
 namespace Blog
 {

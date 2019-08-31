@@ -1,10 +1,9 @@
-﻿using Blog.Services.PostQuery;
-using Blog.Domain;
+﻿using Blog.Domain;
 using MediatR;
 
-namespace Blog.Services.PreviewQuery
+namespace Blog.Services.DraftPreviewQuery
 {
-   public class DraftPreviewQuery : IRequest<PostViewModel>
+   public class DraftPreviewQuery : IRequest<Result>
    {
       public Language Language { get; set; }
       public string Title { get; set; }

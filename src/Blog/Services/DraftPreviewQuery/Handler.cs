@@ -4,9 +4,9 @@ using Blog.Domain;
 using Blog.Domain.Blogging;
 using MediatR;
 
-namespace Blog.Services.PreviewQuery
+namespace Blog.Services.DraftPreviewQuery
 {
-   public class Handler : RequestHandler<DraftPreviewQuery, PostViewModel>
+   public class Handler : RequestHandler<DraftPreviewQuery, Result>
    {
       public Handler(IDateProvider dateProvider, IHtmlProcessor htmlProcessor, IMapper mapper)
       {
@@ -19,14 +19,20 @@ namespace Blog.Services.PreviewQuery
       private readonly IHtmlProcessor _htmlProcessor;
       private readonly IMapper _mapper;
 
-      protected override PostViewModel Handle(DraftPreviewQuery request)
+      protected override Result Handle(DraftPreviewQuery request)
       {
          var draft = new Draft();
          var updateInfo = _mapper.Map<DraftUpdateCommand>(request);
          updateInfo.Summary = "Not Important";
-         draft.Update(updateInfo);
-         draft.Publish(_dateProvider, _htmlProcessor);
-         return _mapper.Map<PostViewModel>(draft.Post);
+         var updateResult = draft.Update(updateInfo);
+         if (updateResult.Failed)
+            return Result.MakeFailure(updateResult);
+
+         var publishResult = draft.Publish(_dateProvider, _htmlProcessor);
+         if (publishResult.Failed)
+            return Result.MakeFailure(publishResult);
+
+         return Result.MakeSuccess(_mapper.Map<PostViewModel>(draft.Post));
       }
    }
 }
