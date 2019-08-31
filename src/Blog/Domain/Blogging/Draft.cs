@@ -18,19 +18,19 @@ namespace Blog.Domain.Blogging
 
    public class DraftUpdateCommandResult : CommandResult
    {
-      public DraftUpdateCommandResult(IEnumerable<Error> errors)
+      public DraftUpdateCommandResult(IEnumerable<string> errors)
          : base(errors)
       { }
 
       public DraftUpdateCommandResult(ImageCollection images)
-          : base(Enumerable.Empty<Error>())
+          : base(Enumerable.Empty<string>())
       {
          Images = images;
       }
 
       public ImageCollection Images { get; }
 
-      public static DraftUpdateCommandResult MakeFailure(IEnumerable<Error> errors) =>
+      public static DraftUpdateCommandResult MakeFailure(IEnumerable<string> errors) =>
          new DraftUpdateCommandResult(errors);
 
       public static DraftUpdateCommandResult MakeSuccess(ImageCollection images) =>
@@ -138,9 +138,9 @@ namespace Blog.Domain.Blogging
          return DraftUpdateCommandResult.MakeSuccess(RenderImages(oldDirectory));
       }
 
-      private IEnumerable<Error> ValidateCodeBlocks()
+      private IEnumerable<string> ValidateCodeBlocks()
       {
-         var result = new List<Error>();
+         var result = new List<string>();
 
          if (string.IsNullOrEmpty(Content))
             return result;
@@ -157,12 +157,12 @@ namespace Blog.Domain.Blogging
 
                if (!node.InnerHtml.Contains('\n'))
                {
-                  result.Add(new Error($"Language is not specified for the code block #{num}"));
+                  result.Add($"Language is not specified for the code block #{num}");
                }
 
                var lang = HtmlProcessor.GetLanguage(plain);
                if (!languages.Contains(lang))
-                  result.Add(new Error($"Specified language in code block #{num} is not valid ({lang}...)"));
+                  result.Add($"Specified language in code block #{num} is not valid ({lang}...)");
             }
          });
          return result;

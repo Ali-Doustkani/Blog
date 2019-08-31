@@ -44,16 +44,7 @@ namespace Blog.Domain
               ? new InvalidOperationException()
               : new InvalidOperationException($"{name} is required for this operation.");
 
-      public void NoError(IEnumerable<Error> errors)
-      {
-         if (errors.Any())
-         {
-            var sb = new StringBuilder();
-            foreach (var err in errors)
-               sb.AppendLine($"{err.Message} {err.Property}");
-            throw new InvalidOperationException(sb.ToString());
-         }
-      }
+
    }
 
    public class ArgumentAssertions : Assertions

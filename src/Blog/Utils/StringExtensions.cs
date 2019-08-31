@@ -1,5 +1,4 @@
-﻿using Blog.Domain;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -36,10 +35,10 @@ namespace Blog.Utils
          return value;
       }
 
-      public static void AddModelErrors(this ModelStateDictionary dic, IEnumerable<Error> problems)
+      public static void AddModelErrors(this ModelStateDictionary dic, IEnumerable<string> problems)
       {
          foreach (var prob in problems)
-            dic.AddModelError(prob.Property, prob.Message);
+            dic.AddModelError(string.Empty, prob);
       }
 
       public static string JoinLines(this string[] lines) =>

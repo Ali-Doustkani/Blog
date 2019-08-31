@@ -35,10 +35,7 @@ namespace Blog.Tests.Domain
             .Publish(_dateProvider.Object, _htmlProcesssor.Object)
             .Errors
             .Should()
-            .ContainEquivalentOf(new
-            {
-               Message = "EnglishUrl is required for Farsi posts"
-            });
+            .ContainEquivalentOf("EnglishUrl is required for Farsi posts");
       }
 
       [Fact]
@@ -79,10 +76,7 @@ namespace Blog.Tests.Domain
             .Publish(Mock.Of<IDateProvider>(), Mock.Of<IHtmlProcessor>())
             .Errors
             .Should()
-            .ContainEquivalentOf(new
-            {
-               Message = "'Title' is required"
-            });
+            .ContainEquivalentOf("'Title' is required");
       }
 
       [Fact]
@@ -92,10 +86,7 @@ namespace Blog.Tests.Domain
             .Publish(Mock.Of<IDateProvider>(), Mock.Of<IHtmlProcessor>())
             .Errors
             .Should()
-            .ContainEquivalentOf(new
-            {
-               Message = "'Tags' is required"
-            });
+            .ContainEquivalentOf("'Tags' is required");
       }
 
       [Fact]
@@ -105,10 +96,7 @@ namespace Blog.Tests.Domain
             .Publish(Mock.Of<IDateProvider>(), Mock.Of<IHtmlProcessor>())
             .Errors
             .Should()
-            .ContainEquivalentOf(new
-            {
-               Message = "'Summary' is required"
-            });
+            .ContainEquivalentOf("'Summary' is required");
       }
 
       [Fact]
@@ -118,10 +106,7 @@ namespace Blog.Tests.Domain
             .Publish(Mock.Of<IDateProvider>(), Mock.Of<IHtmlProcessor>())
             .Errors
             .Should()
-            .ContainEquivalentOf(new
-            {
-               Message = "'Content' is required"
-            });
+            .ContainEquivalentOf("'Content' is required");
       }
 
       [Fact]
@@ -181,10 +166,7 @@ namespace Blog.Tests.Domain
          draft.Update(command);
          var result = draft.Publish(Mock.Of<IDateProvider>(), Mock.Of<IHtmlProcessor>());
          result.Failed.Should().BeTrue();
-         result.Errors.Should().ContainEquivalentOf(new
-         {
-            Message = "Language is not specified for the code block #1"
-         });
+         result.Errors.Should().ContainEquivalentOf("Language is not specified for the code block #1");
       }
 
       [Fact]
@@ -222,7 +204,6 @@ namespace Blog.Tests.Domain
 
          result.Errors
             .First()
-            .Message
             .Should()
             .StartWith("Specified language in code block #1 is not valid");
       }

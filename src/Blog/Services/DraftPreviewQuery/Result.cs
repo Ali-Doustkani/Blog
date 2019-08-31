@@ -7,7 +7,7 @@ namespace Blog.Services.DraftPreviewQuery
 {
    public class Result : CommandResult
    {
-      public Result(IEnumerable<Error> errors, PostViewModel post)
+      public Result(IEnumerable<string> errors, PostViewModel post)
          : base(errors)
       {
          Post = post;
@@ -19,6 +19,6 @@ namespace Blog.Services.DraftPreviewQuery
          new Result(commandResult.Errors, null);
 
       public static Result MakeSuccess(PostViewModel post) =>
-         new Result(Enumerable.Empty<Error>(), post);
+         new Result(Enumerable.Empty<string>(), post);
    }
 }

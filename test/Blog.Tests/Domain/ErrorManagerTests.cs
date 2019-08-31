@@ -16,8 +16,8 @@ namespace Blog.Tests.Domain
          .Should()
          .BeEquivalentTo(new[]
          {
-            new { Message = "'A' is required" },
-            new { Message = "'B' is required" },
+            "'A' is required" ,
+            "'B' is required" ,
          });
 
       [Fact]
@@ -27,9 +27,6 @@ namespace Blog.Tests.Domain
         .IfTrue(false, "B")
         .Errors
         .Should()
-        .BeEquivalentTo(new[]
-        {
-            new{Message = "A"}
-        });
+        .BeEquivalentTo(new[] { "A" });
    }
 }

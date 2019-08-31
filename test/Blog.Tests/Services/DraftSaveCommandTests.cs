@@ -362,10 +362,7 @@ namespace Blog.Tests.CQ
          }, default);
 
          result.Published.Should().BeFalse();
-         result.Errors.Should().ContainEquivalentOf(new
-         {
-            Message = "Language is not specified for the code block #1"
-         });
+         result.Errors.Should().ContainEquivalentOf("Language is not specified for the code block #1");
 
          using (var db = _context.GetDb())
          {
@@ -395,10 +392,7 @@ namespace Blog.Tests.CQ
 
          result.PostUrl.Should().BeNull();
          result.Published.Should().BeFalse();
-         result.Errors.Should().ContainEquivalentOf(new
-         {
-            Message = "reason"
-         });
+         result.Errors.Should().ContainEquivalentOf("reason");
 
          using (var db = _context.GetDb())
          {
@@ -431,10 +425,7 @@ namespace Blog.Tests.CQ
             Language = Language.English
          }, default);
 
-         result.Errors.Should().ContainEquivalentOf(new
-         {
-            Message = "A draft or post with title 'JS' already exists"
-         });
+         result.Errors.Should().ContainEquivalentOf("A draft or post with title 'JS' already exists");
 
       }
    }

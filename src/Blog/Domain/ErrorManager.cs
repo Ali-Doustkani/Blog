@@ -7,32 +7,32 @@ namespace Blog.Domain
    {
       public ErrorManager()
       {
-         _errors = new List<Error>();
+         _errors = new List<string>();
       }
 
-      private readonly List<Error> _errors;
+      private readonly List<string> _errors;
 
       public ErrorManager Required(string value, string name)
       {
          if (string.IsNullOrWhiteSpace(value))
-            _errors.Add(new Error($"'{name}' is required"));
+            _errors.Add($"'{name}' is required");
          return this;
       }
 
       public ErrorManager IfTrue(bool value, string message)
       {
          if (value)
-            _errors.Add(new Error(message));
+            _errors.Add(message);
          return this;
       }
 
       public ErrorManager Add(string message)
       {
-         _errors.Add(new Error(message));
+         _errors.Add(message);
          return this;
       }
 
-      public ErrorManager Add(IEnumerable<Error> errors)
+      public ErrorManager Add(IEnumerable<string> errors)
       {
          _errors.AddRange(errors);
          return this;
@@ -44,7 +44,7 @@ namespace Blog.Domain
       public CommandResult ToResult() =>
          new CommandResult(_errors.ToArray());
 
-      public IEnumerable<Error> Errors =>
+      public IEnumerable<string> Errors =>
          _errors;
    }
 }

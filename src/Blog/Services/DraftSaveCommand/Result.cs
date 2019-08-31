@@ -6,7 +6,7 @@ namespace Blog.Services.DraftSaveCommand
 {
    public class Result : CommandResult
    {
-      public Result(IEnumerable<Error> errors, string postUrl)
+      public Result(IEnumerable<string> errors, string postUrl)
          : base(errors)
       {
          PostUrl = postUrl;
@@ -19,12 +19,12 @@ namespace Blog.Services.DraftSaveCommand
          new Result(commandResult.Errors, null);
 
       public static Result MakeFailure(string error) =>
-         new Result(new[] { new Error(error) }, null);
+         new Result(new[] { error }, null);
 
       public static Result MakeSuccess() =>
-         new Result(Enumerable.Empty<Error>(), null);
+         new Result(Enumerable.Empty<string>(), null);
 
       public static Result MakeSuccess(string postUrl) =>
-         new Result(Enumerable.Empty<Error>(), postUrl);
+         new Result(Enumerable.Empty<string>(), postUrl);
    }
 }
