@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
+using Blog.Domain;
+using Blog.Domain.Blogging;
 using Blog.Infrastructure;
 using Blog.Utils;
-using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -45,15 +46,14 @@ namespace Blog
          services.AddMvc(cfg =>
          {
             cfg.Filters.Add<MigrationFilter>();
-         })
-            .AddFluentValidation(cfg =>
-            {
-               cfg.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
-               cfg.ImplicitlyValidateChildProperties = true;
-            });
+         });
          services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<BlogContext>();
          services.AddAutoMapper(GetType().Assembly);
-         services.AddBlogTypes();
+         services.AddTransient<IHtmlProcessor, HtmlProcessor>();
+         services.AddTransient<IImageProcessor, CloudImageProcessor>();
+         services.AddTransient<ICodeFormatter, HerokuCodeFormatter>();
+         services.AddTransient<IFileSystem, FileSystem>();
+         services.AddTransient<IDateProvider, DefaultDateProvider>();
          services.AddScoped<ImageContext>();
          services.AddMediatR(GetType().Assembly);
          services.AddSpaStaticFiles(options =>

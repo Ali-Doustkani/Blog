@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Blog.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,9 +9,9 @@ namespace Blog.Domain.DeveloperStory
    {
       private Developer()
       {
-         _experiences = new AggregateList<Experience>();
-         _sideProjects = new AggregateList<SideProject>();
-         _educations = new AggregateList<Education>();
+         _experiences = new List<Experience>();
+         _sideProjects = new List<SideProject>();
+         _educations = new List<Education>();
       }
 
       public static DeveloperFactoryResult Create(DeveloperUpdateCommand command)
@@ -27,9 +28,9 @@ namespace Blog.Domain.DeveloperStory
       }
 
       private string _summary;
-      private readonly AggregateList<Experience> _experiences;
-      private readonly AggregateList<SideProject> _sideProjects;
-      private readonly AggregateList<Education> _educations;
+      private readonly List<Experience> _experiences;
+      private readonly List<SideProject> _sideProjects;
+      private readonly List<Education> _educations;
 
       public HtmlText Summary => new HtmlText(_summary);
       public string Skills { get; private set; }
@@ -92,47 +93,9 @@ namespace Blog.Domain.DeveloperStory
          _summary = command.Summary;
          Skills = command.Skills;
 
-         command.Update(_experiences, x => x.Experiences)
-            .OnUpdate((id, exp) =>
-            {
-               var oldExperience = _experiences.Single(exp.Id);
-               Updating(UpdatingType.Removing, oldExperience);
-               _experiences.Remove(oldExperience);
-               AddExperience(id, exp);
-               Updating(UpdatingType.Added, _experiences.Single(exp.Id));
-            })
-            .OnAdd(exp =>
-            {
-               AddExperience(0, exp);
-            });
-
-         command.Update(_sideProjects, x => x.SideProjects)
-            .OnUpdate((id, proj) =>
-            {
-               var toRemove = _sideProjects.Single(x => x.Id == id);
-               Updating(UpdatingType.Removing, toRemove);
-               _sideProjects.Remove(toRemove);
-               AddSideProject(id, proj);
-               Updating(UpdatingType.Added, _sideProjects.Single(proj.Id));
-            })
-            .OnAdd(proj =>
-            {
-               AddSideProject(0, proj);
-            });
-
-         command.Update(_educations, x => x.Educations)
-             .OnUpdate((id, edu) =>
-             {
-                var toRemove = _educations.Single(edu.Id);
-                Updating(UpdatingType.Removing, toRemove);
-                _educations.Remove(toRemove);
-                AddEducation(id, edu);
-                Updating(UpdatingType.Added, _educations.Single(edu.Id));
-             })
-             .OnAdd(edu =>
-             {
-                AddEducation(0, edu);
-             });
+         Update(_experiences, command.Experiences, AddExperience);
+         Update(_sideProjects, command.SideProjects, AddSideProject);
+         Update(_educations, command.Educations, AddEducation);
       }
 
       private void AddExperience(int id, ExperienceEntry exp) =>
@@ -143,5 +106,27 @@ namespace Blog.Domain.DeveloperStory
 
       private void AddEducation(int id, EducationEntry edu) =>
          _educations.Add(new Education(id, edu.Degree, edu.University, Period.Parse(edu.StartDate, edu.EndDate)));
+
+      private void Update<TEntity, TEntry>(List<TEntity> entities, IEnumerable<TEntry> entries, Action<int, TEntry> adder)
+         where TEntity : DomainEntity
+         where TEntry : DomainObjectEntry
+      {
+         entities.RemoveAll(x => !entries.Select(y => y.Id).Contains(x.Id.ToString()));
+         foreach (var item in entries)
+         {
+            if (int.TryParse(item.Id, out int id))
+            {
+               var oldEntity = entities.Single(item.Id);
+               Updating(UpdatingType.Removing, oldEntity);
+               entities.Remove(oldEntity);
+               adder(id, item);
+               Updating(UpdatingType.Added, entities.Single(item.Id));
+            }
+            else
+            {
+               adder(0, item);
+            }
+         }
+      }
    }
 }

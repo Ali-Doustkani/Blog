@@ -1,11 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using Blog.Domain;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace Blog.Utils
 {
-   public static class StringExtensions
+   public static class Extensions
    {
       public static bool IsMatch(this string value, string pattern) =>
          Regex.IsMatch(value, pattern);
@@ -43,5 +45,9 @@ namespace Blog.Utils
 
       public static string JoinLines(this string[] lines) =>
          string.Join(Environment.NewLine, lines);
+
+      public static T Single<T>(this List<T> list, string id)
+        where T : DomainEntity =>
+         list.Single(x => x.Id.ToString() == id);
    }
 }

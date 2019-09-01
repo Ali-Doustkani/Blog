@@ -2,7 +2,7 @@
 
 namespace Blog.Domain.DeveloperStory
 {
-   public class DeveloperUpdateCommand : Command<DeveloperUpdateCommand>
+   public class DeveloperUpdateCommand
    {
       public DeveloperUpdateCommand()
       {
