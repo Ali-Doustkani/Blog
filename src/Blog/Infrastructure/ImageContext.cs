@@ -17,7 +17,7 @@ namespace Blog.Infrastructure
 
       public void AddOrUpdate(ImageCollection images)
       {
-         Assert.Arg.NotNull(images);
+         Assert.NotNull(images);
          RenameDirectory(images.OldDirectory, images.NewDirectory);
          var dir = GetDirectory(images.NewDirectory);
          CreteDirectory(dir, images.Images);

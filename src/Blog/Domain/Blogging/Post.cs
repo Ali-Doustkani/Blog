@@ -19,13 +19,13 @@ namespace Blog.Domain.Blogging
          string content)
       {
          Id = id;
-         Title = Assert.Arg.NotNull(title);
+         Title = Assert.NotNull(title);
          PublishDate = publishDate;
          Language = language;
-         Summary = Assert.Arg.NotNull(summary);
-         Tags = Assert.Arg.NotNull(tags);
-         Url = Assert.Arg.NotNull(url);
-         Content = Assert.Arg.NotNull(content);
+         Summary = Assert.NotNull(summary);
+         Tags = Assert.NotNull(tags);
+         Url = Assert.NotNull(url);
+         Content = Assert.NotNull(content);
       }
 
       public string Title { get; private set; }
