@@ -6,11 +6,11 @@ it("updates the developer info", () => {
   cy.visit("/admin/developer");
   cy.wait("@getDeveloper");
 
-  cy.el("summary-richtext")
+  cy.testid("summary-richtext")
     .clearRichtext()
     .type("Hi. Im Ali.");
 
-  cy.el("skills-input")
+  cy.testid("skills-input")
     .clear()
     .type("C#, Javascript, React");
 
@@ -18,96 +18,96 @@ it("updates the developer info", () => {
 
   // add 2 experiences
 
-  cy.el("add-experience-button")
+  cy.testid("add-experience-button")
     .click()
     .click();
 
-  cy.el("experience-container")
+  cy.testid("experience-container")
     .eq(0)
     .within(() => {
-      cy.el("company-input").type("Parmis");
-      cy.el("position-input").type("C# Developer");
-      cy.el("startDate-input").type("2010-01-01");
-      cy.el("endDate-input").type("2011-01-01");
-      cy.el("content-richtext")
+      cy.testid("company-input").type("Parmis");
+      cy.testid("position-input").type("C# Developer");
+      cy.testid("startDate-input").type("2010-01-01");
+      cy.testid("endDate-input").type("2011-01-01");
+      cy.testid("content-richtext")
         .get("p")
         .type("coded back-end features");
     });
 
-  cy.el("experience-container")
+  cy.testid("experience-container")
     .eq(1)
     .within(() => {
-      cy.el("company-input").type("Lodgify");
-      cy.el("position-input").type("Fullstack Developer");
-      cy.el("startDate-input").type("2012-01-01");
-      cy.el("endDate-input").type("2013-01-01");
-      cy.el("content-richtext")
+      cy.testid("company-input").type("Lodgify");
+      cy.testid("position-input").type("Fullstack Developer");
+      cy.testid("startDate-input").type("2012-01-01");
+      cy.testid("endDate-input").type("2013-01-01");
+      cy.testid("content-richtext")
         .get("p")
         .type("coded both front-end and back-end");
     });
 
   // add 2 side projects
 
-  cy.el("add-project-button")
+  cy.testid("add-project-button")
     .click()
     .click();
 
-  cy.el("project-container")
+  cy.testid("project-container")
     .eq(0)
     .within(() => {
-      cy.el("title-input").type("Richtext");
-      cy.el("content-richtext")
+      cy.testid("title-input").type("Richtext");
+      cy.testid("content-richtext")
         .get("p")
         .type("a HTML web richtext editor");
     });
 
-  cy.el("project-container")
+  cy.testid("project-container")
     .eq(1)
     .within(() => {
-      cy.el("title-input").type("CactusGuru");
-      cy.el("content-richtext")
+      cy.testid("title-input").type("CactusGuru");
+      cy.testid("content-richtext")
         .get("p")
         .type("Cacti Collection Manager");
     });
 
   // add 2 educations
 
-  cy.el("add-education-button")
+  cy.testid("add-education-button")
     .click()
     .click();
 
-  cy.el("education-container")
+  cy.testid("education-container")
     .eq(0)
     .within(() => {
-      cy.el("degree-input").type("BS of software engineering");
-      cy.el("university-input").type("C&S");
-      cy.el("startDate-input").type("2012-01-01");
-      cy.el("endDate-input").type("2013-01-01");
+      cy.testid("degree-input").type("BS of software engineering");
+      cy.testid("university-input").type("C&S");
+      cy.testid("startDate-input").type("2012-01-01");
+      cy.testid("endDate-input").type("2013-01-01");
     });
 
-  cy.el("education-container")
+  cy.testid("education-container")
     .eq(1)
     .within(() => {
-      cy.el("degree-input").type("MS of software engineering");
-      cy.el("university-input").type("C&S");
-      cy.el("startDate-input").type("2013-01-01");
-      cy.el("endDate-input").type("2014-01-01");
+      cy.testid("degree-input").type("MS of software engineering");
+      cy.testid("university-input").type("C&S");
+      cy.testid("startDate-input").type("2013-01-01");
+      cy.testid("endDate-input").type("2014-01-01");
     });
 
   // save
 
-  cy.el("save-button").click();
+  cy.testid("save-button").click();
   cy.wait("@putDeveloper");
 
   // check about page
 
   cy.visit("/about");
 
-  cy.el("summary-container").within(() => {
+  cy.testid("summary-container").within(() => {
     cy.get("p").should("have.text", "Hi. Im Ali.");
   });
 
-  cy.el("experience-container").within(() => {
+  cy.testid("experience-container").within(() => {
     cy.get("section>h2")
       .eq(0)
       .should("have.text", "C# Developer, Parmis January/2010 - January/2011");
@@ -125,7 +125,7 @@ it("updates the developer info", () => {
       .should("have.text", "coded both front-end and back-end");
   });
 
-  cy.el("project-container").within(() => {
+  cy.testid("project-container").within(() => {
     cy.get("section>h2")
       .eq(0)
       .should("have.text", "Richtext");
@@ -140,7 +140,7 @@ it("updates the developer info", () => {
       .should("have.text", "Cacti Collection Manager");
   });
 
-  cy.el("education-container").within(() => {
+  cy.testid("education-container").within(() => {
     cy.get("section h2")
       .eq(0)
       .should("have.text", "BS of software engineering 2012 - 2013");
@@ -155,7 +155,7 @@ it("updates the developer info", () => {
       .should("have.text", "C&S");
   });
 
-  cy.el("skills-container").within(() => {
+  cy.testid("skills-container").within(() => {
     cy.get("p").should("have.text", "C#, Javascript, React");
   });
 });
