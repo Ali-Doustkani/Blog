@@ -1,5 +1,4 @@
-const url_developer =
-   process.env.NODE_ENV === 'development' ? 'http://localhost:3000/api/developer' : '/api/developer'
+const url_developer = '/api/developer'
 
 const ok = data => ({
    status: 'ok',
