@@ -1,5 +1,5 @@
 describe("admin activities", () => {
-  it("show admin panel when logged in", () => {
+  it("shows admin panel when logged in", () => {
     cy.visit("/admin").login();
     cy.el("logout-button").should("be.visible");
 
@@ -7,7 +7,7 @@ describe("admin activities", () => {
     cy.el("logout-button").should("not.be.visible");
   });
 
-  it("show edit button when logged in", () => {
+  it("shows edit button when logged in", () => {
     cy.visit("/admin").login();
     cy.visit("/admin/Post");
     cy.el("title-input").type("test");
@@ -19,7 +19,7 @@ describe("admin activities", () => {
     cy.el("publish-checkbox").check();
     cy.el("save-button").click();
     cy.el("edit-button").should("be.visible");
-    
+
     cy.el("logout-button").click();
     cy.visit("/en/test");
     cy.el("edit-button").should("not.be.visible");

@@ -39,10 +39,14 @@ namespace Blog.Controllers
       [ValidateAntiForgeryToken]
       public async Task<IActionResult> SavePost(DraftSaveCommand command)
       {
-         if (!ModelState.IsValid)
-            return View(nameof(Post), command);
-
          var result = await _mediator.Send(command);
+
+         if (result.Failed)
+         {
+            ModelState.AddModelErrors(result.Errors);
+            return View(nameof(Post), command);
+         }
+
          if (result.Published)
          {
             var lang = command.Language == Language.English ? "en" : "fa";

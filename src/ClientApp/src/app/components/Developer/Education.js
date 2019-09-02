@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Input, ToolbarButton, ErrorList } from 'Controls'
 
 const Education = props => (
-   <div className="sub-form-group">
+   <div data-cy="education-container" className="sub-form-group">
       <div className="text-group toolbar">
          <label>Education:</label>
          <Input name="degree" autoFocus {...props} />
@@ -11,7 +11,11 @@ const Education = props => (
          <Input name="startDate" type="date" className="hide-arrow" {...props} />
          <Input name="endDate" type="date" className="hide-arrow" {...props} />
          <div className="separator" />
-         <ToolbarButton content="trash-alt" onClick={() => props.onDelete(props.id)} />
+         <ToolbarButton
+            data-cy="delete-button"
+            content="trash-alt"
+            onClick={() => props.onDelete(props.id)}
+         />
       </div>
       <ErrorList
          errors={[

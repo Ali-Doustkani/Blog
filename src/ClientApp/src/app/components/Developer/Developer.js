@@ -95,7 +95,9 @@ const Developer = ({ notify }) => {
                onChange={actions.updateEducation}
                onDelete={ask(actions.deleteEducation)}
             />
-            <Button onClick={save}>Save</Button>
+            <Button data-cy="save-button" onClick={save}>
+               Save
+            </Button>
          </div>
       </DisabledContext.Provider>
    )

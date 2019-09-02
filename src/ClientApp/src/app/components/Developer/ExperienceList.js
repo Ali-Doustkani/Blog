@@ -15,7 +15,9 @@ const ExperienceList = props => {
                onDelete={props.onDelete}
             />
          ))}
-         <Button onClick={props.onAdd}>Add Work Experience</Button>
+         <Button data-cy="add-experience-button" onClick={props.onAdd}>
+            Add Work Experience
+         </Button>
       </div>
    )
 }

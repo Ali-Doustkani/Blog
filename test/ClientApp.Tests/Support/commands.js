@@ -27,3 +27,8 @@ Cypress.Commands.add("clickAll", { prevSubject: false }, selector => {
     });
   }
 });
+
+Cypress.Commands.add("clearRichtext", { prevSubject: true }, prev => {
+  prev[0].innerHTML = '<p contenteditable="true"></p>';
+  return cy.wrap(prev[0].firstChild);
+});

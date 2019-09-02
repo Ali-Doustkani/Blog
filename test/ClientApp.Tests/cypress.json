@@ -1,5 +1,5 @@
 {
-  "integrationFolder": "Integration",
+  "integrationFolder": "Tests",
   "fixturesFolder": false,
   "pluginsFile": false,
   "supportFile": "Support",

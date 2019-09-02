@@ -6,7 +6,7 @@ const Button = props => {
    const disabled = React.useContext(DisabledContext)
 
    return (
-      <button disabled={disabled} className="form-button" onClick={props.onClick}>
+      <button disabled={disabled} className="form-button" {...props}>
          {props.children}
       </button>
    )

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Richtext, ErrorList, Input, ToolbarButton } from 'Controls'
 
 const Experience = props => (
-   <div className="sub-form-group">
+   <div data-cy="experience-container" className="sub-form-group">
       <div className="text-group toolbar">
          <label>Work Experience:</label>
          <Input name="company" {...props} autoFocus />
@@ -11,7 +11,11 @@ const Experience = props => (
          <Input name="startDate" {...props} type="date" className="hide-arrow" />
          <Input name="endDate" {...props} type="date" className="hide-arrow" />
          <div className="separator" />
-         <ToolbarButton content="trash-alt" onClick={() => props.onDelete(props.id)} />
+         <ToolbarButton
+            data-cy="delete-button"
+            content="trash-alt"
+            onClick={() => props.onDelete(props.id)}
+         />
       </div>
       <Richtext name="content" showErrors={false} {...props} />
       <ErrorList

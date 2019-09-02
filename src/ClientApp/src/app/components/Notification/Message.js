@@ -9,7 +9,7 @@ const Message = props => {
          <i className="fas fa-times" />
       ) : null
    return (
-      <div className={'message-box ' + props.appearance}>
+      <div data-cy="message-container" className={'message-box ' + props.appearance}>
          {icon}
          {props.message}
          <a onClick={props.onDismiss}>Dismiss</a>

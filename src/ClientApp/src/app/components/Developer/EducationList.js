@@ -14,7 +14,9 @@ const EducationList = props => (
             onChange={props.onChange}
          />
       ))}
-      <Button onClick={props.onAdd}>Add Education</Button>
+      <Button data-cy="add-education-button" onClick={props.onAdd}>
+         Add Education
+      </Button>
    </div>
 )
 

@@ -14,7 +14,9 @@ const SideProjectList = props => (
             onDelete={props.onDelete}
          />
       ))}
-      <Button onClick={props.onAdd}>Add Side Project</Button>
+      <Button data-cy="add-project-button" onClick={props.onAdd}>
+         Add Side Project
+      </Button>
    </div>
 )
 

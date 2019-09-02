@@ -2,8 +2,8 @@
 @{
    ViewData["Title"] = "About Me";
 }
-<article class="resume-section">@Html.Raw(Model.Summary)</article>
-<article class="resume-section">
+<article class="resume-section" data-cy="summary-container">@Html.Raw(Model.Summary)</article>
+<article class="resume-section" data-cy="experience-container">
    <h1>work experience</h1>
    @foreach (var experience in Model.Experiences)
    {
@@ -13,7 +13,7 @@
       </section>
    }
 </article>
-<article class="resume-section">
+<article class="resume-section" data-cy="project-container">
    <h1>side projects</h1>
    @foreach (var proj in Model.SideProjects)
    {
@@ -23,7 +23,7 @@
       </section>
    }
 </article>
-<article class="resume-section">
+<article class="resume-section" data-cy="education-container">
    <h1>education</h1>
    @foreach (var edu in Model.Educations)
    {
@@ -35,7 +35,7 @@
       </section>
    }
 </article>
-<article class="resume-section">
+<article class="resume-section" data-cy="skills-container">
    <h1>technical skills</h1>
    @foreach (var line in Model.Skills)
    {
