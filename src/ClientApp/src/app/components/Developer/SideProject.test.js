@@ -1,7 +1,7 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 import SideProject from './SideProject'
-import { Input, Richtext, ToolbarButton } from 'Controls'
+import { Input, Richtext } from 'Controls'
 
 const sample = {
    id: 12,
@@ -22,17 +22,4 @@ it('displays content', () => {
       .find(Richtext)
       .findWhere(x => x.prop('name') === 'content')
    expect(content.prop('content')).toBe('<p>Desc</p>')
-})
-
-it('calls delete when delete button clicked', () => {
-   expect.assertions(1)
-   const btn = shallow(
-      <SideProject
-         {...sample}
-         onDelete={id => {
-            expect(id).toBe(12)
-         }}
-      />
-   ).find(ToolbarButton)
-   btn.simulate('click')
 })

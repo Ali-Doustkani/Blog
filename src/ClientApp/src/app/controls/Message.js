@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 const Message = props => (
    <div className="page-message">
-      <div data-testid="message-component">
+      <div data-cy="message-container">
          <div>{props.message}</div>
          <a onClick={props.onTryAgain} style={{ cursor: 'pointer' }}>
             Try again

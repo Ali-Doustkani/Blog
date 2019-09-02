@@ -8,6 +8,7 @@ module.exports = {
       'eslint:recommended',
       'plugin:react/recommended',
       'plugin:jest/recommended',
+      'plugin:cypress/recommended',
       'prettier'
    ],
    parser: 'babel-eslint',

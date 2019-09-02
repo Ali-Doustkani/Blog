@@ -1,6 +1,6 @@
 import React from 'react'
 import { shallow } from 'enzyme'
-import { Input, ToolbarButton, ErrorList } from 'Controls'
+import { Input, ErrorList } from 'Controls'
 import Education from './Education'
 
 const sample = {
@@ -45,13 +45,6 @@ it('displays end date', () => {
          .findWhere(x => x.prop('name') === 'endDate')
          .prop('endDate')
    ).toBe('2011-1-1')
-})
-
-it('calls onDelete when delete button clicked', () => {
-   expect.assertions(1)
-   shallow(<Education onDelete={id => expect(id).toBe(1)} {...sample} />)
-      .find(ToolbarButton)
-      .simulate('click')
 })
 
 it('displays errors', () => {

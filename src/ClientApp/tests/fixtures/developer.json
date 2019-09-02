@@ -1,0 +1,50 @@
+{
+   "summary": "<p contenteditable='true'>Hi. Im Ali.</p>",
+   "skills": "C#\nJavascript\nReact",
+   "experiences": [
+      {
+         "id": 1,
+         "company": "Lodgify",
+         "position": "C# Developer",
+         "startDate": "2019-01-01",
+         "endDate": "2020-01-01",
+         "content": "<p contenteditable=\"true\">worked as a back-end developer</p>"
+      },
+      {
+         "id": 2,
+         "company": "Parmis",
+         "position": "Fullstack Developer",
+         "startDate": "2020-01-01",
+         "endDate": "2021-01-01",
+         "content": "<p contenteditable=\"true\">worked as both front-end & back-end developer</p>"
+      }
+   ],
+   "sideProjects": [
+      {
+         "id": 1,
+         "title": "Richtext Editor",
+         "content": "<p contenteditable=\"true\">A HTML richtext editor</p>"
+      },
+      {
+         "id": 2,
+         "title": "Cactus Guru",
+         "content": "<p contenteditable=\"true\">Cacti Collection Manager</p>"
+      }
+   ],
+   "educations": [
+      {
+         "id": 1,
+         "degree": "B.S.",
+         "university": "S&C",
+         "startDate": "2010-01-01",
+         "endDate": "2011-01-01"
+      },
+      {
+         "id": 2,
+         "degree": "M.S.",
+         "university": "S&C",
+         "startDate": "2011-01-01",
+         "endDate": "2012-01-01"
+      }
+   ]
+}

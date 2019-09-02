@@ -1,0 +1,8 @@
+{
+   "integrationFolder": "tests/integration",
+   "fixturesFolder": "tests/fixtures",
+   "pluginsFile": false,
+   "supportFile": "tests/support/index.js",
+   "baseUrl": "http://localhost:1234",
+   "video": false
+}
