@@ -28,10 +28,6 @@
          border-radius: 6px;
          background: transparentize($color3, 0.9);
       }
-
-      &:focus {
-         outline: none;
-      }
    }
 
    button:disabled {

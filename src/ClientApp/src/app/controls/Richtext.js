@@ -63,20 +63,28 @@ function Richtext(props) {
       <div className="text-group richtext-group">
          {props.label ? <label>{props.label}</label> : null}
          <div className="toolbar">
-            <ToolbarButton content="bold" onClick={() => rich.style('important')} />
-            <ToolbarButton content="code" onClick={() => rich.style('inlineCode')} />
+            <ToolbarButton content="bold" tabIndex="-1" onClick={() => rich.style('important')} />
+            <ToolbarButton content="code" tabIndex="-1" onClick={() => rich.style('inlineCode')} />
             <div className="separator" />
-            <ToolbarButton onClick={() => rich.apply('h1')}>
+            <ToolbarButton tabIndex="-1" onClick={() => rich.apply('h1')}>
                <strong>H1</strong>
             </ToolbarButton>
-            <ToolbarButton onClick={() => rich.apply('h2')}>
+            <ToolbarButton tabIndex="-1" onClick={() => rich.apply('h2')}>
                <strong>H2</strong>
             </ToolbarButton>
             <div className="separator" />
-            <ToolbarButton content="list-ul" onClick={() => rich.applyUnorderedList()} />
-            <ToolbarButton content="list-ol" onClick={() => rich.applyOrderedList()} />
+            <ToolbarButton
+               content="list-ul"
+               tabIndex="-1"
+               onClick={() => rich.applyUnorderedList()}
+            />
+            <ToolbarButton
+               content="list-ol"
+               tabIndex="-1"
+               onClick={() => rich.applyOrderedList()}
+            />
             <div className="separator" />
-            <ToolbarButton content="link" onClick={() => rich.styleLink()} />
+            <ToolbarButton content="link" tabIndex="-1" onClick={() => rich.styleLink()} />
          </div>
          <div
             className={classes.join(' ')}
