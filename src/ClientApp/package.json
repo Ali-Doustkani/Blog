@@ -37,7 +37,7 @@
       "whatwg-fetch": "^3.0.0"
    },
    "dependencies": {
-      "@alidoustkani/richtext": "^1.0.26",
+      "@alidoustkani/richtext": "^1.0.27",
       "react": "^16.8.6",
       "react-dom": "^16.8.6",
       "uuid": "^3.3.2"
