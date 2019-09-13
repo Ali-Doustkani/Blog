@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Blog.Infrastructure
 {
@@ -18,12 +19,12 @@ namespace Blog.Infrastructure
       public DbSet<Post> Posts { get; set; }
       public DbSet<Developer> Developers { get; set; }
 
-      public Developer GetDeveloper() =>
-         Developers
+      public async Task<Developer> GetDeveloper() =>
+         await Developers
          .Include(x => x.Experiences)
          .Include(x => x.SideProjects)
          .Include(x => x.Educations)
-         .SingleOrDefault();
+         .SingleOrDefaultAsync();
 
       public Draft GetDraft(int id) =>
          Drafts.Include(x => x.Post).SingleOrDefault(x => x.Id == id);

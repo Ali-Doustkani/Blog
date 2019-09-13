@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -89,13 +90,7 @@ namespace Blog
 
          app.Map("/admin/developer", clientApp =>
          {
-            clientApp.UseSpa(spa =>
-            {
-               //if (_env.IsDevelopment())
-               //{
-               //   spa.UseProxyToSpaDevelopmentServer("http://localhost:1234");
-               //}
-            });
+            clientApp.UseSpa(spa => { });
          });
 
          app.UseMvc(cfg =>

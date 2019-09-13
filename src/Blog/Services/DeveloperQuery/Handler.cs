@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Blog.Infrastructure;
 using MediatR;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Blog.Services.DeveloperQuery
 {
-   public class Handler : RequestHandler<DeveloperQuery, DeveloperViewModel>
+   public class Handler : IRequestHandler<DeveloperQuery, DeveloperViewModel>
    {
       public Handler(BlogContext context, IMapper mapper)
       {
@@ -15,7 +17,7 @@ namespace Blog.Services.DeveloperQuery
       private readonly BlogContext _context;
       private readonly IMapper _mapper;
 
-      protected override DeveloperViewModel Handle(DeveloperQuery request) =>
-         _mapper.Map<DeveloperViewModel>(_context.GetDeveloper());
+      public async Task<DeveloperViewModel> Handle(DeveloperQuery request, CancellationToken cancellationToken) =>
+         _mapper.Map<DeveloperViewModel>(await _context.GetDeveloper());
    }
 }

@@ -18,12 +18,12 @@ namespace Blog.Controllers
       private readonly IMediator _mediator;
 
       [HttpGet]
-      public async Task<ActionResult<DeveloperSaveCommand>> Get()
+      public async Task<IActionResult> Get()
       {
          var result = await _mediator.Send(new DeveloperSaveQuery());
          if (result == null)
             return NoContent();
-         return result;
+         return Ok(result);
       }
 
       [HttpPut]

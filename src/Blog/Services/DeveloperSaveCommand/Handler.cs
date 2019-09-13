@@ -5,10 +5,12 @@ using Blog.Infrastructure;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Blog.Services.DeveloperSaveCommand
 {
-   public class Handler : RequestHandler<DeveloperSaveCommand, DeveloperSaveResult>
+   public class Handler : IRequestHandler<DeveloperSaveCommand, DeveloperSaveResult>
    {
       public Handler(BlogContext context, IMapper mapper)
       {
@@ -19,19 +21,19 @@ namespace Blog.Services.DeveloperSaveCommand
       private readonly BlogContext _context;
       private readonly IMapper _mapper;
 
-      protected override DeveloperSaveResult Handle(DeveloperSaveCommand request)
+      public async Task<DeveloperSaveResult> Handle(DeveloperSaveCommand request, CancellationToken cancellationToken)
       {
          var command = _mapper.Map<DeveloperUpdateCommand>(request);
-         if (_context.Developers.Any())
+         if (await _context.Developers.AnyAsync())
          {
-            var developer = _context.GetDeveloper();
+            var developer = await _context.GetDeveloper();
             developer.Updating += Developer_Updating;
             var result = developer.Update(command);
             developer.Updating -= Developer_Updating;
             if (result.Failed)
                return DeveloperSaveResult.MakeFailure(result.Errors);
             _context.Update(developer);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return DeveloperSaveResult.MakeSuccess(false,
                developer.Experiences.Select(x => x.Id),
                developer.SideProjects.Select(x => x.Id),
@@ -43,7 +45,7 @@ namespace Blog.Services.DeveloperSaveCommand
             if (result.Failed)
                return DeveloperSaveResult.MakeFailure(result.Errors);
             _context.Update(result.Developer);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return DeveloperSaveResult.MakeSuccess(true,
                result.Developer.Experiences.Select(x => x.Id),
                result.Developer.SideProjects.Select(x => x.Id),
