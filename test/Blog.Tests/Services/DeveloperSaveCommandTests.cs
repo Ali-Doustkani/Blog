@@ -212,7 +212,7 @@ namespace Blog.Tests.CQ
 
          using (var db = _context.GetDb())
          {
-            db.GetDeveloper().Should().BeEquivalentTo(new
+            (await db.GetDeveloper()).Should().BeEquivalentTo(new
             {
                Summary = new
                {
@@ -335,7 +335,7 @@ namespace Blog.Tests.CQ
 
          using (var db = _context.GetDb())
          {
-            db.GetDeveloper().Should().BeEquivalentTo(new
+            (await db.GetDeveloper()).Should().BeEquivalentTo(new
             {
                Summary = new
                {
@@ -462,7 +462,7 @@ namespace Blog.Tests.CQ
 
          using (var db = _context.GetDb())
          {
-            db.GetDeveloper().Should().BeEquivalentTo(new
+            (await db.GetDeveloper()).Should().BeEquivalentTo(new
             {
                Summary = new
                {
@@ -602,7 +602,7 @@ namespace Blog.Tests.CQ
 
          using (var db = _context.GetDb())
          {
-            db.GetDeveloper().Should().BeEquivalentTo(new
+            (await db.GetDeveloper()).Should().BeEquivalentTo(new
             {
                Summary = new
                {

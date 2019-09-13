@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Blog.Tests
 {
@@ -61,13 +62,14 @@ namespace Blog.Tests
          log.Add(string.Join(" ", "rename-dir", oldDir.Standard(), newDir.Standard()));
       }
 
-      public void WriteAllBytes(string path, byte[] data)
+      public Task WriteAllBytesAsync(string path, byte[] data)
       {
          _files.Add(path.Standard());
          log.Add(string.Join(" ", "write-file", path.Standard(), string.Join(",", data)));
+         return Task.CompletedTask;
       }
 
       public void WriteFile(string path) =>
-         WriteAllBytes(path, new byte[] { });
+         WriteAllBytesAsync(path, new byte[] { });
    }
 }

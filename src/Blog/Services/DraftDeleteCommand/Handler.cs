@@ -1,10 +1,11 @@
 ﻿using Blog.Infrastructure;
-using Blog.Utils;
 using MediatR;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Blog.Services.DraftDeleteCommand
 {
-   public class Handler : RequestHandler<DraftDeleteCommand>
+   public class Handler : AsyncRequestHandler<DraftDeleteCommand>
    {
       public Handler(BlogContext context, ImageContext imageContext)
       {
@@ -15,12 +16,12 @@ namespace Blog.Services.DraftDeleteCommand
       private readonly BlogContext _context;
       private readonly ImageContext _imageContext;
 
-      protected override void Handle(DraftDeleteCommand request)
+      protected override async Task Handle(DraftDeleteCommand request, CancellationToken cancellationToken)
       {
-         var draft = _context.GetDraft(request.Id);
+         var draft = await _context.GetDraft(request.Id);
          _imageContext.Delete(draft.GetImageDirectoryName());
          _context.Drafts.Remove(draft);
-         _context.SaveChanges();
+         await _context.SaveChangesAsync();
       }
    }
 }

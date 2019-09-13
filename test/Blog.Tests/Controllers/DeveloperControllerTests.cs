@@ -126,13 +126,13 @@ namespace Blog.Tests.Controllers
 
             var dic = new Dictionary<string, object>
             {
-               { "Skills", new[] {"'Skills' must not be empty."}},
-               { "Summary", new[] {"'Summary' must not be empty."}},
-               { "Experiences[0].Company", new[] {"'Company' must not be empty."}},
-               { "Experiences[0].Content", new[] {"'Content' must not be empty."}},
-               { "Experiences[0].EndDate", new[] {"Date string is invalid"}},
-               { "Experiences[0].Position", new[] {"'Position' must not be empty."}},
-               { "Experiences[0].StartDate", new[] {"Date string is invalid"}},
+               { "Skills", new[] {"The Skills field is required."}},
+               { "Summary", new[] {"The Summary field is required."}},
+               { "Experiences[0].Company", new[] {"The Company field is required."}},
+               { "Experiences[0].Content", new[] {"The Content field is required."}},
+               { "Experiences[0].EndDate", new[] {"The EndDate field is required."}},
+               { "Experiences[0].Position", new[] {"The Position field is required."}},
+               { "Experiences[0].StartDate", new[] {"The StartDate field is required."}},
             };
 
             result.Should().BeEquivalentTo(JsonConvert.SerializeObject(dic));

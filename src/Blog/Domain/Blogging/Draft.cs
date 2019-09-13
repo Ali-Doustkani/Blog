@@ -3,6 +3,7 @@ using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Blog.Domain.Blogging
 {
@@ -77,7 +78,7 @@ namespace Blog.Domain.Blogging
          return SlugifyTitle();
       }
 
-      public CommandResult Publish(IDateProvider dateProvider, IHtmlProcessor processor)
+      public async Task<CommandResult> Publish(IDateProvider dateProvider, IHtmlProcessor processor)
       {
          var errors = new ErrorManager()
             .Required(Title, "Title")
@@ -102,7 +103,7 @@ namespace Blog.Domain.Blogging
                    Summary,
                    Tags,
                    GetImageDirectoryName(),
-                   processor.Process(Content));
+                   await processor.ProcessAsync(Content));
          }
          catch (ServiceDependencyException exc)
          {

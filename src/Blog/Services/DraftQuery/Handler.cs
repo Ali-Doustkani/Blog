@@ -1,17 +1,20 @@
 ﻿using Blog.Infrastructure;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Blog.Services.DraftQuery
 {
-   public class Handler : RequestHandler<DraftQuery, DraftSaveCommand.DraftSaveCommand>
+   public class Handler : IRequestHandler<DraftQuery, DraftSaveCommand.DraftSaveCommand>
    {
       public Handler(BlogContext context) =>
          _context = context;
 
       private readonly BlogContext _context;
 
-      protected override DraftSaveCommand.DraftSaveCommand Handle(DraftQuery request) =>
+      public Task<DraftSaveCommand.DraftSaveCommand> Handle(DraftQuery request, CancellationToken cancellationToken) =>
          _context
          .Drafts
          .Select(x => new DraftSaveCommand.DraftSaveCommand
@@ -25,6 +28,6 @@ namespace Blog.Services.DraftQuery
             Tags = x.Tags,
             Title = x.Title
          })
-         .Single(x => x.Id == request.Id);
+         .SingleAsync(x => x.Id == request.Id);
    }
 }

@@ -3,10 +3,12 @@ using Blog.Services.PostQuery;
 using Blog.Domain;
 using Blog.Domain.Blogging;
 using MediatR;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Blog.Services.DraftPreviewQuery
 {
-   public class Handler : RequestHandler<DraftPreviewQuery, Result>
+   public class Handler : IRequestHandler<DraftPreviewQuery, Result>
    {
       public Handler(IDateProvider dateProvider, IHtmlProcessor htmlProcessor, IMapper mapper)
       {
@@ -19,7 +21,7 @@ namespace Blog.Services.DraftPreviewQuery
       private readonly IHtmlProcessor _htmlProcessor;
       private readonly IMapper _mapper;
 
-      protected override Result Handle(DraftPreviewQuery request)
+      public async Task<Result> Handle(DraftPreviewQuery request, CancellationToken cancellationToken)
       {
          var draft = new Draft();
          var updateInfo = _mapper.Map<DraftUpdateCommand>(request);
@@ -28,7 +30,7 @@ namespace Blog.Services.DraftPreviewQuery
          if (updateResult.Failed)
             return Result.MakeFailure(updateResult);
 
-         var publishResult = draft.Publish(_dateProvider, _htmlProcessor);
+         var publishResult = await draft.Publish(_dateProvider, _htmlProcessor);
          if (publishResult.Failed)
             return Result.MakeFailure(publishResult);
 

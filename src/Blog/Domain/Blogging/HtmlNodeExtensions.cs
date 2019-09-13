@@ -1,6 +1,7 @@
 ﻿using HtmlAgilityPack;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Blog.Domain.Blogging
 {
@@ -40,6 +41,16 @@ namespace Blog.Domain.Blogging
          while (node != null)
          {
             action(node);
+            node = node.NextSibling;
+         }
+      }
+
+      public static async Task ForEachChildAsync(this HtmlNode element, Func<HtmlNode, Task> action)
+      {
+         var node = element.FirstChild;
+         while (node != null)
+         {
+            await action(node);
             node = node.NextSibling;
          }
       }

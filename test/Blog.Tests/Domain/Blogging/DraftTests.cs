@@ -4,6 +4,7 @@ using FluentAssertions;
 using NSubstitute;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Blog.Tests.Domain
@@ -13,7 +14,7 @@ namespace Blog.Tests.Domain
       public DraftTests()
       {
          _htmlProcesssor = Substitute.For<IHtmlProcessor>(); ;
-         _htmlProcesssor.Process(Arg.Any<string>()).Returns(x => x[0]);
+         _htmlProcesssor.ProcessAsync(Arg.Any<string>()).Returns(x => Task.FromResult((string)x[0]));
          _dateProvider = Substitute.For<IDateProvider>();
       }
 
@@ -21,28 +22,26 @@ namespace Blog.Tests.Domain
       private IDateProvider _dateProvider;
 
       [Fact]
-      public void Farsi_posts_should_be_slugified_to_english_url()
+      public async Task Farsi_posts_should_be_slugified_to_english_url()
       {
          var draft = new Draft(0, "the post", "the-url", Language.Farsi, "learn js", "js", "<p>text</p>");
-         draft.Publish(_dateProvider, _htmlProcesssor);
+         await draft.Publish(_dateProvider, _htmlProcesssor);
          draft.Post.Url.Should().Be("the-url");
       }
 
       [Fact]
-      public void Throw_if_english_url_is_not_available_for_farsi_posts()
+      public async Task Throw_if_english_url_is_not_available_for_farsi_posts()
       {
-         new Draft(0, "the post", null, Language.Farsi, "learn js", "js", "<p>text</p>")
-            .Publish(_dateProvider, _htmlProcesssor)
-            .Errors
-            .Should()
-            .ContainEquivalentOf("EnglishUrl is required for Farsi posts");
+         var draft = new Draft(0, "the post", null, Language.Farsi, "learn js", "js", "<p>text</p>");
+         var result = await draft.Publish(_dateProvider, _htmlProcesssor);
+         result.Errors.Should().ContainEquivalentOf("EnglishUrl is required for Farsi posts");
       }
 
       [Fact]
-      public void Use_english_url_for_english_posts_if_available()
+      public async Task Use_english_url_for_english_posts_if_available()
       {
          var draft = new Draft(0, "the post", "the-url", Language.English, "learn js", "js", "<p>text</p>");
-         draft.Publish(_dateProvider, _htmlProcesssor);
+         await draft.Publish(_dateProvider, _htmlProcesssor);
          draft.Post.Url.Should().Be("the-url");
       }
 
@@ -51,10 +50,10 @@ namespace Blog.Tests.Domain
       [InlineData("js      intro", "js-intro")]
       [InlineData("learn: ASP.NET Core", "learn-aspnet-core")]
       [InlineData("LEARN JS", "learn-js")]
-      public void Slugify(string title, string result)
+      public async Task Slugify(string title, string result)
       {
          var draft = new Draft(0, title, null, Language.English, "learn js", "js", "<p>text</p>");
-         draft.Publish(_dateProvider, _htmlProcesssor);
+         await draft.Publish(_dateProvider, _htmlProcesssor);
          draft.Post.Url.Should().Be(result);
       }
 
@@ -62,97 +61,89 @@ namespace Blog.Tests.Domain
       [InlineData("c# in depth", "csharp-in-depth")]
       [InlineData("Webpack/node.js////react", "webpack-nodejs-react")]
       [InlineData(@"webpack\node.js\\\\\react", "webpack-nodejs-react")]
-      public void Slugify_change_some_characters(string title, string result)
+      public async Task Slugify_change_some_characters(string title, string result)
       {
          var draft = new Draft(0, title, null, Language.English, "learn js", "js", "<p>text</p>");
-         draft.Publish(_dateProvider, _htmlProcesssor);
+         await draft.Publish(_dateProvider, _htmlProcesssor);
          draft.Post.Url.Should().Be(result);
       }
 
       [Fact]
-      public void Dont_publish_when_there_is_no_title()
+      public async Task Dont_publish_when_there_is_no_title()
       {
-         new Draft(0, "", "", Language.English, "read about js", "js", "Learning JS")
-            .Publish(_dateProvider, _htmlProcesssor)
-            .Errors
-            .Should()
-            .ContainEquivalentOf("'Title' is required");
+         var draft = new Draft(0, "", "", Language.English, "read about js", "js", "Learning JS");
+         var result = await draft.Publish(_dateProvider, _htmlProcesssor);
+         result.Errors.Should().ContainEquivalentOf("'Title' is required");
       }
 
       [Fact]
-      public void Dont_publish_when_there_is_no_tag()
+      public async Task Dont_publish_when_there_is_no_tag()
       {
-         new Draft(0, "JS", null, Language.English, "read about js", "", "Learning JS")
-            .Publish(_dateProvider, _htmlProcesssor)
-            .Errors
-            .Should()
-            .ContainEquivalentOf("'Tags' is required");
+         var draft = new Draft(0, "JS", null, Language.English, "read about js", "", "Learning JS");
+         var result = await draft.Publish(_dateProvider, _htmlProcesssor);
+         result.Errors.Should().ContainEquivalentOf("'Tags' is required");
       }
 
       [Fact]
-      public void Dont_publish_when_there_is_no_summary()
+      public async Task Dont_publish_when_there_is_no_summary()
       {
-         new Draft(0, "JS", null, Language.English, "", "js", "Learning JS")
-            .Publish(_dateProvider, _htmlProcesssor)
-            .Errors
-            .Should()
-            .ContainEquivalentOf("'Summary' is required");
+         var draft = new Draft(0, "JS", null, Language.English, "", "js", "Learning JS");
+         var result = await draft.Publish(_dateProvider, _htmlProcesssor);
+         result.Errors.Should().ContainEquivalentOf("'Summary' is required");
       }
 
       [Fact]
-      public void Dont_publish_when_there_is_no_content()
+      public async Task Dont_publish_when_there_is_no_content()
       {
-         new Draft(0, "JS", null, Language.English, "learn js", "js", "")
-            .Publish(_dateProvider, _htmlProcesssor)
-            .Errors
-            .Should()
-            .ContainEquivalentOf("'Content' is required");
+         var draft = new Draft(0, "JS", null, Language.English, "learn js", "js", "");
+         var result = await draft.Publish(_dateProvider, _htmlProcesssor);
+         result.Errors.Should().ContainEquivalentOf("'Content' is required");
       }
 
       [Fact]
-      public void Set_now_as_post_date_when_publishing_for_the_first_time()
+      public async Task Set_now_as_post_date_when_publishing_for_the_first_time()
       {
          var dateProvider = _dateProvider;
          dateProvider.Now.Returns(new DateTime(2019, 8, 27));
          var htmlProcessor = _htmlProcesssor;
-         htmlProcessor.Process(Arg.Any<string>()).Returns("<p>TEXT</p>");
+         htmlProcessor.ProcessAsync(Arg.Any<string>()).Returns("<p>TEXT</p>");
 
          var draft = new Draft(0, "title", null, Language.English, "summary", "tags", "<p>TEXT</p>");
 
-         draft.Publish(dateProvider, htmlProcessor);
+         await draft.Publish(dateProvider, htmlProcessor);
          draft.Post.PublishDate.Should().BeSameDateAs(new DateTime(2019, 8, 27));
 
          dateProvider.Now.Returns(new DateTime(2001, 1, 1));
-         draft.Publish(dateProvider, htmlProcessor);
+         await draft.Publish(dateProvider, htmlProcessor);
          draft.Post.PublishDate.Should().BeSameDateAs(new DateTime(2019, 8, 27));
       }
 
       [Fact]
-      public void Reset_publish_date_after_unpublishing()
+      public async Task Reset_publish_date_after_unpublishing()
       {
          var draft = new Draft(1, "JS", null, Language.English, "learn js", "js", "<p>text</p>");
 
          _dateProvider.Now.Returns(new DateTime(2010, 1, 1));
-         draft.Publish(_dateProvider, _htmlProcesssor);
+         await draft.Publish(_dateProvider, _htmlProcesssor);
          draft.Post.PublishDate.Should().BeSameDateAs(new DateTime(2010, 1, 1));
 
          _dateProvider.Now.Returns(new DateTime(2011, 1, 1));
          draft.Unpublish();
-         draft.Publish(_dateProvider, _htmlProcesssor);
+         await draft.Publish(_dateProvider, _htmlProcesssor);
          draft.Post.PublishDate.Should().BeSameDateAs(new DateTime(2011, 1, 1));
       }
 
       [Fact]
-      public void Remove_post_after_unpublishing()
+      public async Task Remove_post_after_unpublishing()
       {
          var draft = new Draft(1, "JS", null, Language.English, "learn js", "js", "<p>text</p>");
-         draft.Publish(_dateProvider, _htmlProcesssor);
+         await draft.Publish(_dateProvider, _htmlProcesssor);
          draft.Unpublish();
          draft.Post.Should().BeNull();
       }
 
       [Fact]
-      public void Dont_publish_if_language_of_code_block_is_not_specified()
+      public async Task Dont_publish_if_language_of_code_block_is_not_specified()
       {
          var draft = new Draft();
          var command = new DraftUpdateCommand
@@ -164,13 +155,13 @@ namespace Blog.Tests.Domain
             Content = "<pre class=\"code\">some code</code>"
          };
          draft.Update(command);
-         var result = draft.Publish(_dateProvider, _htmlProcesssor);
+         var result = await draft.Publish(_dateProvider, _htmlProcesssor);
          result.Failed.Should().BeTrue();
          result.Errors.Should().ContainEquivalentOf("Language is not specified for the code block #1");
       }
 
       [Fact]
-      public void Publish_if_code_block_is_empty()
+      public async Task Publish_if_code_block_is_empty()
       {
          var draft = new Draft();
          var command = new DraftUpdateCommand
@@ -182,12 +173,12 @@ namespace Blog.Tests.Domain
             Content = "<p>text</p><pre class=\"code\"> </code>"
          };
          draft.Update(command);
-         var result = draft.Publish(_dateProvider, _htmlProcesssor);
+         var result = await draft.Publish(_dateProvider, _htmlProcesssor);
          result.Failed.Should().BeFalse();
       }
 
       [Fact]
-      public void Dont_publish_if_code_block_language_is_invalid()
+      public async Task Dont_publish_if_code_block_language_is_invalid()
       {
          var draft = new Draft();
          var command = new DraftUpdateCommand
@@ -199,7 +190,7 @@ namespace Blog.Tests.Domain
             Content = "<pre class=\"code\">\nclojure\nsome code</code>"
          };
          draft.Update(command);
-         var result = draft.Publish(_dateProvider, _htmlProcesssor);
+         var result = await draft.Publish(_dateProvider, _htmlProcesssor);
          result.Failed.Should().BeTrue();
 
          result.Errors

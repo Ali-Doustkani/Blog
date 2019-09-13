@@ -22,7 +22,7 @@ namespace Blog.Tests.Utils
       public void Create_dir_before_writing_images()
       {
          var images = new ImageCollection(new[] { new Image("a.png", "the-post", new byte[] { 1, 2 }) }, null, "the-post");
-         _ctx.AddOrUpdate(images);
+         _ctx.AddOrUpdateAsync(images);
 
          _fs.log.Should()
             .BeEquivalentTo(new[]
@@ -46,7 +46,7 @@ namespace Blog.Tests.Utils
                 new Image("b.png", "the-post", new byte[] {4,5})
          };
          var imageCollection = new ImageCollection(images, null, "the-post");
-         _ctx.AddOrUpdate(imageCollection);
+         _ctx.AddOrUpdateAsync(imageCollection);
 
          _fs.log.Should()
              .BeEquivalentTo(new[]
@@ -72,7 +72,7 @@ namespace Blog.Tests.Utils
          };
          var imageCollection = new ImageCollection(images, string.Empty, "the-post");
 
-         _ctx.AddOrUpdate(imageCollection);
+         _ctx.AddOrUpdateAsync(imageCollection);
 
          _fs.log.Should()
              .BeEquivalentTo(new[]
@@ -98,7 +98,7 @@ namespace Blog.Tests.Utils
          };
          var imageCollection = new ImageCollection(images, "the-post", "the-post");
 
-         _ctx.AddOrUpdate(imageCollection);
+         _ctx.AddOrUpdateAsync(imageCollection);
 
          _fs.log.Should()
              .BeEquivalentTo(new[]
@@ -121,13 +121,13 @@ namespace Blog.Tests.Utils
       public void Delete_empty_directory_at_the_end()
       {
          _fs.CreateDirectory("wwwroot/images/posts/the-post");
-         _fs.WriteAllBytes("wwwroot/images/posts/the-post/a.png", new byte[] { });
-         _fs.WriteAllBytes("wwwroot/images/posts/the-post/b.png", new byte[] { });
+         _fs.WriteAllBytesAsync("wwwroot/images/posts/the-post/a.png", new byte[] { });
+         _fs.WriteAllBytesAsync("wwwroot/images/posts/the-post/b.png", new byte[] { });
          _fs.log.Clear();
 
          var images = new ImageCollection(Enumerable.Empty<Image>(), "the-post", "the-post");
 
-         _ctx.AddOrUpdate(images);
+         _ctx.AddOrUpdateAsync(images);
 
          _fs.log.Should()
              .BeEquivalentTo(new[]
@@ -150,7 +150,7 @@ namespace Blog.Tests.Utils
          images.Add(new Image("a.png", "the-post"));
          var imageCollection = new ImageCollection(images, "the-post", "new-title");
 
-         _ctx.AddOrUpdate(imageCollection);
+         _ctx.AddOrUpdateAsync(imageCollection);
 
          _fs.log.Should().BeEquivalentTo(new[]
          {
@@ -170,7 +170,7 @@ namespace Blog.Tests.Utils
          images.Add(new Image("a.png", "the-post", new byte[] { 3, 4 }));
          var imageCollection = new ImageCollection(images, "the-post", "the-post");
 
-         _ctx.AddOrUpdate(imageCollection);
+         _ctx.AddOrUpdateAsync(imageCollection);
 
          _fs.log.Should().BeEquivalentTo(new[]
          {
@@ -183,7 +183,7 @@ namespace Blog.Tests.Utils
       {
          var images = new ImageCollection(Enumerable.Empty<Image>(), "the-post", "new-title");
 
-         _ctx.AddOrUpdate(images);
+         _ctx.AddOrUpdateAsync(images);
 
          _fs.log.Should().BeEquivalentTo(new string[] { });
       }

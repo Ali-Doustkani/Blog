@@ -3,11 +3,14 @@ using Blog.Domain;
 using Blog.Domain.Blogging;
 using Blog.Infrastructure;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Blog.Services.DraftSaveCommand
 {
-   public class Handler : RequestHandler<DraftSaveCommand, Result>
+   public class Handler : IRequestHandler<DraftSaveCommand, Result>
    {
       public Handler(BlogContext context,
          ImageContext imageContext,
@@ -28,14 +31,14 @@ namespace Blog.Services.DraftSaveCommand
       private readonly IDateProvider _dateProvider;
       private readonly IHtmlProcessor _htmlProcessor;
 
-      protected override Result Handle(DraftSaveCommand request)
+      public async Task<Result> Handle(DraftSaveCommand request, CancellationToken cancellationToken)
       {
-         if (_context.Drafts.Any(x => x.Id != request.Id && x.Title == request.Title))
+         if (await _context.Drafts.AnyAsync(x => x.Id != request.Id && x.Title == request.Title))
             return Result.MakeFailure($"A draft or post with title '{request.Title}' already exists");
 
          var draft = request.Id == 0
             ? new Draft()
-            : _context.GetDraft(request.Id);
+            : await _context.GetDraft(request.Id);
 
          _context.Update(draft);
 
@@ -44,12 +47,12 @@ namespace Blog.Services.DraftSaveCommand
          if (updateResult.Failed)
             return Result.MakeFailure(updateResult);
 
-         _imageContext.AddOrUpdate(updateResult.Images);
+         await _imageContext.AddOrUpdateAsync(updateResult.Images);
 
          Result ret = Result.MakeSuccess();
          if (request.Publish)
          {
-            var result = draft.Publish(_dateProvider, _htmlProcessor);
+            var result = await draft.Publish(_dateProvider, _htmlProcessor);
             ret = result.Failed
                ? Result.MakeFailure(result)
                : Result.MakeSuccess(draft.Post.Url);
@@ -58,7 +61,7 @@ namespace Blog.Services.DraftSaveCommand
          if (!request.Publish && draft.Post != null)
             draft.Unpublish();
 
-         _context.SaveChanges();
+         await _context.SaveChangesAsync();
          return ret;
       }
    }

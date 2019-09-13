@@ -1,10 +1,8 @@
-﻿using Blog.Domain;
-using Blog.Domain.Blogging;
+﻿using Blog.Domain.Blogging;
 using Blog.Domain.DeveloperStory;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Blog.Infrastructure
@@ -26,17 +24,8 @@ namespace Blog.Infrastructure
          .Include(x => x.Educations)
          .SingleOrDefaultAsync();
 
-      public Draft GetDraft(int id) =>
-         Drafts.Include(x => x.Post).SingleOrDefault(x => x.Id == id);
-
-      public void AddOrUpdate<T>(T entity)
-         where T : DomainEntity
-      {
-         if (Set<T>().Any(x => x.Id == entity.Id))
-            Update(entity);
-         else
-            Set<T>().Add(entity);
-      }
+      public async Task<Draft> GetDraft(int id) =>
+         await Drafts.Include(x => x.Post).SingleOrDefaultAsync(x => x.Id == id);
 
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {

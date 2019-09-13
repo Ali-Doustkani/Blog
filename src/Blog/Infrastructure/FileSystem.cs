@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Blog.Infrastructure
 {
@@ -12,7 +13,7 @@ namespace Blog.Infrastructure
       void RenameDirectory(string oldDir, string newDir);
       string[] GetFiles(string path);
       void DeleteFile(string path);
-      void WriteAllBytes(string path, byte[] data);
+      Task WriteAllBytesAsync(string path, byte[] data);
    }
 
    public class FileSystem : IFileSystem
@@ -48,9 +49,9 @@ namespace Blog.Infrastructure
       public string[] GetFiles(string path) =>
           Directory.GetFiles(path);
 
-      public void WriteAllBytes(string path, byte[] data)
+      public async Task WriteAllBytesAsync(string path, byte[] data)
       {
-         File.WriteAllBytes(path, data);
+         await File.WriteAllBytesAsync(path, data);
          _logger.LogInformation("Write File: {0}, Size: {1}", path, data.Length);
       }
 

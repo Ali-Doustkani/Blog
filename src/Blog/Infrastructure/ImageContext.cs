@@ -3,6 +3,7 @@ using Blog.Domain.Blogging;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Blog.Infrastructure
 {
@@ -15,13 +16,13 @@ namespace Blog.Infrastructure
 
       private readonly IFileSystem _fs;
 
-      public void AddOrUpdate(ImageCollection images)
+      public async Task AddOrUpdateAsync(ImageCollection images)
       {
          Assert.NotNull(images);
          RenameDirectory(images.OldDirectory, images.NewDirectory);
          var dir = GetDirectory(images.NewDirectory);
          CreteDirectory(dir, images.Images);
-         WriteImages(dir, images.Images);
+         await WriteImages(dir, images.Images);
          DeleteOrphanFiles(dir, images.Images);
       }
 
@@ -38,12 +39,12 @@ namespace Blog.Infrastructure
             _fs.CreateDirectory(dir);
       }
 
-      private void WriteImages(string dir, IEnumerable<Image> images)
+      private async Task WriteImages(string dir, IEnumerable<Image> images)
       {
          foreach (var image in images)
          {
             if (!image.IsFile)
-               _fs.WriteAllBytes(Path.Combine(dir, image.Filename), image.Data);
+               await _fs.WriteAllBytesAsync(Path.Combine(dir, image.Filename), image.Data);
          }
       }
 

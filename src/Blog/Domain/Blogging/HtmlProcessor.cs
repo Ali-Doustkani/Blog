@@ -4,13 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Blog.Domain.Blogging
 {
    public interface IHtmlProcessor
    {
       /// <exception cref="ServiceDependencyException"/>
-      string Process(string rawContent);
+      Task<string> ProcessAsync(string rawContent);
    }
 
    public class HtmlProcessor : IHtmlProcessor
@@ -23,32 +24,35 @@ namespace Blog.Domain.Blogging
 
       private readonly ICodeFormatter _codeFormatter;
       private readonly IImageProcessor _imageProcessor;
+      private StringBuilder _display;
 
-      public string Process(string rawContent)
+      public async Task<string> ProcessAsync(string rawContent)
       {
-         var display = new StringBuilder(1000);
+         _display = new StringBuilder(1000);
          var doc = new HtmlDocument();
          doc.LoadHtml(rawContent);
-         doc.DocumentNode.ForEachChild(node =>
+         await doc.DocumentNode.ForEachChildAsync(async node =>
          {
             if (node.Is("pre.code"))
-               display.Append(Code(node));
+               _display.Append(Code(node));
             else if (node.Is("pre.terminal"))
-               display.Append(node.El("div.cmd>pre"));
+               _display.Append(node.El("div.cmd>pre"));
             else if (node.Is("div.note"))
-               display.Append(node.El("div.box-wrapper>span.note"));
+               _display.Append(node.El("div.box-wrapper>span.note"));
             else if (node.Is("div.warning"))
-               display.Append(node.El("div.box-wrapper>span.warning"));
+               _display.Append(node.El("div.box-wrapper>span.warning"));
             else if (node.Is("ul") || node.Is("ol"))
-               display.Append(node.ElChildren());
+               _display.Append(node.ElChildren());
             else if (node.Is("figure"))
-               display.Append(Figure(node));
+               _display.Append(await FigureAsync(node));
             else
-               display.Append(node.El());
+               _display.Append(node.El());
          });
 
-         return display.ToString();
+         return _display.ToString();
       }
+
+
 
       private string Code(HtmlNode node)
       {
@@ -103,7 +107,7 @@ namespace Blog.Domain.Blogging
       private string GetCode(string plain) =>
           HtmlEntity.DeEntitize(plain.Substring(plain.IndexOf(Environment.NewLine)).Trim());
 
-      private string Figure(HtmlNode node)
+      private async Task<string> FigureAsync(HtmlNode node)
       {
          var img = node.Child("img");
          if (Image.IsDataUrl(img.Attr("src")))
@@ -112,7 +116,7 @@ namespace Blog.Domain.Blogging
          var src = img.Attr("src");
          img.Attributes.RemoveAll();
          img.SetAttributeValue("class", "lazyload lazyloading");
-         img.SetAttributeValue("src", _imageProcessor.Minimize(src));
+         img.SetAttributeValue("src", await _imageProcessor.Minimize(src));
          img.SetAttributeValue("data-src", src);
 
          var caption = node.Child("figcaption");

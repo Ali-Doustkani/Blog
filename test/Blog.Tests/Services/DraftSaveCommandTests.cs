@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using Blog.Domain;
 using Blog.Domain.Blogging;
 using Blog.Services.DraftSaveCommand;
@@ -378,7 +379,7 @@ namespace Blog.Tests.CQ
       public async Task If_publishing_failed_save_the_draft_anyway()
       {
          _imageProcessor.Minimize(Arg.Any<string>())
-            .Returns(x => throw new ServiceDependencyException("reason", new Exception()));
+            .Throws(new ServiceDependencyException("reason", new Exception()));
 
          var result = await _handler.Handle(new DraftSaveCommand
          {

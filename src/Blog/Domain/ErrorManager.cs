@@ -7,33 +7,12 @@ namespace Blog.Domain
 {
    public class ErrorManager
    {
-      private ErrorManager(List<string> errors)
-      {
-         _errors = errors;
-         _chained = true;
-      }
-
       public ErrorManager()
       {
          _errors = new List<string>();
-         _chained = false;
       }
 
       private readonly List<string> _errors;
-      private readonly bool _chained;
-
-      public ErrorManager ContinueIfClean
-      {
-         get { return new ErrorManager(_errors); }
-      }
-
-      private ErrorManager Run(Action action)
-      {
-         if (_chained && _errors.Any())
-            return this;
-         action();
-         return this;
-      }
 
       public ErrorManager Conditional(Action<ErrorManager> conditional, Action<ErrorManager> then)
       {

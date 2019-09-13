@@ -3,6 +3,7 @@ using Blog.Utils;
 using FluentAssertions;
 using NSubstitute;
 using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Blog.Tests.Domain.Blogging
@@ -13,7 +14,7 @@ namespace Blog.Tests.Domain.Blogging
       private ICodeFormatter _codeFormatter;
       private IImageProcessor _imageProcessor;
 
-      private string Publish(string html)
+      private async Task<string> Publish(string html)
       {
          _codeFormatter = Substitute.For<ICodeFormatter>();
          _codeFormatter.Format(Arg.Any<string>(), Arg.Any<string>()).Returns(x => x[1]);
@@ -24,43 +25,43 @@ namespace Blog.Tests.Domain.Blogging
          _processor = new HtmlProcessor(_codeFormatter, _imageProcessor);
          var renderer = new ImageRenderer("the-post");
          var result = renderer.Render(html);
-         return _processor.Process(result.Html);
+         return await _processor.ProcessAsync(result.Html);
       }
 
-      private string Publish(params string[] htmlLines) =>
-         Publish(htmlLines.JoinLines());
+      private async Task<string> Publish(params string[] htmlLines) =>
+         await Publish(htmlLines.JoinLines());
 
       [Fact]
-      public void Return_the_same_for_not_known_elements() =>
-          Publish("<span contenteditable=\"true\">TEXT</span><h3>H3</h3><h4>H4</h4>")
+      public async Task Return_the_same_for_not_known_elements() =>
+          (await Publish("<span contenteditable=\"true\">TEXT</span><h3>H3</h3><h4>H4</h4>"))
           .Should()
           .Be("<span>TEXT</span><h3>H3</h3><h4>H4</h4>");
 
       [Fact]
-      public void Delete_empty_paragraphs() =>
-          Publish("<p>1</p><p> </p><p>2</p>")
+      public async Task Delete_empty_paragraphs() =>
+          (await Publish("<p>1</p><p> </p><p>2</p>"))
           .Should()
           .Be("<p>1</p><p>2</p>");
 
       [Fact]
-      public void Remove_empty_spaces() =>
-          Publish("<p> Hello </p>")
+      public async Task Remove_empty_spaces() =>
+          (await Publish("<p> Hello </p>"))
           .Should()
           .Be("<p>Hello</p>");
 
       [Fact]
-      public void Wrap_codes() =>
-           Publish("<pre class=\"code\">", "csharp, no-line-number", "<b>CODE</b></pre>")
+      public async Task Wrap_codes() =>
+           (await Publish("<pre class=\"code\">", "csharp, no-line-number", "<b>CODE</b></pre>"))
           .Should()
           .Be("<div class=\"code\"><pre><b>CODE</b></pre></div>");
 
       [Fact]
-      public void Format_code()
+      public async Task Format_code()
       {
-         Publish(
+         (await Publish(
             "<pre class=\"code\">js, no-line-number",
             "var a = 1;",
-            "var b = 2;</pre>")
+            "var b = 2;</pre>"))
          .Should()
          .BeLines(
             "<div class=\"code\"><pre>var a = 1;",
@@ -72,11 +73,11 @@ namespace Blog.Tests.Domain.Blogging
       }
 
       [Fact]
-      public void Set_line_numbers() =>
-         Publish(
+      public async Task Set_line_numbers() =>
+         (await Publish(
             "<pre class=\"code\">csharp",
             "var a = 12;",
-            "var b = 13;</pre>")
+            "var b = 13;</pre>"))
          .Should()
          .BeLines(
             "<div class=\"code\"><pre><table><tr><td>1",
@@ -84,11 +85,11 @@ namespace Blog.Tests.Domain.Blogging
             "var b = 13;</td></tr></table></pre></div>");
 
       [Fact]
-      public void Highlight_marked_lines_with_line_numbers() =>
-         Publish(
+      public async Task Highlight_marked_lines_with_line_numbers() =>
+         (await Publish(
             "<pre class=\"code\">csharp",
             "var a = 12; #hl",
-            "var b = 13;</pre>")
+            "var b = 13;</pre>"))
          .Should()
          .BeLines(
             "<div class=\"code\"><pre><table><tr><td><span class=\"highlight\">1</span>",
@@ -96,73 +97,73 @@ namespace Blog.Tests.Domain.Blogging
             "var b = 13;</td></tr></table></pre></div>");
 
       [Fact]
-      public void Highlight_html() =>
-         Publish("<pre class=\"code\">html, no-line-number", "<div>TEXT</div> #hl</pre>")
+      public async Task Highlight_html() =>
+         (await Publish("<pre class=\"code\">html, no-line-number", "<div>TEXT</div> #hl</pre>"))
             .Should()
             .Be("<div class=\"code\"><pre><span class=\"highlight\"><div>TEXT</div></span></pre></div>");
 
       [Fact]
-      public void Hightlight_marked_lines_without_line_numbers() =>
-         Publish(
+      public async Task Hightlight_marked_lines_without_line_numbers() =>
+         (await Publish(
             "<pre class=\"code\">csharp, no-line-number",
             "var a = 12; #hl",
-            "var b = 13;</pre>")
+            "var b = 13;</pre>"))
          .Should()
          .BeLines(
             "<div class=\"code\"><pre><span class=\"highlight\">var a = 12;</span>",
             "var b = 13;</pre></div>");
 
       [Fact]
-      public void Wrap_terminals() =>
-          Publish("<pre class=\"terminal\"><b>CMD</b></pre>")
+      public async Task Wrap_terminals() =>
+          (await Publish("<pre class=\"terminal\"><b>CMD</b></pre>"))
           .Should()
           .Be("<div class=\"cmd\"><pre><b>CMD</b></pre></div>");
 
       [Fact]
-      public void Wrap_notes() =>
-          Publish("<div class=\"note\"><b>NOTE</b></div>")
+      public async Task Wrap_notes() =>
+          (await Publish("<div class=\"note\"><b>NOTE</b></div>"))
           .Should()
           .Be("<div class=\"box-wrapper\"><span class=\"note\"><b>NOTE</b></span></div>");
 
       [Fact]
-      public void Wrap_warnings() =>
-          Publish("<div class=\"warning\"><b>WARN</b></div>")
+      public async Task Wrap_warnings() =>
+          (await Publish("<div class=\"warning\"><b>WARN</b></div>"))
           .Should()
           .Be("<div class=\"box-wrapper\"><span class=\"warning\"><b>WARN</b></span></div>");
 
       [Fact]
-      public void Unordered_lists() =>
-          Publish("<ul><li contenteditable=\"true\">I1</li><li contenteditable=\"true\"><b>I2</b></li></ul>")
+      public async Task Unordered_lists() =>
+          (await Publish("<ul><li contenteditable=\"true\">I1</li><li contenteditable=\"true\"><b>I2</b></li></ul>"))
           .Should()
           .Be("<ul><li>I1</li><li><b>I2</b></li></ul>");
 
       [Fact]
-      public void Ordered_lists() =>
-          Publish("<ol><li contenteditable=\"true\">I1</li><li contenteditable=\"true\"><b>I2</b></li></ol>")
+      public async Task Ordered_lists() =>
+          (await Publish("<ol><li contenteditable=\"true\">I1</li><li contenteditable=\"true\"><b>I2</b></li></ol>"))
           .Should()
           .Be("<ol><li>I1</li><li><b>I2</b></li></ol>");
 
       [Fact]
-      public void Dont_touch_insiders() =>
-          Publish("<p contenteditable=\"true\"><strong>Hello</strong>World</p>")
+      public async Task Dont_touch_insiders() =>
+          (await Publish("<p contenteditable=\"true\"><strong>Hello</strong>World</p>"))
           .Should()
           .Be("<p><strong>Hello</strong>World</p>");
 
       [Fact]
-      public void Set_img_attributes() =>
-          Publish("<figure><button>Remove</button><img data-filename=\"pic.png\" src=\"data:image/png;base64,DATA\"><figcaption contenteditable=\"true\">CAP</figcaption></figure>")
+      public async Task Set_img_attributes() =>
+          (await Publish("<figure><button>Remove</button><img data-filename=\"pic.png\" src=\"data:image/png;base64,DATA\"><figcaption contenteditable=\"true\">CAP</figcaption></figure>"))
           .Should()
           .BePath("<figure><img class=\"lazyload lazyloading\" src=\"minImage\" data-src=\"/images/posts/the-post/pic.png\" alt=\"CAP\"><figcaption>CAP</figcaption></figure>");
 
       [Fact]
-      public void Figures_without_captions() =>
-          Publish("<figure><img data-filename=\"pic.jpeg\" src=\"data:image/jpeg;base64,DATA\"></figure>")
+      public async Task Figures_without_captions() =>
+          (await Publish("<figure><img data-filename=\"pic.jpeg\" src=\"data:image/jpeg;base64,DATA\"></figure>"))
           .Should()
           .BePath("<figure><img class=\"lazyload lazyloading\" src=\"minImage\" data-src=\"/images/posts/the-post/pic.jpeg\"></figure>");
 
       [Fact]
-      public void Figures_with_empty_captions() =>
-          Publish("<figure><img data-filename=\"pic.jpeg\" src=\"data:image/jpeg;base64,DATA\"><figcaption></figcaption></figure>")
+      public async Task Figures_with_empty_captions() =>
+          (await Publish("<figure><img data-filename=\"pic.jpeg\" src=\"data:image/jpeg;base64,DATA\"><figcaption></figcaption></figure>"))
           .Should()
           .BePath("<figure><img class=\"lazyload lazyloading\" src=\"minImage\" data-src=\"/images/posts/the-post/pic.jpeg\"></figure>");
    }

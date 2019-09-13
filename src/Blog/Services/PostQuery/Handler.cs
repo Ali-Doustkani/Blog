@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using Blog.Infrastructure;
 using MediatR;
-using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Blog.Services.PostQuery
 {
-   public class Handler : RequestHandler<PostQuery, PostViewModel>
+   public class Handler : IRequestHandler<PostQuery, PostViewModel>
    {
       public Handler(BlogContext context, IMapper mapper)
       {
@@ -16,9 +18,9 @@ namespace Blog.Services.PostQuery
       private readonly BlogContext _context;
       private readonly IMapper _mapper;
 
-      protected override PostViewModel Handle(PostQuery request) =>
-         _mapper.Map<PostViewModel>(_context
-                .Posts
-                .SingleOrDefault(x => x.Url == request.PostUrl));
+      public async Task<PostViewModel> Handle(PostQuery request, CancellationToken cancellationToken) =>
+         _mapper.Map<PostViewModel>(await _context
+            .Posts
+            .SingleOrDefaultAsync(x => x.Url == request.PostUrl));
    }
 }

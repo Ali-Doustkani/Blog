@@ -48,6 +48,7 @@ namespace Blog
          {
             cfg.Filters.Add<MigrationFilter>();
          });
+         services.AddHttpClient();
          services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<BlogContext>();
          services.AddAutoMapper(GetType().Assembly);
          services.AddTransient<IHtmlProcessor, HtmlProcessor>();
