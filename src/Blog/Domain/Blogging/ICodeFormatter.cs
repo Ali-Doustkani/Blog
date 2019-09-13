@@ -1,4 +1,6 @@
-﻿namespace Blog.Domain.Blogging
+﻿using System.Threading.Tasks;
+
+namespace Blog.Domain.Blogging
 {
    public interface ICodeFormatter
    {
@@ -7,6 +9,6 @@
       /// </summary>
       /// <returns>HTML of beautified code</returns>
       /// <exception cref="ServiceDependencyException">If anything happens during formatting.</exception>
-      string Format(string language, string code);
+      Task<string> FormatAsync(string language, string code);
    }
 }

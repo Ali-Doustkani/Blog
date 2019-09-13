@@ -17,7 +17,7 @@ namespace Blog.Tests.Domain.Blogging
       private async Task<string> Publish(string html)
       {
          _codeFormatter = Substitute.For<ICodeFormatter>();
-         _codeFormatter.Format(Arg.Any<string>(), Arg.Any<string>()).Returns(x => x[1]);
+         _codeFormatter.FormatAsync(Arg.Any<string>(), Arg.Any<string>()).Returns(x => Task.FromResult((string)x[1]));
 
          _imageProcessor = Substitute.For<IImageProcessor>();
          _imageProcessor.Minimize(Arg.Any<string>()).Returns("minImage");
@@ -67,9 +67,9 @@ namespace Blog.Tests.Domain.Blogging
             "<div class=\"code\"><pre>var a = 1;",
             "var b = 2;</pre></div>");
 
-         _codeFormatter
+         await _codeFormatter
             .Received()
-            .Format("js", string.Join(Environment.NewLine, "var a = 1;", "var b = 2;"));
+            .FormatAsync("js", string.Join(Environment.NewLine, "var a = 1;", "var b = 2;"));
       }
 
       [Fact]

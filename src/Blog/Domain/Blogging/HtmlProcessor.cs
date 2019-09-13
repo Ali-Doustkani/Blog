@@ -34,7 +34,7 @@ namespace Blog.Domain.Blogging
          await doc.DocumentNode.ForEachChildAsync(async node =>
          {
             if (node.Is("pre.code"))
-               _display.Append(Code(node));
+               _display.Append(await Code(node));
             else if (node.Is("pre.terminal"))
                _display.Append(node.El("div.cmd>pre"));
             else if (node.Is("div.note"))
@@ -54,11 +54,11 @@ namespace Blog.Domain.Blogging
 
 
 
-      private string Code(HtmlNode node)
+      private async Task<string> Code(HtmlNode node)
       {
          var plain = node.InnerHtml.Trim();
          var highlightedLines = GetHighlightedLines(GetCode(plain));
-         var formattedCode = _codeFormatter.Format(
+         var formattedCode = await _codeFormatter.FormatAsync(
             GetLanguage(plain),
             GetCode(plain).ReplaceWithPattern(@"\s*#hl", string.Empty));
 

@@ -34,13 +34,15 @@ namespace Blog.Infrastructure
          try
          {
             var req = _httpContextAccessor.HttpContext.Request;
-            var client = _httpClientFactory.CreateClient();
-            var url = $"https://{_token}.cloudimg.io/width/25/none/{req.Scheme}://{req.Host.Host}:{req.Host.Port}{originalImage}";
-            _logger.LogInformation("Start Processing Image: {0}", url);
-            var result = await client.GetAsync(url);
-            result.EnsureSuccessStatusCode();
-            var base64 = Convert.ToBase64String(await result.Content.ReadAsByteArrayAsync());
-            return DataUrl(originalImage, base64);
+            using (var client = _httpClientFactory.CreateClient())
+            {
+               var url = $"https://{_token}.cloudimg.io/width/25/none/{req.Scheme}://{req.Host.Host}:{req.Host.Port}{originalImage}";
+               _logger.LogInformation("Start Processing Image: {0}", url);
+               var result = await client.GetAsync(url);
+               result.EnsureSuccessStatusCode();
+               var base64 = Convert.ToBase64String(await result.Content.ReadAsByteArrayAsync());
+               return DataUrl(originalImage, base64);
+            }
          }
          catch (Exception ex)
          {

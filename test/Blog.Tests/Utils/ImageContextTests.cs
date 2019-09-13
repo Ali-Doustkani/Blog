@@ -3,6 +3,7 @@ using Blog.Infrastructure;
 using FluentAssertions;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Blog.Tests.Utils
@@ -19,10 +20,10 @@ namespace Blog.Tests.Utils
       private readonly MockFileSystem _fs;
 
       [Fact]
-      public void Create_dir_before_writing_images()
+      public async Task Create_dir_before_writing_images()
       {
          var images = new ImageCollection(new[] { new Image("a.png", "the-post", new byte[] { 1, 2 }) }, null, "the-post");
-         _ctx.AddOrUpdateAsync(images);
+         await _ctx.AddOrUpdateAsync(images);
 
          _fs.log.Should()
             .BeEquivalentTo(new[]
@@ -33,7 +34,7 @@ namespace Blog.Tests.Utils
       }
 
       [Fact]
-      public void Write_image_files()
+      public async Task Write_image_files()
       {
          _fs.CreateDirectory("wwwroot/images/posts/the-post");
          _fs.WriteFile("wwwroot/images/posts/the-post/a.png");
@@ -46,7 +47,7 @@ namespace Blog.Tests.Utils
                 new Image("b.png", "the-post", new byte[] {4,5})
          };
          var imageCollection = new ImageCollection(images, null, "the-post");
-         _ctx.AddOrUpdateAsync(imageCollection);
+         await _ctx.AddOrUpdateAsync(imageCollection);
 
          _fs.log.Should()
              .BeEquivalentTo(new[]
@@ -58,7 +59,7 @@ namespace Blog.Tests.Utils
       }
 
       [Fact]
-      public void Ignore_written_files()
+      public async Task Ignore_written_files()
       {
          _fs.CreateDirectory("wwwroot/images/posts/the-post");
          _fs.WriteFile("wwwroot/images/posts/the-post/a.png");
@@ -72,7 +73,7 @@ namespace Blog.Tests.Utils
          };
          var imageCollection = new ImageCollection(images, string.Empty, "the-post");
 
-         _ctx.AddOrUpdateAsync(imageCollection);
+         await _ctx.AddOrUpdateAsync(imageCollection);
 
          _fs.log.Should()
              .BeEquivalentTo(new[]
@@ -83,7 +84,7 @@ namespace Blog.Tests.Utils
       }
 
       [Fact]
-      public void Delete_orphan_files()
+      public async Task Delete_orphan_files()
       {
          _fs.CreateDirectory("wwwroot/images/posts/the-post");
          _fs.WriteFile("wwwroot/images/posts/the-post/a.png");
@@ -98,7 +99,7 @@ namespace Blog.Tests.Utils
          };
          var imageCollection = new ImageCollection(images, "the-post", "the-post");
 
-         _ctx.AddOrUpdateAsync(imageCollection);
+         await _ctx.AddOrUpdateAsync(imageCollection);
 
          _fs.log.Should()
              .BeEquivalentTo(new[]
@@ -118,16 +119,16 @@ namespace Blog.Tests.Utils
       }
 
       [Fact]
-      public void Delete_empty_directory_at_the_end()
+      public async Task Delete_empty_directory_at_the_end()
       {
          _fs.CreateDirectory("wwwroot/images/posts/the-post");
-         _fs.WriteAllBytesAsync("wwwroot/images/posts/the-post/a.png", new byte[] { });
-         _fs.WriteAllBytesAsync("wwwroot/images/posts/the-post/b.png", new byte[] { });
+         await _fs.WriteAllBytesAsync("wwwroot/images/posts/the-post/a.png", new byte[] { });
+         await _fs.WriteAllBytesAsync("wwwroot/images/posts/the-post/b.png", new byte[] { });
          _fs.log.Clear();
 
          var images = new ImageCollection(Enumerable.Empty<Image>(), "the-post", "the-post");
 
-         _ctx.AddOrUpdateAsync(images);
+         await _ctx.AddOrUpdateAsync(images);
 
          _fs.log.Should()
              .BeEquivalentTo(new[]
@@ -140,17 +141,19 @@ namespace Blog.Tests.Utils
       }
 
       [Fact]
-      public void Rename_post_directory_name()
+      public async Task Rename_post_directory_name()
       {
          _fs.CreateDirectory("wwwroot/images/posts/the-post");
          _fs.WriteFile("wwwroot/images/posts/the-post/a.png");
          _fs.log.Clear();
 
-         var images = new List<Image>();
-         images.Add(new Image("a.png", "the-post"));
+         var images = new List<Image>
+         {
+            new Image("a.png", "the-post")
+         };
          var imageCollection = new ImageCollection(images, "the-post", "new-title");
 
-         _ctx.AddOrUpdateAsync(imageCollection);
+         await _ctx.AddOrUpdateAsync(imageCollection);
 
          _fs.log.Should().BeEquivalentTo(new[]
          {
@@ -160,17 +163,19 @@ namespace Blog.Tests.Utils
       }
 
       [Fact]
-      public void Overwrite_files()
+      public async Task Overwrite_files()
       {
          _fs.CreateDirectory("wwwroot/images/posts/the-post");
          _fs.WriteFile("wwwroot/images/posts/the-post/a.png");
          _fs.log.Clear();
 
-         var images = new List<Image>();
-         images.Add(new Image("a.png", "the-post", new byte[] { 3, 4 }));
+         var images = new List<Image>
+         {
+            new Image("a.png", "the-post", new byte[] { 3, 4 })
+         };
          var imageCollection = new ImageCollection(images, "the-post", "the-post");
 
-         _ctx.AddOrUpdateAsync(imageCollection);
+         await _ctx.AddOrUpdateAsync(imageCollection);
 
          _fs.log.Should().BeEquivalentTo(new[]
          {
@@ -179,11 +184,11 @@ namespace Blog.Tests.Utils
       }
 
       [Fact]
-      public void Do_not_rename_not_existing_directories()
+      public async Task Do_not_rename_not_existing_directories()
       {
          var images = new ImageCollection(Enumerable.Empty<Image>(), "the-post", "new-title");
 
-         _ctx.AddOrUpdateAsync(images);
+         await _ctx.AddOrUpdateAsync(images);
 
          _fs.log.Should().BeEquivalentTo(new string[] { });
       }
