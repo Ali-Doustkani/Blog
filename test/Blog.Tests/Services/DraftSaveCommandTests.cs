@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
-using NSubstitute;
-using NSubstitute.ExceptionExtensions;
 using Blog.Domain;
 using Blog.Domain.Blogging;
-using Blog.Services.DraftSaveCommand;
+using Blog.Domain.Blogging.Abstractions;
 using Blog.Infrastructure;
+using Blog.Services.DraftSaveCommand;
 using FluentAssertions;
 using MediatR;
+using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using System;
 using System.Linq;
 using System.Threading.Tasks;

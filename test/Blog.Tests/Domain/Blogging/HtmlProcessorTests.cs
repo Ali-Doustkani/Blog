@@ -1,4 +1,5 @@
 ﻿using Blog.Domain.Blogging;
+using Blog.Domain.Blogging.Abstractions;
 using Blog.Utils;
 using FluentAssertions;
 using NSubstitute;

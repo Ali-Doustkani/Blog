@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Blog.Domain;
 using Blog.Domain.Blogging;
+using Blog.Domain.Blogging.Abstractions;
 using Blog.Services.DraftPreviewQuery;
 using Blog.Services.PostQuery;
 using FluentAssertions;

@@ -1,4 +1,5 @@
-﻿using Blog.Utils;
+﻿using Blog.Domain.Blogging.Abstractions;
+using Blog.Utils;
 using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
@@ -51,8 +52,6 @@ namespace Blog.Domain.Blogging
 
          return _display.ToString();
       }
-
-
 
       private async Task<string> Code(HtmlNode node)
       {

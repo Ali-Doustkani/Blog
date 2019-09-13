@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Blog.Domain.Blogging
+namespace Blog.Domain.Blogging.Abstractions
 {
    public interface IImageProcessor
    {

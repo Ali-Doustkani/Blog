@@ -1,5 +1,5 @@
 ﻿using Blog.Domain;
-using Blog.Domain.Blogging;
+using Blog.Domain.Blogging.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
