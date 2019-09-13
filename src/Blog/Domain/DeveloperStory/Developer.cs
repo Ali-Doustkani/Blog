@@ -8,6 +8,7 @@ namespace Blog.Domain.DeveloperStory
    public class Developer : DomainEntity
    {
       private Developer()
+         : base(0)
       {
          _experiences = new List<Experience>();
          _sideProjects = new List<SideProject>();

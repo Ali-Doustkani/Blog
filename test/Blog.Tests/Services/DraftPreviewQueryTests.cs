@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using Xunit;
 using Handler = Blog.Services.DraftPreviewQuery.Handler;
 
-namespace Blog.Tests.CQ
+namespace Blog.Tests.Services
 {
    public class DraftPreviewQueryTests
    {

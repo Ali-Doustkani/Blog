@@ -7,7 +7,7 @@ namespace Blog.Domain.Blogging
 {
    public class Post : DomainEntity
    {
-      private Post() { }
+      private Post() : base(0) { }
 
       public Post(int id,
          string title,
@@ -17,8 +17,8 @@ namespace Blog.Domain.Blogging
          string tags,
          string url,
          string content)
+         : base(id)
       {
-         Id = id;
          Title = Assert.NotNull(title);
          PublishDate = publishDate;
          Language = language;

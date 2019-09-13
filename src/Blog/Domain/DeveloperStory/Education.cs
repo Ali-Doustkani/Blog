@@ -2,11 +2,11 @@
 {
    public class Education : DomainEntity
    {
-      private Education() { }
+      private Education() : base(0) { }
 
       public Education(int id, string degree, string university, Period period)
+         : base(id)
       {
-         Id = id;
          Degree = Assert.NotNull(degree);
          University = Assert.NotNull(university);
          Period = Assert.NotNull(period);

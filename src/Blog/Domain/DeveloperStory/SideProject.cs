@@ -3,8 +3,8 @@
    public class SideProject : DomainEntity
    {
       public SideProject(int id, string title, string content)
+         : base(id)
       {
-         Id = id;
          Title = Assert.NotNull(title);
          _content = Assert.NotNull(content);
       }

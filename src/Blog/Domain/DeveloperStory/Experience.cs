@@ -2,11 +2,11 @@
 {
    public class Experience : DomainEntity
    {
-      private Experience() { }
+      private Experience() : base(0) { }
 
       public Experience(int id, string company, string position, Period period, string content)
+         : base(id)
       {
-         Id = id;
          Company = Assert.NotNull(company);
          Position = Assert.NotNull(position);
          Period = Assert.NotNull(period);

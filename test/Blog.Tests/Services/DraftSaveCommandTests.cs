@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Blog.Tests.CQ
+namespace Blog.Tests.Services
 {
    public class DraftSaveCommandTests
    {

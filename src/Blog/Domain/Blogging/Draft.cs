@@ -40,11 +40,11 @@ namespace Blog.Domain.Blogging
 
    public class Draft : DomainEntity
    {
-      public Draft() { }
+      public Draft() : base(0) { }
 
       public Draft(int id, string title, string englishUrl, Language language, string summary, string tags, string content)
+         : base(id)
       {
-         Id = id;
          Title = title;
          EnglishUrl = englishUrl;
          Language = language;
@@ -53,7 +53,7 @@ namespace Blog.Domain.Blogging
          Content = content;
       }
 
-      private static string[] languages = new[] { "csharp", "cs", "javascript", "js", "css", "sass", "less", "html", "sql" };
+      private static readonly string[] languages = new[] { "csharp", "cs", "javascript", "js", "css", "sass", "less", "html", "sql" };
 
       private DateTime? _publishDate;
 
