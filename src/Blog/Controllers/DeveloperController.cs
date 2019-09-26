@@ -1,6 +1,7 @@
 ﻿using Blog.Services.DeveloperSaveCommand;
 using Blog.Services.DeveloperSaveQuery;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 namespace Blog.Controllers
 {
    [ApiController]
-   [Authorize]
+   [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
    [Route("/api/developer")]
    public class DeveloperController : ControllerBase
    {

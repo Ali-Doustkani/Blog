@@ -4,7 +4,7 @@ import { InstantMessage, notify } from './components/Notification'
 import { Loader } from 'Controls'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import createAuth0Client from '@auth0/auth0-spa-js'
-import config from './auth_config.json'
+import config from './auth_config'
 
 const DashboardPage = () => (
    <main>
@@ -81,7 +81,7 @@ function App() {
                   </li>
                   <li className="end">
                      <a className="logout" onClick={() => client.logout(config.logout)}>
-                        <i class="fas fa-power-off" />
+                        <i className="fas fa-power-off" />
                      </a>
                   </li>
                </ul>

@@ -40,12 +40,12 @@ namespace Blog
          {
             options.UseSqlServer(_configuration.GetConnectionString("Blog"));
          });
-         services.ConfigureApplicationCookie(op =>
-         {
-            op.SlidingExpiration = false;
-            op.ExpireTimeSpan = TimeSpan.FromDays(30);
-         });
-         services.AddAuthentication(options =>
+      services.ConfigureApplicationCookie(op =>
+      {
+        op.SlidingExpiration = false;
+        op.ExpireTimeSpan = TimeSpan.FromDays(30);
+      });
+      services.AddAuthentication(options =>
          {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -59,7 +59,7 @@ namespace Blog
            cfg.Filters.Add<MigrationFilter>();
          });
          services.AddHttpClient();
-         //services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<BlogContext>();
+         services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<BlogContext>();
          services.AddAutoMapper(GetType().Assembly);
          services.AddTransient<IHtmlProcessor, HtmlProcessor>();
          services.AddTransient<IImageProcessor, CloudImageProcessor>();
@@ -70,7 +70,7 @@ namespace Blog
          services.AddMediatR(GetType().Assembly);
          services.AddSpaStaticFiles(options =>
          {
-            options.RootPath = "../ClientApp/dist";
+            options.RootPath = "wwwroot/admin";
          });
       }
 
