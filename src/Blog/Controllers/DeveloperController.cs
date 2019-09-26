@@ -1,12 +1,14 @@
 ﻿using Blog.Services.DeveloperSaveCommand;
 using Blog.Services.DeveloperSaveQuery;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace Blog.Controllers
 {
    [ApiController]
+   [Authorize]
    [Route("/api/developer")]
    public class DeveloperController : ControllerBase
    {

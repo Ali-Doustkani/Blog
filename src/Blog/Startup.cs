@@ -5,6 +5,7 @@ using Blog.Domain.Blogging.Abstractions;
 using Blog.Infrastructure;
 using Blog.Utils;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -44,12 +45,21 @@ namespace Blog
             op.SlidingExpiration = false;
             op.ExpireTimeSpan = TimeSpan.FromDays(30);
          });
+         services.AddAuthentication(options =>
+         {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+         }).AddJwtBearer(options =>
+         {
+            options.Authority = "https://ali-doustkani.auth0.com/";
+            options.Audience = "http://localhost:5000/api/developer";
+         });
          services.AddMvc(cfg =>
          {
-            cfg.Filters.Add<MigrationFilter>();
+           cfg.Filters.Add<MigrationFilter>();
          });
          services.AddHttpClient();
-         services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<BlogContext>();
+         //services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<BlogContext>();
          services.AddAutoMapper(GetType().Assembly);
          services.AddTransient<IHtmlProcessor, HtmlProcessor>();
          services.AddTransient<IImageProcessor, CloudImageProcessor>();
@@ -89,7 +99,7 @@ namespace Blog
          app.UseSpaStaticFiles();
          app.UseAuthentication();
 
-         app.Map("/admin/developer", clientApp =>
+         app.Map("/newadmin", clientApp =>
          {
             clientApp.UseSpa(spa => { });
          });

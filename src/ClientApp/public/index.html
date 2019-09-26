@@ -15,51 +15,10 @@
          rel="stylesheet"
       />
       <link rel="stylesheet" href="../src/sass/main.scss" />
-      <title>Write about yourself</title>
+      <title>Admin Dashboard</title>
    </head>
    <body>
-      <header>
-         <nav>
-            <ul class="menu-bar">
-               <li><a href="/">Blog</a></li>
-               <li><div class="separator"></div></li>
-               <li><a href="/about">About Me</a></li>
-               <li><div class="separator"></div></li>
-               <li>
-                  <form action="/account/logout" class="logout-form">
-                     <button data-testid="logout-button" class="form-button" type="submit">
-                        Logout
-                     </button>
-                  </form>
-               </li>
-               <li><div class="separator"></div></li>
-               <li><a href="/administrator/index">Posts</a></li>
-               <li><div class="separator"></div></li>
-               <li><a href="/administrator/post">New Post</a></li>
-               <li><div class="separator"></div></li>
-               <li><a href="#">Developer</a></li>
-            </ul>
-            <ul class="menu-bar">
-               <li>
-                  <a href="https://github.com/Ali-Doustkani">
-                     <i class="fab fa-github-square"></i>
-                  </a>
-               </li>
-               <li>
-                  <a href="https://www.linkedin.com/in/ali-doustkani/">
-                     <i class="fab fa-linkedin"></i>
-                  </a>
-               </li>
-               <li>
-                  <a href="https://twitter.com/AliDoustkani">
-                     <i class="fab fa-twitter-square"></i>
-                  </a>
-               </li>
-            </ul>
-         </nav>
-      </header>
-      <main></main>
-      <footer></footer>
-      <script src="../src/app/components/Developer/index.js"></script>
+      <div id="root"></div>
+      <script src="../src/app/index.js"></script>
    </body>
 </html>

@@ -1,10 +1,11 @@
-body {
+#root {
    display: flex;
    flex-direction: column;
    align-items: stretch;
    font-family: 'Roboto Condensed';
    font-size: 13pt;
    background-color: $bg;
+   height: 100%;
 }
 
 main {

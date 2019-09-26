@@ -1,15 +1,21 @@
-﻿body > header {
+﻿header {
    text-align: center;
 
-   nav {
+   ul {
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      margin-top: 10px;
+      margin-top: 20px;
+      margin-left: 20px;
       padding: 0 15px;
       ul {
          margin-right: 20px;
       }
+   }
+
+   .end {
+      margin-left: auto;
+      margin-right: 10px;
    }
 
    img {
@@ -54,6 +60,22 @@
       width: 1px;
       height: 1em;
       display: inline-block;
-      margin: 0 3px;
+      margin: 0 10px;
+   }
+
+   .logout {
+      background: $color2;
+      display: inline-block;
+      cursor: pointer;
+      padding: 10px;
+      border-radius: 10px;
+      margin-left: auto;
+      transition: 0.1s;
+      i {
+         color: white;
+      }
+      &:hover {
+         background: $toast-error;
+      }
    }
 }

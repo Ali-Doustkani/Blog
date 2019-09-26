@@ -24,6 +24,10 @@ const processResponse = async response => {
          return ok()
       case 400:
          return error(await response.json())
+      case 401:
+         return fatal('not authenticated')
+      case 403:
+         return fatal('forbidden')
       case 404:
          return fatal('server not found')
       default:
@@ -31,12 +35,14 @@ const processResponse = async response => {
    }
 }
 
-const getDeveloper = async () => {
+const getDeveloper = async auth0 => {
    try {
+      const token = await auth0.getTokenSilently()
       return await processResponse(
          await fetch(url_developer, {
             headers: {
-               Accept: 'application/json'
+               Accept: 'application/json',
+               Authorization: 'Bearer ' + token
             }
          })
       )
@@ -45,13 +51,15 @@ const getDeveloper = async () => {
    }
 }
 
-const saveDeveloper = async state => {
+const saveDeveloper = async (state, auth0) => {
    try {
+      const token = await auth0.getTokenSilently()
       return await processResponse(
          await fetch(url_developer, {
             method: 'PUT',
             headers: {
-               'Content-Type': 'application/json'
+               'Content-Type': 'application/json',
+               Authorization: 'Bearer ' + token
             },
             body: JSON.stringify(state)
          })

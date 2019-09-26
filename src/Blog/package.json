@@ -5,10 +5,8 @@
   "scripts": {
     "build-styles": "parcel build Views/Site.scss --out-dir wwwroot --out-file site.min.css --no-source-maps",
     "build-js": "parcel build Views/Administrator/Index.js --out-dir wwwroot --out-file admin.min.js && parcel build Views/Administrator/Post.js --out-dir wwwroot --out-file post.min.js",
-    "build-adminfrontend": "cd ../Blog.AdminFrontend && npm run build",
-    "copy-adminfrontend": "cpx \"../Blog.AdminFrontend/dist/*.js\" \"wwwroot\"",
     "copy-assets": "cpx \"Assets/Images/**/*\" \"wwwroot/images\" && cpx \"Assets/*.js\" \"wwwroot\"",
-    "build-assets": "npm run copy-assets && npm run build-styles && npm run build-js && npm run build-adminfrontend && npm run copy-adminfrontend"
+    "build-assets": "npm run copy-assets && npm run build-styles && npm run build-js"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",

@@ -9,7 +9,7 @@ import DisabledContext from 'DisabledContext'
 import { useActions, STATUS } from './actions'
 import { useValidation } from './validation'
 
-const Developer = ({ notify }) => {
+const Developer = ({ notify, auth0 }) => {
    const [state, actions] = useActions()
    const [errors, validate] = useValidation()
 
@@ -19,7 +19,7 @@ const Developer = ({ notify }) => {
 
    async function fetchDeveloper() {
       actions.toLoading()
-      const result = await getDeveloper()
+      const result = await getDeveloper(auth0)
       actions.load(result)
    }
 
@@ -31,7 +31,7 @@ const Developer = ({ notify }) => {
       }
 
       actions.toSaving()
-      const result = await saveDeveloper(state)
+      const result = await saveDeveloper(state, auth0)
       if (result.status === 'ok') {
          actions.updateIds(result.data)
          notify('The developer saved successfully!', 'success')

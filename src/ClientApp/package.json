@@ -38,8 +38,10 @@
    },
    "dependencies": {
       "@alidoustkani/richtext": "^1.0.27",
+      "@auth0/auth0-spa-js": "^1.2.4",
       "react": "^16.8.6",
       "react-dom": "^16.8.6",
+      "react-router-dom": "^5.1.0",
       "uuid": "^3.3.2"
    },
    "browserslist": [
