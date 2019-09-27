@@ -1,141 +1,69 @@
-﻿using FluentAssertions;
+﻿using Blog.Controllers;
+using Blog.Services.DeveloperSaveCommand;
+using Blog.Services.DeveloperSaveQuery;
+using FluentAssertions;
 using FluentAssertions.Json;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using NSubstitute;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace Blog.Tests.Controllers
 {
-   public class DeveloperControllerTests : IClassFixture<ApiTestContext>
+   public class DeveloperControllerTests  
    {
-      public DeveloperControllerTests(ApiTestContext fixture)
+      public DeveloperControllerTests( )
       {
-         fixture.InitializeDatabase();
-         _client = fixture.Client;
+         _mediator = Substitute.For<IMediator>();
+         _controller = new DeveloperController(_mediator);
       }
 
-      private readonly HttpClient _client;
+      private readonly DeveloperController _controller;
+      private readonly IMediator _mediator;
 
       [Fact]
-      public async Task Return_204_when_no_developer_is_available()
+      public async Task Get_returns_204_when_no_developer_is_available()
       {
-         using (var response = await _client.GetAsync("/api/developer"))
-         {
-            response.StatusCode
-               .Should()
-               .Be(HttpStatusCode.NoContent);
-         }
+         var result = await _controller.Get() as StatusCodeResult;
+         result.Should().BeOfType<NoContentResult>();
       }
 
       [Fact]
-      public async Task Return_201_when_new_developer_is_added()
+      public async Task Get_returns_200_when_a_developer_exists()
       {
-         var developer = new
-         {
-            summary = "a web programmer",
-            skills = "C#, HTML",
-            experiences = new[]
-            {
-               new
-               {
-                  id = "a",
-                  company = "parmis",
-                  position = "C# Developer",
-                  startDate = "2010-1-1",
-                  endDate = "2011-1-1",
-                  content = "web development"
-               }
-            }
-         };
-
-         using (var response = await _client.PutAsJsonAsync("/api/developer", developer))
-         {
-            response.StatusCode
-               .Should()
-               .Be(HttpStatusCode.Created);
-         }
+         _mediator.Send(Arg.Any<DeveloperSaveQuery>())
+            .Returns(Task.FromResult(new DeveloperSaveCommand()));
+         var result = await _controller.Get();
+         result.Should().BeOfType<OkObjectResult>();
       }
 
       [Fact]
-      public async Task Return_200_when_developer_is_updated()
+      public async Task Put_returns_201_when_new_developer_is_added()
       {
-         await _client.PutAsJsonAsync("/api/developer", new
+         _mediator.Send(Arg.Any<DeveloperSaveCommand>())
+            .Returns(Task.FromResult(DeveloperSaveResult.MakeSuccess(true, new[] { 1 }, new[] { 2 }, new[] { 3 })));
+         var result = await _controller.Put(null) as CreatedAtActionResult;
+         result.Value.Should().BeEquivalentTo(new
          {
-            summary = "a web programmer",
-            skills = "C#, HTML",
-            experiences = new[]
-            {
-               new
-               {
-                  id = "a",
-                  company = "parmis",
-                  position = "C# Developer",
-                  startDate = "2010-1-1",
-                  endDate = "2011-1-1",
-                  content = "web development"
-               }
-            }
+            Experiences = new[] { 1 },
+            SideProjects = new[] { 2 },
+            Educations = new[] { 3 }
          });
-
-         var update = new
-         {
-            summary = "a passionate web developer",
-            skills = "C#",
-            experiences = new[]
-            {
-               new
-               {
-                  id = "1",
-                  company = "parmis",
-                  position = "C# Developer",
-                  startDate = "2010-1-1",
-                  endDate = "2011-1-1",
-                  content = "web development"
-               }
-            }
-         };
-
-         using (var response = await _client.PutAsJsonAsync("/api/developer", update))
-         {
-            response.StatusCode
-               .Should()
-               .Be(HttpStatusCode.OK);
-         }
       }
 
       [Fact]
-      public async Task Validate_input()
+      public async Task Put_returns_200_when_developer_is_updated()
       {
-         var developer = new
+         _mediator.Send(Arg.Any<DeveloperSaveCommand>())
+            .Returns(Task.FromResult(DeveloperSaveResult.MakeSuccess(false, new[] { 1 }, new[] { 2 }, new[] { 3 })));
+         var result = await _controller.Put(null) as OkObjectResult;
+         result.Value.Should().BeEquivalentTo(new
          {
-            experiences = new[]
-            {
-               new { Id = "abc-123" }
-            }
-         };
-
-         using (var response = await _client.PutAsJsonAsync("/api/developer", developer))
-         {
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            var result = JToken.Parse(await response.Content.ReadAsStringAsync());
-
-            var dic = new Dictionary<string, object>
-            {
-               { "Skills", new[] {"The Skills field is required."}},
-               { "Summary", new[] {"The Summary field is required."}},
-               { "Experiences[0].Company", new[] {"The Company field is required."}},
-               { "Experiences[0].Content", new[] {"The Content field is required."}},
-               { "Experiences[0].EndDate", new[] {"The EndDate field is required."}},
-               { "Experiences[0].Position", new[] {"The Position field is required."}},
-               { "Experiences[0].StartDate", new[] {"The StartDate field is required."}},
-            };
-
-            result.Should().BeEquivalentTo(JsonConvert.SerializeObject(dic));
-         }
-      }
+            Experiences = new[] { 1 },
+            SideProjects = new[] { 2 },
+            Educations = new[] { 3 }
+         });
+       }
    }
 }
