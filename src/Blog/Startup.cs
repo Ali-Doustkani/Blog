@@ -1,6 +1,11 @@
 ﻿using AutoMapper;
 using Blog.Domain;
+using Blog.Domain.Blogging;
+using Blog.Domain.Blogging.Abstractions;
+using Blog.Infrastructure;
 using Blog.Utils;
+using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -35,22 +40,38 @@ namespace Blog
          {
             options.UseSqlServer(_configuration.GetConnectionString("Blog"));
          });
-         services.ConfigureApplicationCookie(op =>
+      services.ConfigureApplicationCookie(op =>
+      {
+        op.SlidingExpiration = false;
+        op.ExpireTimeSpan = TimeSpan.FromDays(30);
+      });
+      services.AddAuthentication(options =>
          {
-            op.SlidingExpiration = false;
-            op.ExpireTimeSpan = TimeSpan.FromDays(30);
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+         }).AddJwtBearer(options =>
+         {
+            options.Authority = "https://ali-doustkani.auth0.com/";
+            options.Audience = "http://localhost:5000/api/developer";
          });
-         services.AddMvc();
+         services.AddMvc(cfg =>
+         {
+           cfg.Filters.Add<MigrationFilter>();
+         });
+         services.AddHttpClient();
          services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<BlogContext>();
          services.AddAutoMapper(GetType().Assembly);
-         services.AddTransient<Services.Home.Service>();
-         services.AddTransient<Services.Administrator.Service>();
-         services.AddTransient<IImageContext, ImageContext>();
-         services.AddTransient<IFileSystem, FileSystem>();
-         services.AddTransient<DraftValidator>();
-         services.AddTransient<ICodeFormatter, HerokuCodeFormatter>();
+         services.AddTransient<IHtmlProcessor, HtmlProcessor>();
          services.AddTransient<IImageProcessor, CloudImageProcessor>();
-         services.AddTransient<Services.Administrator.DraftSaveCommand>();
+         services.AddTransient<ICodeFormatter, HerokuCodeFormatter>();
+         services.AddTransient<IFileSystem, FileSystem>();
+         services.AddTransient<IDateProvider, DefaultDateProvider>();
+         services.AddScoped<ImageContext>();
+         services.AddMediatR(GetType().Assembly);
+         services.AddSpaStaticFiles(options =>
+         {
+            options.RootPath = "wwwroot/admin";
+         });
       }
 
       public void Configure(IApplicationBuilder app)
@@ -74,18 +95,22 @@ namespace Blog
             app.UseDeveloperExceptionPage();
          }
 
-         app.MigrateDatabase();
          app.UseStaticFiles();
+         app.UseSpaStaticFiles();
          app.UseAuthentication();
+
+         app.Map("/newadmin", clientApp =>
+         {
+            clientApp.UseSpa(spa => { });
+         });
+
          app.UseMvc(cfg =>
          {
             cfg.MapRoute("root", "/", new { controller = "home", action = "index", language = "fa" })
                .MapRoute("langRoot", "{language:regex(^fa|en$)}", new { controller = "home", action = "index" })
                .MapRoute("post", "{language:regex(^fa|en$)}/{urlTitle}", new { controller = "home", action = "post" })
                .MapRoute("about", "about", new { controller = "home", action = "about" });
-
             cfg.MapRoute("admin", "admin/{action=index}/{id?}", new { controller = "administrator" });
-
             cfg.MapRoute("default", "{controller}/{action}");
          });
       }

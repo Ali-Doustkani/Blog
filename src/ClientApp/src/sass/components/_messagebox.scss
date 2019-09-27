@@ -1,0 +1,25 @@
+.page-message {
+   position: fixed;
+   width: 210px;
+   height: 90px;
+   left: 50%;
+   margin-left: -105px;
+   top: 50%;
+   margin-top: -45px;
+
+   & > div {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: darken($bg, 10);
+      border-radius: 9px;
+      padding: 10px 30px;
+      width: 150px;
+      min-height: 70px;
+      margin: 0 auto;
+      a {
+         color: $color4;
+      }
+   }
+}

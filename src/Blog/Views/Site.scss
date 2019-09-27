@@ -11,9 +11,9 @@
 @import 'Home/NotFound';
 
 @media only screen and (min-width: 720px) {
-  @import 'Shared/Header_Wide';
+   @import 'Shared/Header_Wide';
 
-  main {
-    margin: 20px auto;
-  }
+   main {
+      margin: 20px auto;
+   }
 }

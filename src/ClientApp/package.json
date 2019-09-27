@@ -1,0 +1,56 @@
+{
+   "name": "adminfrontend",
+   "private": true,
+   "version": "1.0.0",
+   "description": "administrator react pages",
+   "scripts": {
+      "start": "parcel public/index.html",
+      "build": "parcel build public/index.html --out-dir ../Blog/wwwroot/admin",
+      "build:dev": "cross-env NODE_ENV=development parcel build public/index.html --out-dir ../Blog/wwwroot/admin",
+      "test": "jest",
+      "test:watch": "jest --watchAll",
+      "test:cy": "start-test start http://localhost:1234 cy:open",
+      "test:integ": "start-test start http://localhost:1234 cy:run",
+      "cy:open": "cypress open",
+      "cy:run": "cypress run",
+      "lint": "eslint ."
+   },
+   "devDependencies": {
+      "@babel/preset-env": "^7.5.5",
+      "@babel/preset-react": "^7.0.0",
+      "babel-eslint": "^10.0.2",
+      "cross-env": "^6.0.0",
+      "cypress": "^3.4.1",
+      "enzyme": "^3.10.0",
+      "enzyme-adapter-react-16": "^1.14.0",
+      "eslint": "^6.1.0",
+      "eslint-config-prettier": "^6.0.0",
+      "eslint-config-standard": "^13.0.1",
+      "eslint-plugin-cypress": "^2.6.1",
+      "eslint-plugin-import": "^2.18.2",
+      "eslint-plugin-jest": "^22.14.1",
+      "eslint-plugin-node": "^9.1.0",
+      "eslint-plugin-react": "^7.14.3",
+      "jest": "^24.8.0",
+      "parcel-bundler": "^1.12.3",
+      "prop-types": "^15.7.2",
+      "sass": "^1.22.9",
+      "start-server-and-test": "^1.10.0",
+      "whatwg-fetch": "^3.0.0"
+   },
+   "dependencies": {
+      "@alidoustkani/richtext": "^1.0.27",
+      "@auth0/auth0-spa-js": "^1.2.4",
+      "react": "^16.8.6",
+      "react-dom": "^16.8.6",
+      "react-router-dom": "^5.1.0",
+      "uuid": "^3.3.2"
+   },
+   "browserslist": [
+      "chrome > 55"
+   ],
+   "alias": {
+      "DisabledContext": "./src/app/components/DisabledContext.js",
+      "Controls": "./src/app/controls"
+   }
+}

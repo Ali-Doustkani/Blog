@@ -1,72 +1,83 @@
 ﻿using Blog.Domain;
-using Blog.Services;
-using Blog.Services.Administrator;
+using Blog.Services.DraftDeleteCommand;
+using Blog.Services.DraftListQuery;
+using Blog.Services.DraftPreviewQuery;
+using Blog.Services.DraftQuery;
+using Blog.Services.DraftSaveCommand;
 using Blog.Utils;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Blog.Controllers
 {
    [Authorize]
    public class AdministratorController : Controller
    {
-      public AdministratorController(Service services)
+      public AdministratorController(IMediator mediator)
       {
-         _services = services;
+         _mediator = mediator;
       }
 
-      private readonly Service _services;
+      private readonly IMediator _mediator;
 
-      public ViewResult Index() => View(_services.GetDrafts());
+      public async Task<ViewResult> Index() =>
+         View(await _mediator.Send(new DraftListQuery()));
 
-      public ViewResult Post() => View(_services.Create());
+      public ViewResult Post() =>
+         View(new DraftSaveCommand());
 
-      public IActionResult ViewPost(int id)
+      public async Task<IActionResult> ViewPost(int id)
       {
-         var post = _services.Get(id);
-         if (post == null)
+         var result = await _mediator.Send(new DraftQuery { Id = id });
+         if (result == null)
             return NotFound();
-         return View(nameof(Post), post);
+         return View(nameof(Post), result);
       }
 
       [ValidateAntiForgeryToken]
-      public IActionResult SavePost(DraftEntry draft)
+      public async Task<IActionResult> SavePost(DraftSaveCommand command)
       {
-         if (!ModelState.IsValid)
-            return View(nameof(Post), draft);
+         var result = await _mediator.Send(command);
 
-         var result = _services.Save(draft);
          if (result.Failed)
          {
-            ModelState.AddModelErrors(result.Problems);
-            return View(nameof(Post), draft);
+            ModelState.AddModelErrors(result.Errors);
+            return View(nameof(Post), command);
          }
 
-         if (draft.Publish)
+         if (result.Published)
          {
-            var lang = draft.Language == Language.English ? "en" : "fa";
-            return RedirectToAction("Post", "Home", new { language = lang, urlTitle = result.Url });
+            var lang = command.Language == Language.English ? "en" : "fa";
+            return RedirectToAction("Post", "Home", new { language = lang, urlTitle = result.PostUrl });
          }
 
          return RedirectToAction(nameof(Index));
-
       }
 
       [ValidateAntiForgeryToken]
-      public IActionResult DeletePost(int id)
+      public async Task<IActionResult> DeletePost(int id)
       {
-         _services.Delete(id);
+         await _mediator.Send(new DraftDeleteCommand { Id = id });
          return RedirectToAction(nameof(Index));
       }
 
-      public IActionResult Preview(int id)
+      public async Task<IActionResult> Preview(DraftPreviewQuery draft)
       {
-         var post = _services.GetView(id);
-         if (post == null)
-            return NotFound();
+         var result = await _mediator.Send(draft);
+         if (result.Failed)
+         {
+            ModelState.AddModelErrors(result.Errors);
+            return View();
+         }
 
-         ViewData["language"] = post.Language;
-         return View("Views/Home/Post.cshtml", post);
+         ViewData["language"] = result.Post.Language;
+         return View("Views/Home/Post.cshtml", result.Post);
       }
+
+      [IgnoreMigration]
+      public IActionResult Developer() =>
+         View();
    }
 }

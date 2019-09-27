@@ -1,22 +1,21 @@
-﻿@using Blog.ViewModels.Account
-@model LoginEntry
+﻿@model Blog.Controllers.LoginEntry
 @{
-    ViewData["Title"] = "Login";
-    ViewData["HasHeader"] = false;
+   ViewData["Title"] = "Login";
+   ViewData["HasHeader"] = false;
 }
 
 <div>
-    <h1>Login</h1>
-    <form asp-action="Login" asp-route-returnUrl="@ViewData["returnUrl"]">
-        <div asp-validation-summary="All" class="error"></div>
-        <div class="text-group">
-            <label for="username">Username</label>
-            <input blog-testid="username-input" type="text" name="username" autocomplete="off" autofocus />
-        </div>
-        <div class="text-group">
-            <label for="password">Password</label>
-            <input blog-testid="password-input" type="password" name="password" />
-        </div>
-        <button blog-testid="login-button" type="submit" class="form-button">Login</button>
-    </form>
+   <h1>Login</h1>
+   <form asp-action="Login" asp-route-returnUrl="@ViewData["returnUrl"]">
+      <div asp-validation-summary="All" class="error"></div>
+      <div class="text-group">
+         <label for="username">Username</label>
+         <input blog-testid="username-input" type="text" name="username" autocomplete="off" autofocus />
+      </div>
+      <div class="text-group">
+         <label for="password">Password</label>
+         <input blog-testid="password-input" type="password" name="password" />
+      </div>
+      <button blog-testid="login-button" type="submit" class="form-button">Login</button>
+   </form>
 </div>

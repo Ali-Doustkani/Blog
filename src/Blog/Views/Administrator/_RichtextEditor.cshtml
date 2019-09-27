@@ -1,0 +1,21 @@
+﻿<div class="toolbar">
+   <button id="important"><i class="fas fa-bold"></i></button>
+   <button id="inlineCode"><i class="fas fa-code"></i></button>
+   <div class="separator"></div>
+   <button id="h1"><strong>H1</strong></button>
+   <button id="h2"><strong>H2</strong></button>
+   <div class="separator"></div>
+   <button id="code"><i class="fas fa-code"></i></button>
+   <button id="terminal"><i class="fas fa-terminal"></i></button>
+   <div class="separator"></div>
+   <button id="note"><i class="fas fa-exclamation"></i></button>
+   <button id="warning"><i class="fas fa-times"></i></button>
+   <div class="separator"></div>
+   <button id="unorderedList"><i class="fas fa-list-ul"></i></button>
+   <button id="orderedList"><i class="fas fa-list-ol"></i></button>
+   <div class="separator"></div>
+   <button id="image"><i class="fas fa-camera"></i></button>
+   <button id="link"><i class="fas fa-link"></i></button>
+</div>
+<input name="@ViewBag.Name" type="hidden" />
+<article id="editor" class="entry" blog-testid="@string.Concat(ViewBag.Name, "-input")"></article>

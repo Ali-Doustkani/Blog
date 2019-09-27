@@ -1,27 +1,21 @@
 {
-   "version": "1.0.0",
-   "name": "blog",
-   "private": true,
-   "scripts": {
-      "build-styles": "parcel build Views/Site.scss --out-dir wwwroot --out-file site.min.css --no-source-maps",
-      "build-js": "parcel build Views/Administrator/Index.js --out-dir wwwroot --out-file admin.min.js && parcel build Views/Administrator/Post.js --out-dir wwwroot --out-file post.min.js",
-      "copy-assets": "cpx \"Assets/Images/**/*\" \"wwwroot/images\" && cpx \"Assets/*.js\" \"wwwroot\"",
-      "build-assets": "npm run copy-assets && npm run build-styles && npm run build-js",
-      "test:cy": "start-server-and-test start http://localhost:5000 cy:open",
-      "test:e2e": "start-server-and-test start http://localhost:5000 cy:run",
-      "start": "dotnet run --launch-profile E2E",
-      "cy:open": "cypress open",
-      "cy:run": "cypress run"
-   },
-   "devDependencies": {
-      "autoprefixer": "^9.6.0",
-      "cpx": "^1.5.0",
-      "cypress": "^3.4.0",
-      "parcel-bundler": "^1.12.3",
-      "sass": "^1.22.0",
-      "start-server-and-test": "^1.9.1"
-   },
-   "dependencies": {
-      "@alidoustkani/richtext": "^1.0.24"
-   }
+  "version": "1.0.0",
+  "name": "blog",
+  "private": true,
+  "scripts": {
+    "build-styles": "parcel build Views/Site.scss --out-dir wwwroot --out-file site.min.css --no-source-maps",
+    "build-js": "parcel build Views/Administrator/Index.js --out-dir wwwroot --out-file admin.min.js && parcel build Views/Administrator/Post.js --out-dir wwwroot --out-file post.min.js",
+    "copy-assets": "cpx \"Assets/Images/**/*\" \"wwwroot/images\" && cpx \"Assets/*.js\" \"wwwroot\"",
+    "build-assets": "npm run copy-assets && npm run build-styles && npm run build-js"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "autoprefixer": "^9.6.0",
+    "cpx": "^1.5.0",
+    "parcel-bundler": "^1.12.3",
+    "sass": "^1.22.0"
+  },
+  "dependencies": {
+    "@alidoustkani/richtext": "^1.0.24"
+  }
 }

@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`updating updates fields 1`] = `
+Object {
+  "educations": Array [],
+  "errorMessage": "",
+  "experiences": Array [],
+  "sideProjects": Array [],
+  "skills": "C#",
+  "status": 1,
+  "summary": "summary",
+}
+`;

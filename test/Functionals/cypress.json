@@ -1,0 +1,8 @@
+{
+  "integrationFolder": "Integration",
+  "fixturesFolder": false,
+  "pluginsFile": false,
+  "supportFile": "Support",
+  "baseUrl": "http://localhost:5000",
+  "video": false
+}

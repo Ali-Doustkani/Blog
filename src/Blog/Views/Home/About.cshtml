@@ -1,119 +1,50 @@
+@model DeveloperViewModel
 @{
-    ViewData["Title"] = "About Me";
+   ViewData["Title"] = "About Me";
 }
-<article class="resume-section">
-    <h1>hire me</h1>
-    <p>
-        Hi there, I'm Ali and I would be glad to discuss about your job offer! Feel free to <a href="mailto:ali.doostkany@gmail.com">contact me</a>.
-    </p>
-    <p>
-        I'm a software developer with 7+ years of experience. I have spent most of my time with Microsoft technologies but I also like to work with JavaScript stack, especially because of its functional capabilities that challenge my OOP background to face problems differently.
-    </p>
-    <p>
-        I love working with pro teams and people and I have a passion to write clean code.
-    </p>
+<article class="resume-section" data-cy="summary-container">@Html.Raw(Model.Summary)</article>
+<article class="resume-section" data-cy="experience-container">
+   <h1>work experience</h1>
+   @foreach (var experience in Model.Experiences)
+   {
+      <section>
+         <h2>@experience.Position, @experience.Company <span class="date">@experience.StartDate.ToString("MMMM/yyyy") - @experience.EndDate.ToString("MMMM/yyyy")</span></h2>
+         @Html.Raw(experience.Content)
+      </section>
+   }
+</article>
+<article class="resume-section" data-cy="project-container">
+   <h1>side projects</h1>
+   @foreach (var proj in Model.SideProjects)
+   {
+      <section>
+         <h2>@proj.Title</h2>
+         @Html.Raw(proj.Content)
+      </section>
+   }
+</article>
+<article class="resume-section" data-cy="education-container">
+   <h1>education</h1>
+   @foreach (var edu in Model.Educations)
+   {
+      <section>
+         <header>
+            <h2 class="item-title">@edu.Degree <span class="date">@edu.StartDate.Year - @edu.EndDate.Year</span></h2>
+         </header>
+         <p>@edu.University</p>
+      </section>
+   }
+</article>
+<article class="resume-section" data-cy="skills-container">
+   <h1>technical skills</h1>
+   @foreach (var line in Model.Skills)
+   {
+      <p>@line</p>
+   }
 </article>
 <article class="resume-section">
-    <h1>work experience</h1>
-    <section>
-        <h2>.NET Architect, Parmis <span class="date">May/2014 - December/2017</span></h2>
-        <p>
-            Parmis is a fintech company that provides modern sales and financial services for it's customers. It serves various industries with a whole range of products including accounting, CRM, manufacturing, inventory, and etc.
-        </p>
-        <ul>
-            <li>
-                Built back-end services using ASP.NET Web API, demonstrating RESTful architecture.
-            </li>
-            <li>
-                Embraced unit and integration testing policies with MSTest Suite, TFS test automation and nightly builds to maintain a continuously integrated system, which led to much less bug reports.
-            </li>
-            <li>
-                Optimised domain process of year-end closing 60% faster by using T-SQL scripts, Repository design pattern, and asynchrounous programming.
-            </li>
-            <li>
-                Implemented a shared kernel of accounting domain using .NET Portable Class Library in a TDD manner so it could be used across multiple platforms.
-            </li>
-            <li>
-                Rearchitected legacy procedural-based modules (Transaction Scripts) to testable, object-oriented domain models with DDD approach which decreased technical dept tremendously.
-            </li>
-            <li>
-                Refactored database tables using Visual Studio SQL Database Project to maintain consistency in deployment.
-            </li>
-            <li>
-                Developed desktop invoice processing application using C#, MVP, IoC Container, SQL Server, and Entity Framework.
-            </li>
-            <li>
-                Directed the order processing user-interface for the mobile app using XAML, and MVVM.
-            </li>
-        </ul>
-    </section>
-    <section>
-        <h2>.NET Desktop Developer, Freelancer <span class="date">March/2012 - March/2013</span></h2>
-        <ul>
-            <li>
-                Implemented and maintained user-friendly apps with C#, NHibernate, ADO.NET, WPF, StructureMap and SQL databases.
-            </li>
-            <li>
-                Completed a customized build process with MSBuild and TFS Release pipline.
-            </li>
-        </ul>
-    </section>
-</article>
-<article class="resume-section">
-    <h1>side projects</h1>
-    <section>
-        <h2>Richtext</h2>
-        <p>
-            An open-source, configurable richtext developed with vanilla js, jest, and cypress. A <a href="https://richtext.alidoustkani.com">demo</a> is available and it's shared on <a href="https://github.com/Ali-Doustkani/richtext">github</a>.
-        </p>
-    </section>
-    <section>
-        <h2>CactusGuru</h2>
-        <p>
-            A simple app for managing a collection of cacti! It's available on <a href="https://github.com/Ali-Doustkani/CactusGuru">github</a>.
-        </p>
-    </section>
-</article>
-<article class="resume-section">
-    <h1>education</h1>
-    <section>
-        <header>
-            <h2 class="item-title">B.Sc. in Computer Software Engineering <span class="date">2010 - 2013</span></h2>
-        </header>
-        <p>
-            University of Science and Culture
-        </p>
-    </section>
-    <section>
-        <header>
-            <h2 class="item-title">A.Sc in Computer Software Engineering <span class="date">2008 - 2010</span></h2>
-        </header>
-        <p>
-            Shamsipour Technical College
-        </p>
-    </section>
-</article>
-<article class="resume-section">
-    <h1>technical skills</h1>
-    <p>
-        (6+ years): C#, OOP, SOLID, Design Patterns, SQL
-    </p>
-    <p>
-        (4+ years): SQL Server, Entity Framework, TFS, IoC Containers
-    </p>
-    <p>
-        (2+ years): TDD, NUnit, Moq, MVVM, WPF, Javascript, HTML, CSS, REST
-    </p>
-    <p>
-        (1+ years): ASP.NET Core, Webpack, SASS, Git, DDD, MSBuild, Jest, Cypress
-    </p>
-    <p>
-        (Studying): React, Node.js
-    </p>
-</article>
-<article class="resume-section">
-    <a class="download-resume" href="/files/AliDoustkani.pdf">
-        <i class="fas fa-file-pdf"></i>
-        Download Resume
-    </a>
+   <a class="download-resume" href="/files/AliDoustkani.pdf">
+      <i class="fas fa-file-pdf"></i>
+      Download Resume
+   </a>
 </article>

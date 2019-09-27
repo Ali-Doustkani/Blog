@@ -1,4 +1,4 @@
-﻿@model DraftEntry
+﻿@model Blog.Services.DraftSaveCommand.DraftSaveCommand
 @{
    ViewData["Title"] = "Write a post";
 }
@@ -9,20 +9,15 @@
    <script src="https://kit.fontawesome.com/4f69c52348.js"></script>
 }
 
-<div class="post-form">
+<div class="form post-form">
    <h1>Write a post</h1>
-   <form id="save-post" class="english" asp-action="SavePost">
+   <form id="save-post" class="english" method="post">
       <div asp-validation-summary="ModelOnly" class="error"></div>
       <input name="Id" value="@Model.Id" type="hidden" />
       <div id="language" class="text-group">
          <label>Language</label>
          <input id="english" blog-testid="englishLanguage-radio" type="radio" asp-for="Language" value="@Language.English" checked /><label for="english">English</label>
          <input id="farsi" blog-testid="farsiLanguage-radio" type="radio" asp-for="Language" value="@Language.Farsi" /><label for="farsi">Farsi</label>
-      </div>
-      <div class="text-group">
-         <label asp-for="PublishDate"></label>
-         <input blog-testid="publishDate-input" asp-for="PublishDate" value="@Model.PublishDate.ToString("yyyy-MM-dd")" type="date" autocomplete="off" />
-         <span asp-validation-for="PublishDate" class="error"></span>
       </div>
       <div class="text-group">
          <label asp-for="Title"></label>
@@ -44,7 +39,7 @@
          <textarea blog-testid="summary-input" asp-for="Summary"></textarea>
          <span asp-validation-for="Summary" class="error"></span>
       </div>
-      <div class="text-group">
+      <div class="text-group richtext-group">
          <label asp-for="Content"></label>
          <div class="toolbar">
             <button id="important"><i class="fas fa-bold"></i></button>
@@ -72,8 +67,8 @@
       <div class="check-group">
          <input blog-testid="publish-checkbox" asp-for="Publish" /><label asp-for="Publish">Publish the Post</label>
       </div>
-      <button blog-testid="save-button" class="form-button" type="submit">Save</button>
-      <a blog-testid="preview-button" class="form-button" asp-action="Preview" asp-route-id="@Model.Id" target="_blank">Preview</a>
+      <button blog-testid="save-button" class="form-button" type="submit" formaction="/admin/SavePost">Save</button>
+      <button blog-testid="preview-button" class="form-button" type="submit" formaction="/admin/Preview" formtarget="_blank">Preview</button>
       <button blog-testid="clear-button" class="form-button" type="reset">Clear</button>
    </form>
 </div>

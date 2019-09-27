@@ -1,7 +1,15 @@
 ﻿namespace Blog.Domain
 {
+   /// <summary>
+   /// The base class for all domain entities.
+   /// </summary>
    public abstract class DomainEntity
    {
-      public int Id { get; set; }
+      protected DomainEntity(int id)
+      {
+         Id = id;
+      }
+
+      public int Id { get; private set; }
    }
 }
