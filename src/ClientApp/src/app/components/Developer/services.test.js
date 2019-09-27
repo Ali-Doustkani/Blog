@@ -3,6 +3,10 @@ import { getDeveloper, saveDeveloper } from './services'
 
 jest.mock('../../utils')
 
+const auth0 = {
+   getTokenSilently: () => Promise.resolve('TOK')
+}
+
 const sample = {
    summary: 'started to code as a young boy',
    skills: 'c#, javascript',
@@ -15,7 +19,7 @@ describe('GET', () => {
    it('handles 200', async () => {
       fetchMock.status(200).data({ name: 'developer' })
 
-      expect(await getDeveloper()).toEqual({
+      expect(await getDeveloper(auth0)).toEqual({
          status: 'ok',
          data: { name: 'developer' }
       })
@@ -24,7 +28,7 @@ describe('GET', () => {
    it('handles 204', async () => {
       fetchMock.status(204)
 
-      expect(await getDeveloper()).toEqual({
+      expect(await getDeveloper(auth0)).toEqual({
          status: 'ok',
          data: null
       })
@@ -33,7 +37,7 @@ describe('GET', () => {
    it('handles 404', async () => {
       fetchMock.status(404)
 
-      expect(await getDeveloper()).toEqual({
+      expect(await getDeveloper(auth0)).toEqual({
          status: 'fatal',
          data: 'server not found'
       })
@@ -42,7 +46,7 @@ describe('GET', () => {
    it('handles other status', async () => {
       fetchMock.status(500).data('error message')
 
-      expect(await getDeveloper()).toEqual({
+      expect(await getDeveloper(auth0)).toEqual({
          status: 'fatal',
          data: 'error message'
       })
@@ -51,7 +55,7 @@ describe('GET', () => {
    it('handles corrupted data', async () => {
       fetchMock.status(200).throwOnData('corrupted data')
 
-      expect(await getDeveloper()).toEqual({
+      expect(await getDeveloper(auth0)).toEqual({
          status: 'fatal',
          data: 'corrupted data'
       })
@@ -60,7 +64,7 @@ describe('GET', () => {
    it('handles ERR_CONNECTION_REFUSED', async () => {
       fetchMock.throw('Error')
 
-      expect(await getDeveloper()).toEqual({
+      expect(await getDeveloper(auth0)).toEqual({
          status: 'fatal',
          data: 'Error'
       })
@@ -71,7 +75,7 @@ describe('PUT', () => {
    it('handles 200', async () => {
       fetchMock.status(200).data({ data: 'response' })
 
-      expect(await saveDeveloper(sample)).toEqual({
+      expect(await saveDeveloper(sample, auth0)).toEqual({
          status: 'ok',
          data: { data: 'response' }
       })
@@ -81,7 +85,7 @@ describe('PUT', () => {
    it('handles 200 with corrupted content', async () => {
       fetchMock.status(200).throwOnData('corrupted data')
 
-      expect(await saveDeveloper(sample)).toEqual({
+      expect(await saveDeveloper(sample, auth0)).toEqual({
          status: 'fatal',
          data: 'corrupted data'
       })
@@ -90,7 +94,7 @@ describe('PUT', () => {
    it('handles 201', async () => {
       fetchMock.status(201).data({ data: 'result' })
 
-      expect(await saveDeveloper(sample)).toEqual({
+      expect(await saveDeveloper(sample, auth0)).toEqual({
          status: 'ok',
          data: { data: 'result' }
       })
@@ -101,7 +105,7 @@ describe('PUT', () => {
          summary: ['summary field is required']
       })
 
-      expect(await saveDeveloper(sample)).toEqual({
+      expect(await saveDeveloper(sample, auth0)).toEqual({
          status: 'error',
          data: { summary: ['summary field is required'] }
       })
@@ -110,7 +114,7 @@ describe('PUT', () => {
    it('handles 404', async () => {
       fetchMock.status(404)
 
-      expect(await saveDeveloper(sample)).toEqual({
+      expect(await saveDeveloper(sample, auth0)).toEqual({
          status: 'fatal',
          data: 'server not found'
       })
@@ -119,7 +123,7 @@ describe('PUT', () => {
    it('handles other statuses', async () => {
       fetchMock.status(500).data('error on server')
 
-      expect(await saveDeveloper(sample)).toEqual({
+      expect(await saveDeveloper(sample, auth0)).toEqual({
          status: 'fatal',
          data: 'error on server'
       })
@@ -128,7 +132,7 @@ describe('PUT', () => {
    it('handle ERR_CONNECTION_REFUSED', async () => {
       fetchMock.throw('ERROR')
 
-      expect(await saveDeveloper(sample)).toEqual({
+      expect(await saveDeveloper(sample, auth0)).toEqual({
          status: 'fatal',
          data: 'ERROR'
       })
