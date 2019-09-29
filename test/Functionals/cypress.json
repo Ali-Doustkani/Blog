@@ -4,5 +4,6 @@
   "pluginsFile": false,
   "supportFile": "Support",
   "baseUrl": "http://localhost:5000",
-  "video": false
+  "video": false,
+  "chromeWebSecurity": false
 }

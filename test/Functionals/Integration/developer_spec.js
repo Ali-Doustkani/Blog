@@ -3,7 +3,19 @@ it("updates the developer info", () => {
   cy.route("PUT", "/api/developer").as("putDeveloper");
   cy.route("GET", "/api/developer").as("getDeveloper");
 
-  cy.visit("/admin/developer");
+  cy.visit("/newadmin");
+  cy.wait(2000);
+
+  cy.location().then(loc => {
+    if (loc.href.includes("auth0.com")) {
+      cy.get("input[type=email]").type(Cypress.env("loginemail"));
+      cy.get("input[type=password]").type(Cypress.env("loginpassword"));
+      cy.get("button[type=submit]").click();
+    }
+  });
+
+  cy.contains("Developer").click();
+
   cy.wait("@getDeveloper");
 
   cy.testid("summary-richtext")

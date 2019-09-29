@@ -40,23 +40,23 @@ namespace Blog
          {
             options.UseSqlServer(_configuration.GetConnectionString("Blog"));
          });
-      services.ConfigureApplicationCookie(op =>
-      {
-        op.SlidingExpiration = false;
-        op.ExpireTimeSpan = TimeSpan.FromDays(30);
-      });
-      services.AddAuthentication(options =>
+         services.ConfigureApplicationCookie(op =>
          {
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-         }).AddJwtBearer(options =>
-         {
-            options.Authority = "https://ali-doustkani.auth0.com/";
-            options.Audience = "http://localhost:5000/api/developer";
+            op.SlidingExpiration = false;
+            op.ExpireTimeSpan = TimeSpan.FromDays(30);
          });
+         services.AddAuthentication(options =>
+            {
+               options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+               options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+               options.Authority = "https://ali-doustkani.auth0.com/";
+               options.Audience = "http://localhost:5000/api/developer";
+            });
          services.AddMvc(cfg =>
          {
-           cfg.Filters.Add<MigrationFilter>();
+            cfg.Filters.Add<MigrationFilter>();
          });
          services.AddHttpClient();
          services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<BlogContext>();
@@ -95,9 +95,9 @@ namespace Blog
             app.UseDeveloperExceptionPage();
          }
 
+         app.UseAuthentication();
          app.UseStaticFiles();
          app.UseSpaStaticFiles();
-         app.UseAuthentication();
 
          app.Map("/newadmin", clientApp =>
          {
