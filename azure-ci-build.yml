@@ -1,8 +1,3 @@
-variables:
-  buildConfiguration: 'Release'
-  srcDirectory: '$(System.DefaultWorkingDirectory)\src'
-  blogDirectory: '$(srcDirectory)\Blog'
-
 pool:
   vmImage: 'windows-2019'
   
@@ -11,31 +6,37 @@ steps:
   displayName: install node modules
   inputs:
     command: 'install'
-    workingDir: '$(blogDirectory)'
+    workingDir: '$(System.DefaultWorkingDirectory)/src/Blog'
 
 - task: DotNetCoreCLI@2
   displayName: Build
   inputs:
     command: 'build'
-    arguments: '--configuration $(buildConfiguration)'
-    workingDirectory: '$(srcDirectory)'
+    arguments: '--configuration Release'
+    workingDirectory: '$(System.DefaultWorkingDirectory)'
 
 - task: DotNetCoreCLI@2
   displayName: Unit Tests
   inputs:
     command: 'test'
     projects: '**/*.csproj'
-    workingDirectory: '$(srcDirectory)/Blog.Tests'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/test'
 
 - task: CmdLine@2
   displayName: build assets
   inputs:
     script: 'npm run build-assets'
-    workingDirectory: '$(blogDirectory)'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/src/Blog'
 
+- task: Npm@1
+  displayName: install node modules
+  inputs:
+    command: 'install'
+    workingDir: '$(System.DefaultWorkingDirectory)/test/Functionals'
+    
 - task: CmdLine@2
   displayName: E2E Tests
   continueOnError: true
   inputs:
     script: 'npm run test:e2e'
-    workingDirectory: '$(blogDirectory)'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/test/Functionals'
