@@ -8,8 +8,8 @@ it("updates the developer info", () => {
 
   cy.location().then(loc => {
     if (loc.href.includes("auth0.com")) {
-      cy.get("input[type=email]").type(Cypress.env("loginemail"));
-      cy.get("input[type=password]").type(Cypress.env("loginpassword"));
+      cy.get("input[type=email]").type(Cypress.env("LOGINEMAIL"));
+      cy.get("input[type=password]").type(Cypress.env("LOGINPASSWORD"));
       cy.get("button[type=submit]").click();
     }
   });
