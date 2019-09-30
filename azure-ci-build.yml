@@ -1,56 +1,83 @@
+variables:
+  dir_blog: '$(System.DefaultWorkingDirectory)/src/Blog'
+  dir_blogTest: '$(System.DefaultWorkingDirectory)/test/Blog.Tests'
+  dir_clientApp: '$(System.DefaultWorkingDirectory)/src/ClientApp'
+  dir_functionalTest: '$(System.DefaultWorkingDirectory)/test/Functionals'
+
 pool:
   vmImage: 'windows-2019'
   
 steps:
 - task: Npm@1
-  displayName: install node modules
+  displayName: Install Blog Node Modules
   inputs:
     command: 'install'
-    workingDir: '$(System.DefaultWorkingDirectory)/src/Blog'
+    workingDir: '$(dir_blog)'
 
 - task: DotNetCoreCLI@2
-  displayName: Build
+  displayName: Build Blog
   inputs:
     command: 'build'
     arguments: '--configuration Release'
-    workingDirectory: '$(System.DefaultWorkingDirectory)'
+    workingDirectory: '$(dir_blog)'
+
+- task: CmdLine@2
+  displayName: Build Blog Static Assets
+  inputs:
+    script: 'npm run build-assets'
+    workingDirectory: '$(dir_blog)'
 
 - task: DotNetCoreCLI@2
-  displayName: Unit Tests
+  displayName: Unit Test Blog
   inputs:
     command: 'test'
     projects: '**/*.csproj'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/test'
-
-- task: CmdLine@2
-  displayName: build assets
-  inputs:
-    script: 'npm run build-assets'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/src/Blog'
+    workingDirectory: '$(dir_blogTest)'
 
 - task: Npm@1
-  displayName: install node modules
+  displayName: Install ClientApp Node Modules
+  inputs: 
+    command: 'install'
+    workingDir: '$(dir_clientApp)'
+
+- task: CmdLine@2
+  displayName: Build ClientApp
+  inputs:
+    script: 'npm run build:dev'
+    workingDirectory: '$(dir_clientApp)'
+
+- task: Npm@1
+  displayName: Install Functional Test Node Modules
   inputs:
     command: 'install'
-    workingDir: '$(System.DefaultWorkingDirectory)/test/Functionals'
+    workingDir: '$(dir_functionalTest)'
     
 - task: CmdLine@2
-  displayName: E2E Tests
+  displayName: Functional Test
   continueOnError: true
   inputs:
     script: 'npm run test:e2e'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/test/Functionals'
+    workingDirectory: '$(dir_functionalTest)'
+
+- task: PublishBuildArtifacts@1
+  displayName: Publish Server Logs
+  inputs:
+    PathtoPublish: '$(dir_blog)/log/logs.json'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
 
 - task: ArchiveFiles@2
+  displayName: Archive Screenshots
   inputs:
-    rootFolderOrFile: '$(System.DefaultWorkingDirectory)/test/Functionals/cypress/screenshots'
+    rootFolderOrFile: '$(dir_functionalTest)/cypress/screenshots'
     includeRootFolder: true
     archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    archiveFile: '$(dir_functionalTest)/cypress/screenshots.zip'
     replaceExistingArchive: true
 
 - task: PublishBuildArtifacts@1
+  displayName: Publish Screenshots
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    PathtoPublish: '$(dir_functionalTest)/cypress/screenshots.zip'
     ArtifactName: 'drop'
     publishLocation: 'Container'
