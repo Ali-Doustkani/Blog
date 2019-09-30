@@ -6,8 +6,6 @@ pool:
 variables:
   dir_blog: '$(System.DefaultWorkingDirectory)/src/Blog'
   dir_clientApp: '$(System.DefaultWorkingDirectory)/src/ClientApp'
-  srcDirectory: '$(System.DefaultWorkingDirectory)/src'
-  blogDirectory: '$(srcDirectory)/Blog'
 
 steps:
 - task: DotNetCoreCLI@2
@@ -54,7 +52,7 @@ steps:
 - task: ArchiveFiles@2
   displayName: Archive Publish Files
   inputs:
-    rootFolderOrFile: '$(dir_blog)/bin/Release/netcoreapp2.1/publish'
+    rootFolderOrFile: '$(dir_blog)/bin/Release/netcoreapp2.2/publish'
     includeRootFolder: false
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/release.zip'
