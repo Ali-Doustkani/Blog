@@ -32,7 +32,7 @@ namespace Blog
              {
                 cfg.AddConsole();
              }
-             else if (context.HostingEnvironment.IsProduction())
+             else  
              {
                 cfg.AddSerilog(new LoggerConfiguration()
                       .WriteTo
