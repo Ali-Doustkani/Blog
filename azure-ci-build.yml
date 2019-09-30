@@ -43,7 +43,7 @@ steps:
 - task: CmdLine@2
   displayName: Build ClientApp
   inputs:
-    script: 'npm run build'
+    script: 'npm run build:dev'
     workingDirectory: '$(dir_clientApp)'
 
 - task: Npm@1
