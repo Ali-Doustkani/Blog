@@ -41,16 +41,8 @@ steps:
     script: 'npm run test:e2e'
     workingDirectory: '$(System.DefaultWorkingDirectory)/test/Functionals'
 
-- task: ArchiveFiles@2
-  inputs:
-    rootFolderOrFile: '$(System.DefaultWorkingDirectory)/test/Functionals/cypress/screenshots'
-    includeRootFolder: true
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    replaceExistingArchive: true
-
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    PathtoPublish: '$(System.DefaultWorkingDirectory)/src/Blog/log/logs.json'
     ArtifactName: 'drop'
     publishLocation: 'Container'
