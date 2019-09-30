@@ -61,6 +61,7 @@ steps:
 
 - task: PublishBuildArtifacts@1
   displayName: Publish Server Logs
+  enabled: false
   inputs:
     PathtoPublish: '$(dir_blog)/log/logs.json'
     ArtifactName: 'drop'
@@ -68,6 +69,7 @@ steps:
 
 - task: ArchiveFiles@2
   displayName: Archive Screenshots
+  enabled: false
   inputs:
     rootFolderOrFile: '$(dir_functionalTest)/cypress/screenshots'
     includeRootFolder: true
@@ -77,6 +79,7 @@ steps:
 
 - task: PublishBuildArtifacts@1
   displayName: Publish Screenshots
+  enabled: false
   inputs:
     PathtoPublish: '$(dir_functionalTest)/cypress/screenshots.zip'
     ArtifactName: 'drop'
