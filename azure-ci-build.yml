@@ -65,3 +65,19 @@ steps:
     PathtoPublish: '$(dir_blog)/log/logs.json'
     ArtifactName: 'drop'
     publishLocation: 'Container'
+
+- task: ArchiveFiles@2
+  displayName: Archive Screenshots
+  inputs:
+    rootFolderOrFile: '$(dir_functionalTest)/cypress/screenshots'
+    includeRootFolder: true
+    archiveType: 'zip'
+    archiveFile: '$(dir_functionalTest)/cypress/screenshots.zip'
+    replaceExistingArchive: true
+
+- task: PublishBuildArtifacts@1
+  displayName: Publish Screenshots
+  inputs:
+    PathtoPublish: '$(dir_functionalTest)/cypress/screenshots.zip'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
