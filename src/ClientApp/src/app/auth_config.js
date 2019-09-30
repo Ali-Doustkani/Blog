@@ -16,7 +16,7 @@ const config =
               domain: 'ali-doustkani.auth0.com',
               client_id: 'wZmKb30P6lnFD4Olh2ryazHqBwX8KU8L',
               redirect_uri: 'http://localhost:5000/newadmin',
-              audience: 'http://localhost:5000/api/developer'
+              audience: 'http://localhost:5000/api'
            },
            logout: {
               returnTo: 'http://localhost:5000'

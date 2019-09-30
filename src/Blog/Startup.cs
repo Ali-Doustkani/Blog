@@ -51,8 +51,8 @@ namespace Blog
                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(options =>
             {
-               options.Authority = "https://ali-doustkani.auth0.com/";
-               options.Audience = "http://localhost:5000/api/developer";
+               options.Authority = _configuration["auth0:authority"];
+               options.Audience = _configuration["auth0:audience"];
             });
          services.AddMvc(cfg =>
          {
