@@ -4,49 +4,62 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  buildConfiguration: 'Release'
-  srcDirectory: '$(System.DefaultWorkingDirectory)/src'
-  blogDirectory: '$(srcDirectory)/Blog'
+  dir_blog: '$(System.DefaultWorkingDirectory)/src/Blog'
+  dir_clientApp: '$(System.DefaultWorkingDirectory)/src/ClientApp'
 
 steps:
 - task: DotNetCoreCLI@2
-  displayName: Build
+  displayName: Build Blog
   inputs:
     command: 'build'
-    arguments: '--configuration $(buildConfiguration)'
-    workingDirectory: '$(srcDirectory)'
+    arguments: '--configuration Release'
+    workingDirectory: '$(dir_blog)'
 
 - task: Npm@1
-  displayName: install node modules
+  displayName: Install Blog Node Modules
   inputs:
     command: 'install'
-    workingDir: '$(blogDirectory)'
+    workingDir: '$(dir_blog)'
 
 - task: CmdLine@2
-  displayName: build assets
+  displayName: Build Blog Static Assets
   inputs:
     script: 'npm run build-assets'
-    workingDirectory: '$(blogDirectory)'
+    workingDirectory: '$(dir_blog)'
+
+- task: Npm@1
+  displayName: Install ClientApp Node Modules
+  inputs: 
+    command: 'install'
+    workingDir: '$(dir_clientApp)'
+
+- task: CmdLine@2
+  displayName: Build ClientApp
+  inputs:
+    script: 'npm run build'
+    workingDirectory: '$(dir_clientApp)'
 
 - task: DotNetCoreCLI@2
-  displayName: publish
+  displayName: Publish Blog
   inputs:
     command: 'publish'
-    arguments: '--no-build --configuration $(buildConfiguration)'
+    arguments: '--no-build --configuration Release'
     publishWebProjects: true
     zipAfterPublish: false
     modifyOutputPath: false
-    workingDirectory: '$(blogDirectory)'
+    workingDirectory: '$(dir_blog)'
 
 - task: ArchiveFiles@2
+  displayName: Archive Publish Files
   inputs:
-    rootFolderOrFile: '$(blogDirectory)/bin/Release/netcoreapp2.1/publish'
+    rootFolderOrFile: '$(dir_blog)/bin/Release/netcoreapp2.2/publish'
     includeRootFolder: false
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/release.zip'
     replaceExistingArchive: true
 
 - task: PublishBuildArtifacts@1
+  displayName: Publish For Download
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
