@@ -2,7 +2,7 @@
 using FluentAssertions;
 using Xunit;
 
-namespace Blog.Tests.Domain
+namespace Blog.Domain.Tests.Blogging
 {
    public class PostPathTests
    {

@@ -1,13 +1,12 @@
 ﻿using Blog.Domain.Blogging;
 using Blog.Domain.Blogging.Abstractions;
-using Blog.Utils;
 using FluentAssertions;
 using NSubstitute;
 using System;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Blog.Tests.Domain.Blogging
+namespace Blog.Domain.Tests.Blogging
 {
    public class HtmlProcessorTests
    {

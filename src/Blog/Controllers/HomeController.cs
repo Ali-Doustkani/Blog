@@ -53,7 +53,6 @@ namespace Blog.Controllers
          return View(developer);
       }
 
-      [IgnoreMigration]
       public IActionResult Error(int statusCode = -1)
       {
          ViewData["language"] = Language.English;

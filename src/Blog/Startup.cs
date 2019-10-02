@@ -3,7 +3,6 @@ using Blog.Domain;
 using Blog.Domain.Blogging;
 using Blog.Domain.Blogging.Abstractions;
 using Blog.Infrastructure;
-using Blog.Utils;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -15,7 +14,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
 
 namespace Blog
 {
@@ -56,10 +54,7 @@ namespace Blog
                options.Authority = _configuration["auth0:authority"];
                options.Audience = _configuration["auth0:audience"];
             });
-         services.AddMvc(cfg =>
-         {
-            cfg.Filters.Add<MigrationFilter>();
-         });
+         services.AddMvc();
          services.AddHttpClient();
          services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<BlogContext>();
          services.AddAutoMapper(GetType().Assembly);

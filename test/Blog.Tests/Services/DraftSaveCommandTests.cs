@@ -140,7 +140,7 @@ namespace Blog.Tests.Services
          {
             db.Drafts.Single().Should().BeEquivalentTo(new
             {
-               Content = "<figure><img src=\"/images/posts/learn-js/pic.jpeg\"></figure>".Local()
+               Content = "<figure><img src=\"/images/posts/learn-js/pic.jpeg\"></figure>".LocalPath()
             });
          }
 
@@ -166,7 +166,7 @@ namespace Blog.Tests.Services
          {
             db.Drafts.Single().Should().BeEquivalentTo(new
             {
-               Content = "<figure><img src=\"/images/posts/learn-c-sharp/pic.jpeg\"></figure>".Local()
+               Content = "<figure><img src=\"/images/posts/learn-c-sharp/pic.jpeg\"></figure>".LocalPath()
             });
          }
       }
@@ -400,7 +400,7 @@ namespace Blog.Tests.Services
          {
             db.Drafts.Single().Should().BeEquivalentTo(new
             {
-               Content = "<figure><img src=\"/images/posts/js/a.png\"></figure>".Local()
+               Content = "<figure><img src=\"/images/posts/js/a.png\"></figure>".LocalPath()
             });
             db.Posts.Should().BeEmpty();
          }
