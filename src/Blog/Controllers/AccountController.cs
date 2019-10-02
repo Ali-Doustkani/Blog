@@ -28,7 +28,6 @@ namespace Blog.Controllers
       private readonly SignInManager<IdentityUser> _signInManager;
       private readonly ILogger _logger;
 
-      [IgnoreMigration]
       public IActionResult Login(string returnUrl = null)
       {
          ViewData["returnUrl"] = returnUrl;
