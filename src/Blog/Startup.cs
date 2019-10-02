@@ -99,10 +99,11 @@ namespace Blog
 
          app.UseAuthentication();
 
-
+         var mimes = new FileExtensionContentTypeProvider();
+         mimes.Mappings[".yaml"] = "text/yaml";
          app.UseStaticFiles(new StaticFileOptions
          {
-            ContentTypeProvider = new FileExtensionContentTypeProvider(new Dictionary<string, string> { { ".yaml", "text/yaml" } })
+            ContentTypeProvider = mimes
          });
 
          app.UseSpaStaticFiles();
