@@ -33,6 +33,7 @@ namespace Blog.DbMigrator
          try
          {
             Migrator.Migrate(server, db, username, psw);
+            Console.WriteLine("Done!");
          }
          catch (Exception ex)
          {
