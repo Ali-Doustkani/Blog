@@ -1,9 +1,8 @@
-﻿using Blog.Domain;
-using FluentAssertions;
+﻿using FluentAssertions;
 using System.Linq;
 using Xunit;
 
-namespace Blog.Tests.Domain
+namespace Blog.Domain.Tests
 {
    public class ErrorManagerTests
    {

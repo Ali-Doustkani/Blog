@@ -1,5 +1,4 @@
-﻿using Blog.Domain;
-using Blog.Domain.Blogging;
+﻿using Blog.Domain.Blogging;
 using FluentAssertions;
 using NSubstitute;
 using System;
@@ -7,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Blog.Tests.Domain
+namespace Blog.Domain.Tests.Blogging
 {
    public class DraftTests
    {

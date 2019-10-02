@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using Xunit;
 
-namespace Blog.Tests.Domain.DeveloperStory
+namespace Blog.Domain.Tests.DeveloperStory
 {
    public class DeveloperTests
    {

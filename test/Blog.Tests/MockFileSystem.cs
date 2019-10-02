@@ -1,4 +1,5 @@
-﻿using Blog.Infrastructure;
+﻿using Blog.Domain;
+using Blog.Infrastructure;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,51 +22,51 @@ namespace Blog.Tests
 
       public void CreateDirectory(string path)
       {
-         _directories.Add(path.Standard());
-         log.Add(string.Join(" ", "create-dir", path.Standard()));
+         _directories.Add(path.StandardPath());
+         log.Add(string.Join(" ", "create-dir", path.StandardPath()));
       }
 
       public void DeleteDirectory(string path)
       {
-         _directories.Remove(path.Standard());
-         _files.RemoveAll(x => x.StartsWith(path.Standard()));
-         log.Add(string.Join(" ", "del-dir", path.Standard()));
+         _directories.Remove(path.StandardPath());
+         _files.RemoveAll(x => x.StartsWith(path.StandardPath()));
+         log.Add(string.Join(" ", "del-dir", path.StandardPath()));
       }
 
       public void DeleteFile(string path)
       {
-         _files.Remove(path.Standard());
-         log.Add(string.Join(" ", "del-file", path.Standard()));
+         _files.Remove(path.StandardPath());
+         log.Add(string.Join(" ", "del-file", path.StandardPath()));
       }
 
       public bool DirectoryExists(string path) =>
-         _directories.Contains(path.Standard());
+         _directories.Contains(path.StandardPath());
 
       public string[] GetFiles(string path)
       {
          if (!DirectoryExists(path))
             throw new DirectoryNotFoundException();
 
-         return _files.Where(x => x.StartsWith(path.Standard())).ToArray();
+         return _files.Where(x => x.StartsWith(path.StandardPath())).ToArray();
       }
 
       public void RenameDirectory(string oldDir, string newDir)
       {
-         if (!_directories.Contains(oldDir.Standard()))
+         if (!_directories.Contains(oldDir.StandardPath()))
             throw new IOException();
 
-         _directories.Remove(oldDir.Standard());
-         _directories.Add(newDir.Standard());
+         _directories.Remove(oldDir.StandardPath());
+         _directories.Add(newDir.StandardPath());
          _files = _files
-            .Select(x => x.StartsWith(oldDir.Standard()) ? Path.Combine(newDir.Standard(), Path.GetFileName(x)).Standard() : x)
+            .Select(x => x.StartsWith(oldDir.StandardPath()) ? Path.Combine(newDir.StandardPath(), Path.GetFileName(x)).StandardPath() : x)
             .ToList();
-         log.Add(string.Join(" ", "rename-dir", oldDir.Standard(), newDir.Standard()));
+         log.Add(string.Join(" ", "rename-dir", oldDir.StandardPath(), newDir.StandardPath()));
       }
 
       public Task WriteAllBytesAsync(string path, byte[] data)
       {
-         _files.Add(path.Standard());
-         log.Add(string.Join(" ", "write-file", path.Standard(), string.Join(",", data)));
+         _files.Add(path.StandardPath());
+         log.Add(string.Join(" ", "write-file", path.StandardPath(), string.Join(",", data)));
          return Task.CompletedTask;
       }
 

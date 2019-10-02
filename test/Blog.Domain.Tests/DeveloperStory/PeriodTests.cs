@@ -3,7 +3,7 @@ using FluentAssertions;
 using System;
 using Xunit;
 
-namespace Blog.Tests.Domain
+namespace Blog.Domain.Tests.DeveloperStory
 {
    public class PeriodTests
    {
