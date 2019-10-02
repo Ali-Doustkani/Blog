@@ -183,6 +183,8 @@
    padding: 10px 10px 10px 20px;
    direction: ltr;
    border-radius: 9px;
+   white-space: pre-wrap;
+   word-break: break-all;
 }
 
 @mixin cmd() {
