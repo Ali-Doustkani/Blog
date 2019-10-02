@@ -19,6 +19,7 @@
     <Content Include="Assets\Fonts\IRANSansWeb_Light.woff2" />
     <Content Include="Assets\Fonts\IRANSansWeb_Medium.woff2" />
     <Content Include="Assets\Fonts\IRANSansWeb_UltraLight.woff2" />
+    <Content Include="Assets\openapi.yaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,10 +36,7 @@
     <PackageReference Include="NWebsec.AspNetCore.Middleware" Version="2.0.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
     <PackageReference Include="Serilog.Sinks.File" Version="4.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Domain\Blogging\Abstractions\" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="4.0.1" />
   </ItemGroup>
 
 </Project>

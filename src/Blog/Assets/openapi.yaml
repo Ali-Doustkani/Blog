@@ -1,0 +1,188 @@
+openapi: 3.0.0
+info:
+  title: Blog APIs
+  version: "1.0.0"
+  description: Administration APIs available at [alidoustkani.com](https://alidoustkani.com)
+tags:
+  - name: developer
+    description: Developer APIs for customizing the About page
+paths:
+  /api/developer:
+    get:
+      tags:
+        - developer
+      summary: Returns the one existing developer
+      operationId: getDeveloper
+      responses:
+        "200":
+          description: The existsing developer
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Developer"
+        "204":
+          description: No developer exists in the system
+        "401":
+          description: Unauthenticated
+    put:
+      tags:
+        - developer
+      summary: Add or updates the existing developer
+      operationId: saveDeveloper
+      responses:
+        "201":
+          description: Creates a new developer. This happens when there is no developer in the system
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeveloperSaveResult'
+        "200":
+          description: The existing developer gets updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeveloperSaveResult'
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthenticated
+      requestBody:
+        $ref: "#/components/requestBodies/Developer"
+components:
+  schemas:
+    Developer:
+      description: This object has no Id field. Only one Developer exists.
+      type: object
+      required:
+        - summary
+        - skills
+        - experiences
+      properties:
+        summary:
+          type: string
+          format: html
+          example: "<p>Hi Im a developer</p>"
+          description: The summary of the developer shown first in the about page
+        skills:
+          type: array
+          items:
+            type: string
+          example: [c#, es6]
+        experiences:
+          type: array
+          items:
+            $ref: "#/components/schemas/Experience"
+        sideProjects:
+          type: array
+          items:
+            $ref: "#/components/schemas/SideProject"
+        educations:
+          type: array
+          items:
+            $ref: "#/components/schemas/Education"
+    Experience:
+      type: object
+      required:
+        - company
+        - position
+        - startDate
+        - endDate
+        - content
+      properties:
+        id:
+          type: string
+          example: "12"
+          description: On GET this is a number. On PUT the API checks the value, if its anumber it will update the coresponding object and if its not a number it will create a new object
+        company:
+          type: string
+          example: Microsoft
+        position:
+          type: string
+          example: Senior .NET Developer
+        startDate:
+          type: string
+          format: date
+          example: "2018-12-28"
+        endDate:
+          type: string
+          format: date
+          example: "2019-5-25"
+        content:
+          type: string
+          format: html
+          description: The content of each 'experience' section in About page
+          example: "<p>Used <b>.net</b> most of the time</p>"
+    SideProject:
+      type: object
+      required:
+        - title
+        - content
+      properties:
+        id:
+          type: string
+          example: "13"
+          description: On GET this is a number. On PUT the API checks the value, if its anumber it will update the coresponding object and if its not a number it will create a new object
+        title:
+          type: string
+          example: facebook/react
+        content:
+          type: string
+          format: html
+          description: HTML content of side project in About page
+          example: "<p>contributed to facebook/react</p>"
+    Education:
+      type: object
+      required:
+        - degree
+        - university
+        - startDate
+        - endDate
+      properties:
+        id:
+          type: string
+          example: "124"
+          description: On GET this is a number. On PUT the API checks the value, if its anumber it will update the coresponding object and if its not a number it will create a new object
+        degree:
+          type: string
+          example: B.Sc. in Software Engineering
+        university:
+          type: string
+          example: MIT
+        startDate:
+          type: string
+          format: date
+          example: "2010-10-25"
+        endDate:
+          type: string
+          format: date
+          example: "2015-1-20"
+    DeveloperSaveResult:
+      type: object
+      properties:
+        experiences:
+          description: IDs of added/updated experiences
+          type: array
+          items:
+            type: integer
+            format: int32
+          example: [1, 2, 3]
+        educations:
+          description: IDs of added/updated educations
+          type: array
+          items:
+            type: integer
+            format: int32
+          example: []
+        sideProjects:
+          description: IDs of added/updated side projects
+          type: array
+          items:
+            type: integer
+            format: int32
+          example: [9]
+  requestBodies:
+    Developer:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Developer"

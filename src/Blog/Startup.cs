@@ -10,10 +10,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 
 namespace Blog
 {
@@ -96,13 +98,20 @@ namespace Blog
          }
 
          app.UseAuthentication();
-         app.UseStaticFiles();
+
+
+         app.UseStaticFiles(new StaticFileOptions
+         {
+            ContentTypeProvider = new FileExtensionContentTypeProvider(new Dictionary<string, string> { { ".yaml", "text/yaml" } })
+         });
+
          app.UseSpaStaticFiles();
 
          app.Map("/newadmin", clientApp =>
          {
             clientApp.UseSpa(spa => { });
          });
+         app.UseSwaggerUI(options => options.SwaggerEndpoint("/openapi.yaml", "Blog APIs"));
 
          app.UseMvc(cfg =>
          {

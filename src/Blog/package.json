@@ -5,7 +5,7 @@
   "scripts": {
     "build-styles": "parcel build Views/Site.scss --out-dir wwwroot --out-file site.min.css --no-source-maps",
     "build-js": "parcel build Views/Administrator/Index.js --out-dir wwwroot --out-file admin.min.js && parcel build Views/Administrator/Post.js --out-dir wwwroot --out-file post.min.js",
-    "copy-assets": "cpx \"Assets/Images/**/*\" \"wwwroot/images\" && cpx \"Assets/*.js\" \"wwwroot\"",
+    "copy-assets": "cpx \"Assets/Images/**/*\" \"wwwroot/images\" && cpx \"Assets/*.*\" \"wwwroot\"",
     "build-assets": "npm run copy-assets && npm run build-styles && npm run build-js"
   },
   "devDependencies": {
