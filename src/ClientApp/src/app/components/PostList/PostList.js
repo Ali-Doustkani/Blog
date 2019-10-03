@@ -1,36 +1,64 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useReducer } from 'react'
 import PostItem from './PostItem'
 import { getPostItems } from '../services'
-import { Loader } from 'Controls'
+import { Loader, Message } from 'Controls'
+
+const initial = {
+   status: 'loading',
+   errorMessage: '',
+   posts: []
+}
+
+function reducer(state, action) {
+   switch (action.type) {
+      case 'LOAD_POSTS':
+         if (action.result.status === 'ok') {
+            return {
+               posts: action.result.data,
+               status: 'normal',
+               errorMessage: ''
+            }
+         } else {
+            return {
+               posts: [],
+               status: 'error',
+               errorMessage: action.result.data
+            }
+         }
+      default:
+         throw new Error('Unsupported action type')
+   }
+}
 
 function PostList() {
-   const [posts, setPosts] = useState([])
-   const [loading, setLoading] = useState(true)
+   const [state, dispatch] = useReducer(reducer, initial)
+   let mounted = true
 
    useEffect(() => {
-      let mounted = true
-      const init = async () => {
-         const result = await getPostItems()
-         if (mounted) {
-            setPosts(result.data)
-            setLoading(false)
-         }
-      }
-      init()
-      return () => {
-         mounted = false
-      }
+      fetchPostItems()
+      return () => (mounted = false)
    }, [])
 
-   if (loading) {
+   const fetchPostItems = async () => {
+      const result = await getPostItems()
+      if (mounted) {
+         dispatch({ type: 'LOAD_POSTS', result })
+      }
+   }
+
+   if (state.status === 'loading') {
       return <Loader text="Loading posts..." />
+   } else if (state.status === 'error') {
+      return (
+         <Message message={state.errorMessage} onTryAgain={async () => await fetchPostItems()} />
+      )
    }
 
    return (
       <div data-testid="post-list" className="post-list">
          <h1>Posts</h1>
          <ol>
-            {posts.map(x => {
+            {state.posts.map(x => {
                const { id, ...rest } = x
                return <PostItem key={id} {...rest} />
             })}
