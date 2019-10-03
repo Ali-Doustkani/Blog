@@ -95,7 +95,7 @@ const Developer = ({ notify, auth0 }) => {
                onChange={actions.updateEducation}
                onDelete={ask(actions.deleteEducation)}
             />
-            <Button data-cy="save-button" onClick={save}>
+            <Button data-testid="save-button" onClick={save}>
                Save
             </Button>
          </div>

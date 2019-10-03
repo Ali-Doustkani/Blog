@@ -9,7 +9,7 @@ const Input = props => {
    return (
       <input
          name={props.name}
-         data-cy={props.name + '-input'}
+         data-testid={props.name + '-input'}
          type={props.type}
          placeholder={ph}
          autoFocus={props.autoFocus}

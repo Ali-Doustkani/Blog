@@ -11,7 +11,7 @@ const Textarea = props => {
          <label>{props.label}</label>
          <textarea
             name={props.name}
-            data-cy={props.name + '-input'}
+            data-testid={props.name + '-input'}
             defaultValue={props[props.name]}
             className={renderClassNames(props)}
             onChange={emitChange(props)}

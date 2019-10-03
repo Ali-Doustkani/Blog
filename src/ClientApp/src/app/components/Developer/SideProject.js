@@ -3,13 +3,13 @@ import PropTypes from 'prop-types'
 import { Input, Richtext, ToolbarButton, ErrorList } from 'Controls'
 
 const SideProject = props => (
-   <div data-cy="project-container" className="sub-form-group">
+   <div data-testid="project-container" className="sub-form-group">
       <div className="text-group toolbar">
          <label>Side Project:</label>
          <Input name="title" autoFocus {...props} />
          <div className="separator" />
          <ToolbarButton
-            data-cy="delete-button"
+            data-testid="delete-button"
             content="trash-alt"
             onClick={() => props.onDelete(props.id)}
          />

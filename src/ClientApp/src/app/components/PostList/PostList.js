@@ -27,7 +27,7 @@ function PostList() {
    }
 
    return (
-      <div data-cy="post-list" className="post-list">
+      <div data-testid="post-list" className="post-list">
          <h1>Posts</h1>
          <ol>
             {posts.map(x => {

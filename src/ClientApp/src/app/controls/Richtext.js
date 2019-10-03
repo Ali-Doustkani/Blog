@@ -33,7 +33,7 @@ function Richtext(props) {
          <article
             ref={editorRef}
             className="entry"
-            data-cy={props.name + '-richtext'}
+            data-testid={props.name + '-richtext'}
             dangerouslySetInnerHTML={{ __html: props[props.name] }}
             onBlur={() =>
                props.onChange({
