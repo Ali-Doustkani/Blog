@@ -1,10 +1,10 @@
 import fetchMock from 'fetchMock'
 import { getDeveloper, saveDeveloper } from './services'
 
-jest.mock('../../utils')
+jest.mock('../utils')
 
 const auth0 = {
-   getTokenSilently: () => Promise.resolve('TOK')
+   getAccessToken: () => Promise.resolve('TOK')
 }
 
 const sample = {

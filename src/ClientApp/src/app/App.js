@@ -1,20 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import Developer from './components/Developer/Developer'
+import PostList from './components/PostList/PostList'
 import { InstantMessage, notify } from './components/Notification'
 import { Loader } from 'Controls'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
-import createAuth0Client from '@auth0/auth0-spa-js'
-import config from './auth_config'
-
-const DashboardPage = () => (
-   <main>
-      <h1>Dashboard</h1>
-   </main>
-)
+import useAuth0 from './useAuth0'
 
 const PostPage = () => (
    <main>
-      <h1>Post</h1>
+      <PostList />
    </main>
 )
 
@@ -25,37 +19,10 @@ const DeveloperPage = auth0 => () => (
    </main>
 )
 
-const setHistory = appState => {
-   window.history.replaceState(
-      {},
-      document.title,
-      appState && appState.targetUrl ? appState.targetUrl : window.location.pathname
-   )
-}
-
 function App() {
-   const [client, setClient] = useState()
-   const [loading, setLoading] = useState(true)
+   const auth0 = useAuth0()
 
-   useEffect(() => {
-      const init = async () => {
-         const client = await createAuth0Client(config.info)
-         setClient(client)
-         if (window.location.search.includes('code=')) {
-            const { appState } = await client.handleRedirectCallback()
-            setHistory(appState)
-         }
-         const authenticated = await client.isAuthenticated()
-         if (!authenticated) {
-            await client.loginWithRedirect()
-         } else {
-            setLoading(false)
-         }
-      }
-      init()
-   }, [])
-
-   if (loading) {
+   if (auth0.loading) {
       return <Loader text="Authenticating..." />
    }
 
@@ -71,24 +38,17 @@ function App() {
                      <div className="separator" />
                   </li>
                   <li>
-                     <Link to="/post">New Post</Link>
-                  </li>
-                  <li>
-                     <div className="separator" />
-                  </li>
-                  <li>
                      <Link to="/developer">Developer</Link>
                   </li>
                   <li className="end">
-                     <a className="logout" onClick={() => client.logout(config.logout)}>
+                     <a className="logout" onClick={() => auth0.logout()}>
                         <i className="fas fa-power-off" />
                      </a>
                   </li>
                </ul>
             </header>
-            <Route path="/" exact component={DashboardPage} />
-            <Route path="/post" component={PostPage} />
-            <Route path="/developer" component={DeveloperPage(client)} />
+            <Route path="/" exact component={PostPage} />
+            <Route path="/developer" component={DeveloperPage(auth0)} />
          </>
       </Router>
    )

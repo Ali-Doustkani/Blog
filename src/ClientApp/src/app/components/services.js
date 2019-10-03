@@ -1,4 +1,5 @@
 const url_developer = '/api/developer'
+const url_posts = '/api/posts'
 
 const ok = data => ({
    status: 'ok',
@@ -37,7 +38,7 @@ const processResponse = async response => {
 
 const getDeveloper = async auth0 => {
    try {
-      const token = await auth0.getTokenSilently()
+      const token = await auth0.getAccessToken()
       return await processResponse(
          await fetch(url_developer, {
             headers: {
@@ -53,7 +54,7 @@ const getDeveloper = async auth0 => {
 
 const saveDeveloper = async (state, auth0) => {
    try {
-      const token = await auth0.getTokenSilently()
+      const token = await auth0.getAccessToken()
       return await processResponse(
          await fetch(url_developer, {
             method: 'PUT',
@@ -69,4 +70,18 @@ const saveDeveloper = async (state, auth0) => {
    }
 }
 
-export { getDeveloper, saveDeveloper }
+const getPostItems = async () => {
+   try {
+      return await processResponse(
+         await fetch(url_posts, {
+            headers: {
+               Accept: 'application/json'
+            }
+         })
+      )
+   } catch (err) {
+      return fatal(err.message)
+   }
+}
+
+export { getDeveloper, saveDeveloper, getPostItems }

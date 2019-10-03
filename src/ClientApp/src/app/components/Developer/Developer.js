@@ -4,7 +4,7 @@ import { Loader, Message, Button, Richtext, Textarea, ErrorList, ask } from 'Con
 import ExperienceList from './ExperienceList'
 import SideProjectList from './SideProjectList'
 import EducationList from './EducationList'
-import { getDeveloper, saveDeveloper } from './services'
+import { getDeveloper, saveDeveloper } from '../services'
 import DisabledContext from 'DisabledContext'
 import { useActions, STATUS } from './actions'
 import { useValidation } from './validation'

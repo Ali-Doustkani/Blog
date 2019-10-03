@@ -2,7 +2,9 @@ describe('fetching', () => {
    beforeEach(() => {
       cy.server()
       cy.route('GET', '/api/developer', 'fixture:developer.json')
+      cy.route('GET', '/api/posts', 'fixture:posts.json')
       cy.visit('/')
+      cy.contains('Developer').click()
    })
 
    it('fetches general info', () => {
@@ -83,6 +85,7 @@ describe('deleting items', () => {
       cy.server()
       cy.route('GET', '/api/developer', 'fixture:developer.json')
       cy.visit('/')
+      cy.contains('Developer').click()
    })
 
    it('deletes an experience', () => {
@@ -135,6 +138,7 @@ describe('loading', () => {
          delay: 300
       }).as('getDeveloper')
       cy.visit('/')
+      cy.contains('Developer').click()
 
       cy.testid('loader-container').should('be.visible')
       cy.wait('@getDeveloper')
@@ -145,6 +149,7 @@ describe('loading', () => {
       cy.server()
       cy.route('GET', '/api/developer', '').as('getDeveloper')
       cy.visit('/')
+      cy.contains('Developer').click()
 
       cy.wait('@getDeveloper')
       cy.testid('message-container').should($c => {
@@ -208,6 +213,7 @@ describe('saving', () => {
       })
 
       cy.visit('/')
+      cy.contains('Developer').click()
 
       // change experiences
 
@@ -278,6 +284,7 @@ describe('saving', () => {
       cy.route('PUT', '/api/developer', '').as('putDeveloper')
 
       cy.visit('/')
+      cy.contains('Developer').click()
       cy.testid('save-button').click()
       cy.wait('@putDeveloper')
       cy.testid('toaster-container').should($c => {
@@ -297,6 +304,8 @@ describe('saving', () => {
       }).as('putDeveloper')
 
       cy.visit('/')
+      cy.contains('Developer').click()
+
       cy.testid('save-button').click()
       cy.testid('loader-container').should('be.visible')
       cy.wait('@putDeveloper')
