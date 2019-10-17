@@ -53,14 +53,14 @@ function useAuth0() {
             setLoading(false)
          }
       }
-      if (process.env.NODE_ENV === 'production') {
-         init()
-      } else {
+      if (process.env.NODE_ENV === 'testing') {
          setLoading(false)
          setClient({
             logout: () => {},
             getTokenSilently: async () => Promise.resolve('TOK')
          })
+      } else {
+         init()
       }
    }, [])
 

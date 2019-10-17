@@ -5,12 +5,13 @@
    "description": "administrator react pages",
    "scripts": {
       "start": "parcel public/index.html",
+      "start:testing": "cross-env NODE_ENV=testing parcel public/index.html",
       "build": "parcel build public/index.html --out-dir ../Blog/wwwroot/admin",
       "build:dev": "cross-env NODE_ENV=development parcel build public/index.html --out-dir ../Blog/wwwroot/admin",
       "test": "jest",
       "test:watch": "jest --watchAll",
-      "test:cy": "start-test start http://localhost:1234 cy:open",
-      "test:integ": "start-test start http://localhost:1234 cy:run",
+      "test:cy": "start-test start:testing http://localhost:1234 cy:open",
+      "test:integ": "start-test start:testing http://localhost:1234 cy:run",
       "cy:open": "cypress open",
       "cy:run": "cypress run",
       "lint": "eslint ."
