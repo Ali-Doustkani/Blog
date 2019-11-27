@@ -1,0 +1,41 @@
+.postForm--rtl {
+   direction: rtl;
+   .postForm__title {
+      font-family: 'IRANSans';
+   }
+   .postForm__richtext {
+      font-family: 'IRANSans';
+   }
+}
+
+.postForm__title {
+   font-size: 2.5em;
+   font-family: 'Roboto Condensed';
+   font-weight: bold;
+   background: none;
+   border: none;
+   outline: none;
+   width: 50%;
+   color: $color1;
+
+   &::placeholder {
+      color: #a6e3e9;
+   }
+}
+
+.postForm__richtext {
+   margin-top: 20px;
+}
+
+.saveMessage {
+   position: fixed;
+   right: 200px;
+   top: 10px;
+   color: green;
+   z-index: 100;
+}
+
+.saveMessage--rtl {
+   right: unset;
+   left: 200px;
+}

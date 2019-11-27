@@ -1,0 +1,61 @@
+$itemHeight: 35px;
+$menuBg: #daeeef;
+
+.menu {
+   height: 50px;
+   position: relative;
+
+   &__button {
+      position: absolute;
+      top: 20px;
+      right: 0;
+      display: block;
+      border: none;
+      background: none;
+      cursor: pointer;
+      outline: none;
+      padding: 0;
+      font-size: 1.5em;
+      color: $color1;
+   }
+
+   &__itemContainer {
+      position: absolute;
+      right: 0;
+      top: 40px;
+      display: none;
+      list-style-type: none;
+      margin-top: 10px;
+      padding: 10px;
+      background: $menuBg;
+      width: 150px;
+      border-top: 3px solid $color2;
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;
+   }
+
+   &__item {
+      height: $itemHeight;
+      border-bottom: 1px solid $bg;
+   }
+
+   &__item:last-of-type {
+      border-bottom: none;
+   }
+
+   &__link {
+      font-size: 1.2em;
+      line-height: $itemHeight;
+      color: $color1;
+      text-decoration: none;
+      transition: color 200ms;
+   }
+
+   &__link:hover {
+      color: $color2;
+   }
+}
+
+.menu--open .menu__button {
+   color: $color2;
+}

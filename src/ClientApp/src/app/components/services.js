@@ -1,26 +1,37 @@
 const url_developer = '/api/developer'
 const url_posts = '/api/posts'
+const url_drafts = '/api/drafts'
 
-const ok = data => ({
-   status: 'ok',
-   data: data || null
-})
+function ok(data) {
+   return {
+      status: 'ok',
+      data: data || null
+   }
+}
 
-const error = data => ({
-   status: 'error',
-   data
-})
+function error(data) {
+   return {
+      status: 'error',
+      data
+   }
+}
 
-const fatal = msg => ({
-   status: 'fatal',
-   data: msg
-})
+function fatal(msg) {
+   return {
+      status: 'fatal',
+      data: msg
+   }
+}
 
-const processResponse = async response => {
+async function processResponse(response) {
    switch (response.status) {
       case 200:
       case 201:
-         return ok(await response.json())
+         const contentType = response.headers.get('content-type')
+         if (contentType && contentType.indexOf('application/json') !== -1) {
+            return ok(await response.json())
+         }
+         return ok()
       case 204:
          return ok()
       case 400:
@@ -36,7 +47,7 @@ const processResponse = async response => {
    }
 }
 
-const getDeveloper = async auth0 => {
+async function getDeveloper(auth0) {
    try {
       const token = await auth0.getAccessToken()
       return await processResponse(
@@ -52,7 +63,7 @@ const getDeveloper = async auth0 => {
    }
 }
 
-const saveDeveloper = async (state, auth0) => {
+async function saveDeveloper(state, auth0) {
    try {
       const token = await auth0.getAccessToken()
       return await processResponse(
@@ -70,10 +81,10 @@ const saveDeveloper = async (state, auth0) => {
    }
 }
 
-const getPostItems = async () => {
+async function getDraftItems() {
    try {
       return await processResponse(
-         await fetch(url_posts, {
+         await fetch(url_drafts, {
             headers: {
                Accept: 'application/json'
             }
@@ -84,4 +95,44 @@ const getPostItems = async () => {
    }
 }
 
-export { getDeveloper, saveDeveloper, getPostItems }
+async function getDraft(id) {
+   try {
+      return await processResponse(await fetch(`${url_drafts}/${id}`))
+   } catch (err) {
+      return fatal(err.message)
+   }
+}
+
+async function postDraft(post) {
+   try {
+      return await processResponse(
+         await fetch(url_drafts, {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(post)
+         })
+      )
+   } catch (err) {
+      return fatal(err.message)
+   }
+}
+
+async function patchDraft(post) {
+   try {
+      return await processResponse(
+         await fetch(`${url_drafts}/${post.id}`, {
+            method: 'PATCH',
+            headers: {
+               'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ title: post.title, content: post.content })
+         })
+      )
+   } catch (err) {
+      return fatal(err.message)
+   }
+}
+
+export { getDeveloper, saveDeveloper, getDraftItems, postDraft, patchDraft, getDraft }

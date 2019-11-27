@@ -1,14 +1,22 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import MainMenu from './components/MainMenu/MainMenu'
 import Developer from './components/Developer/Developer'
 import PostList from './components/PostList/PostList'
+import Post from './components/Post/Post'
 import { InstantMessage, notify } from './components/Notification'
 import { Loader } from 'Controls'
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import useAuth0 from './useAuth0'
+
+const PostListPage = () => (
+   <main>
+      <PostList />
+   </main>
+)
 
 const PostPage = () => (
    <main>
-      <PostList />
+      <Post />
    </main>
 )
 
@@ -20,7 +28,22 @@ const DeveloperPage = auth0 => () => (
 )
 
 function App() {
-   const auth0 = useAuth0()
+   const [isMenuOpen, setMenuOpen] = useState(false)
+   const auth0 =
+      process.env.NODE_ENV === 'development'
+         ? {
+              loading: false
+           }
+         : useAuth0()
+   const showMenu = () => setMenuOpen(!isMenuOpen)
+   const closeMenu = () => setMenuOpen(false)
+
+   useEffect(() => {
+      if (isMenuOpen) {
+         document.addEventListener('click', closeMenu)
+      }
+      return () => document.removeEventListener('click', closeMenu)
+   }, [isMenuOpen])
 
    if (auth0.loading) {
       return <Loader text="Authenticating..." />
@@ -29,26 +52,16 @@ function App() {
    return (
       <Router basename="/newadmin">
          <>
-            <header>
-               <ul className="menu-bar">
-                  <li>
-                     <Link to="/">Dashboard</Link>
-                  </li>
-                  <li>
-                     <div className="separator" />
-                  </li>
-                  <li>
-                     <Link to="/developer">Developer</Link>
-                  </li>
-                  <li className="end">
-                     <a className="logout" onClick={() => auth0.logout()}>
-                        <i className="fas fa-power-off" />
-                     </a>
-                  </li>
-               </ul>
-            </header>
-            <Route path="/" exact component={PostPage} />
-            <Route path="/developer" component={DeveloperPage(auth0)} />
+            <MainMenu
+               open={isMenuOpen}
+               onOpenClick={() => showMenu()}
+               onLogout={() => auth0.logout()}
+            />
+            <Switch>
+               <Route path="/" exact component={PostListPage} />
+               <Route path="/developer" component={DeveloperPage(auth0)} />
+               <Route path="/post/:id?" children={<PostPage />} />
+            </Switch>
          </>
       </Router>
    )

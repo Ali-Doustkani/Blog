@@ -6,6 +6,7 @@
 **/*/node_modules
 **/*/wwwroot
 **/*/dist
+**/*/cypress/screenshots
 /build
 /.vs
 

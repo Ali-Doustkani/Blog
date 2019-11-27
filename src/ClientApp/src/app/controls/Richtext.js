@@ -17,9 +17,13 @@ const OPTIONS = {
 
 function Richtext(props) {
    const editorRef = useRef()
+   const toolbarRef = useRef()
    const [rich, setRich] = useState(null)
    const [hasFocus, setFocus] = useState(false)
+   const [hasStickyToolbar, setHasStickyToolbar] = useState(false)
+   const [toolbarOffset, setToolbarOffset] = useState()
    const disabled = React.useContext(DisabledContext)
+   const setStickyToolbar = () => setHasStickyToolbar(window.pageYOffset > toolbarOffset)
 
    useEffect(() => {
       setRich(create(editorRef.current, OPTIONS))
@@ -27,6 +31,14 @@ function Richtext(props) {
          editorRef.current.firstChild.focus()
       }
    }, [])
+
+   useEffect(() => {
+      if (props.stickyToolbar) {
+         setToolbarOffset(toolbarRef.current.offsetTop - 20)
+         window.addEventListener('scroll', setStickyToolbar)
+         return () => window.removeEventListener('scroll', setStickyToolbar)
+      }
+   }, [toolbarOffset])
 
    const article = useMemo(
       () => (
@@ -51,7 +63,7 @@ function Richtext(props) {
    }
 
    const errors = props[props.name + 'Errors']
-   const classes = ['entry']
+   const classes = ['richtext__entry']
    if (errors && errors.length) {
       classes.push('incorrect')
    }
@@ -60,19 +72,48 @@ function Richtext(props) {
    }
 
    return (
-      <div className="text-group richtext-group">
+      <div className={'richtext ' + props.className}>
          {props.label ? <label>{props.label}</label> : null}
-         <div className="toolbar">
+         <div
+            ref={toolbarRef}
+            className={
+               hasStickyToolbar
+                  ? 'richtext__toolbar richtext__toolbar--sticky'
+                  : 'richtext__toolbar'
+            }
+         >
             <ToolbarButton content="bold" tabIndex="-1" onClick={() => rich.style('important')} />
             <ToolbarButton content="code" tabIndex="-1" onClick={() => rich.style('inlineCode')} />
-            <div className="separator" />
+            <div className="richtext__separator" />
             <ToolbarButton tabIndex="-1" onClick={() => rich.apply('h1')}>
                <strong>H1</strong>
             </ToolbarButton>
             <ToolbarButton tabIndex="-1" onClick={() => rich.apply('h2')}>
                <strong>H2</strong>
             </ToolbarButton>
-            <div className="separator" />
+            <div className="richtext__separator" />
+            {props.pro ? (
+               <>
+                  <ToolbarButton content="code" tabIndex="-1" onClick={() => rich.apply('code')} />
+                  <ToolbarButton
+                     content="terminal"
+                     tabIndex="-1"
+                     onClick={() => rich.apply('terminal')}
+                  />
+                  <div className="richtext__separator" />
+                  <ToolbarButton
+                     content="exclamation"
+                     tabIndex="-1"
+                     onClick={() => rich.apply('note')}
+                  />
+                  <ToolbarButton
+                     content="times"
+                     tabIndex="-1"
+                     onClick={() => rich.apply('warning')}
+                  />
+                  <div className="richtext__separator" />
+               </>
+            ) : null}
             <ToolbarButton
                content="list-ul"
                tabIndex="-1"
@@ -83,8 +124,11 @@ function Richtext(props) {
                tabIndex="-1"
                onClick={() => rich.applyOrderedList()}
             />
-            <div className="separator" />
+            <div className="richtext__separator" />
             <ToolbarButton content="link" tabIndex="-1" onClick={() => rich.styleLink()} />
+            {props.pro ? (
+               <ToolbarButton content="camera" tabIndex="-1" onClick={() => rich.selectImage()} />
+            ) : null}
          </div>
          <div
             className={classes.join(' ')}

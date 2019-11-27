@@ -1,0 +1,39 @@
+$toolbarHeight: 45px;
+
+.richtext__toolbar {
+   display: flex;
+   align-items: center;
+   background: rgb(225, 228, 231);
+   padding: 5px;
+   border-radius: 5px;
+   box-sizing: border-box;
+   width: $width;
+   height: $toolbarHeight;
+
+   &--sticky {
+      position: fixed;
+      top: 0;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+   }
+}
+
+.richtext__toolbar--sticky + .richtext__entry {
+   padding-top: $toolbarHeight;
+}
+
+.richtext__separator {
+   display: inline-block;
+   width: 1px;
+   height: 20px;
+   background: $bg;
+   margin: 0 5px;
+}
+
+.richtext__entry {
+   margin-top: 10px;
+   font-size: 1.3em;
+   * {
+      outline: none;
+   }
+}

@@ -2,8 +2,9 @@ describe('fetching', () => {
    beforeEach(() => {
       cy.server()
       cy.route('GET', '/api/developer', 'fixture:developer.json')
-      cy.route('GET', '/api/posts', 'fixture:posts.json')
+      cy.route('GET', '/api/drafts', 'fixture:posts.json')
       cy.visit('/')
+      cy.get('button.menu__button').click()
       cy.contains('Developer').click()
    })
 
@@ -84,7 +85,9 @@ describe('deleting items', () => {
    beforeEach(() => {
       cy.server()
       cy.route('GET', '/api/developer', 'fixture:developer.json')
+      cy.route('GET', '/api/drafts', 'fixture:posts.json')
       cy.visit('/')
+      cy.get('button.menu__button').click()
       cy.contains('Developer').click()
    })
 
@@ -94,7 +97,6 @@ describe('deleting items', () => {
          .within(() => {
             cy.testid('delete-button').click()
          })
-
       cy.testid('experience-container').should('have.length', 1)
       cy.testid('experience-container').within(() => {
          cy.testid('company-input').should('have.value', 'Parmis')
@@ -137,7 +139,9 @@ describe('loading', () => {
          response: 'fixture:developer.json',
          delay: 300
       }).as('getDeveloper')
+      cy.route('GET', '/api/drafts', 'fixture:posts.json')
       cy.visit('/')
+      cy.get('button.menu__button').click()
       cy.contains('Developer').click()
 
       cy.testid('loader-container').should('be.visible')
@@ -147,14 +151,21 @@ describe('loading', () => {
 
    it('shows retry when loading failed', () => {
       cy.server()
-      cy.route('GET', '/api/developer', '').as('getDeveloper')
+      cy.route({
+         method: 'GET',
+         url: '/api/developer',
+         status: 500,
+         response: 'Error Text'
+      }).as('getDeveloper')
+      cy.route('GET', '/api/drafts', 'fixture:posts.json')
       cy.visit('/')
+      cy.get('button.menu__button').click()
       cy.contains('Developer').click()
 
       cy.wait('@getDeveloper')
       cy.testid('message-container').should($c => {
          expect($c).to.be.visible
-         expect($c).to.contain('Unexpected end of JSON input')
+         expect($c).to.contain('Error Text')
          expect($c).to.contain('Try again')
       })
    })
@@ -163,6 +174,7 @@ describe('loading', () => {
 describe('saving', () => {
    it('sends correct state to end-point', () => {
       cy.server()
+      cy.route('GET', '/api/drafts', 'fixture:posts.json')
       cy.route('GET', '/api/developer', 'fixture:developer.json').as('getDeveloper')
       cy.route({
          method: 'PUT',
@@ -213,6 +225,7 @@ describe('saving', () => {
       })
 
       cy.visit('/')
+      cy.get('button.menu__button').click()
       cy.contains('Developer').click()
 
       // change experiences
@@ -280,10 +293,14 @@ describe('saving', () => {
 
    it('shows the error if saving fails', () => {
       cy.server()
+      cy.route('GET', '/api/drafts', 'fixture:posts.json')
       cy.route('GET', '/api/developer', 'fixture:developer.json')
-      cy.route('PUT', '/api/developer', '').as('putDeveloper')
+      cy.route({ method: 'PUT', url: '/api/developer', response: '', status: 500 }).as(
+         'putDeveloper'
+      )
 
       cy.visit('/')
+      cy.get('button.menu__button').click()
       cy.contains('Developer').click()
       cy.testid('save-button').click()
       cy.wait('@putDeveloper')
@@ -296,6 +313,7 @@ describe('saving', () => {
    it('shows loader indicator when saving', () => {
       cy.server()
       cy.route('GET', '/api/developer', 'fixture:developer.json')
+      cy.route('GET', '/api/drafts', 'fixture:posts.json')
       cy.route({
          method: 'PUT',
          url: '/api/developer',
@@ -304,6 +322,7 @@ describe('saving', () => {
       }).as('putDeveloper')
 
       cy.visit('/')
+      cy.get('button.menu__button').click()
       cy.contains('Developer').click()
 
       cy.testid('save-button').click()

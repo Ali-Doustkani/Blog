@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer } from 'react'
 import PostItem from './PostItem'
-import { getPostItems } from '../services'
-import { Loader, Message } from 'Controls'
+import { getDraftItems } from '../services'
+import { Loader, Message, Button } from 'Controls'
 
 const initial = {
    status: 'loading',
@@ -35,12 +35,12 @@ function PostList() {
    let mounted = true
 
    useEffect(() => {
-      fetchPostItems()
+      fetchDraftItems()
       return () => (mounted = false)
    }, [])
 
-   const fetchPostItems = async () => {
-      const result = await getPostItems()
+   const fetchDraftItems = async () => {
+      const result = await getDraftItems()
       if (mounted) {
          dispatch({ type: 'LOAD_POSTS', result })
       }
@@ -50,17 +50,32 @@ function PostList() {
       return <Loader text="Loading posts..." />
    } else if (state.status === 'error') {
       return (
-         <Message message={state.errorMessage} onTryAgain={async () => await fetchPostItems()} />
+         <Message message={state.errorMessage} onTryAgain={async () => await fetchDraftItems()} />
       )
    }
 
    return (
       <div data-testid="post-list" className="post-list">
          <h1>Posts</h1>
+         <button
+            onClick={() => {
+               window.location.assign('/post')
+            }}
+         >
+            New Post
+         </button>
          <ol>
             {state.posts.map(x => {
-               const { id, ...rest } = x
-               return <PostItem key={id} {...rest} />
+               return (
+                  <PostItem
+                     key={x.id}
+                     id={x.id}
+                     title={x.title}
+                     date={x.date}
+                     published={x.published}
+                     onEdit={id => window.location.assign(`/post/${id}`)}
+                  />
+               )
             })}
          </ol>
       </div>

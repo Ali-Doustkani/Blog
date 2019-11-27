@@ -11,7 +11,7 @@ const ToolbarButton = props => {
          props.children
       )
    return (
-      <button disabled={disabled} {...props}>
+      <button disabled={disabled} {...props} className="toolbarButton">
          {content}
       </button>
    )
