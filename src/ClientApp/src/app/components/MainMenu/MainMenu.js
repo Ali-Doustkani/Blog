@@ -35,9 +35,9 @@ function MainMenu({ open, onOpenClick, onLogout }) {
             <i className="fas fa-ellipsis-h"></i>
          </button>
          <ul className="menu__itemContainer" style={style}>
-            <MenuItem text="Posts" page="posts" />
-            <MenuItem text="New Post" page="post" />
-            <MenuItem text="Developer" page="developer" />
+            <MenuItem text="Posts" page="/newadmin" />
+            <MenuItem text="New Post" page="/newadmin/post" />
+            <MenuItem text="Developer" page="/newadmin/developer" />
             <MenuItem text="Logout" onClick={onLogout} />
          </ul>
       </nav>

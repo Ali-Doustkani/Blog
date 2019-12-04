@@ -61,7 +61,7 @@ function PostList({ auth0 }) {
          <h1>Posts</h1>
          <button
             onClick={() => {
-               window.location.assign('/post')
+               window.location.assign('/newadmin/post')
             }}
          >
             New Post

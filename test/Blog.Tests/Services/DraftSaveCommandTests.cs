@@ -32,7 +32,7 @@ namespace Blog.Tests.Services
          _handler = new Handler(context, _imageContext, mapper, _dateProvider, _htmlProcessor);
       }
 
-      private readonly IRequestHandler<DraftSaveCommand, Result> _handler;
+      private readonly IRequestHandler<DraftSaveCommand, DraftSaveResult> _handler;
       private readonly TestContext _context;
       private readonly MockFileSystem _fs;
       private readonly ImageContext _imageContext;

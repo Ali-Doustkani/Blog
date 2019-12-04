@@ -31,12 +31,13 @@ namespace Blog.Controllers
          Ok(await _mediator.Send(new DraftQuery { Id = id }));
 
       [HttpPatch("{id}")]
+      [HttpPost]
       public async Task<IActionResult> Save(DraftSaveCommand draft)
       {
          var result = await _mediator.Send(draft);
          if (result.Failed)
             return BadRequest(result.Errors);
-         return Ok();
+         return Ok(result.Id);
       }
 
       [HttpDelete("{id}")]

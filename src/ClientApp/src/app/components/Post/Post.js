@@ -117,7 +117,9 @@ function Post({ auth0 }) {
    }, [state.showSaveMessage])
 
    if (!state.id && !state.language) {
-      return <LanguageSelector onSelection={lang => dispatch({ type: 'CHANGE_LANG', lang })} />
+      return (
+         <LanguageSelector onSelection={language => dispatch({ type: 'CHANGE_LANG', language })} />
+      )
    }
 
    if (state.loading) {

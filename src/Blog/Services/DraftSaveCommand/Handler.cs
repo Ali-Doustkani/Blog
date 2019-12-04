@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Blog.Services.DraftSaveCommand
 {
-   public class Handler : IRequestHandler<DraftSaveCommand, Result>
+   public class Handler : IRequestHandler<DraftSaveCommand, DraftSaveResult>
    {
       public Handler(BlogContext context,
          ImageContext imageContext,
@@ -23,10 +23,10 @@ namespace Blog.Services.DraftSaveCommand
       private readonly ImageContext _imageContext;
       private readonly IMapper _mapper;
 
-      public async Task<Result> Handle(DraftSaveCommand request, CancellationToken cancellationToken)
+      public async Task<DraftSaveResult> Handle(DraftSaveCommand request, CancellationToken cancellationToken)
       {
          if (await _context.Drafts.AnyAsync(x => x.Id != request.Id && x.Title == request.Title))
-            return Result.MakeFailure($"A draft or post with title '{request.Title}' already exists");
+            return DraftSaveResult.MakeFailure(request.Id, $"A draft or post with title '{request.Title}' already exists");
 
          var draft = request.Id == 0
             ? new Draft()
@@ -37,11 +37,11 @@ namespace Blog.Services.DraftSaveCommand
          var command = _mapper.Map<DraftUpdateCommand>(request);
          var updateResult = draft.Update(command);
          if (updateResult.Failed)
-            return Result.MakeFailure(updateResult);
+            return DraftSaveResult.MakeFailure(draft.Id, updateResult);
 
          await _imageContext.AddOrUpdateAsync(updateResult.Images);
          await _context.SaveChangesAsync();
-         return Result.MakeSuccess();
+         return DraftSaveResult.MakeSuccess(draft.Id);
       }
    }
 }
