@@ -103,7 +103,7 @@ namespace Blog
 
          app.UseSpaStaticFiles();
 
-         app.Map("/newadmin", clientApp =>
+         app.Map("/admin", clientApp =>
          {
             clientApp.UseSpa(spa => { });
          });
@@ -115,7 +115,6 @@ namespace Blog
                .MapRoute("langRoot", "{language:regex(^fa|en$)}", new { controller = "home", action = "index" })
                .MapRoute("post", "{language:regex(^fa|en$)}/{urlTitle}", new { controller = "home", action = "post" })
                .MapRoute("about", "about", new { controller = "home", action = "about" });
-            cfg.MapRoute("admin", "admin/{action=index}/{id?}", new { controller = "administrator" });
             cfg.MapRoute("default", "{controller}/{action}");
          });
       }

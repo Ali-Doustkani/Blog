@@ -7,7 +7,7 @@ const config =
            info: {
               domain: 'ali-doustkani.auth0.com',
               client_id: 'wZmKb30P6lnFD4Olh2ryazHqBwX8KU8L',
-              redirect_uri: 'https://alidoustkani.com/newadmin',
+              redirect_uri: 'https://alidoustkani.com/admin',
               audience: 'https://alidoustkani.com/api'
            },
            logout: {
@@ -18,7 +18,7 @@ const config =
            info: {
               domain: 'ali-doustkani.auth0.com',
               client_id: 'wZmKb30P6lnFD4Olh2ryazHqBwX8KU8L',
-              redirect_uri: 'http://localhost:5000/newadmin',
+              redirect_uri: 'http://localhost:5000/admin',
               audience: 'http://localhost:5000/api'
            },
            logout: {

@@ -61,7 +61,7 @@ function PostList({ auth0 }) {
          <h1>Posts</h1>
          <button
             onClick={() => {
-               window.location.assign('/newadmin/post')
+               window.location.assign('/admin/post')
             }}
          >
             New Post
@@ -75,7 +75,7 @@ function PostList({ auth0 }) {
                      title={x.title}
                      date={x.date}
                      published={x.published}
-                     onEdit={id => window.location.assign(`newadmin/post/${id}`)}
+                     onEdit={id => window.location.assign(`admin/post/${id}`)}
                      onDelete={async id => {
                         if (confirm('Are you sure?')) {
                            const result = await deleteDraft(id, auth0)

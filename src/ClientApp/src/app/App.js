@@ -48,7 +48,7 @@ function App() {
    }
 
    return (
-      <Router basename="/newadmin">
+      <Router basename="/admin">
          <>
             <MainMenu
                open={isMenuOpen}
