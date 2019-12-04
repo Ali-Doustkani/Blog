@@ -81,12 +81,14 @@ async function saveDeveloper(state, auth0) {
    }
 }
 
-async function getDraftItems() {
+async function getDraftItems(auth0) {
    try {
+      const token = await auth0.getAccessToken()
       return await processResponse(
          await fetch(url_drafts, {
             headers: {
-               Accept: 'application/json'
+               Accept: 'application/json',
+               Authorization: 'Bearer ' + token
             }
          })
       )
@@ -95,21 +97,30 @@ async function getDraftItems() {
    }
 }
 
-async function getDraft(id) {
+async function getDraft(id, auth0) {
    try {
-      return await processResponse(await fetch(`${url_drafts}/${id}`))
+      const token = await auth0.getAccessToken()
+      return await processResponse(
+         await fetch(`${url_drafts}/${id}`, {
+            headers: {
+               Authorization: 'Bearer ' + token
+            }
+         })
+      )
    } catch (err) {
       return fatal(err.message)
    }
 }
 
-async function postDraft(post) {
+async function postDraft(post, auth0) {
    try {
+      const token = await auth0.getAccessToken()
       return await processResponse(
          await fetch(url_drafts, {
             method: 'POST',
             headers: {
-               'Content-Type': 'application/json'
+               'Content-Type': 'application/json',
+               Authorization: 'Bearer ' + token
             },
             body: JSON.stringify(post)
          })
@@ -119,15 +130,17 @@ async function postDraft(post) {
    }
 }
 
-async function patchDraft(post) {
+async function patchDraft(draft, auth0) {
    try {
+      const token = await auth0.getAccessToken()
       return await processResponse(
-         await fetch(`${url_drafts}/${post.id}`, {
+         await fetch(`${url_drafts}/${draft.id}`, {
             method: 'PATCH',
             headers: {
-               'Content-Type': 'application/json'
+               'Content-Type': 'application/json',
+               Authorization: 'Bearer ' + token
             },
-            body: JSON.stringify({ title: post.title, content: post.content })
+            body: JSON.stringify(draft)
          })
       )
    } catch (err) {
@@ -135,4 +148,20 @@ async function patchDraft(post) {
    }
 }
 
-export { getDeveloper, saveDeveloper, getDraftItems, postDraft, patchDraft, getDraft }
+async function deleteDraft(id, auth0) {
+   try {
+      const token = await auth0.getAccessToken()
+      return await processResponse(
+         await fetch(`${url_drafts}/${id}`, {
+            method: 'DELETE',
+            headers: {
+               Authorization: 'Bearer ' + token
+            }
+         })
+      )
+   } catch (err) {
+      return fatal(err.message)
+   }
+}
+
+export { getDeveloper, saveDeveloper, getDraftItems, postDraft, patchDraft, getDraft, deleteDraft }

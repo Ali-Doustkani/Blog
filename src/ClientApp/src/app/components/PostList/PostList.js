@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer } from 'react'
 import PostItem from './PostItem'
-import { getDraftItems } from '../services'
-import { Loader, Message, Button } from 'Controls'
+import { getDraftItems, deleteDraft } from '../services'
+import { Loader, Message } from 'Controls'
 
 const initial = {
    status: 'loading',
@@ -25,12 +25,14 @@ function reducer(state, action) {
                errorMessage: action.result.data
             }
          }
+      case 'DELETE_POST':
+         return { ...state, posts: state.posts.filter(x => x.id !== action.id) }
       default:
          throw new Error('Unsupported action type')
    }
 }
 
-function PostList() {
+function PostList({ auth0 }) {
    const [state, dispatch] = useReducer(reducer, initial)
    let mounted = true
 
@@ -40,7 +42,7 @@ function PostList() {
    }, [])
 
    const fetchDraftItems = async () => {
-      const result = await getDraftItems()
+      const result = await getDraftItems(auth0)
       if (mounted) {
          dispatch({ type: 'LOAD_POSTS', result })
       }
@@ -73,7 +75,15 @@ function PostList() {
                      title={x.title}
                      date={x.date}
                      published={x.published}
-                     onEdit={id => window.location.assign(`/post/${id}`)}
+                     onEdit={id => window.location.assign(`newadmin/post/${id}`)}
+                     onDelete={async id => {
+                        if (confirm('Are you sure?')) {
+                           const result = await deleteDraft(id, auth0)
+                           if (result.status === 'ok') {
+                              dispatch({ type: 'DELETE_POST', id })
+                           }
+                        }
+                     }}
                   />
                )
             })}

@@ -129,7 +129,7 @@ namespace Blog.Domain.Blogging
          var oldDirectory = Title == null ? null : GetImageDirectoryName();
 
          Title = command.Title;
-         Language = command.Language;
+         Language = command.Language == Language.None ? Language : command.Language;
          EnglishUrl = command.EnglishUrl;
          Content = command.Content ?? string.Empty;
          Summary = command.Summary;

@@ -1,16 +1,17 @@
 import React, { useReducer, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Richtext } from 'Controls'
+import { Richtext, Loader } from 'Controls'
 import { LanguageSelector } from './LanguageSelector'
 import { getDraft, postDraft, patchDraft } from '../services'
 
 const initial = {
    id: '',
-   lang: '',
+   language: '',
    title: '',
    content: '',
    changed: false,
-   showSaveMessage: false
+   showSaveMessage: false,
+   loading: true
 }
 
 function reducer(state, action) {
@@ -22,23 +23,22 @@ function reducer(state, action) {
       case 'CHANGE_ID':
          return { ...state, id: action.id }
       case 'CHANGE_LANG':
-         return { ...state, lang: action.lang }
+         return { ...state, language: action.language }
       case 'CHANGE_TITLE':
          return { ...state, changed: true, title: action.title }
       case 'CHANGE_CONTENT':
          return { ...state, changed: true, content: action.content }
       case 'CHANGE_DRAFT':
-         console.log(action.draft)
-         return { ...state, ...action.draft }
+         return { ...state, ...action.draft, loading: false }
       default:
          throw Error('Not valid action type')
    }
 }
 
-function Post() {
+function Post({ auth0 }) {
    const [state, dispatch] = useReducer(reducer, initial)
    const directionProps =
-      state.lang === 'farsi'
+      state.language === 'farsi'
          ? {
               placeholder: 'موضوع را اینجا وارد کنید',
               formClass: 'postForm postForm--rtl',
@@ -57,8 +57,8 @@ function Post() {
 
    useEffect(() => {
       const load = async () => {
-         if (state.id) {
-            const result = await getDraft(state.id)
+         if (state.loading) {
+            const result = await getDraft(state.id, auth0)
             if (result.status === 'ok') {
                dispatch({ type: 'CHANGE_DRAFT', draft: result.data })
             }
@@ -70,20 +70,26 @@ function Post() {
    useEffect(() => {
       const save = async () => {
          if (state.id) {
-            const result = await patchDraft({
-               id: state.id,
-               title: state.title,
-               content: state.content
-            })
+            const result = await patchDraft(
+               {
+                  id: state.id,
+                  title: state.title,
+                  content: state.content
+               },
+               auth0
+            )
             if (result.status !== 'ok') {
                console.error('Saving Error', result)
             }
          } else {
-            const result = await postDraft({
-               lang: state.lang,
-               title: state.title,
-               content: state.content
-            })
+            const result = await postDraft(
+               {
+                  language: state.language,
+                  title: state.title,
+                  content: state.content
+               },
+               auth0
+            )
             if (result.status === 'ok') {
                dispatch({ type: 'CHANGE_ID', id: result.data.id })
             } else {
@@ -110,8 +116,12 @@ function Post() {
       }
    }, [state.showSaveMessage])
 
-   if (!state.id && !state.lang) {
+   if (!state.id && !state.language) {
       return <LanguageSelector onSelection={lang => dispatch({ type: 'CHANGE_LANG', lang })} />
+   }
+
+   if (state.loading) {
+      return <Loader text="Loading draft..." />
    }
 
    return (
@@ -123,6 +133,7 @@ function Post() {
             placeholder={directionProps.placeholder}
             autoFocus
             className="postForm__title"
+            value={state.title}
             onChange={e => dispatch({ type: 'CHANGE_TITLE', title: e.target.value })}
          />
          <Richtext
@@ -130,6 +141,7 @@ function Post() {
             stickyToolbar={true}
             pro={true}
             className="postForm__richtext"
+            content={state.content}
             onChange={e => dispatch({ type: 'CHANGE_CONTENT', content: e.content })}
          />
       </div>

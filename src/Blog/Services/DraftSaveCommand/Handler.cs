@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
-using Blog.Domain;
 using Blog.Domain.Blogging;
 using Blog.Infrastructure;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,22 +12,16 @@ namespace Blog.Services.DraftSaveCommand
    {
       public Handler(BlogContext context,
          ImageContext imageContext,
-         IMapper mapper,
-         IDateProvider dateProvider,
-         IHtmlProcessor htmlProcessor)
+         IMapper mapper)
       {
          _context = context;
          _imageContext = imageContext;
          _mapper = mapper;
-         _dateProvider = dateProvider;
-         _htmlProcessor = htmlProcessor;
       }
 
       private readonly BlogContext _context;
       private readonly ImageContext _imageContext;
       private readonly IMapper _mapper;
-      private readonly IDateProvider _dateProvider;
-      private readonly IHtmlProcessor _htmlProcessor;
 
       public async Task<Result> Handle(DraftSaveCommand request, CancellationToken cancellationToken)
       {
@@ -48,21 +40,8 @@ namespace Blog.Services.DraftSaveCommand
             return Result.MakeFailure(updateResult);
 
          await _imageContext.AddOrUpdateAsync(updateResult.Images);
-
-         Result ret = Result.MakeSuccess();
-         if (request.Publish)
-         {
-            var result = await draft.Publish(_dateProvider, _htmlProcessor);
-            ret = result.Failed
-               ? Result.MakeFailure(result)
-               : Result.MakeSuccess(draft.Post.Url);
-         }
-
-         if (!request.Publish && draft.Post != null)
-            draft.Unpublish();
-
          await _context.SaveChangesAsync();
-         return ret;
+         return Result.MakeSuccess();
       }
    }
 }

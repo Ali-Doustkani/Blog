@@ -7,26 +7,22 @@ using System.Threading.Tasks;
 
 namespace Blog.Services.DraftQuery
 {
-   public class Handler : IRequestHandler<DraftQuery, DraftSaveCommand.DraftSaveCommand>
+   public class Handler : IRequestHandler<DraftQuery, Draft>
    {
       public Handler(BlogContext context) =>
          _context = context;
 
       private readonly BlogContext _context;
 
-      public Task<DraftSaveCommand.DraftSaveCommand> Handle(DraftQuery request, CancellationToken cancellationToken) =>
+      public Task<Draft> Handle(DraftQuery request, CancellationToken cancellationToken) =>
          _context
          .Drafts
-         .Select(x => new DraftSaveCommand.DraftSaveCommand
+         .Select(x => new Draft
          {
             Id = x.Id,
-            Content = x.Content,
-            EnglishUrl = x.EnglishUrl,
-            Language = x.Language,
-            Publish = x.Post != null,
-            Summary = x.Summary,
-            Tags = x.Tags,
-            Title = x.Title
+            Language = x.Language.ToString().ToLower(),
+            Title = x.Title,
+            Content = x.Content
          })
          .SingleAsync(x => x.Id == request.Id);
    }

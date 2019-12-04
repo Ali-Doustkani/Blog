@@ -8,15 +8,15 @@ import { Loader } from 'Controls'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import useAuth0 from './useAuth0'
 
-const PostListPage = () => (
+const PostListPage = auth0 => () => (
    <main>
-      <PostList />
+      <PostList auth0={auth0} />
    </main>
 )
 
-const PostPage = () => (
+const PostPage = auth0 => () => (
    <main>
-      <Post />
+      <Post auth0={auth0} />
    </main>
 )
 
@@ -31,9 +31,7 @@ function App() {
    const [isMenuOpen, setMenuOpen] = useState(false)
    const auth0 =
       process.env.NODE_ENV === 'development'
-         ? {
-              loading: false
-           }
+         ? { loading: false, getAccessToken: () => {} }
          : useAuth0()
    const showMenu = () => setMenuOpen(!isMenuOpen)
    const closeMenu = () => setMenuOpen(false)
@@ -58,9 +56,9 @@ function App() {
                onLogout={() => auth0.logout()}
             />
             <Switch>
-               <Route path="/" exact component={PostListPage} />
+               <Route path="/" exact component={PostListPage(auth0)} />
                <Route path="/developer" component={DeveloperPage(auth0)} />
-               <Route path="/post/:id?" children={<PostPage />} />
+               <Route path="/post/:id?" children={PostPage(auth0)} />
             </Switch>
          </>
       </Router>

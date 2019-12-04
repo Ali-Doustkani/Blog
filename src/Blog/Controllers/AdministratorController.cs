@@ -36,25 +36,7 @@ namespace Blog.Controllers
          return View(nameof(Post), result);
       }
 
-      [ValidateAntiForgeryToken]
-      public async Task<IActionResult> SavePost(DraftSaveCommand command)
-      {
-         var result = await _mediator.Send(command);
 
-         if (result.Failed)
-         {
-            ModelState.AddModelErrors(result.Errors);
-            return View(nameof(Post), command);
-         }
-
-         if (result.Published)
-         {
-            var lang = command.Language == Language.English ? "en" : "fa";
-            return RedirectToAction("Post", "Home", new { language = lang, urlTitle = result.PostUrl });
-         }
-
-         return RedirectToAction(nameof(Index));
-      }
 
       [ValidateAntiForgeryToken]
       public async Task<IActionResult> DeletePost(int id)

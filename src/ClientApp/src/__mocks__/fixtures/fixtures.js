@@ -16,3 +16,5 @@ fetchMock.post('/api/drafts', () => ({
 }))
 
 fetchMock.patch(/\/api\/drafts\/\d/, 200)
+
+fetchMock.delete(/\/api\/drafts\/\d/, 200)

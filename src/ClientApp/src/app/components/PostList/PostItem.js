@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-function PostItem({ id, title, date, published, onEdit }) {
+function PostItem({ id, title, date, published, onEdit, onDelete }) {
    const [showButtons, setShowButtons] = useState(false)
    return (
       <li
@@ -9,7 +9,7 @@ function PostItem({ id, title, date, published, onEdit }) {
          onMouseOut={() => setShowButtons(false)}
       >
          <div className={'button-container' + (showButtons ? ' visible' : ' hidden')}>
-            <button>Delete</button>
+            <button onClick={() => onDelete(id)}>Delete</button>
             <button onClick={() => onEdit(id)}>Edit</button>
             {published || <button data-testid="publish-button">Publish</button>}
             {published || <button data-testid="preview-button">Preview</button>}
