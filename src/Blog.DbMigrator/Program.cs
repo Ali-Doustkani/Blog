@@ -7,6 +7,14 @@ namespace Blog.DbMigrator
    {
       static void Main(string[] args)
       {
+         if (args.Length == 1 && args[0].ToLower()=="localdb")
+         {
+             Console.WriteLine("Migrating LocalDb started");
+             Migrator.MigrateLocalDb();
+             Console.WriteLine("LocalDb Migrated");
+             return;
+         }
+
          string server, db, username, psw;
          if (args.Length == 4)
          {
