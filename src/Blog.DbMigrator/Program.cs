@@ -1,16 +1,17 @@
 ﻿using Blog.Infrastructure;
 using System;
+using System.Threading.Tasks;
 
 namespace Blog.DbMigrator
 {
    class Program
    {
-      static void Main(string[] args)
+      static async Task Main(string[] args)
       {
          if (args.Length == 1 && args[0].ToLower()=="localdb")
          {
              Console.WriteLine("Migrating LocalDb started");
-             Migrator.MigrateLocalDb();
+             await Migrator.MigrateLocalDb();
              Console.WriteLine("LocalDb Migrated");
              return;
          }
@@ -40,7 +41,7 @@ namespace Blog.DbMigrator
 
          try
          {
-            Migrator.Migrate(server, db, username, psw);
+            await Migrator.Migrate(server, db, username, psw);
             Console.WriteLine("Done!");
          }
          catch (Exception ex)
